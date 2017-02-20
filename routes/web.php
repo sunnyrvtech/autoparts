@@ -26,5 +26,7 @@ Route::group(['prefix' => 'api'], function () {
 
 //    Route::resource('api/todos', 'TodosController');
 
-    Route::get('/login', 'Auth\LoginController@index');
+    Route::get('/login', function(){
+        return 'hello';
+    });
 });
