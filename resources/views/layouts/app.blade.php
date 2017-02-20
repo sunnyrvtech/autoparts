@@ -98,7 +98,7 @@
                 <div class="container container-nav-search">
                     <div class="" id="navbar-lower">
                         <ul class="nav navbar-nav">
-                            <li class="active am-logo"><a href="{{ url('/') }}" title="Auto-LightHouse"></a></li>
+                            <li class="active am-logo"><a href="{{ url('/')}}" title="Auto-LightHouse"></a></li>
                         </ul>
                         <ul class="free-shipping">
                             <li>
@@ -231,7 +231,7 @@
                 </div>
             </div>
         </div>
-    </fo                                oter>
+    </footer>
 
     <!-- Scripts -->
     <script src="{{ URL::asset('/js/app.js') }}"></script>
@@ -240,7 +240,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-sanitize/1.6.2/angular-sanitize.min.js"></script>
     <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.2/angular-animate.min.js"></script>-->
     <script>
-                                var BaseUrl = "<?php echo url('/') ?>";
+                                        var BaseUrl = "<?php echo url('/') ?>";
     </script>
     <script src="{{ URL::asset('/js/front.js') }}"></script>
 </body>
