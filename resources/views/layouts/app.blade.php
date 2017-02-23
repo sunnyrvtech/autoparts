@@ -14,13 +14,16 @@
         <link rel="shortcut icon" href="assets/images/gt_favicon.png">
         <!-- Styles -->
         <link href="{{ URL::asset('/css/app.css') }}" rel="stylesheet">
-        <link href="{{ URL::asset('/css/style.css') }}" rel="stylesheet">
         <link href="{{ URL::asset('/css/animate.css') }}" rel="stylesheet">
+        <link href="{{ URL::asset('/slick/slick.css') }}" rel="stylesheet">
+        <link href="{{ URL::asset('/slick/slick-theme.css') }}" rel="stylesheet">
+        <link href="{{ URL::asset('/css/style.css') }}" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto" rel="stylesheet" type="text/css" />
         <script>
             window.Laravel = <?php echo json_encode(['csrfToken' => csrf_token(),]); ?>
         </script>
+        <script src="{{ URL::asset('/js/app.js') }}"></script>
     </head>
     <body ng-app="autoPartApp" ng-controller="autoPartController">
 
@@ -60,8 +63,8 @@
                             </span>
                             <span class="mini-cart-count">0</span>
                             <span class="hidden-xxs"> items in cart:</span>
-                            <span class="visible-xxs-inline"> / </span>
-                            <span class="mini-cart-total">$0.00</span>
+<!--                            <span class="visible-xxs-inline"> / </span>
+                            <span class="mini-cart-total">$0.00</span>-->
                         </a>
 
                         <a class="navbar-brand" title="Auto-LightHouse" href="/"></a>
@@ -82,10 +85,8 @@
                                     <span class="fab-cirle am-bg-dark-blue">
                                         <span aria-hidden="true" class="glyphicon glyphicon-shopping-cart"></span>
                                     </span>
-                                    <span class="mini-cart-count">0</span>  items
-                                    in
-                                    cart:
-                                    <span class="mini-cart-total">$0.00</span>
+                                    <span class="mini-cart-count">0</span>  items in cart:
+                                    <!--<span class="mini-cart-total">$0.00</span>-->
                                 </a>
                             </li>
                             <li><a class="login" href="javascript:void(0);" ng-click="login()">Login</a></li>
@@ -134,38 +135,14 @@
                         </div>
                         <div class="navbar-collapse collapse" id="dropdown-navbar-target">
                             <ul class="nav navbar-nav">
+                                @if(isset($categories))
+                                @foreach($categories as $key=>$cat_value)
                                 <li>
-                                    <a data-target-container="li" href="#" data-target="#nav-dropdown-0">Exterior, Body Parts & Mirrors</a>
-                                    <span aria-hidden="true" class="glyphicon glyphicon-triangle-bottom"></span>
+                                    <a data-target-container="li" href="javascript:void(0);" data-target="#nav-dropdown-{{ $key}}"><?= $cat_value->name ?></a>
+                                    <span class="glyphicon glyphicon-triangle-bottom"></span>
                                 </li>
-                                <li>
-                                    <a data-target-container="li" href="#" data-target="#nav-dropdown-1">Interior Parts and Accessories</a>
-                                    <span aria-hidden="true" class="glyphicon glyphicon-triangle-bottom"></span>
-                                </li>
-                                <li>
-                                    <a data-target-container="li" href="#" data-target="#nav-dropdown-2">Engine Parts</a>
-                                    <span aria-hidden="true" class="glyphicon glyphicon-triangle-bottom"></span>
-                                </li>
-                                <li>
-                                    <a data-target-container="li" href="#" data-target="#nav-dropdown-3">Drivetrain Parts</a>
-                                    <span aria-hidden="true" class="glyphicon glyphicon-triangle-bottom"></span>
-                                </li>
-                                <li>
-                                    <a data-target-container="li" href="#" data-target="#nav-dropdown-4">Headlights & Lighting</a>
-                                    <span aria-hidden="true" class="glyphicon glyphicon-triangle-bottom"></span>
-                                </li>
-                                <li>
-                                    <a data-target-container="li" href="#" data-target="#nav-dropdown-5">Heating & Cooling</a>
-                                    <span aria-hidden="true" class="glyphicon glyphicon-triangle-bottom"></span>
-                                </li>
-                                <li>
-                                    <a data-target-container="li" href="#" data-target="#nav-dropdown-6">Brakes, Steering & Suspension Parts</a>
-                                    <span aria-hidden="true" class="glyphicon glyphicon-triangle-bottom"></span>
-                                </li>
-                                <li>
-                                    <a data-target-container="li" href="#" data-target="#nav-dropdown-7">Fuel, Exhaust & Emissions Parts</a>
-                                    <span aria-hidden="true" class="glyphicon glyphicon-triangle-bottom"></span>
-                                </li>
+                                @endforeach
+                                @endif
                             </ul>
                         </div>
                     </div>
@@ -174,74 +151,71 @@
         </section>
         <!-- BEGIN CONTENT -->
         <div id="content">
-            <div class="container animated" @if(Request::is('/')) ng-bind-html="render_html" @endif ng-class="animated"><!-- /#content.container -->
-                 @yield('content')
-        </div><!-- /#content.container -->
-    </div><!-- /#content -->
-    <footer class="footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4 col-md-6 col-sm-6">
-                    <h3>Customer Service<span class="footer-header-border"></span></h3>
-                    <ul>
-                        <!-- <li>Chat with an agent</li> -->
-                        <li><a href="javascript:void(0);" title="About Auto Light House">About Us</a></li>
-                        <li><a href="javascript:void(0);" title="Track Your Order">Track Your Order</a></li>
-                        <li><a href="javascript:void(0);" title="Return a Part">Return a Part</a></li>
-                        <li><a href="javascript:void(0);" title="Email Customer Care">Email Customer Care</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-4 col-md-6 col-sm-6">
-                    <h3>Sign up For Special Deals<span class="footer-header-border"></span></h3>
-                    <ul class="">
-                        <li>Get Special Offers &amp; Discounts</li>
-                        <li><form METHOD="POST" action="javascript:void(0);" class="subscription-form subscription-simple" name="subscribeForm">
-                                <table class="email-field" id="formTable">
-                                    <tr>
-                                        <td>Email:</td>
-                                        <td><input name="email" required="" style="color:black" type="text" /><span></span></td>
-                                    </tr>
-                                </table>
-                                <br />
-                                <input class="btn am-orange" type="submit" value="Subscribe" />
-                            </form>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-lg-4 col-md-6 col-sm-6">
-                    <h3>Secure Checkout<span class="footer-header-border"></span></h3>
-                    <ul class="secure-checkout">
-                        <li></li>
-                    </ul>
-                    <h3>We Accept<span class="footer-header-border"></span></h3>
-                    <ul class="creditcards">
-                        <li class="cc1">
-                            <img src="{{ url('/images/accepted-credit-cards.png')}}" alt="PayPal, American Express, MasterCard, Discover, Visa" class="img lazy" height="60" />
-                        </li>
-                    </ul>
-                </div>
+             <div class="animated"  @if(Request::is('/')) ng-bind-html="render_html" @endif ng-class="animated">
+                @yield('content')
             </div>
-        </div>
-        <div class="footer-bottom-links">
+        </div><!-- /#content -->
+        <footer class="footer">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-12 col-md-12 col-sm-12">
-                        <span class="copyright">Copyright © 2017 Auto Light House. All Rights Reserved.</span>
+                    <div class="col-lg-4 col-md-6 col-sm-6">
+                        <h3>Customer Service<span class="footer-header-border"></span></h3>
+                        <ul>
+                            <!-- <li>Chat with an                                        agent</li> -->
+                            <li><a href="javascript:void(0);" title="About Auto Light House">About Us</a></li>
+                            <li><a href="javascript:void(0);" title="Track Your Order">Track Your Order</a></li>
+                            <li><a href="javascript:void(0);" title="Return a Part">Return a Part</a></li>
+                            <li><a href="javascript:void(0);" title="Email Customer Care">Email Customer Care</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-6">
+                        <h3>Sign up For Special Deals<span class="footer-header-border"></span></h3>
+                        <ul class="">
+                            <li>Get Special Offers &amp; Discounts</li>
+                            <li><form METHOD="POST" action="javascript:void(0);" class="subscription-form subscription-simple" name="subscribeForm">
+                                    <table class="email-field" id="formTable">
+                                        <tr>
+                                            <td>Email:</td>
+                                            <td><input name="email" required="" style="color:black" type="text" /><span></span></td>
+                                        </tr>
+                                    </table>
+                                    <br />
+                                    <input class="btn am-orange" type="submit" value="Subscribe" />
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-6">
+                        <h3>Secure Checkout<span c                                                                                                                                                                                  lass="footer-header-border"></span></h3>
+                        <ul class="secure-checkout">
+                            <li></li>
+                        </ul>
+                        <h3>We Accept<span class="footer-header-border"></span></h3>
+                        <ul class="creditcards">
+                            <li class="cc1">
+                                <img src="{{ url('/images/accepted-credit-cards.png')}}" alt="PayPal, American Express, MasterCard, Discover, Visa" class="img lazy" height="60" />
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
-        </div>
-    </footer>
-
-    <!-- Scripts -->
-    <script src="{{ URL::asset('/js/app.js') }}"></script>
-    <!--AngularJS-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.2/angular.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-sanitize/1.6.2/angular-sanitize.min.js"></script>
-    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.2/angular-animate.min.js"></script>-->
-    <script>
-                                        var BaseUrl = "<?php echo url('/') ?>";
-    </script>
-    <script src="{{ URL::asset('/js/front.js') }}"></script>
-</body>
+            <div class="footer-bottom-links">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <span class="copyright">Copyright © 2017 Auto Light House. All Rights Reserved.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!--AngularJS-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.2/angular.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-sanitize/1.6.2/angular-sanitize.min.js"></script>
+        <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.2/angular-animate.min.js"></script>-->
+        <script type="text/javascript">
+                                            var BaseUrl = "<?php echo url('/') ?>";
+        </script>
+        <script src="{{ URL::asset('/js/front.js') }}"></script>
+    </body>
 </html>

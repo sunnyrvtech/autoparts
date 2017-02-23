@@ -3,7 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/var/www/html/autoparts/resources/views/admin/index.blade.php</file>
+            <file>file:/var/www/html/autoparts/resources/views/index.blade.php</file>
+            <file>file:/var/www/html/autoparts/app/Http/Controllers/HomeController.php</file>
+            <file>file:/var/www/html/autoparts/resources/views/layouts/app.blade.php</file>
+            <file>file:/var/www/html/autoparts/routes/web.php</file>
+            <file>file:/var/www/html/autoparts/public/css/style.css</file>
         </group>
     </open-files>
 </project-private>

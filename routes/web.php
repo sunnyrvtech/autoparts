@@ -11,13 +11,15 @@
   |
  */
 
-Route::get('/', function () {
-    return view('index');
-});
+Route::get('/', 'HomeController@index');
 
 Route::group(['prefix' => 'admin'], function () {
     Route::get('/', 'Admin\IndexController@index');
-    Route::get('/users', 'Admin\IndexController@get_customer');
+    Route::resource('customers', 'Admin\CustomerController');
+    Route::resource('categories', 'Admin\CategoryController');
+    Route::resource('subcategories', 'Admin\SubCategoryController');
+    Route::resource('vehicle', 'Admin\VehicleCompanyController');
+    Route::resource('brands', 'Admin\BrandController');
 });
 
 

@@ -8,28 +8,16 @@ use View;
 use App\User;
 use Yajra\Datatables\Facades\Datatables;
 
-class IndexController extends Controller
-{
-    
+class IndexController extends Controller {
+
     /**
      * Display a listing of the resource.
      *
      * @return Response
      */
     public function index() {
-        return View::make('admin.index');
-    }
-
-    
-
-    /**
-     * Process datatables ajax request.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function get_customer()
-    {
-        return Datatables::of(User::query())->make(true);
+        $title = 'AutoLightHouse | Dashboard';
+        return View::make('admin.index',compact('title'));
     }
 
     /**

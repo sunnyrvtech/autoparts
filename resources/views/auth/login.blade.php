@@ -64,62 +64,63 @@
         </div>
     </div>
 </div>-->
-<div class="row">
-    <h2>Please Login or Register <small>Welcome Back to Auto Light House!</small></h2>
-    <hr class="colorgraph">
-    <div class="col-xs-12 col-md-6">
-        <form role="form">
-            <h2>Login In <small>It's free and always will be.</small></h2>
-            <hr class="colorgraph">
-            <div class="form-group">
-                <input type="email" name="email" required=""  class="form-control input-lg" placeholder="Email Address" tabindex="3">
-            </div>
-            <div class="form-group">
-                <input type="password" name="password" required=""  class="form-control input-lg" placeholder="Password" tabindex="4">
-            </div>
-            <hr class="colorgraph">
-            <div class="row">
-                <div class="col-xs-6 col-md-6"><a href="#" class="btn btn-success btn-block btn-lg">Sign In</a></div>
-            </div>
-        </form>
-    </div>
-    <div class="col-xs-12 col-md-6">
-        <form role="form">
-            <h2>Register<small></small></h2>
-            <hr class="colorgraph">
-            <div class="row">
-                <div class="col-xs-12 col-sm-6 col-md-6">
-                    <div class="form-group">
-                        <input type="text" name="first_name" required=""  id="first_name" class="form-control input-lg" placeholder="First Name" tabindex="1">
+<div class="container"><!-- /#content.container -->    
+    <div class="row">
+        <h2>Please Login or Register <small>Welcome Back to Auto Light House!</small></h2>
+        <hr class="colorgraph">
+        <div class="col-xs-12 col-md-6">
+            <form role="form">
+                <h2>Login In <small>It's free and always will be.</small></h2>
+                <hr class="colorgraph">
+                <div class="form-group">
+                    <input type="email" name="email" required=""  class="form-control input-lg" placeholder="Email Address" tabindex="3">
+                </div>
+                <div class="form-group">
+                    <input type="password" name="password" required=""  class="form-control input-lg" placeholder="Password" tabindex="4">
+                </div>
+                <hr class="colorgraph">
+                <div class="row">
+                    <div class="col-xs-6 col-md-6"><a href="#" class="btn btn-success btn-block btn-lg">Sign In</a></div>
+                </div>
+            </form>
+        </div>
+        <div class="col-xs-12 col-md-6">
+            <form role="form">
+                <h2>Register<small></small></h2>
+                <hr class="colorgraph">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-md-6">
+                        <div class="form-group">
+                            <input type="text" name="first_name" required=""  id="first_name" class="form-control input-lg" placeholder="First Name" tabindex="1">
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-6">
+                        <div class="form-group">
+                            <input type="text" name="last_name" required=""  id="last_name" class="form-control input-lg" placeholder="Last Name" tabindex="2">
+                        </div>
                     </div>
                 </div>
-                <div class="col-xs-12 col-sm-6 col-md-6">
-                    <div class="form-group">
-                        <input type="text" name="last_name" required=""  id="last_name" class="form-control input-lg" placeholder="Last Name" tabindex="2">
+                <div class="form-group">
+                    <input type="email" name="email" required=""  id="email" class="form-control input-lg" placeholder="Email Address" tabindex="4">
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-md-6">
+                        <div class="form-group">
+                            <input type="password" name="password" required=""  id="password" class="form-control input-lg" placeholder="Password" tabindex="5">
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-6">
+                        <div class="form-group">
+                            <input type="password" name="password_confirmation" required=""  id="password_confirmation" class="form-control input-lg" placeholder="Confirm Password" tabindex="6">
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <input type="email" name="email" required=""  id="email" class="form-control input-lg" placeholder="Email Address" tabindex="4">
-            </div>
-            <div class="row">
-                <div class="col-xs-12 col-sm-6 col-md-6">
-                    <div class="form-group">
-                        <input type="password" name="password" required=""  id="password" class="form-control input-lg" placeholder="Password" tabindex="5">
-                    </div>
+                <hr class="colorgraph">
+                <div class="row">
+                    <div class="col-xs-6 col-md-6"><input type="submit" value="Register" class="btn btn-primary btn-block btn-lg" tabindex="7"></div>
                 </div>
-                <div class="col-xs-12 col-sm-6 col-md-6">
-                    <div class="form-group">
-                        <input type="password" name="password_confirmation" required=""  id="password_confirmation" class="form-control input-lg" placeholder="Confirm Password" tabindex="6">
-                    </div>
-                </div>
-            </div>
-            <hr class="colorgraph">
-            <div class="row">
-                <div class="col-xs-6 col-md-6"><input type="submit" value="Register" class="btn btn-primary btn-block btn-lg" tabindex="7"></div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
-
 @endsection

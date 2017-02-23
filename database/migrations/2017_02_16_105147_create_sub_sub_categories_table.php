@@ -17,7 +17,6 @@ class CreateSubSubCategoriesTable extends Migration
             $table->increments('id');
             $table->integer('sub_category_id');
             $table->integer('vehicle_company_id');
-            $table->string('name');
             $table->timestamps();
             $table->softDeletes();
         });

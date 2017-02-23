@@ -17,7 +17,7 @@ class CreateCategoriesTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('category_image')->nullable();
-            $table->enum('status', array(0, 1))->default(0);
+            $table->enum('status', array(0, 1))->default(1);
             $table->timestamps();
             $table->softDeletes();
         });
