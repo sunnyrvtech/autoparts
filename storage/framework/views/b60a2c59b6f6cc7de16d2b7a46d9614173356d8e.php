@@ -103,7 +103,7 @@
                         </ul>
                         <ul class="free-shipping">
                             <li>
-                                <h3>Always Free Shipping!</h3>
+                                <h3>&nbsp;CAPA & NSF Certified Parts</h3>
                                 <div class="order-by-text">Order by 5 P.M. EST M-F and your order ships same day</div>
                             </li>
                         </ul>
