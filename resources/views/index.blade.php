@@ -62,7 +62,7 @@
             <!-- Featured Categories -->
             <div class="home-page-card-con">
                 <div class="home-page-card-con-inner">
-                    <h3>Featured Categories</h3>
+                    <h3 class="text-center">Featured Categories</h3>
                     <!--                <div class="carousel-loading">
                                         <i class="glyphicon glyphicon-repeat gly-spin"></i>
                                     </div>-->
@@ -125,7 +125,7 @@
             <div class="col-md-6">
                 <div class="home-page-card-con material" elevation="1">
                     <div class="home-page-card-con-inner">
-                        <h3>Shop by Vehicle Make</h3>
+                        <h3>Shop by Vehicle</h3>
                         <div class="slickSlider-half slickSlider" type="TOP_BASIC_MAKE" style="overflow: initial; display: block;">
                             @foreach($vehicles as $key=>$value)
                             <div class="thumbnail-wrapper">
@@ -159,7 +159,7 @@
             <!-- Featured Categories -->
             <div class="home-page-card-con">
                 <div class="home-page-card-con-inner">
-                    <h3>Latest Products</h3>
+                    <h3 class="text-center">Latest Products</h3>
 
                     <div class="slickSlider-con slickSlider"  style="overflow: initial; display: block;">
 
@@ -225,20 +225,54 @@
         </div>
     </div>
 
+    <div class="row featured-products-con">
+        <div class="col-md-12 material" elevation="1">
+            <!-- Featured Categories -->
+            <div class="home-page-card-con">
+                <div class="home-page-card-con-inner">
+                    <h3 class="text-center">Testimonials</h3>
+                    <div class="slickSlider-full slickSlider"  style="overflow: initial; display: block;">
+                        <div class="thumbnail-wrapper">
+                            <div class="col-sm-3 text-center">
+                                <img class="img-circle" src="{{ URL::asset('/images/default-avatar.png') }}" style="width: 100px;height:100px;">
+                            </div>
+                            <div class="col-sm-9">
+                                <p>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit!</p>
+                                <small>Someone famous</small>
+                            </div>
+                        </div>
+                        <div class="thumbnail-wrapper">
+                            <div class="col-sm-3 text-center">
+                                <img class="img-circle" src="{{ URL::asset('/images/default-avatar.png') }}" style="width: 100px;height:100px;">
+                            </div>
+                            <div class="col-sm-9">
+                                <p>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit!</p>
+                                <small>Someone famous</small>
+                            </div>
+                        </div>
+                        <div class="thumbnail-wrapper">
+                            <div class="col-sm-3 text-center">
+                                <img class="img-circle" src="{{ URL::asset('/images/default-avatar.png') }}" style="width: 100px;height:100px;">
+                            </div>
+                            <div class="col-sm-9">
+                                <p>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit!</p>
+                                <small>Someone famous</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row about-us-con">
         <div class="col-md-0"></div>
         <div class="col-md-12 material" elevation="1">
             <br />
             <h1 class="welcome-msg">Welcome to Auto Light House!</h1>
-            <p>
-                We've all been to a parts website thinking, "I'm here to get a part that fits my car - this should be easy!" Thirty minutes later, you get up from your computer, without auto parts and dejected. That won't happen here. The guesswork has been taken out of our shopping experience. The parts we sell are guaranteed to fit the applications we list. It should only take a minute or two to find what you need. Here, every part is in stock, has a picture, a terrific price, and will be shipped within 24 hours. No muss, no fuss and most importantly, no dejection.
-            </p>
-            <p>
-                We stock a full range of replacement mirrors, power window regulators, power window motors, replacement door lock actuators, door handles, turn signal switches, headlights, tail lights and everything else you can imagine. Our parts are an inexpensive alternative to overpriced dealer parts. Our selection of domestic car, light truck, van, SUV and crossover replacement parts is unrivaled. Our selection of parts for your Japanese, Korean or European import is as extensive as you'll find. We also offer a vast number of replacement parts for your vintage and antique vehicle restoration projects. If you can think up a car part, chances are good that we sell it at a discount you'd have to see to believe.
-            </p>
-            <p>
-                Our warehouse is always ready for your order.  If you place an order on a weekday, before 5 P.M. EST your order will be shipped that same day! Our trained, professional customer service staff offers prompt and courteous service. It's a combination of the most efficient warehouse crew, knowledgeable customer service representatives and our super fast FREE SHIPPING that keeps our customers coming back to us! Welcome to the best place to find replacement parts online: <a href="{{ url('.') }}">AUTOLIGHTHOUSE.COM</a>!
-            </p>
+            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.<a href="{{ url('.') }}">AUTOLIGHTHOUSE.COM</a>!</p>
         </div>
         <div class="col-md-0"></div>
     </div>
