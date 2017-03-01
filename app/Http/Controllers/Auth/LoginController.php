@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Request;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Lang;
 use View;
 
 class LoginController extends Controller {
@@ -26,7 +27,7 @@ use AuthenticatesUsers;
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -39,13 +40,48 @@ use AuthenticatesUsers;
      *
      * @return Response
      */
-    public function index() {
-        $view = View::make('auth.login');
-        if(Request::wantsJson()) { 
+    public function index(Request $request) {
+        $view = View::make('auth.auth');
+        if ($request->wantsJson()) {
             $sections = $view->renderSections();
             return $sections['content'];
         }
         return $view;
+    }
+
+    /**
+     * Get the failed login response instance.
+     *
+     * @param \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    protected function sendFailedLoginResponse(Request $request) {
+        if ($request->wantsJson()) {
+            return response()->json([
+                        'error' => Lang::get('auth.failed')
+                            ], 401);
+        }
+
+        return redirect()->back()
+                        ->withInput($request->only($this->username(), 'remember'))
+                        ->withErrors([
+                            $this->username() => Lang::get('auth.failed'),
+        ]);
+    }
+
+    protected function sendLockoutResponse(Request $request) {
+        $seconds = $this->limiter()->availableIn(
+                $this->throttleKey($request)
+        );
+        if ($request->wantsJson()) {
+            return response()->json([
+                        'error' => $message
+                            ], 401);
+        }
+
+        return redirect()->back()
+                        ->withInput($request->only($this->username(), 'remember'))
+                        ->withErrors([$this->username() => $message]);
     }
 
     public function __construct() {

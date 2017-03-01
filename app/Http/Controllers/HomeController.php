@@ -10,6 +10,12 @@ use App\Brand;
 use App\VehicleCompany;
 
 class HomeController extends Controller {
+    
+    public function __construct()
+    {
+        $this->middleware('VerifyLoginStatus',['only'=>'index']);
+    }
+
 
     /**
      * Display a listing of the resource.

@@ -164,7 +164,7 @@
                         <div class="thumbnail-wrapper">
                             <a class="thumbnail" href="javascript:void(0);">
                                 <div class="img-wrapper">
-                                    <img src="" alt="" />
+                                    <img src="<?php echo e(URL::asset('/images/product1.jpg')); ?>" alt="" />
                                 </div>  
                                 <div class="caption">
                                     <div class="caption-text truncate">Product1</div>
@@ -174,7 +174,7 @@
                         <div class="thumbnail-wrapper">
                             <a class="thumbnail" href="javascript:void(0);">
                                 <div class="img-wrapper">
-                                    <img src="" alt="" />
+                                    <img src="<?php echo e(URL::asset('/images/product2.jpg')); ?>" alt="" />
                                 </div>  
                                 <div class="caption">
                                     <div class="caption-text truncate">Product2</div>
@@ -184,7 +184,7 @@
                         <div class="thumbnail-wrapper">
                             <a class="thumbnail" href="javascript:void(0);">
                                 <div class="img-wrapper">
-                                    <img src="" alt="" />
+                                    <img src="<?php echo e(URL::asset('/images/product3.jpg')); ?>" alt="" />
                                 </div>  
                                 <div class="caption">
                                     <div class="caption-text truncate">Product3</div>
@@ -194,7 +194,7 @@
                         <div class="thumbnail-wrapper">
                             <a class="thumbnail" href="javascript:void(0);">
                                 <div class="img-wrapper">
-                                    <img src="" alt="" />
+                                    <img src="<?php echo e(URL::asset('/images/product1.jpg')); ?>" alt="" />
                                 </div>  
                                 <div class="caption">
                                     <div class="caption-text truncate">Product4</div>
@@ -204,7 +204,7 @@
                         <div class="thumbnail-wrapper">
                             <a class="thumbnail" href="javascript:void(0);">
                                 <div class="img-wrapper">
-                                    <img src="" alt="" />
+                                    <img src="<?php echo e(URL::asset('/images/product2.jpg')); ?>" alt="" />
                                 </div>  
                                 <div class="caption">
                                     <div class="caption-text truncate">Product5</div>

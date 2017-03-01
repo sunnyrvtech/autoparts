@@ -39,7 +39,7 @@
                 <div class="side"></div>
             </div>
         </div>
-        <section>
+        <section class="top-header-section fadeInDown animated">
             <div id="top-header-con">
                 <div class="row">
                     <div class="col-md-12">
@@ -89,8 +89,22 @@
                                     <!--<span class="mini-cart-total">$0.00</span>-->
                                 </a>
                             </li>
+                            <?php if(Auth::guest()): ?>
                             <li><a class="login" href="javascript:void(0);" ng-click="login()">Login</a></li>
                             <li><a class="register" href="javascript:void(0);" ng-click="login()">Register</a></li>
+                            <?php else: ?>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                    <?php echo e(Auth::user()->first_name.' '.Auth::user()->last_name); ?> <span class="caret"></span>
+                                </a>
+
+                                <ul class="dropdown-menu" role="menu">
+                                    <li>
+                                        <a href="<?php echo e(url('/logout')); ?>"> Logout</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <?php endif; ?>
                         </ul>
                     </div>
                 </div>
@@ -150,10 +164,21 @@
             </div>
         </section>
         <!-- BEGIN CONTENT -->
+        <!--for angular message-->
+        <div class="alert fade in alert-dismissable" ng-show="alert_loading" ng-class="alertClass">
+            <a href="javascript:void(0);" ng-click="alert_loading = false" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
+            <strong><% alertLabel %> </strong><% alert_messages %>
+        </div>
+        <?php if(Session::has('success-message') || Session::has('error-message')): ?>
+        <div id="redirect_alert" class="alert <?php if(Session::has('success-message')): ?> alert-success <?php elseif(Session::has('error-message')): ?> alert-danger <?php endif; ?> fade in alert-dismissable">
+            <a href="javascript:void(0);" onclick="$(this).parent().remove();" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
+            <strong><?php if(Session::has('success-message')): ?> Success! <?php elseif(Session::has('error-message')): ?> Error! <?php endif; ?> </strong><?php if(Session::has('success-message')): ?> <?php echo e(Session::pull('success-message')); ?> <?php elseif(Session::has('error-message')): ?> <?php echo e(Session::pull('error-message')); ?> <?php endif; ?>
+        </div>
+        <?php endif; ?>
         <div id="content">
-             <div class="animated"  <?php if(Request::is('/')): ?> ng-bind-html="render_html" <?php endif; ?> ng-class="animated">
-                <?php echo $__env->yieldContent('content'); ?>
-            </div>
+            <!--<div class="animated"  <?php if(Request::is('/')): ?> ng-bind-html="render_html" <?php endif; ?> ng-class="animated">-->
+            <?php echo $__env->yieldContent('content'); ?>
+            <!--</div>-->
         </div><!-- /#content -->
         <footer class="footer">
             <div class="container">
@@ -213,9 +238,16 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.2/angular.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-sanitize/1.6.2/angular-sanitize.min.js"></script>
         <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.2/angular-animate.min.js"></script>-->
+        <script src="<?php echo e(URL::asset('/js/common.js')); ?>"></script>
         <script type="text/javascript">
                                             var BaseUrl = "<?php echo url('/') ?>";
+                                            //remove alert box
+                                            setTimeout(function () {
+                                                $("#redirect_alert").remove();
+                                            }, 8000);
+
         </script>
-        <script src="<?php echo e(URL::asset('/js/front.js')); ?>"></script>
+        <script src="<?php echo e(URL::asset('/js/angular/front.js')); ?>"></script>
+        <?php echo $__env->yieldPushContent('scripts'); ?>
     </body>
 </html>
