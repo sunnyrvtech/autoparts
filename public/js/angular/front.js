@@ -8,6 +8,7 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
         $scope.login = {};
         $scope.loading = false;
         $("#loaderOverlay").show();
+        $("#alert_loading").show();
         $scope.alert_loading = false;
 
         $scope.init = function () {

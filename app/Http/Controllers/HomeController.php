@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use View;
-use App\Category;
 use App\SubCategory;
 use App\Brand;
 use App\VehicleCompany;
@@ -23,7 +22,6 @@ class HomeController extends Controller {
      * @return Response
      */
     public function index(Request $request) {
-        $categories = Category::get(array('name', 'id'));
         // get sub category data and make it featured category
         $featured_category = SubCategory::take(40)->get(array('name', 'id'));
         // get vehicle companies data

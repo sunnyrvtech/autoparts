@@ -58,10 +58,10 @@
                         <li>
                             <a href="{{ route('categories.index') }}"><i class="fa fa-fw fa-tags"></i>Categories</a>
                         </li>
-                        <!--
                         <li>
-                            <a href="javascript:void(0);"><i class="fa fa-fw fa-table"></i> Tables</a>
+                            <a href="{{ route('brands.index') }}"><i class="fa fa-fw fa-dribbble"></i>Brands</a>
                         </li>
+                        <!--
                         <li>
                             <a href="javascript:void(0);"><i class="fa fa-fw fa-edit"></i> Forms</a>
                         </li>

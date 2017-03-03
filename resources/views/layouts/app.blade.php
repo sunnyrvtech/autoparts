@@ -165,7 +165,7 @@
         </section>
         <!-- BEGIN CONTENT -->
         <!--for angular message-->
-        <div class="alert fade in alert-dismissable" ng-show="alert_loading" ng-class="alertClass">
+        <div id="alert_loading" class="alert fade in alert-dismissable" ng-show="alert_loading" ng-class="alertClass" style="display: none;">
             <a href="javascript:void(0);" ng-click="alert_loading = false" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
             <strong><% alertLabel %> </strong><% alert_messages %>
         </div>
