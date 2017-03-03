@@ -988,7 +988,8 @@ table {
     height: 120px
 }
 #content {
-    overflow: hidden
+    overflow: hidden;
+    min-height: 650px;
 }
 #content .ymm-con {
     overflow: visible
@@ -2155,10 +2156,7 @@ nav.navbar.navbar-default.navbar-static-top ul.nav.navbar-nav li a {
     font-weight: 600;
 }
 nav.navbar.navbar-default.navbar-static-top .navbar-nav>li>a{padding-top: 10px; padding-bottom: 10px;} 
-
-nav.navbar.navbar-default.navbar-static-top .navbar-nav a:hover {
-    color: #40ac52 !important;
-}
+nav.navbar.navbar-default.navbar-static-top .navbar-nav a:hover,nav.navbar.navbar-default.navbar-static-top .navbar-nav a:focus { color: #40ac52; }
 
 nav.navbar.navbar-default.navbar-static-top .fab-cirle {
     width: 25px;
