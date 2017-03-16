@@ -65,15 +65,9 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group" style="border:1px solid #ccc;">
-                                    <div style="position:relative;padding: 10px;">
-                                        <a class="btn btn-primary" href="javascript:void(0);">
-                                                Choose File...
-                                                <input style="position:absolute;z-index:2;top:0;left:0;opacity:0;background-color:transparent;color:transparent;" name="profile_image" size="40" onchange="$('#upload-file-info').html($(this).val());angular.element(this).scope().setFile(this)" type="file">
-                                        </a>
-                                        <span class="label label-info" id="upload-file-info"></span>
-                                    </div>
-                                  </div>
+                                <div class="form-group">
+                                    <input type="file" name="profile_image" id="profile_image" onchange="angular.element(this).scope().setFile(this)" class="form-control">
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="form-group text-center" id="previewImage">

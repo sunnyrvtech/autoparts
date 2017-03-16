@@ -155,6 +155,9 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
             var data = new FormData();
             if (isValid) {
                 $scope.loading = true;
+                data.append('profile_image', $("#profile_image")[0].files[0]);
+                data.append('first_name', $scope.profile.first_name);
+                data.append('last_name', $scope.profile.last_name);
                 $http({
                     method: 'POST',
                     url: BaseUrl + '/my-account/profile',
