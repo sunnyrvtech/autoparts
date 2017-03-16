@@ -15,9 +15,8 @@
         <!-- Styles -->
         <link href="<?php echo e(URL::asset('/css/app.css')); ?>" rel="stylesheet">
         <link href="<?php echo e(URL::asset('/css/animate.css')); ?>" rel="stylesheet">
-        <link href="<?php echo e(URL::asset('/slick/slick.css')); ?>" rel="stylesheet">
-        <link href="<?php echo e(URL::asset('/slick/slick-theme.css')); ?>" rel="stylesheet">
         <link href="<?php echo e(URL::asset('/css/style.css')); ?>" rel="stylesheet">
+        <?php echo $__env->yieldPushContent('stylesheet'); ?>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto" rel="stylesheet" type="text/css" />
         <script>
@@ -76,7 +75,7 @@
                             <li><a href="javascript:void(0);" title="Track your order">Order Tracking</a></li>
 
                             <li>
-                                <a id="my-account" href="javascript:void(0);">My Account</a>
+                                <a id="my-account" href="<?php echo e(URL('/my-account')); ?>">My Account</a>
                             </li>
                         </ul>
                         <ul class="nav navbar-nav navbar-right">

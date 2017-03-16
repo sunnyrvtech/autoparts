@@ -6,7 +6,7 @@
         <a href="{{ route('categories.create') }}" class="btn btn-primary">Add New</a>
     </div>
     <div class="row">
-        <table class="table table-bordered" id="category-table">
+        <table class="ui celled table" id="category-table">
             <thead>
                 <tr>
                     <th>Id</th>
@@ -51,7 +51,7 @@
                 },
                 {data: 'created_at', name: 'created_at'},
                 {data: 'updated_at', name: 'updated_at'},
-                {data: 'Action',orderable: false, render: function (data, type, row) {
+                {data: 'Action',orderable: false,searchable: false, render: function (data, type, row) {
                         //console.log(row.id);
                         return '<a href="'+ "<?php echo url('/') ?>"+'/admin/subcategories/'+row.id+'" data-toggle="tooltip" title="View Sub Category" class="glyphicon glyphicon-eye-open"></a>&nbsp;<a href="'+ "{{ url('/categories/sub') }}" +'" data-toggle="tooltip" title="update" class="glyphicon glyphicon-edit"></a>'; 
                     }

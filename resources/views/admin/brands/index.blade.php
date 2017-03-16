@@ -6,7 +6,7 @@
         <a href="{{ route('brands.create') }}" class="btn btn-primary">Add New</a>
     </div>
     <div class="row">
-        <table class="table table-bordered" id="brand-table">
+        <table class="ui celled table" id="brand-table">
             <thead>
                 <tr>
                     <th>Id</th>
@@ -42,7 +42,7 @@
                 },
                 {data: 'created_at', name: 'created_at'},
                 {data: 'updated_at', name: 'updated_at'},
-                {data: 'Action',orderable: false, render: function (data, type, row) {
+                {data: 'Action',orderable: false,searchable: false, render: function (data, type, row) {
                         //console.log(row.id);
                         return '<a href="'+ "" +'" data-toggle="tooltip" title="update" class="glyphicon glyphicon-edit"></a>'; 
                     }

@@ -6,6 +6,8 @@ var app = angular.module('autoPartApp', ['ngSanitize'], function ($interpolatePr
 app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$timeout', function ($scope, $http, $sce, $compile, $timeout) {
 
         $scope.login = {};
+        $scope.shipping = {};
+        $scope.billing = {};
         $scope.loading = false;
         $("#loaderOverlay").show();
         $("#alert_loading").show();
@@ -53,7 +55,7 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
                     $scope.alert_messages = 'Login successfully!Redirecting.....';
                     $(window).scrollTop(0);
                     $timeout(function () {
-                        window.location=BaseUrl+"/";
+                        window.location = BaseUrl + "/my-account";
                     }, 2000);
 
                     //console.log(data);
@@ -112,6 +114,181 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
             }
         };
 
+        $scope.submitChangePassword = function (isValid) {
+            if (isValid) {
+                $http({
+                    method: 'POST',
+                    url: BaseUrl + '/my-account/change-password',
+                    data: 'password=' + $scope.password.password + '&confirm_password=' + $scope.password.confirm_password + '&current_password=' + $scope.password.current_password,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                }).then(function (data, status, headers, config) {
+                    $scope.loading = false;
+                    $scope.alert_loading = true;
+                    $scope.alertClass = 'alert-success';
+                    $scope.alertLabel = 'Success!';
+                    $scope.alert_messages = data.data.messages;
+                    $scope.alertHide();
+                    $(window).scrollTop(0);
+                    // $scope.push(data.data);
+//                $scope.loading = false;
+
+                }, function errorCallback(data) {
+                    $scope.loading = false;
+                    $scope.alert_loading = true;
+                    $scope.alertClass = 'alert-danger';
+                    $scope.alertLabel = 'Error!';
+                    if (data.data.error) {
+                        $scope.alert_messages = data.data.error;
+                    } else if (data.data.password) {
+                        $scope.alert_messages = data.data.password[0];
+                    } else if (data.data.password) {
+                        $scope.alert_messages = data.data.confirm_password[0];
+                    }
+                    $scope.alertHide();
+                    $(window).scrollTop(0);
+
+                });
+            }
+        };
+
+        $scope.submitProfile = function (isValid) {
+            var data = new FormData();
+            if (isValid) {
+                $scope.loading = true;
+                $http({
+                    method: 'POST',
+                    url: BaseUrl + '/my-account/profile',
+                    data: data,
+                    headers: {'Content-Type': undefined}
+                }).then(function (data, status, headers, config) {
+                    $scope.loading = false;
+                    $scope.alert_loading = true;
+                    $scope.alertClass = 'alert-success';
+                    $scope.alertLabel = 'Success!';
+                    $scope.alert_messages = data.data.messages;
+                    $scope.alertHide();
+                    $(window).scrollTop(0);
+                    $scope.loading = false;
+
+                }, function errorCallback(data) {
+                    $scope.loading = false;
+                    $scope.alert_loading = true;
+                    $scope.alertClass = 'alert-danger';
+                    $scope.alertLabel = 'Error!';
+                    if (data.data.first_name) {
+                        $scope.alert_messages = data.data.first_name[0];
+                    } else if (data.data.last_name) {
+                        $scope.alert_messages = data.data.last_name[0];
+                    }
+                    $scope.alertHide();
+                    $(window).scrollTop(0);
+
+                });
+            }
+        };
+
+        $scope.submitShipping = function (isValid) {
+            var data = $scope.shipping;
+//            console.log(this.shipping);
+            if (isValid) {
+                $scope.loading = true;
+                $http({
+                    method: 'POST',
+                    url: BaseUrl + '/my-account/shipping',
+                    data: data,
+                    headers: {'Content-Type': 'application/json'}
+                }).then(function (data, status, headers, config) {
+                    $scope.loading = false;
+                    $scope.alert_loading = true;
+                    $scope.alertClass = 'alert-success';
+                    $scope.alertLabel = 'Success!';
+                    $scope.alert_messages = data.data.messages;
+                    $scope.alertHide();
+                    $(window).scrollTop(0);
+                    $scope.loading = false;
+
+                }, function errorCallback(data) {
+                    $scope.loading = false;
+                    $scope.alert_loading = true;
+                    $scope.alertClass = 'alert-danger';
+                    $scope.alertLabel = 'Error!';
+                    $scope.alert_messages = data.data;
+                    $scope.alertHide();
+                    $(window).scrollTop(0);
+
+                });
+            }
+        };
+
+        $scope.submitBilling = function (isValid) {
+            var data = $scope.billing;
+//            console.log(this.shipping);
+            if (isValid) {
+                $scope.loading = true;
+                $http({
+                    method: 'POST',
+                    url: BaseUrl + '/my-account/billing',
+                    data: data,
+                    headers: {'Content-Type': 'application/json'}
+                }).then(function (data, status, headers, config) {
+                    $scope.loading = false;
+                    $scope.alert_loading = true;
+                    $scope.alertClass = 'alert-success';
+                    $scope.alertLabel = 'Success!';
+                    $scope.alert_messages = data.data.messages;
+                    $scope.alertHide();
+                    $(window).scrollTop(0);
+                    $scope.loading = false;
+
+                }, function errorCallback(data) {
+                    $scope.loading = false;
+                    $scope.alert_loading = true;
+                    $scope.alertClass = 'alert-danger';
+                    $scope.alertLabel = 'Error!';
+                    $scope.alert_messages = data.data;
+                    $scope.alertHide();
+                    $(window).scrollTop(0);
+
+                });
+            }
+        };
+
+        $scope.getState = function ($countryId, $type) {
+            if ($countryId != undefined) {
+                $http({
+                    method: 'POST',
+                    url: BaseUrl + '/my-account/getState',
+                    data: {id: $countryId}
+                }).then(function (data) {
+                    if ($type == 'states1') {
+                        $scope.states1 = data.data;
+                    } else {
+                        $scope.states2 = data.data;
+                    }
+                }, function errorCallback(data) {
+
+                });
+            }
+        };
+
+        $scope.selectState = function ($countryId) {
+            return $countryId;
+        };
+
+        $scope.setFile = function (element) {
+            $scope.currentFile = element.files[0];
+            var img = $('<img/>', {
+                width: 200
+            });
+            var reader = new FileReader();
+            reader.onload = function (event) {
+                img.attr('src', event.target.result);
+                $("#previewImage").html('<span class="image_prev">' + $(img)[0].outerHTML + '</span>');
+            }
+            // when the file is read it triggers the onload event above.
+            reader.readAsDataURL(element.files[0]);
+        };
+
         $scope.updateTodo = function (todo) {
             $scope.loading = true;
 
@@ -144,7 +321,7 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
                 $scope.alert_loading = false;
             }, 8000);
         };
-        
+
         $scope.init();
 
     }]);

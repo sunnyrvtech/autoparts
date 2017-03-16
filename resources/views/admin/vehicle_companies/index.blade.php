@@ -6,7 +6,7 @@
         <a href="{{ route('vehicle.create') }}" class="btn btn-primary">Add New</a>
     </div>
     <div class="row">
-        <table class="table table-bordered" id="category-table">
+        <table class="ui celled table" id="category-table">
             <thead>
                 <tr>
                     <th>Id</th>
@@ -19,8 +19,6 @@
         </table>
     </div>
 </div>
-
-
 @push('scripts')
 <script>
     $(function () {
@@ -33,7 +31,7 @@
                 {data: 'name', name: 'name'},
                 {data: 'created_at', name: 'created_at'},
                 {data: 'updated_at', name: 'updated_at'},
-                {data: 'Action',orderable: false, render: function (data, type, row) {
+                {data: 'Action',orderable: false,searchable: false, render: function (data, type, row) {
                         return '<a href="javascript:void(0);" title="update" class="glyphicon glyphicon-edit"></a>'; 
                     }
 

@@ -2,7 +2,7 @@
 
 @section('content')
 <div id="page-wrapper">
-<table class="table table-bordered" id="users-table">
+<table class="ui celled table" id="users-table">
         <thead>
             <tr>
                 <th>Id</th>

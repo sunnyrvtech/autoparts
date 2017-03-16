@@ -1,3 +1,7 @@
+<?php $__env->startPush('stylesheet'); ?>
+<link href="<?php echo e(URL::asset('/slick/slick.css')); ?>" rel="stylesheet">
+<link href="<?php echo e(URL::asset('/slick/slick-theme.css')); ?>" rel="stylesheet">
+<?php $__env->stopPush(); ?>
 <?php $__env->startSection('content'); ?>
 <!--full width slider on home page-->
 <div class="slickSlider-full" style="overflow: initial; display: block;">
@@ -276,6 +280,8 @@
         </div>
     </div>
 </div>
+<?php $__env->stopSection(); ?>
+<?php $__env->startPush('scripts'); ?>
 <script src="<?php echo e(URL::asset('/slick/slick.js')); ?>"></script>
 <script type="text/javascript">
 $(".slickSlider-full").slick({autoplay: true});
@@ -307,6 +313,7 @@ $(".slickSlider-con").slick({
     ]
 });
 </script>
-<?php $__env->stopSection(); ?>
+<?php $__env->stopPush(); ?>
+
 
 <?php echo $__env->make('layouts.app', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

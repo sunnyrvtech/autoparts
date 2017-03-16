@@ -1,5 +1,8 @@
 @extends('layouts.app')
-
+@push('stylesheet')
+<link href="{{ URL::asset('/slick/slick.css') }}" rel="stylesheet">
+<link href="{{ URL::asset('/slick/slick-theme.css') }}" rel="stylesheet">
+@endpush
 @section('content')
 <!--full width slider on home page-->
 <div class="slickSlider-full" style="overflow: initial; display: block;">
@@ -278,6 +281,8 @@
         </div>
     </div>
 </div>
+@endsection
+@push('scripts')
 <script src="{{ URL::asset('/slick/slick.js') }}"></script>
 <script type="text/javascript">
 $(".slickSlider-full").slick({autoplay: true});
@@ -309,4 +314,5 @@ $(".slickSlider-con").slick({
     ]
 });
 </script>
-@endsection
+@endpush
+

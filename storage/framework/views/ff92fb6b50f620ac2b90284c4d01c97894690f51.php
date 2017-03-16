@@ -16,16 +16,16 @@
                     </span> 
                 </div>
                 <div class="form-group" ng-class="{ 'has-error' : loginForm.password.$invalid && !loginForm.password.$pristine }">
-                    <input type="password" name="password" required="" ng-model="login.password"  class="form-control input-lg" placeholder="Password" tabindex="4">
+                    <input type="password" name="passwordkk" required="" ng-model="login.password"  class="form-control input-lg" placeholder="Password" tabindex="4">
                     <span ng-show="loginForm.password.$invalid && !loginForm.password.$pristine" class="help-block">
                         <strong>Please enter password.</strong>
                     </span> 
                 </div>
-<!--                <div class="form-group">
-                    <label>
-                        <input type="checkbox" name="remember"> Remember Me
-                    </label>
-                </div>-->
+                <!--                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" name="remember"> Remember Me
+                                    </label>
+                                </div>-->
                 <hr class="colorgraph">
                 <div class="row">
                     <div class="col-xs-6 col-md-6"><button type="submit" class="btn btn-success btn-block btn-lg">Sign In</button></div>
@@ -34,6 +34,8 @@
         </div>
         <div class="col-xs-12 col-md-6">
             <form name="registerForm" role="form" role="form" method="POST" action="javascript:void(0);" ng-submit="submitRegister(registerForm.$valid)" novalidate>
+                <input type='text' style="display:none;">
+                <input type='password' style="display:none;">
                 <?php echo e(csrf_field()); ?>
 
                 <h2>Register<small></small></h2>
