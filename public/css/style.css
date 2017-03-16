@@ -2385,9 +2385,8 @@ footer.footer .container {
 .my-account .btn-nav:hover { color: #4ba8ad;cursor: pointer;-webkit-transition: color 1s;transition: color 1s; }
 .my-account .btn-nav.active {
     color: #4ba8ad;
-    padding: 2px;
-    border-top: 6px solid #4ba8ad;
-    border-bottom: 6px solid #4ba8ad;
+    border-top: 2px solid #4ba8ad;
+    border-bottom: 2px solid #4ba8ad;
     border-left: 0;
     border-right: 0;
     box-sizing:border-box;
