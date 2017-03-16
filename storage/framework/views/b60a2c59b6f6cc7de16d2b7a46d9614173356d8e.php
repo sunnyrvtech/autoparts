@@ -138,7 +138,7 @@
                 <nav class="navbar dropdowns-navbar navbar-default navbar-categories">
                     <div class="container">
                         <div class="navbar-header">
-                            <div class="dropdown-categories-header">Auto Parts Categories:</div>
+                            <div class="dropdown-categories-header">Auto Light Categories:</div>
                             <button aria-controls="dropdown-navbar-target" class="navbar-toggle collapsed" data-target="#dropdown-navbar-target" data-toggle="collapse" type="button">
                                 <span class="sr-only">Toggle navigation</span>
                                 <span class="icon-bar"></span>

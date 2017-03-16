@@ -4,7 +4,7 @@
 @section('content')
 <div class="container"><!-- /#content.container -->   
     <div class="my-account">
-        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+        <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
             <div class="btn-group btn-group-vertical" ng-init="selectedTab = 'profile'">
                 <div class="btn-group"> 
                     <a class="btn btn-nav" ng-class="{'active':selectedTab === 'profile'}" ng-click="selectedTab = 'profile'" href="#profile" data-toggle="tab">
@@ -38,7 +38,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-xs-9 col-sm-9 col-md-6 col-lg-6">
+        <div class="col-xs-12 col-sm-9 col-md-6 col-lg-6">
             <!-- Tab panes -->
             <div class="tab-content">
                 <div class="tab-pane active" id="profile">
