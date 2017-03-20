@@ -19,7 +19,7 @@ class IsAdmin {
         if (Auth::check() && Auth::user()->role_id != 1) {
             return redirect()->to('/');
         } else if (!Auth::check()) {
-            return response()->view('admin.account.login');
+            return response()->view('admin.accounts.login');
         }
         return $next($request);
     }

@@ -4,7 +4,7 @@
         <h2>Please Login or Register <small>Welcome Back to Auto Light House!</small></h2>
         <hr class="colorgraph">
         <div class="col-xs-12 col-md-6">
-            <form name="loginForm" role="form" method="POST" action="javascript:void(0);" ng-submit="submitLogin(loginForm.$valid)" novalidate>
+            <form name="loginForm" role="form" action="javascript:void(0);" ng-submit="submitLogin(loginForm.$valid)" novalidate>
                 <?php echo e(csrf_field()); ?>
 
                 <h2>Login In <small>It's free and always will be.</small></h2>
@@ -21,11 +21,21 @@
                         <strong>Please enter password.</strong>
                     </span> 
                 </div>
-                <!--                <div class="form-group">
-                                    <label>
-                                        <input type="checkbox" name="remember"> Remember Me
-                                    </label>
-                                </div>-->
+<!--                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" name="remember"> Remember Me
+                        </label>
+                    </div>
+                </div>-->
+                <!--<div class="col-md-12">-->
+                    <div class="form-group text-right">
+                        <a class="btn btn-link" ng-click="forgotPassword()" href="javascript:void(0);">
+                            Forgot Your Password?
+                        </a>
+                    </div>
+                <!--</div>-->
+
                 <hr class="colorgraph">
                 <div class="row">
                     <div class="col-xs-6 col-md-6"><button type="submit" class="btn btn-success btn-block btn-lg">Sign In</button></div>

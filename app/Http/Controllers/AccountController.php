@@ -28,7 +28,7 @@ class AccountController extends Controller {
             $shipping_address = ShippingAddress::where('user_id', Auth::id())->first();
             $billing_address = BillingAddress::where('user_id', Auth::id())->first();
             $countries = Country::get(array('name', 'id'));
-            return View::make('account.account', compact('users', 'shipping_address', 'billing_address', 'countries'));
+            return View::make('accounts.account', compact('users', 'shipping_address', 'billing_address', 'countries'));
         }
         return redirect('/login');
     }

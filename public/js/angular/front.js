@@ -13,16 +13,16 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
         $("#alert_loading").show();
         $scope.alert_loading = false;
 
-        $scope.init = function () {
-            //$scope.loading = true;
-            $http.get(BaseUrl + '/').
-                    then(function (data, status, headers, config) {
-                        //$scope.render_html = data.data;
-                        $scope.render_html = $sce.trustAsHtml(data.data);
-                        // $scope.loading = false;
-
-                    });
-        }
+//        $scope.init = function () {
+//            //$scope.loading = true;
+//            $http.get(BaseUrl + '/').
+//                    then(function (data, status, headers, config) {
+//                        //$scope.render_html = data.data;
+//                        //$scope.render_html = $sce.trustAsHtml(data.data);
+//                        // $scope.loading = false;
+//
+//                    });
+//        }
 
         $scope.login = function () {
             //$scope.loading = true;
@@ -36,7 +36,7 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
 
                         //$scope.loading = false;
                     });
-        };
+        }
 
         $scope.submitLogin = function (isValid) {
             //$scope.loading = true;
@@ -72,7 +72,7 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
                     $(window).scrollTop(0);
                 });
             }
-        };
+        }
 
         $scope.submitRegister = function (isValid) {
             $scope.alert_loading = false;
@@ -112,7 +112,7 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
 
                 });
             }
-        };
+        }
 
         $scope.submitChangePassword = function (isValid) {
             if (isValid) {
@@ -149,7 +149,81 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
 
                 });
             }
-        };
+        }
+
+        $scope.forgotPassword = function () {
+            $http.get(BaseUrl + '/password/email').
+                    then(function (data, status, headers, config) {
+                        var $e1 = $('#content').html(data.data);
+                        $compile($e1)($scope);
+
+                    });
+        }
+
+        $scope.submitResetPasswordLink = function (isValid) {
+            if (isValid) {
+                $scope.loading = true;
+                $http({
+                    method: 'POST',
+                    url: BaseUrl + '/password/email',
+                    data: 'email=' + $scope.reset.email,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                }).then(function (data, status, headers, config) {
+                    $scope.loading = false;
+                    $scope.alert_loading = true;
+                    $scope.alertClass = 'alert-success';
+                    $scope.alertLabel = 'Success!';
+                    $scope.alert_messages = data.data.messages;
+                    $(window).scrollTop(0);
+                    //console.log(data);
+                    // $scope.push(data.data);
+//                $scope.loading = false;
+
+                }, function errorCallback(data) {
+                    $scope.loading = false;
+                    $scope.alert_loading = true;
+                    $scope.alertClass = 'alert-danger';
+                    $scope.alertLabel = 'Error!';
+                    $scope.alert_messages = data.data.error;
+                    $scope.alertHide();
+                    $(window).scrollTop(0);
+                });
+            }
+        }
+        $scope.submitResetPassword = function (isValid) {
+            if (isValid) {
+                $scope.loading = true;
+                $http({
+                    method: 'POST',
+                    url: BaseUrl + '/password/reset',
+                    data: 'token=' + $scope.reset.token +'&email='+ $scope.reset.email + '&password=' + $scope.reset.password + '&password_confirmation=' + $scope.reset.password_confirmation,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                }).then(function (data, status, headers, config) {
+                    $scope.loading = false;
+                    $scope.alert_loading = true;
+                    $scope.alertClass = 'alert-success';
+                    $scope.alertLabel = 'Success!';
+                    $scope.alert_messages = data.data.messages+'!Redirecting.....';
+                    $(window).scrollTop(0);
+                    $timeout(function () {
+                        window.location = BaseUrl + "/";
+                    }, 2000);
+                    
+                    //console.log(data);
+                    // $scope.push(data.data);
+//                $scope.loading = false;
+
+                }, function errorCallback(data) {
+                    $scope.loading = false;
+                    $scope.alert_loading = true;
+                    $scope.alertClass = 'alert-danger';
+                    $scope.alertLabel = 'Error!';
+                    $scope.alert_messages = data.data.error;
+                    $scope.alertHide();
+                    $(window).scrollTop(0);
+                });
+            }
+        }
 
         $scope.submitProfile = function (isValid) {
             var data = new FormData();
@@ -188,7 +262,7 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
 
                 });
             }
-        };
+        }
 
         $scope.submitShipping = function (isValid) {
             var data = $scope.shipping;
@@ -221,7 +295,7 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
 
                 });
             }
-        };
+        }
 
         $scope.submitBilling = function (isValid) {
             var data = $scope.billing;
@@ -254,7 +328,7 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
 
                 });
             }
-        };
+        }
 
         $scope.getState = function ($countryId, $type) {
             if ($countryId != undefined) {
@@ -272,11 +346,11 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
 
                 });
             }
-        };
+        }
 
         $scope.selectState = function ($countryId) {
             return $countryId;
-        };
+        }
 
         $scope.setFile = function (element) {
             $scope.currentFile = element.files[0];
@@ -290,7 +364,7 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
             }
             // when the file is read it triggers the onload event above.
             reader.readAsDataURL(element.files[0]);
-        };
+        }
 
         $scope.updateTodo = function (todo) {
             $scope.loading = true;
@@ -303,7 +377,7 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
                 $scope.loading = false;
 
             });
-        };
+        }
 
         $scope.deleteTodo = function (index) {
             $scope.loading = true;
@@ -317,14 +391,14 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
 
                     });
             ;
-        };
+        }
         // hide alert after 5 second
         $scope.alertHide = function () {
             $timeout(function () {
                 $scope.alert_loading = false;
             }, 8000);
-        };
+        }
 
-        $scope.init();
+//        $scope.init();
 
     }]);
