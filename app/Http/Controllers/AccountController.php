@@ -95,6 +95,7 @@ class AccountController extends Controller {
             $shippings->fill($data)->save();
         } else {
             ShippingAddress::create($data);
+            BillingAddress::create($data);   // billing address same as shipping address when user enter first time
         }
         return response()->json(['success' => true, 'messages' => "Shipping address updated successfully."]);
     }
@@ -127,6 +128,7 @@ class AccountController extends Controller {
             $billings->fill($data)->save();
         } else {
             BillingAddress::create($data);
+            ShippingAddress::create($data); // billing address same as shipping address when user enter first time
         }
         return response()->json(['success' => true, 'messages' => "Billing address updated successfully."]);
     }

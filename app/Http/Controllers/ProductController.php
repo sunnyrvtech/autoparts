@@ -15,4 +15,22 @@ class ProductController extends Controller
     public function index(Request $request) {
         return View::make('products.index');
     }
+    
+    /**
+     * Single product detail function.
+     *
+     * @return Response
+     */
+    public function singleProduct(){
+        return View::make('products.single');
+    }
+    
+    /**
+     * Cart function.
+     *
+     * @return Response
+     */
+    public function Cart(){
+        return View::make('carts.index');
+    }
 }

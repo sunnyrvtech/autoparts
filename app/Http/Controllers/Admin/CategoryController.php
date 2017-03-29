@@ -20,7 +20,11 @@ class CategoryController extends Controller {
     public function index(Request $request) {
         $title = 'Categories';
         if ($request->ajax()) {
-            return Datatables::of(Category::query())->make(true);
+            $categories = Category::get();
+            foreach ($categories as $key => $value) {
+                $categories[$key]['action'] = '<a href="' . route('subcategories.show', $value->id) . '" data-toggle="tooltip" title="update" class="glyphicon glyphicon-eye-open"></a>&nbsp;<a href="' . route('categories.show', $value->id) . '" data-toggle="tooltip" title="update" class="glyphicon glyphicon-edit"></a>';
+            }
+            return Datatables::of($categories)->make(true);
         }
         return View::make('admin.categories.index', compact('title'));
     }
@@ -64,15 +68,16 @@ class CategoryController extends Controller {
         return Redirect::back()
                         ->with('success-message', 'Category inserted successfully!');
     }
-    
+
     /**
      * show function.
      *
      * @return Response
      */
-    
-    public function show(Request $request,$id){
-        
+    public function show(Request $request, $id) {
+        $title = 'Categories | update';
+        $categories = Category::where('id', $id)->first();
+        return View::make('admin.categories.edit', compact('title', '$categories'));
     }
 
 //    /**

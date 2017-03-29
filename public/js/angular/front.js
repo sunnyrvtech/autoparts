@@ -196,19 +196,19 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
                 $http({
                     method: 'POST',
                     url: BaseUrl + '/password/reset',
-                    data: 'token=' + $scope.reset.token +'&email='+ $scope.reset.email + '&password=' + $scope.reset.password + '&password_confirmation=' + $scope.reset.password_confirmation,
+                    data: 'token=' + $scope.reset.token + '&email=' + $scope.reset.email + '&password=' + $scope.reset.password + '&password_confirmation=' + $scope.reset.password_confirmation,
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
                 }).then(function (data, status, headers, config) {
                     $scope.loading = false;
                     $scope.alert_loading = true;
                     $scope.alertClass = 'alert-success';
                     $scope.alertLabel = 'Success!';
-                    $scope.alert_messages = data.data.messages+'!Redirecting.....';
+                    $scope.alert_messages = data.data.messages + '!Redirecting.....';
                     $(window).scrollTop(0);
                     $timeout(function () {
                         window.location = BaseUrl + "/";
                     }, 2000);
-                    
+
                     //console.log(data);
                     // $scope.push(data.data);
 //                $scope.loading = false;
@@ -246,6 +246,9 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
                     $scope.alertHide();
                     $(window).scrollTop(0);
                     $scope.loading = false;
+                    $timeout(function () {
+                        window.location = BaseUrl + "/my-account";
+                    }, 200);
 
                 }, function errorCallback(data) {
                     $scope.loading = false;
@@ -283,6 +286,9 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
                     $scope.alertHide();
                     $(window).scrollTop(0);
                     $scope.loading = false;
+                    $timeout(function () {
+                        window.location = BaseUrl + "/my-account";
+                    }, 200);
 
                 }, function errorCallback(data) {
                     $scope.loading = false;
@@ -316,6 +322,9 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
                     $scope.alertHide();
                     $(window).scrollTop(0);
                     $scope.loading = false;
+                    $timeout(function () {
+                        window.location = BaseUrl + "/my-account";
+                    }, 200);
 
                 }, function errorCallback(data) {
                     $scope.loading = false;

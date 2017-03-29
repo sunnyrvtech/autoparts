@@ -33,6 +33,8 @@ Route::get('register', 'Auth\LoginController@index');
 Route::post('register', 'Auth\RegisterController@create');
 Route::get('logout', 'Auth\LoginController@logout');
 Route::get('products', 'ProductController@index');
+Route::get('single-product', 'ProductController@singleProduct');
+Route::get('cart', 'ProductController@Cart');
 Route::get('my-account', 'AccountController@index');
 Route::post('my-account/profile', 'AccountController@updateProfile');
 Route::post('my-account/shipping', 'AccountController@updateShipping');

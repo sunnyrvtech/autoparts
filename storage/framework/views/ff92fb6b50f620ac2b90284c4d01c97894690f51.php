@@ -16,7 +16,7 @@
                     </span> 
                 </div>
                 <div class="form-group" ng-class="{ 'has-error' : loginForm.password.$invalid && !loginForm.password.$pristine }">
-                    <input type="password" name="passwordkk" required="" ng-model="login.password"  class="form-control input-lg" placeholder="Password" tabindex="4">
+                    <input type="password" name="password" required="" ng-model="login.password"  class="form-control input-lg" placeholder="Password" tabindex="4">
                     <span ng-show="loginForm.password.$invalid && !loginForm.password.$pristine" class="help-block">
                         <strong>Please enter password.</strong>
                     </span> 
