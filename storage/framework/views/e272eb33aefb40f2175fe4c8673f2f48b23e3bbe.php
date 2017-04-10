@@ -4,7 +4,7 @@
         <h2>Welcome Back to <small>Auto Light House!</small></h2>
         <hr class="colorgraph">
         <div class="row text-center">
-            <div class="col-xs-12 col-md-6 col-centered">
+            <div class="col-xs-12 col-md-6 col-centered divcontainer">
                 <form name="registerForm" role="form" role="form" method="POST" action="javascript:void(0);" ng-submit="submitRegister(registerForm.$valid)" novalidate>
                     <input type='text' style="display:none;">
                     <input type='password' style="display:none;">
@@ -55,7 +55,7 @@
                         </div>
                     </div>
                     <hr class="colorgraph">
-                    <div class="row">
+                    <div class="form-group">
                         <input type="submit" ng-disabled="register.password !== register.password_confirmation" value="Register" class="btn btn-primary btn-block btn-lg" tabindex="7">
                     </div>
                 </form>
