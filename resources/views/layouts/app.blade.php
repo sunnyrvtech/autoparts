@@ -90,7 +90,7 @@
                             </li>
                             @if (Auth::guest())
                             <li><a class="login" href="javascript:void(0);" ng-click="login()">Login</a></li>
-                            <li><a class="register" href="javascript:void(0);" ng-click="login()">Register</a></li>
+                            <li><a class="register" href="javascript:void(0);" ng-click="register()">Register</a></li>
                             @else
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">

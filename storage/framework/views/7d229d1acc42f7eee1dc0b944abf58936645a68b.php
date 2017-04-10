@@ -874,8 +874,75 @@
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane" id="images">Images.</div>
-                <div class="tab-pane" id="categories">Categories.</div>
+                <div class="tab-pane" id="images">
+                    <h3>Product Images:-</h3>
+                    <div class="row">
+                        <div class="list-group">
+                            <?php $product_images = json_decode($products->product_details->product_images) ?>
+                            <?php if($product_images != ''): ?>
+                            <?php $__currentLoopData = $product_images; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key=>$img_val): $__env->incrementLoopIndices(); $loop = $__env->getFirstLoop(); ?>
+                            <div class="row form-group">
+                                <div class="col-lg-2">
+                                    <img width="100px" src="<?php echo e(URL::asset('/products').'/'.$img_val); ?>">
+                                </div>
+                                <div class="col-lg-2 pull-right">
+                                    <a class="btn btn-xs btn-warning" onclick="$(this).parent().parent().remove();">
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                    </a>
+                                    <input type="hidden" name="old_product_image[]"value="<?php echo e($img_val); ?>">
+                                </div>
+                            </div>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getFirstLoop(); ?>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="form-group">
+                            <input type="file" name="product_images[]" id="product_images" multiple style="visibility: hidden;" class="file">
+                            <div class="text-right">
+                                <button class="browse btn btn-primary input-lg" type="button"><i class="glyphicon glyphicon-search"></i> Browse</button>
+                                <a class="btn btn-xs btn-warning">
+                                    <span class="glyphicon glyphicon-trash removePreviewImage"></span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="list-group">
+                            <div class="list-group-item renderPreviewImage clearfix">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="categories">
+                    <h3>Categories:-</h3>
+                    <ul class="parent_category" style="list-style: none;">
+                        <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cat): $__env->incrementLoopIndices(); $loop = $__env->getFirstLoop(); ?>
+                        <li><input type="checkbox" <?php if(in_array($cat->id,$product_categories)): ?> checked <?php endif; ?> name="parent_category[]" value="<?php echo e($cat->id); ?>"><?php echo e($cat->name); ?>
+
+                            <?php if(!empty($cat->sub_categories->toArray())): ?>
+                            <a href="javascript:void(0);" class="toggleCategory"><span style="font-size: 20px;color: #000;font-weight: bold;" class="fa fa-angle-down"></span></a>
+                            <ul class="sub_category" style="list-style: none;display: none;">
+                                <?php $__currentLoopData = $cat->sub_categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sub_cat): $__env->incrementLoopIndices(); $loop = $__env->getFirstLoop(); ?>
+                                <li><input type="checkbox" <?php if(in_array($sub_cat->id,$product_sub_categories)): ?> checked <?php endif; ?> name="sub_category[]" value="<?php echo e($sub_cat->id); ?>"><?php echo e($sub_cat->name); ?>
+
+                                    <?php if(!empty($sub_cat->sub_sub_categories->toArray())): ?>
+                                    <a href="javascript:void(0);" class="toggleCategory"><span style="font-size: 20px;color: #000;font-weight: bold;" class="fa fa-angle-down"></span></a>
+                                    <ul class="sub_sub_category" style="list-style: none;display: none;">
+                                        <?php $__currentLoopData = $sub_cat->sub_sub_categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sub_sub_cat): $__env->incrementLoopIndices(); $loop = $__env->getFirstLoop(); ?>
+                                        <li><input type="checkbox" <?php if(in_array($sub_sub_cat->id,$product_sub_sub_categories)): ?> checked <?php endif; ?> name="sub_sub_category[]" value="<?php echo e($sub_sub_cat->id); ?>"><?php echo e($sub_cat->name.' '.$sub_sub_cat->get_vehicle_company_name->name); ?></li>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getFirstLoop(); ?>
+                                    </ul>
+                                    <?php endif; ?>
+                                </li>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getFirstLoop(); ?>
+                            </ul>
+                            <?php endif; ?>
+                        </li>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getFirstLoop(); ?>
+                    </ul>
+                </div>
             </div>
         </div>
         <div class="clearfix"></div>

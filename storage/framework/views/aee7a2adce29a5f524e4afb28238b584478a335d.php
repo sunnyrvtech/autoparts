@@ -33,30 +33,57 @@
                 {data: 'name', name: 'name'},
                 {data: "category_image", render: function (data, type, row) {
                         if (data != null) {
-                            return '<img src="' + "<?php echo e(URL::asset('/category')); ?>" + "/" + data + '" />';
+                            return '<img width="100px" src="' + "<?php echo e(URL::asset('/category')); ?>" + "/" + data + '" />';
                         }
                         return '';
                     }
                 },
                 {data: 'status', render: function (data, type, row) {
                         if (data == 1) {
-                            return 'Active';
+                            return '<select name="category_status" data-id="' + row.id + '" id="category_status"><option selected value="1">Active</option><option value="0">Not Active</option></select>';
                         }
-                        return 'Not Active';
+                        return '<select name="category_status" data-id="' + row.id + '" id="category_status"><option value="1">Active</option><option selected value="0">Not Active</option></select>';
                     }
 
                 },
                 {data: 'created_at', name: 'created_at'},
                 {data: 'updated_at', name: 'updated_at'},
-                {data: 'Action',orderable: false,searchable: false, render: function (data, type, row) {
+                {data: 'Action', orderable: false, searchable: false, render: function (data, type, row) {
                         //console.log(row.id);
                         return row.action;
-//return '<a href="'+ "<?php echo url('/') ?>"+'/admin/subcategories/'+row.id+'" data-toggle="tooltip" title="View Sub Category" class="glyphicon glyphicon-eye-open"></a>&nbsp;<a href="'+ "<?php echo e(url('/categories/sub')); ?>" +'" data-toggle="tooltip" title="update" class="glyphicon glyphicon-edit"></a>'; 
                     }
 
                 }
             ]
         });
+
+        $(document).on('change', '#category_status', function (e) {
+            e.preventDefault(); // does not go through with the link.
+            $(".alert-danger").remove();
+            $(".alert-success").remove();
+            var $this = $(this);
+
+            $.post({
+                data: {'id': $this.data('id'), 'status': $this.val()},
+                url: "<?php echo e(route('categories-status')); ?>"
+            }).done(function (data) {
+                var HTML = '<div class="alert alert-success fade in">';
+                HTML += '<a href="javascript:void(0);" onclick="$(this).parent().remove();" class="close" title="close">×</a>';
+                HTML += '<strong>Success! </strong>' + data.messages + '</div>';
+                $("#page-wrapper .container-fluid").before(HTML);
+                $(window).scrollTop(0);
+            }).fail(function (data) {
+                var HTML = '<div class="alert alert-danger fade in">';
+                HTML += '<a href="javascript:void(0);" onclick="$(this).parent().remove();" class="close" title="close">×</a>';
+                HTML += '<strong>Error! </strong>' + data.responseJSON.error + '</div>';
+                $("#page-wrapper .container-fluid").before(HTML);
+                $(window).scrollTop(0);
+            });
+        });
+
+
+
+
     });
 </script>
 <?php $__env->stopPush(); ?>

@@ -41,7 +41,7 @@ use AuthenticatesUsers;
      * @return Response
      */
     public function index(Request $request) {
-        $view = View::make('auth.auth');
+        $view = View::make('auth.sign_in');
         if ($request->wantsJson()) {
             $sections = $view->renderSections();
             return $sections['content'];

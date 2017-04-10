@@ -38,6 +38,20 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
                     });
         }
 
+        $scope.register = function () {
+            //$scope.loading = true;
+            //$scope.animated = '';
+            $http.get(BaseUrl + '/register').
+                    then(function (data, status, headers, config) {
+//                        $scope.animated = 'slideInDown';
+                        var $e1 = $('#content').html(data.data);
+                        $compile($e1)($scope);
+                        //$scope.render_html = $sce.trustAsHtml(data.data);
+
+                        //$scope.loading = false;
+                    });
+        }
+
         $scope.submitLogin = function (isValid) {
             //$scope.loading = true;
             // check to make sure the form is completely valid

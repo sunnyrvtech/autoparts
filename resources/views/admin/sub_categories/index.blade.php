@@ -6,7 +6,7 @@
         <a href="{{ route('subcategories.create') }}" class="btn btn-primary">Add New</a>
     </div>
     <div class="row">
-        <table class="ui celled table" id="category-table">
+        <table class="ui celled table" id="subcategory-table">
             <thead>
                 <tr>
                     <th>Id</th>
@@ -26,7 +26,7 @@
 @push('scripts')
 <script>
     $(function () {
-        $('#category-table').DataTable({
+        $('#subcategory-table').DataTable({
             processing: true,
             serverSide: true,
             ajax: "{{ url('admin/subcategories') }}"+"?category_id="+<?= $category_id ?>,
@@ -36,7 +36,7 @@
                 {data: 'name', name: 'name'},
                 {data: "category_image", render: function (data, type, row) {
                         if (data != null) {
-                            return '<img src="' + "<?= url('/category') ?>" + "/" + data + '" />';
+                            return '<img width="100px" src="' + "<?= url('/category') ?>" + "/" + data + '" />';
                         }
                         return '';
                     }
@@ -44,7 +44,7 @@
                 {data: 'created_at', name: 'created_at'},
                 {data: 'updated_at', name: 'updated_at'},
                 {data: 'Action',orderable: false,searchable: false, render: function (data, type, row) {
-                        return '<a href="javascript:void(0);" data-toggle="tooltip" title="View Sub Sub Category" class=" glyphicon glyphicon-eye-open"></a>&nbsp;<a href="javascript:void(0);" data-toggle="tooltip" title="update" class="glyphicon glyphicon-edit"></a>'; 
+                        return row.action; 
                     }
 
                 }

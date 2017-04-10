@@ -6,6 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="">
         <meta name="author" content="">
+        <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
 
         <title><?php echo e($title); ?></title>
 
@@ -110,17 +111,10 @@
                 <!-- /.navbar-collapse -->
             </nav>
             <div id="page-wrapper">
-                <?php if(Session::has('success-message')): ?>
-                <div class="alert alert-success fade in alert-dismissable">
-                    <a href="javascript:void(0);" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
-                    <strong>Success! </strong><?php echo e(Session::pull('success-message')); ?>
-
-                </div>
-                <?php elseif(Session::has('error-message')): ?>
-                <div class="alert alert-danger fade in alert-dismissable">
-                    <a href="javascript:void(0);" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
-                    <strong>Error! </strong><?php echo e(Session::pull('error-message')); ?>
-
+                <?php if(Session::has('success-message') || Session::has('error-message')): ?>
+                <div id="redirect_alert" class="alert <?php if(Session::has('success-message')): ?> alert-success <?php elseif(Session::has('error-message')): ?> alert-danger <?php endif; ?> fade in alert-dismissable">
+                    <a href="javascript:void(0);" onclick="$(this).parent().remove();" class="close" title="close">×</a>
+                    <strong><?php if(Session::has('success-message')): ?> Success! <?php elseif(Session::has('error-message')): ?> Error! <?php endif; ?> </strong><?php if(Session::has('success-message')): ?> <?php echo e(Session::pull('success-message')); ?> <?php elseif(Session::has('error-message')): ?> <?php echo e(Session::pull('error-message')); ?> <?php endif; ?>
                 </div>
                 <?php endif; ?>
                 <?php echo $__env->yieldContent('content'); ?>
@@ -135,54 +129,90 @@
         <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
         <script src="https://cdn.datatables.net/1.10.13/js/dataTables.semanticui.min.js"></script>
         <!--<script src="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.6/semantic.min.js "></script>-->
-        <script src="<?php echo e(URL::asset('/js/bootstrap-datetimepicker.js')); ?>"></script>      
+        <script src="<?php echo e(URL::asset('/js/bootstrap-datetimepicker.js')); ?>"></script> 
         <script type="text/javascript">
-$(document).ready(function () {
-    $("body").tooltip({selector: '[data-toggle=tooltip]', trigger: 'hover'});
-    //initialize ckeditor        
-    $('textarea').ckeditor();
-    //initialize datepicker
-    $('.datepicker').datetimepicker({
-        format: "yyyy",
-        startView: 'decade',
-        minView: 'decade',
-        viewSelect: 'decade',
-        autoclose: true,
+                        $(document).ready(function () {
+                            $("body").tooltip({selector: '[data-toggle=tooltip]', trigger: 'hover'});
+                            //initialize ckeditor        
+                            $('textarea').ckeditor();
+                            //initialize datepicker
+                            $('.datepicker').datetimepicker({
+                                format: "yyyy",
+                                startView: 'decade',
+                                minView: 'decade',
+                                viewSelect: 'decade',
+                                autoclose: true,
 
-    });
-    $(document).on('click', '.browse', function () {
-        var file = $(this).parent().parent().parent().find('.file');
-        file.trigger('click');
-    });
-    $(document).on('change', '.file', function (e) {
-    
-    $.each(e.originalEvent.target.files, function(i, file) {
+                            });
+                            $(document).on('click', '.browse', function () {
+                                var file = $(this).parent().parent().parent().find('.file');
+                                file.trigger('click');
+                            });
+                            $(document).on('change', '.file', function (e) {
+                                $(".renderPreviewImage").html('');
+                                $.each(e.originalEvent.target.files, function (i, file) {
+//                                    var img = document.createElement("img");
+//                                    img.id = "image" + (i + 1);
+                                    var reader = new FileReader();
+                                    reader.onloadend = function () {
+                                        var HTML = '<div class="col-md-2">';
+                                        HTML += '<img width="100px" src="' + reader.result + '">';
+                                        HTML += '</div>';
+                                        $(".renderPreviewImage").append(HTML);
+                                    }
+                                    reader.readAsDataURL(file);
+                                });
+                            });
 
-            var img = document.createElement("img");
-            img.id = "image"+(i+1);
-            var reader = new FileReader();
-            reader.onloadend = function () {
-                img.src = reader.result;
-            }
-            reader.readAsDataURL(file);
-            
-            console.log(img);
-            
-           //$("#image"+i).after(img);
-        });
-              
-    
-    
-    
-    
-    
-    
-        
-//        delete files.item(2)
-        
-        //$(this).parent().find('.form-control').val($(this).val().replace(/C:\\fakepath\\/i, ''));
-    });
-});
+                            $(document).on('click', '.removePreviewImage', function () {
+                                var ele = document.getElementById('product_images');
+                                ele.value = "";
+                                $(".renderPreviewImage").html('');
+//                                var result = ele.files;
+//                              console.log(result);
+
+//                                $.each(result, function (i, file) {
+//                                    console.log(file.name);
+//                                     //delete files(2)
+//                                });
+
+                            });
+                            $(document).on('change', '.preview-image', function (e) {
+                                if (this.files && this.files[0]) {
+                                    var img = document.createElement("img");
+                                    var reader = new FileReader();
+
+                                    reader.onload = function (e) {
+                                        img.src = e.target.result;
+                                        img.width = 200;
+                                        $('#image_prev').html(img);
+                                    };
+                                    reader.readAsDataURL(this.files[0]);
+                                }
+                            });
+                            
+                            $(document).on('click','.toggleCategory',function(){
+                                $(this).next().slideToggle();
+                            });
+
+                            $.ajaxSetup({
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                }
+                            });
+                            $(document).on('click', '.deleteRow', function (e) {
+                                e.preventDefault(); // does not go through with the link.
+
+                                var $this = $(this);
+
+                                $.post({
+                                    type: $this.data('method'),
+                                    url: $this.attr('href')
+                                }).done(function (data) {
+                                    window.location.reload();
+                                });
+                            });
+                        });
         </script>
         <!-- App scripts -->
         <?php echo $__env->yieldPushContent('scripts'); ?>

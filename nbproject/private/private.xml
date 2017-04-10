@@ -3,10 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/var/www/html/autoparts/resources/views/admin/customers/add.blade.php</file>
-            <file>file:/var/www/html/autoparts/app/Http/Controllers/Admin/CustomerController.php</file>
-            <file>file:/var/www/html/autoparts/resources/views/admin/customers/index.blade.php</file>
-            <file>file:/var/www/html/autoparts/resources/views/admin/customers/edit.blade.php</file>
+            <file>file:/var/www/html/autoparts/resources/views/auth/sign_up.blade.php</file>
+            <file>file:/var/www/html/autoparts/resources/views/layouts/app.blade.php</file>
+            <file>file:/var/www/html/autoparts/resources/views/auth/sign_in.blade.php</file>
+            <file>file:/var/www/html/autoparts/public/js/angular/front.js</file>
+            <file>file:/var/www/html/autoparts/routes/web.php</file>
+            <file>file:/var/www/html/autoparts/app/Http/Controllers/Auth/LoginController.php</file>
+            <file>file:/var/www/html/autoparts/public/css/style.css</file>
+            <file>file:/var/www/html/autoparts/app/Http/Controllers/Auth/RegisterController.php</file>
         </group>
     </open-files>
 </project-private>

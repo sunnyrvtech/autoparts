@@ -21,7 +21,7 @@ class CustomerController extends Controller {
         if ($request->ajax()) {
             $users = User::get();
             foreach ($users as $key => $value) {
-                $users[$key]['action'] = '<a href="' . route('customers.show', $value->id) . '" data-toggle="tooltip" title="View Sub Category" class="glyphicon glyphicon-edit"></a>';
+                $users[$key]['action'] = '<a href="' . route('customers.show', $value->id) . '" data-toggle="tooltip" title="update" class="glyphicon glyphicon-edit"></a>';
             }
             return Datatables::of($users)->make(true);
         }

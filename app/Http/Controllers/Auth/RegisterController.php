@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Mail;
+use View;
 
 class RegisterController extends Controller {
     /*
@@ -37,6 +38,20 @@ use RegistersUsers;
      */
     public function __construct() {
         $this->middleware('guest');
+    }
+    
+     /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    public function index(Request $request) {
+        $view = View::make('auth.sign_up');
+        if ($request->wantsJson()) {
+            $sections = $view->renderSections();
+            return $sections['content'];
+        }
+        return $view;
     }
 
     /**

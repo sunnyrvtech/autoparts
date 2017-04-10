@@ -805,8 +805,73 @@
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane" id="images">Images.</div>
-                <div class="tab-pane" id="categories">Categories.</div>
+                <div class="tab-pane" id="images">
+                    <h3>Product Images:-</h3>
+                    <div class="row">
+                        <div class="list-group">
+                            <?php $product_images = json_decode($products->product_details->product_images) ?>
+                            @if($product_images != '')
+                            @foreach($product_images as $key=>$img_val)
+                            <div class="row form-group">
+                                <div class="col-lg-2">
+                                    <img width="100px" src="{{ URL::asset('/products').'/'.$img_val}}">
+                                </div>
+                                <div class="col-lg-2 pull-right">
+                                    <a class="btn btn-xs btn-warning" onclick="$(this).parent().parent().remove();">
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                    </a>
+                                    <input type="hidden" name="old_product_image[]"value="{{ $img_val }}">
+                                </div>
+                            </div>
+                            @endforeach
+                            @endif
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="form-group">
+                            <input type="file" name="product_images[]" id="product_images" multiple style="visibility: hidden;" class="file">
+                            <div class="text-right">
+                                <button class="browse btn btn-primary input-lg" type="button"><i class="glyphicon glyphicon-search"></i> Browse</button>
+                                <a class="btn btn-xs btn-warning">
+                                    <span class="glyphicon glyphicon-trash removePreviewImage"></span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="list-group">
+                            <div class="list-group-item renderPreviewImage clearfix">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="categories">
+                    <h3>Categories:-</h3>
+                    <ul class="parent_category" style="list-style: none;">
+                        @foreach ($categories as $cat)
+                        <li><input type="checkbox" @if(in_array($cat->id,$product_categories)) checked @endif name="parent_category[]" value="{{ $cat->id }}">{{ $cat->name }}
+                            @if(!empty($cat->sub_categories->toArray()))
+                            <a href="javascript:void(0);" class="toggleCategory"><span style="font-size: 20px;color: #000;font-weight: bold;" class="fa fa-angle-down"></span></a>
+                            <ul class="sub_category" style="list-style: none;display: none;">
+                                @foreach ($cat->sub_categories as $sub_cat)
+                                <li><input type="checkbox" @if(in_array($sub_cat->id,$product_sub_categories)) checked @endif name="sub_category[]" value="{{ $sub_cat->id }}">{{ $sub_cat->name }}
+                                    @if(!empty($sub_cat->sub_sub_categories->toArray()))
+                                    <a href="javascript:void(0);" class="toggleCategory"><span style="font-size: 20px;color: #000;font-weight: bold;" class="fa fa-angle-down"></span></a>
+                                    <ul class="sub_sub_category" style="list-style: none;display: none;">
+                                        @foreach ($sub_cat->sub_sub_categories as $sub_sub_cat)
+                                        <li><input type="checkbox" @if(in_array($sub_sub_cat->id,$product_sub_sub_categories)) checked @endif name="sub_sub_category[]" value="{{ $sub_sub_cat->id }}">{{ $sub_cat->name.' '.$sub_sub_cat->get_vehicle_company_name->name }}</li>
+                                        @endforeach
+                                    </ul>
+                                    @endif
+                                </li>
+                                @endforeach
+                            </ul>
+                            @endif
+                        </li>
+                        @endforeach
+                    </ul>
+                </div>
             </div>
         </div>
         <div class="clearfix"></div>

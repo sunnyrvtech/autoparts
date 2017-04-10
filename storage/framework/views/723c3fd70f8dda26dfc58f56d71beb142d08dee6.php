@@ -374,14 +374,10 @@
                                 <?php endif; ?>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="tab-pane" id="auto_parts2">
-                    <div class="row">
                         <div class="col-lg-6">
                             <div class="form-group <?php echo e($errors->has('wheel_option') ? ' has-error' : ''); ?>">
                                 <label class="control-label">Wheel Option</label>
-                                <?php echo e(Form::text('wheel_option', null,array('class'=>'form-control'))); ?>
+                                <?php echo e(Form::text('wheel_option',null,array('class'=>'form-control'))); ?>
 
                                 <?php if($errors->has('wheel_option')): ?>
                                 <span class="help-block">
@@ -390,6 +386,10 @@
                                 <?php endif; ?>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="auto_parts2">
+                    <div class="row">
                         <div class="col-lg-6">
                             <div class="form-group <?php echo e($errors->has('includes') ? ' has-error' : ''); ?>">
                                 <label class="control-label">Includes</label>
@@ -618,10 +618,6 @@
                                 <?php endif; ?>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="tab-pane" id="auto_parts3">
-                    <div class="row">
                         <div class="col-lg-6">
                             <div class="form-group <?php echo e($errors->has('lighting_beam_pattern') ? ' has-error' : ''); ?>">
                                 <label class="control-label">Lighting Beam Pattern</label>
@@ -634,6 +630,10 @@
                                 <?php endif; ?>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="auto_parts3">
+                    <div class="row">
                         <div class="col-lg-6">
                             <div class="form-group <?php echo e($errors->has('lighting_lens_material') ? ' has-error' : ''); ?>">
                                 <label class="control-label">Lighting Lens Material</label>
@@ -875,25 +875,55 @@
                     </div>
                 </div>
                 <div class="tab-pane" id="images">
-                    <div class="form-group">
-                        <input type="file" name="product_images[]" multiple style="visibility: hidden;" class="file">
-                        <span class="input-group-btn text-right">
-                            <button class="browse btn btn-primary input-lg" type="button"><i class="glyphicon glyphicon-search"></i> Browse</button>
-                        </span>
+                    <h3>Product Images:-</h3>
+                    <div class="row form-group">
+                        <div class="form-group">
+                            <input type="file" name="product_images[]" id="product_images" multiple style="visibility: hidden;" class="file">
+                            <div class="text-right">
+                                <button class="browse btn btn-primary input-lg" type="button"><i class="glyphicon glyphicon-search"></i> Browse</button>
+                                <a class="btn btn-xs btn-warning">
+                                    <span class="glyphicon glyphicon-trash removePreviewImage"></span>
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                    <div class="list-group">
-                        <div class="list-group-item clearfix">
-                            <img width="200px;" src="http://localhost/autoparts/public/images/logo.jpg">
-                            <span class="pull-right">
-                                <button class="btn btn-xs btn-warning">
-                                    <span class="glyphicon glyphicon-trash"></span>
-                                </button>
-                            </span>
+                    <div class="row">
+                        <div class="list-group">
+                            <div class="list-group-item renderPreviewImage clearfix">
+
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="tab-pane" id="categories">Categories.</div>
+                <div class="tab-pane" id="categories">
+                    <h3>Categories:-</h3>
+                    <ul class="parent_category" style="list-style: none;">
+                        <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cat): $__env->incrementLoopIndices(); $loop = $__env->getFirstLoop(); ?>
+                        <li><input type="checkbox" name="parent_category[]" value="<?php echo e($cat->id); ?>"><?php echo e($cat->name); ?>
+
+                            <?php if(!empty($cat->sub_categories->toArray())): ?>
+                            <a href="javascript:void(0);" class="toggleCategory"><span style="font-size: 20px;color: #000;font-weight: bold;" class="fa fa-angle-down"></span></a>
+                            <ul class="sub_category" style="list-style: none;display: none;">
+                                <?php $__currentLoopData = $cat->sub_categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sub_cat): $__env->incrementLoopIndices(); $loop = $__env->getFirstLoop(); ?>
+                                <li><input type="checkbox" name="sub_category[]" value="<?php echo e($sub_cat->id); ?>"><?php echo e($sub_cat->name); ?>
+
+                                    <?php if(!empty($sub_cat->sub_sub_categories->toArray())): ?>
+                                    <a href="javascript:void(0);" class="toggleCategory"><span style="font-size: 20px;color: #000;font-weight: bold;" class="fa fa-angle-down"></span></a>
+                                    <ul class="sub_sub_category" style="list-style: none;display: none;">
+                                        <?php $__currentLoopData = $sub_cat->sub_sub_categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sub_sub_cat): $__env->incrementLoopIndices(); $loop = $__env->getFirstLoop(); ?>
+                                        <li><input type="checkbox" name="sub_sub_category[]" value="<?php echo e($sub_sub_cat->id); ?>"><?php echo e($sub_cat->name.' '.$sub_sub_cat->get_vehicle_company_name->name); ?></li>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getFirstLoop(); ?>
+                                    </ul>
+                                    <?php endif; ?>
+                                </li>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getFirstLoop(); ?>
+                            </ul>
+                            <?php endif; ?>
+                        </li>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getFirstLoop(); ?>
+                    </ul>
+                </div>
             </div>
         </div>
         <div class="clearfix"></div>
