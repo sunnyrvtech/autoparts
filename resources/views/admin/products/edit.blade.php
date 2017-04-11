@@ -114,7 +114,7 @@
                         <div class="col-lg-6">
                             <div class="form-group {{ $errors->has('status') ? ' has-error' : '' }}">
                                 <label class="control-label">Status</label>
-                                {{ Form::select('status', ['1' => 'Enabled','0'=>'Disabled'], null, ['required','class' => 'form-control']) }}
+                                {{ Form::select('status', ['1' => 'Enabled','0'=>'Disabled'], $products->status, ['required','class' => 'form-control']) }}
                                 @if ($errors->has('status'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('status') }}</strong>
@@ -855,12 +855,12 @@
                             <a href="javascript:void(0);" class="toggleCategory"><span style="font-size: 20px;color: #000;font-weight: bold;" class="fa fa-angle-down"></span></a>
                             <ul class="sub_category" style="list-style: none;display: none;">
                                 @foreach ($cat->sub_categories as $sub_cat)
-                                <li><input type="checkbox" @if(in_array($sub_cat->id,$product_sub_categories)) checked @endif name="sub_category[]" value="{{ $sub_cat->id }}">{{ $sub_cat->name }}
+                                <li class="@if(in_array($sub_cat->id,$product_sub_categories)) categoryExist @endif"><input type="checkbox" @if(in_array($sub_cat->id,$product_sub_categories)) checked @endif name="sub_category[]" value="{{ $sub_cat->id }}">{{ $sub_cat->name }}
                                     @if(!empty($sub_cat->sub_sub_categories->toArray()))
                                     <a href="javascript:void(0);" class="toggleCategory"><span style="font-size: 20px;color: #000;font-weight: bold;" class="fa fa-angle-down"></span></a>
                                     <ul class="sub_sub_category" style="list-style: none;display: none;">
                                         @foreach ($sub_cat->sub_sub_categories as $sub_sub_cat)
-                                        <li><input type="checkbox" @if(in_array($sub_sub_cat->id,$product_sub_sub_categories)) checked @endif name="sub_sub_category[]" value="{{ $sub_sub_cat->id }}">{{ $sub_cat->name.' '.$sub_sub_cat->get_vehicle_company_name->name }}</li>
+                                        <li class="@if(in_array($sub_sub_cat->id,$product_sub_sub_categories)) categoryExist @endif"><input type="checkbox" @if(in_array($sub_sub_cat->id,$product_sub_sub_categories)) checked @endif name="sub_sub_category[]" value="{{ $sub_sub_cat->id }}">{{ $sub_cat->name.' '.$sub_sub_cat->get_vehicle_company_name->name }}</li>
                                         @endforeach
                                     </ul>
                                     @endif

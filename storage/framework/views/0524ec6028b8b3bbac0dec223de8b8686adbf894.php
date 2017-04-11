@@ -132,6 +132,11 @@
         <script src="<?php echo e(URL::asset('/js/bootstrap-datetimepicker.js')); ?>"></script> 
         <script type="text/javascript">
                         $(document).ready(function () {
+
+                            if ($("li").hasClass("categoryExist")) {/// this code is used to check if list contain one value then display block ul list -->
+                               $(".categoryExist").parent().show();
+                               $(".categoryExist").parent().parent().parent().show(); 
+                            }
                             $("body").tooltip({selector: '[data-toggle=tooltip]', trigger: 'hover'});
                             //initialize ckeditor        
                             $('textarea').ckeditor();
@@ -190,8 +195,8 @@
                                     reader.readAsDataURL(this.files[0]);
                                 }
                             });
-                            
-                            $(document).on('click','.toggleCategory',function(){
+
+                            $(document).on('click', '.toggleCategory', function () {
                                 $(this).next().slideToggle();
                             });
 

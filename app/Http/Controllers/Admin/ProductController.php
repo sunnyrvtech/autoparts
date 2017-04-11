@@ -17,6 +17,7 @@ use App\ProductCategory;
 use App\ProductSubCategory;
 use App\ProductSubSubCategory;
 use Redirect;
+use Session;
 use Yajra\Datatables\Facades\Datatables;
 
 class ProductController extends Controller {
@@ -29,7 +30,11 @@ class ProductController extends Controller {
     public function index(Request $request) {
         $title = 'Products';
         if ($request->ajax()) {
-            return Datatables::of(Product::query())->make(true);
+            $products = Product::get();
+            foreach ($products as $key => $value) {
+                $products[$key]['action'] = '<a href="' . route('products.show', $value->id) . '" data-toggle="tooltip" title="update" class="glyphicon glyphicon-edit"></a>&nbsp;&nbsp;<a href="' . route('products.destroy', $value->id) . '" data-toggle="tooltip" title="delete" data-method="delete" class="glyphicon glyphicon-trash deleteRow"></a>';
+            }
+            return Datatables::of($products)->make(true);
         }
         return View::make('admin.products.index', compact('title'));
     }
@@ -115,8 +120,7 @@ class ProductController extends Controller {
             }
         }
 
-        return Redirect::back()
-                        ->with('success-message', 'Product inserted successfully!');
+        return redirect()->route('products.index')->with('success-message', 'Product inserted successfully!');
     }
 
     /**
@@ -170,8 +174,10 @@ class ProductController extends Controller {
         foreach ($data as $key => $value) {
             $data[$key] = empty($value) ? null : $value;
         }
-
-        $existing_product_images = ProductDetail::where('id', $id)->first(array('product_images'));
+        
+        $data['status'] = $data['status'] !=null ? 1:0;
+        
+        $existing_product_images = ProductDetail::where('product_id', $id)->first(array('product_images'));
         $existing_product_image_array = json_decode($existing_product_images->product_images, true);
         $old_image_data = $request->get('old_product_image');
         if ($old_image_data == '') {
@@ -212,9 +218,11 @@ class ProductController extends Controller {
         }
         $products->fill($data)->save();
 
-        $product_details = ProductDetail::findOrFail($id);
-        $product_details->fill($data)->save();
-
+        $product_details = ProductDetail::where('product_id', $products->id);
+        if ($product_details->count()) {
+            $product_details = $product_details->first();
+            $product_details->fill($data)->save();
+        }
         ProductCategory::where('product_id', $products->id)->delete();
         ProductSubCategory::where('product_id', $products->id)->delete();
         ProductSubSubCategory::where('product_id', $products->id)->delete();
@@ -258,7 +266,16 @@ class ProductController extends Controller {
 //     * @param  int  $id
 //     * @return Response
 //     */
-//    public function destroy($id) {
-//        
-//    }
+    public function destroy($id) {
+        $products = Product::find($id);
+
+        if (!$products) {
+            Session::flash('error-message', 'Something went wrong .Please try again later!');
+        } else {
+            $products->delete();
+            Session::flash('success-message', 'Product deleted successfully !');
+        }
+        return 'true';
+    }
+
 }

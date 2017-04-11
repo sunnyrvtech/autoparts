@@ -121,7 +121,7 @@
                         <div class="col-lg-6">
                             <div class="form-group <?php echo e($errors->has('status') ? ' has-error' : ''); ?>">
                                 <label class="control-label">Status</label>
-                                <?php echo e(Form::select('status', ['1' => 'Enabled','0'=>'Disabled'], null, ['required','class' => 'form-control'])); ?>
+                                <?php echo e(Form::select('status', ['1' => 'Enabled','0'=>'Disabled'], $products->status, ['required','class' => 'form-control'])); ?>
 
                                 <?php if($errors->has('status')): ?>
                                 <span class="help-block">
@@ -925,13 +925,13 @@
                             <a href="javascript:void(0);" class="toggleCategory"><span style="font-size: 20px;color: #000;font-weight: bold;" class="fa fa-angle-down"></span></a>
                             <ul class="sub_category" style="list-style: none;display: none;">
                                 <?php $__currentLoopData = $cat->sub_categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sub_cat): $__env->incrementLoopIndices(); $loop = $__env->getFirstLoop(); ?>
-                                <li><input type="checkbox" <?php if(in_array($sub_cat->id,$product_sub_categories)): ?> checked <?php endif; ?> name="sub_category[]" value="<?php echo e($sub_cat->id); ?>"><?php echo e($sub_cat->name); ?>
+                                <li class="<?php if(in_array($sub_cat->id,$product_sub_categories)): ?> categoryExist <?php endif; ?>"><input type="checkbox" <?php if(in_array($sub_cat->id,$product_sub_categories)): ?> checked <?php endif; ?> name="sub_category[]" value="<?php echo e($sub_cat->id); ?>"><?php echo e($sub_cat->name); ?>
 
                                     <?php if(!empty($sub_cat->sub_sub_categories->toArray())): ?>
                                     <a href="javascript:void(0);" class="toggleCategory"><span style="font-size: 20px;color: #000;font-weight: bold;" class="fa fa-angle-down"></span></a>
                                     <ul class="sub_sub_category" style="list-style: none;display: none;">
                                         <?php $__currentLoopData = $sub_cat->sub_sub_categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sub_sub_cat): $__env->incrementLoopIndices(); $loop = $__env->getFirstLoop(); ?>
-                                        <li><input type="checkbox" <?php if(in_array($sub_sub_cat->id,$product_sub_sub_categories)): ?> checked <?php endif; ?> name="sub_sub_category[]" value="<?php echo e($sub_sub_cat->id); ?>"><?php echo e($sub_cat->name.' '.$sub_sub_cat->get_vehicle_company_name->name); ?></li>
+                                        <li class="<?php if(in_array($sub_sub_cat->id,$product_sub_sub_categories)): ?> categoryExist <?php endif; ?>"><input type="checkbox" <?php if(in_array($sub_sub_cat->id,$product_sub_sub_categories)): ?> checked <?php endif; ?> name="sub_sub_category[]" value="<?php echo e($sub_sub_cat->id); ?>"><?php echo e($sub_cat->name.' '.$sub_sub_cat->get_vehicle_company_name->name); ?></li>
                                         <?php endforeach; $__env->popLoop(); $loop = $__env->getFirstLoop(); ?>
                                     </ul>
                                     <?php endif; ?>
