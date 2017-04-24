@@ -67,34 +67,34 @@
                 <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
                 <div class="collapse navbar-collapse navbar-ex1-collapse">
                     <ul class="nav navbar-nav side-nav">
-                        <li class="active">
+                        <li class="<?php if(Request::segment(2) == 'admin'): ?>active <?php endif; ?>">
                             <a href="<?php echo e(url('admin')); ?>"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
                         </li>
-                        <li>
+                        <li class="<?php if(Request::segment(2) == 'customers'): ?>active <?php endif; ?>">
                             <a href="<?php echo e(route('customers.index')); ?>"><i class="fa fa-fw fa-user "></i> Customers</a>
                         </li>
-                        <li>
+                        <li class="<?php if(Request::segment(2) == 'categories' || Request::segment(2) == 'subcategories'): ?>active <?php endif; ?>">
                             <a href="<?php echo e(route('categories.index')); ?>"><i class="fa fa-fw fa-tags"></i> Categories</a>
                         </li>
-                        <li>
+                        <li class="<?php if(Request::segment(2) == 'brands'): ?>active <?php endif; ?>">
                             <a href="<?php echo e(route('brands.index')); ?>"><i class="fa fa-fw fa-dribbble"></i> Brands</a>
                         </li>
-                        <li>
+                        <li class="<?php if(Request::segment(2) == 'vehicle_model' || Request::segment(2) == 'vehicle'): ?>active <?php endif; ?>">
                             <a href="javascript:void(0);" data-toggle="collapse" data-target="#vehicle-menu"><i class="fa fa-fw fa-car"></i> Vehicles<i class="fa fa-fw fa-caret-down"></i></a>
-                            <ul id="vehicle-menu" class="collapse">
-                                <li>
+                            <ul id="vehicle-menu" class="collapse <?php if(Request::segment(2) == 'vehicle_model' || Request::segment(2) == 'vehicle'): ?>in <?php endif; ?>" >
+                                <li class="">
                                     <a href="<?php echo e(route('vehicle_model.index')); ?>">Vehicle Models</a>
                                 </li>
-                                <li>
+                                <li class="">
                                     <a href="<?php echo e(route('vehicle.index')); ?>">Vehicle Companies</a>
                                 </li>
                             </ul>
                         </li>
-                        <li>
+                        <li class="<?php if(Request::segment(2) == 'products'): ?>active <?php endif; ?>">
                             <a href="<?php echo e(route('products.index')); ?>"><i class="fa fa-fw fa-tag"></i> Products</a>
                         </li>
-                        <li>
-                            <a href="<?php echo e(route('orders.index')); ?>"><i class="fa fa-fw fa-tag"></i> Orders</a>
+                        <li class="<?php if(Request::segment(2) == 'orders'): ?>active <?php endif; ?>">
+                            <a href="<?php echo e(route('orders.index')); ?>"><i class="fa fa-fw fa-shopping-cart"></i> Orders</a>
                         </li>
                         <!--
                         <li>

@@ -151,8 +151,7 @@
                                 @if(isset($categories))
                                 @foreach($categories as $key=>$cat_value)
                                 <li>
-                                    <a data-toggle="dropdown" href="javascript:void(0);">{{ $cat_value->name }}</a>
-                                    <span class="glyphicon glyphicon-triangle-bottom"></span>
+                                    <a data-toggle="dropdown" href="javascript:void(0);">{{ $cat_value->name }}<span class="glyphicon glyphicon-triangle-bottom"></span></a>
                                     <div class="dropdown-menu">
                                         <h2 class="onea-page-header">{{ $cat_value->name }}</h2>
                                         <div class="row">

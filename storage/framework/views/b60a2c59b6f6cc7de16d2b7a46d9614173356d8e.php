@@ -151,8 +151,7 @@
                                 <?php if(isset($categories)): ?>
                                 <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key=>$cat_value): $__env->incrementLoopIndices(); $loop = $__env->getFirstLoop(); ?>
                                 <li>
-                                    <a data-toggle="dropdown" href="javascript:void(0);"><?php echo e($cat_value->name); ?></a>
-                                    <span class="glyphicon glyphicon-triangle-bottom"></span>
+                                    <a data-toggle="dropdown" href="javascript:void(0);"><?php echo e($cat_value->name); ?><span class="glyphicon glyphicon-triangle-bottom"></span></a>
                                     <div class="dropdown-menu">
                                         <h2 class="onea-page-header"><?php echo e($cat_value->name); ?></h2>
                                         <div class="row">

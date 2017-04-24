@@ -898,7 +898,7 @@
                     </div>
                     <div class="row form-group">
                         <div class="form-group">
-                            <input type="file" name="product_images[]" id="product_images" multiple style="visibility: hidden;" class="file">
+                            <input type="file" name="product_images[]" id="file_type" multiple style="visibility: hidden;" class="file">
                             <div class="text-right">
                                 <button class="browse btn btn-primary input-lg" type="button"><i class="glyphicon glyphicon-search"></i> Browse</button>
                                 <a class="btn btn-xs btn-warning">
