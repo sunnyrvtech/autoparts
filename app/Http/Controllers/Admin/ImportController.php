@@ -32,19 +32,19 @@ class ImportController extends Controller {
         Excel::filter('chunk')->load($path)->chunk(1000, function($results) {
             foreach ($results as $key => $row) {
                 if (!$category = Category::where('name', 'like', trim($row->category))->first(array('id'))) {
-                    $category = Category::insert(array('name' => trim($row->category)));
+                    $category = Category::create(array('name' => trim($row->category),'created_at' => Carbon::now(),'updated_at' => Carbon::now()));
                 }
 
                 if (!$sub_category = SubCategory::where('category_id', $category->id)->where('name', 'like', trim($row->sub_category))->first(array('id', 'category_id'))) {
 
                     $slug = $this->createSlug(trim($row->sub_category));
-                    $sub_category = SubCategory::insert(array('category_id' => $category->id, 'name' => trim($row->sub_category), 'slug' => $slug));
+                    $sub_category = SubCategory::create(array('category_id' => $category->id, 'name' => trim($row->sub_category), 'slug' => $slug,'created_at' => Carbon::now(),'updated_at' => Carbon::now()));
                 }
                 if (!$vehicle_company = VehicleCompany::where('name', 'like', trim($row->vehicle_make))->first(array('id'))) {
-                    $vehicle_company = VehicleCompany::insert(array('name' => trim($row->vehicle_make)));
+                    $vehicle_company = VehicleCompany::create(array('name' => trim($row->vehicle_make),'created_at' => Carbon::now(),'updated_at' => Carbon::now()));
                 }
                 if (!$vehicle_model = VehicleModel::where('name', 'like', trim($row->vehicle_model))->first(array('id'))) {
-                    $vehicle_model = VehicleModel::insert(array('name' => trim($row->vehicle_model)));
+                    $vehicle_model = VehicleModel::create(array('name' => trim($row->vehicle_model),'created_at' => Carbon::now(),'updated_at' => Carbon::now()));
                 }
 
                 $product_array = array(
