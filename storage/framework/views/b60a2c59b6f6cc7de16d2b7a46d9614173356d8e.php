@@ -151,8 +151,20 @@
                                 <?php if(isset($categories)): ?>
                                 <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key=>$cat_value): $__env->incrementLoopIndices(); $loop = $__env->getFirstLoop(); ?>
                                 <li>
-                                    <a data-target-container="li" href="javascript:void(0);" data-target="#nav-dropdown-<?php echo e($key); ?>"><?= $cat_value->name ?></a>
+                                    <a data-toggle="dropdown" href="javascript:void(0);"><?php echo e($cat_value->name); ?></a>
                                     <span class="glyphicon glyphicon-triangle-bottom"></span>
+                                    <div class="dropdown-menu">
+                                        <h2 class="onea-page-header"><?php echo e($cat_value->name); ?></h2>
+                                        <div class="row">
+                                            <div class="category-lists">
+                                                <?php $__currentLoopData = $cat_value->sub_categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sub_key => $sub_value): $__env->incrementLoopIndices(); $loop = $__env->getFirstLoop(); ?>
+                                                 <div class="col-sm-4 single-li">
+                                                        <a href="<?php echo e(url('/'.$sub_value->slug)); ?>"><span class="fa fa-angle-double-right"></span> <?php echo e($sub_value->name); ?></a>
+                                                 </div>
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getFirstLoop(); ?>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </li>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getFirstLoop(); ?>
                                 <?php endif; ?>

@@ -75,7 +75,7 @@ class ProductController extends Controller {
             if ($request->hasFile('product_images')) {
                 $image = $request->file('product_images');
                 $imageArray = array();
-                $path = base_path('public/products/');
+                $path = base_path('public/product_images/');
                 foreach ($image as $key => $image_val) {
                     $type = $image_val->getClientMimeType();
                     if ($type == 'image/png' || $type == 'image/jpg' || $type == 'image/jpeg') {
@@ -111,13 +111,13 @@ class ProductController extends Controller {
                 ProductSubCategory::insert($sub_category_array);
             }
             //insert sub sub category details in product category table
-            if ($request->get('sub_sub_category') != '') {
-                $sub_sub_category_array = array();
-                foreach ($request->get('sub_sub_category') as $sub_sub_cat_key => $sub_sub_cat_val) {
-                    $sub_sub_category_array[$sub_sub_cat_key] = array('product_id' => $products->id, 'sub_sub_category_id' => $sub_sub_cat_val);
-                }
-                ProductSubSubCategory::insert($sub_sub_category_array);
-            }
+//            if ($request->get('sub_sub_category') != '') {
+//                $sub_sub_category_array = array();
+//                foreach ($request->get('sub_sub_category') as $sub_sub_cat_key => $sub_sub_cat_val) {
+//                    $sub_sub_category_array[$sub_sub_cat_key] = array('product_id' => $products->id, 'sub_sub_category_id' => $sub_sub_cat_val);
+//                }
+//                ProductSubSubCategory::insert($sub_sub_category_array);
+//            }
         }
 
         return redirect()->route('products.index')->with('success-message', 'Product inserted successfully!');
@@ -139,14 +139,14 @@ class ProductController extends Controller {
         foreach ($products->product_sub_categories as $sub_cat_key => $value) {
             $product_sub_categories[$sub_cat_key] = $value->sub_category_id;
         }
-        $product_sub_sub_categories = array();
-        foreach ($products->product_sub_sub_categories as $sub_sub_cat_key => $value) {
-            $product_sub_sub_categories[$sub_sub_cat_key] = $value->sub_sub_category_id;
-        }
+//        $product_sub_sub_categories = array();
+//        foreach ($products->product_sub_sub_categories as $sub_sub_cat_key => $value) {
+//            $product_sub_sub_categories[$sub_sub_cat_key] = $value->sub_sub_category_id;
+//        }
         $brands = Brand::pluck('name', 'id')->prepend('---Please Select---', '');
         $vehicle_model = VehicleModel::pluck('name', 'id')->prepend('---Please Select---', '');
         $vehicle_company = VehicleCompany::pluck('name', 'id')->prepend('---Please Select---', '');
-        return View::make('admin.products.edit', compact('title', 'products', 'brands', 'vehicle_model', 'vehicle_company', 'product_categories', 'product_sub_categories', 'product_sub_sub_categories'));
+        return View::make('admin.products.edit', compact('title', 'products', 'brands', 'vehicle_model', 'vehicle_company', 'product_categories', 'product_sub_categories'));
     }
 
 //    /**
@@ -199,7 +199,7 @@ class ProductController extends Controller {
             if ($request->hasFile('product_images')) {
                 $image = $request->file('product_images');
                 $imageArray = array();
-                $path = base_path('public/products/');
+                $path = base_path('public/product_images/');
                 foreach ($image as $key => $image_val) {
                     $count_key = $key + count($old_image_data);
                     $type = $image_val->getClientMimeType();
@@ -225,7 +225,7 @@ class ProductController extends Controller {
         }
         ProductCategory::where('product_id', $products->id)->delete();
         ProductSubCategory::where('product_id', $products->id)->delete();
-        ProductSubSubCategory::where('product_id', $products->id)->delete();
+//        ProductSubSubCategory::where('product_id', $products->id)->delete();
         //insert category details in product category table
         if ($request->get('parent_category') != '') {
             $parent_category_array = array();
@@ -243,18 +243,13 @@ class ProductController extends Controller {
             ProductSubCategory::insert($sub_category_array);
         }
         //insert sub sub category details in product category table
-        if ($request->get('sub_sub_category') != '') {
-            $sub_sub_category_array = array();
-            foreach ($request->get('sub_sub_category') as $sub_sub_cat_key => $sub_sub_cat_val) {
-                $sub_sub_category_array[$sub_sub_cat_key] = array('product_id' => $products->id, 'sub_sub_category_id' => $sub_sub_cat_val);
-            }
-            ProductSubSubCategory::insert($sub_sub_category_array);
-        }
-
-
-
-
-
+//        if ($request->get('sub_sub_category') != '') {
+//            $sub_sub_category_array = array();
+//            foreach ($request->get('sub_sub_category') as $sub_sub_cat_key => $sub_sub_cat_val) {
+//                $sub_sub_category_array[$sub_sub_cat_key] = array('product_id' => $products->id, 'sub_sub_category_id' => $sub_sub_cat_val);
+//            }
+//            ProductSubSubCategory::insert($sub_sub_category_array);
+//        }
 
         return Redirect::back()
                         ->with('success-message', 'Product updated successfully!');

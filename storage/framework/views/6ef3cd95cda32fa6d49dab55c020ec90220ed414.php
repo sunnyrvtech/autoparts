@@ -1,8 +1,8 @@
 <?php $__env->startSection('content'); ?>
 <div class="container-fluid">
     <!-- Page Heading -->
-    <div class="row">
-        <div class="col-lg-12 form-group">
+    <div class="row form-group">
+        <div class="col-lg-12">
             <h1 class="page-header">
                 Add New Category
             </h1>

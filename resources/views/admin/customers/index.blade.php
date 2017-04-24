@@ -2,24 +2,28 @@
 
 @section('content')
 <div class="container-fluid">
-    <div class="row">
-        <a href="{{ route('customers.create') }}" class="btn btn-primary">Add New</a>
+    <div class="row form-group">
+        <div class="col-md-12">
+            <a href="{{ route('customers.create') }}" class="btn btn-primary">Add New</a>
+        </div>
     </div>
     <div class="row">
-        <table class="ui celled table" id="users-table">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Email</th>
-                    <th>Status</th>
-                    <th>Created At</th>
-                    <th>Updated At</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-        </table>
+        <div class="col-md-12">
+            <table class="ui celled table" id="users-table">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Status</th>
+                        <th>Created At</th>
+                        <th>Updated At</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
     </div>
 </div>
 
@@ -45,7 +49,7 @@
                 },
                 {data: 'created_at', name: 'created_at'},
                 {data: 'updated_at', name: 'updated_at'},
-                {data: 'Action',orderable: false,searchable: false, render: function (data, type, row) {
+                {data: 'Action', orderable: false, searchable: false, render: function (data, type, row) {
                         //console.log(row.id);
                         return row.action;
                     }

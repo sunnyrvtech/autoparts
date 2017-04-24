@@ -15,7 +15,6 @@ class CreateVehicleModelsTable extends Migration
     {
         Schema::create('vehicle_models', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('vehicle_company_id');
             $table->string('name');
             $table->timestamps();
             $table->softDeletes();

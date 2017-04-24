@@ -75,7 +75,7 @@
                             <li><a href="javascript:void(0);" title="Track your order">Order Tracking</a></li>
 
                             <li>
-                                <a id="my-account" href="{{ URL('/my-account') }}">My Account</a>
+                                <a id="my-account" href="{{ URL('/my-account')}}">My Account</a>
                             </li>
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
@@ -151,8 +151,20 @@
                                 @if(isset($categories))
                                 @foreach($categories as $key=>$cat_value)
                                 <li>
-                                    <a data-target-container="li" href="javascript:void(0);" data-target="#nav-dropdown-{{ $key}}"><?= $cat_value->name ?></a>
+                                    <a data-toggle="dropdown" href="javascript:void(0);">{{ $cat_value->name }}</a>
                                     <span class="glyphicon glyphicon-triangle-bottom"></span>
+                                    <div class="dropdown-menu">
+                                        <h2 class="onea-page-header">{{ $cat_value->name }}</h2>
+                                        <div class="row">
+                                            <div class="category-lists">
+                                                @foreach ($cat_value->sub_categories as $sub_key => $sub_value)
+                                                 <div class="col-sm-4 single-li">
+                                                        <a href="{{ url('/'.$sub_value->slug) }}"><span class="fa fa-angle-double-right"></span> {{ $sub_value->name }}</a>
+                                                 </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    </div>
                                 </li>
                                 @endforeach
                                 @endif

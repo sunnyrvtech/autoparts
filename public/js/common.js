@@ -6,8 +6,8 @@ $(document).ready(function () {
         } else {
             $(".top-header-section").removeClass("scrollActive");
         }
-         if ($('.navbar-static-top').is(':visible')){
-             $(this).addClass("fadeInDown");
-         }
+        if ($('.navbar-static-top').is(':visible')) {
+            $(this).addClass("fadeInDown");
+        }
     });
 });

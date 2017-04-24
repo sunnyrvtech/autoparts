@@ -20,11 +20,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'IsAdmin'], function () {
     Route::post('categories/status', 'Admin\CategoryController@categoryStatus')->name('categories-status');
     Route::resource('subcategories', 'Admin\SubCategoryController');
     Route::get('subcategories/show/{id}', 'Admin\SubCategoryController@showSubCategory')->name('subcategories-show');
-    Route::resource('subsubcategories', 'Admin\SubSubCategoryController');
-    Route::get('subsubcategories/show/{id}', 'Admin\SubSubCategoryController@showSubSubCategory')->name('subsubcategories-show');
+//    Route::resource('subsubcategories', 'Admin\SubSubCategoryController');
+//    Route::get('subsubcategories/show/{id}', 'Admin\SubSubCategoryController@showSubSubCategory')->name('subsubcategories-show');
     Route::resource('vehicle', 'Admin\VehicleCompanyController');
+    Route::resource('vehicle_model', 'Admin\VehicleModelController');
     Route::resource('brands', 'Admin\BrandController');
     Route::resource('products', 'Admin\ProductController');
+    Route::resource('orders', 'Admin\OrderController');
+    Route::post('import/csv', 'Admin\ImportController@uploadCsv')->name('import.csv');
 });
 Route::get('/', 'HomeController@index');
 Route::get('login', 'Auth\LoginController@index');
@@ -50,6 +53,8 @@ Route::get('account/activate/{code}', array(
     'as' => 'account.activate',
     'uses' => 'AccountController@getActivate'
 ));
+Route::get('/{slug}', 'SubCategoryController@getSubSubcategory');
+Route::get('/{company}/{slug}', 'SubSubCategoryController@getSubSubSubcategory');
 
 // Auth::routes();
  

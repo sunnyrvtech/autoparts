@@ -2,23 +2,27 @@
 
 @section('content')
 <div class="container-fluid">
-    <div class="row">
-        <a href="{{ route('categories.create') }}" class="btn btn-primary">Add New</a>
+    <div class="row form-group">
+        <div class="col-md-12">
+            <a href="{{ route('categories.create') }}" class="btn btn-primary">Add New</a>
+        </div>
     </div>
     <div class="row">
-        <table class="ui celled table" id="category-table">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Category Name</th>
-                    <th>Category Image</th>
-                    <th>Status</th>
-                    <th>Created At</th>
-                    <th>Updated At</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-        </table>
+        <div class="col-md-12">
+            <table class="ui celled table" id="category-table">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Category Name</th>
+                        <th>Category Image</th>
+                        <th>Status</th>
+                        <th>Created At</th>
+                        <th>Updated At</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
     </div>
 </div>
 
@@ -35,7 +39,7 @@
                 {data: 'name', name: 'name'},
                 {data: "category_image", render: function (data, type, row) {
                         if (data != null) {
-                            return '<img width="100px" src="' + "{{ URL::asset('/category') }}" + "/" + data + '" />';
+                            return '<img width="100px" src="' + "{{ URL::asset('/category_images') }}" + "/" + data + '" />';
                         }
                         return '';
                     }

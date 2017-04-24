@@ -814,7 +814,7 @@
                             @foreach($product_images as $key=>$img_val)
                             <div class="row form-group">
                                 <div class="col-lg-2">
-                                    <img width="100px" src="{{ URL::asset('/products').'/'.$img_val}}">
+                                    <img width="100px" src="{{ URL::asset('/product_images').'/'.$img_val}}">
                                 </div>
                                 <div class="col-lg-2 pull-right">
                                     <a class="btn btn-xs btn-warning" onclick="$(this).parent().parent().remove();">
@@ -829,7 +829,7 @@
                     </div>
                     <div class="row form-group">
                         <div class="form-group">
-                            <input type="file" name="product_images[]" id="product_images" multiple style="visibility: hidden;" class="file">
+                            <input type="file" name="product_images[]" id="file_type" multiple style="visibility: hidden;" class="file">
                             <div class="text-right">
                                 <button class="browse btn btn-primary input-lg" type="button"><i class="glyphicon glyphicon-search"></i> Browse</button>
                                 <a class="btn btn-xs btn-warning">
@@ -856,6 +856,7 @@
                             <ul class="sub_category" style="list-style: none;display: none;">
                                 @foreach ($cat->sub_categories as $sub_cat)
                                 <li class="@if(in_array($sub_cat->id,$product_sub_categories)) categoryExist @endif"><input type="checkbox" @if(in_array($sub_cat->id,$product_sub_categories)) checked @endif name="sub_category[]" value="{{ $sub_cat->id }}">{{ $sub_cat->name }}
+                                    {{--
                                     @if(!empty($sub_cat->sub_sub_categories->toArray()))
                                     <a href="javascript:void(0);" class="toggleCategory"><span style="font-size: 20px;color: #000;font-weight: bold;" class="fa fa-angle-down"></span></a>
                                     <ul class="sub_sub_category" style="list-style: none;display: none;">
@@ -864,6 +865,7 @@
                                         @endforeach
                                     </ul>
                                     @endif
+                                    --}}
                                 </li>
                                 @endforeach
                             </ul>

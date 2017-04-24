@@ -878,7 +878,7 @@
                     <h3>Product Images:-</h3>
                     <div class="row form-group">
                         <div class="form-group">
-                            <input type="file" name="product_images[]" id="product_images" multiple style="visibility: hidden;" class="file">
+                            <input type="file" name="product_images[]" id="file_type" multiple style="visibility: hidden;" class="file">
                             <div class="text-right">
                                 <button class="browse btn btn-primary input-lg" type="button"><i class="glyphicon glyphicon-search"></i> Browse</button>
                                 <a class="btn btn-xs btn-warning">
@@ -908,14 +908,7 @@
                                 <?php $__currentLoopData = $cat->sub_categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sub_cat): $__env->incrementLoopIndices(); $loop = $__env->getFirstLoop(); ?>
                                 <li><input type="checkbox" name="sub_category[]" value="<?php echo e($sub_cat->id); ?>"><?php echo e($sub_cat->name); ?>
 
-                                    <?php if(!empty($sub_cat->sub_sub_categories->toArray())): ?>
-                                    <a href="javascript:void(0);" class="toggleCategory"><span style="font-size: 20px;color: #000;font-weight: bold;" class="fa fa-angle-down"></span></a>
-                                    <ul class="sub_sub_category" style="list-style: none;display: none;">
-                                        <?php $__currentLoopData = $sub_cat->sub_sub_categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sub_sub_cat): $__env->incrementLoopIndices(); $loop = $__env->getFirstLoop(); ?>
-                                        <li><input type="checkbox" name="sub_sub_category[]" value="<?php echo e($sub_sub_cat->id); ?>"><?php echo e($sub_cat->name.' '.$sub_sub_cat->get_vehicle_company_name->name); ?></li>
-                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getFirstLoop(); ?>
-                                    </ul>
-                                    <?php endif; ?>
+                                    
                                 </li>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getFirstLoop(); ?>
                             </ul>

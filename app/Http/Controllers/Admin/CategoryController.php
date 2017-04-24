@@ -51,14 +51,14 @@ class CategoryController extends Controller {
             'name' => 'required|unique:categories|max:100'
 //            'category_picture' => 'required'
         ]);
-
+        
         if ($request->file('category_picture')) {
             if ($request->hasFile('category_picture')) {
                 $image = $request->file('category_picture');
                 $type = $image->getClientMimeType();
                 if ($type == 'image/png' || $type == 'image/jpg' || $type == 'image/jpeg') {
                     $filename = time() . '.' . $image->getClientOriginalExtension();
-                    $path = base_path('public/category/');
+                    $path = base_path('public/category_images/');
                     $image->move($path, $filename);
                     $data['category_image'] = $filename;
                 }
@@ -100,7 +100,7 @@ class CategoryController extends Controller {
                 $type = $image->getClientMimeType();
                 if ($type == 'image/png' || $type == 'image/jpg' || $type == 'image/jpeg') {
                     $filename = time() . '.' . $image->getClientOriginalExtension();
-                    $path = base_path('public/category/');
+                    $path = base_path('public/category_images/');
                     $image->move($path, $filename);
                     $data['category_image'] = $filename;
                 }
@@ -149,5 +149,4 @@ class CategoryController extends Controller {
         }
         return 'true';
     }
-
 }

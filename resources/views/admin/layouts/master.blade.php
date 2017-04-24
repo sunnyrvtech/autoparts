@@ -23,7 +23,18 @@
     </head>
 
     <body>
-
+        <div id="loaderOverlay" style="display: none;">
+            <div class="loader">
+                <div class="side"></div>
+                <div class="side"></div>
+                <div class="side"></div>
+                <div class="side"></div>
+                <div class="side"></div>
+                <div class="side"></div>
+                <div class="side"></div>
+                <div class="side"></div>
+            </div>
+        </div>
         <div id="wrapper">
 
             <!-- Navigation -->
@@ -72,7 +83,7 @@
                             <a href="javascript:void(0);" data-toggle="collapse" data-target="#vehicle-menu"><i class="fa fa-fw fa-car"></i> Vehicles<i class="fa fa-fw fa-caret-down"></i></a>
                             <ul id="vehicle-menu" class="collapse">
                                 <li>
-                                    <a href="javascript:void(0);">Vehicle Models</a>
+                                    <a href="{{ route('vehicle_model.index')}}">Vehicle Models</a>
                                 </li>
                                 <li>
                                     <a href="{{ route('vehicle.index')}}">Vehicle Companies</a>
@@ -81,6 +92,9 @@
                         </li>
                         <li>
                             <a href="{{ route('products.index')}}"><i class="fa fa-fw fa-tag"></i> Products</a>
+                        </li>
+                        <li>
+                            <a href="{{ route('orders.index')}}"><i class="fa fa-fw fa-tag"></i> Orders</a>
                         </li>
                         <!--
                         <li>
@@ -122,6 +136,26 @@
             <!-- /#page-wrapper -->
         </div>
         <!-- /#wrapper -->
+        <!-- Modal -->
+        <div class="modal fade" id="deleteModal" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Delete Record Permanantly</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete ?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default deleteRowRecord">Yes</button>
+                        <button type="button" class="btn btn-default" onclick="$('#deleteModal').modal('hide');">No</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
         <!-- jQuery -->
         <script src="{{ URL::asset('/js/app.js') }}"></script>
         <script src="{{ url('/vendor/unisharp/laravel-ckeditor/ckeditor.js')}}"></script>
@@ -134,8 +168,8 @@
                         $(document).ready(function () {
 
                             if ($("li").hasClass("categoryExist")) {/// this code is used to check if list contain one value then display block ul list -->
-                               $(".categoryExist").parent().show();
-                               $(".categoryExist").parent().parent().parent().show(); 
+                                $(".categoryExist").parent().show();
+                                $(".categoryExist").parent().parent().parent().show();
                             }
                             $("body").tooltip({selector: '[data-toggle=tooltip]', trigger: 'hover'});
                             //initialize ckeditor        
@@ -150,7 +184,7 @@
 
                             });
                             $(document).on('click', '.browse', function () {
-                                var file = $(this).parent().parent().parent().find('.file');
+                                var file = $("#file_type");
                                 file.trigger('click');
                             });
                             $(document).on('change', '.file', function (e) {
@@ -207,12 +241,19 @@
                             });
                             $(document).on('click', '.deleteRow', function (e) {
                                 e.preventDefault(); // does not go through with the link.
-
                                 var $this = $(this);
-
+                                $("#deleteModal").modal('show');
+                                $(".deleteRowRecord").attr('data-method',$this.data('method'));
+                                $(".deleteRowRecord").attr('data-href',$this.attr('href'));
+                            });
+                            $(document).on('click', '.deleteRowRecord', function (e) {
+                               
+                                e.preventDefault(); // does not go through with the link.
+                                var $this = $(this);
+                                $this.attr('disabled','disabled');
                                 $.post({
                                     type: $this.data('method'),
-                                    url: $this.attr('href')
+                                    url: $this.data('href')
                                 }).done(function (data) {
                                     window.location.reload();
                                 });

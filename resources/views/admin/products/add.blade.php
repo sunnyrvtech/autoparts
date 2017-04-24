@@ -809,7 +809,7 @@
                     <h3>Product Images:-</h3>
                     <div class="row form-group">
                         <div class="form-group">
-                            <input type="file" name="product_images[]" id="product_images" multiple style="visibility: hidden;" class="file">
+                            <input type="file" name="product_images[]" id="file_type" multiple style="visibility: hidden;" class="file">
                             <div class="text-right">
                                 <button class="browse btn btn-primary input-lg" type="button"><i class="glyphicon glyphicon-search"></i> Browse</button>
                                 <a class="btn btn-xs btn-warning">
@@ -837,6 +837,7 @@
                             <ul class="sub_category" style="list-style: none;display: none;">
                                 @foreach ($cat->sub_categories as $sub_cat)
                                 <li><input type="checkbox" name="sub_category[]" value="{{ $sub_cat->id }}">{{ $sub_cat->name }}
+                                    {{--
                                     @if(!empty($sub_cat->sub_sub_categories->toArray()))
                                     <a href="javascript:void(0);" class="toggleCategory"><span style="font-size: 20px;color: #000;font-weight: bold;" class="fa fa-angle-down"></span></a>
                                     <ul class="sub_sub_category" style="list-style: none;display: none;">
@@ -845,6 +846,7 @@
                                         @endforeach
                                     </ul>
                                     @endif
+                                    --}}
                                 </li>
                                 @endforeach
                             </ul>

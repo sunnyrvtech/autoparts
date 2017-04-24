@@ -32,7 +32,8 @@ class SubCategoryController extends Controller {
                     ->where('sc.category_id', $category_id)
                     ->get(['sc.*', 'c.name as category_name']);
             foreach ($sub_cat_result as $key => $value) {
-                $sub_cat_result[$key]->action = '<a href="' . route('subsubcategories-show', $value->id) . '" data-toggle="tooltip" title="View Sub Sub Category" class="glyphicon glyphicon-eye-open"></a>&nbsp;&nbsp;<a href="' . route('subcategories.show', $value->id) . '" data-toggle="tooltip" title="update" class="glyphicon glyphicon-edit"></a>&nbsp;&nbsp;<a href="' . route('subcategories.destroy', $value->id) . '" data-toggle="tooltip" title="delete" data-method="delete" class="glyphicon glyphicon-trash deleteRow"></a>';
+//                $sub_cat_result[$key]->action = '<a href="' . route('subsubcategories-show', $value->id) . '" data-toggle="tooltip" title="View Sub Sub Category" class="glyphicon glyphicon-eye-open"></a>&nbsp;&nbsp;<a href="' . route('subcategories.show', $value->id) . '" data-toggle="tooltip" title="update" class="glyphicon glyphicon-edit"></a>&nbsp;&nbsp;<a href="' . route('subcategories.destroy', $value->id) . '" data-toggle="tooltip" title="delete" data-method="delete" class="glyphicon glyphicon-trash deleteRow"></a>';
+                $sub_cat_result[$key]->action = '<a href="' . route('subcategories.show', $value->id) . '" data-toggle="tooltip" title="update" class="glyphicon glyphicon-edit"></a>&nbsp;&nbsp;<a href="' . route('subcategories.destroy', $value->id) . '" data-toggle="tooltip" title="delete" data-method="delete" class="glyphicon glyphicon-trash deleteRow"></a>';
             }
             return Datatables::of($sub_cat_result)->make(true);
         }
@@ -65,6 +66,8 @@ class SubCategoryController extends Controller {
             'name' => 'required|unique:sub_categories|max:100'
 //            'category_picture' => 'required'
         ]);
+
+        $data['slug'] = $this->createSlug($data['name']);
 
         if ($request->file('category_picture')) {
             if ($request->hasFile('category_picture')) {
@@ -148,7 +151,6 @@ class SubCategoryController extends Controller {
         }
     }
 
-//
 //    /**
 //     * Remove the specified resource from storage.
 //     *
@@ -165,6 +167,31 @@ class SubCategoryController extends Controller {
             Session::flash('success-message', 'Sub category deleted successfully !');
         }
         return 'true';
+    }
+
+    public function createSlug($title) {
+        // Normalize the title
+        $slug = str_slug($title);
+        // Get any that could possibly be related.
+        // This cuts the queries down by doing it once.
+        $allSlugs = $this->getRelatedSlugs($slug);
+        // If we haven't used it before then we are all good.
+        if (!$allSlugs->contains('slug', $slug)) {
+            return $slug;
+        }
+        // Just append numbers like a savage until we find not used.
+        for ($i = 1; $i <= 10; $i++) {
+            $newSlug = $slug . '-' . $i;
+            if (!$allSlugs->contains('slug', $newSlug)) {
+                return $newSlug;
+            }
+        }
+        throw new \Exception('Can not create a unique slug');
+    }
+
+    protected function getRelatedSlugs($slug) {
+        return SubCategory::select('slug')->where('slug', 'like', $slug . '%')
+                        ->get();
     }
 
 }
