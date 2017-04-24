@@ -32,25 +32,20 @@ class ImportController extends Controller {
         Excel::filter('chunk')->load($path)->chunk(1000, function($results) {
             foreach ($results as $key => $row) {
                 if (!$category = Category::where('name', 'like', trim($row->category))->first(array('id'))) {
-                    die('cat');
                     $category = Category::insert(array('name' => trim($row->category)));
                 }
 
                 if (!$sub_category = SubCategory::where('category_id', $category->id)->where('name', 'like', trim($row->sub_category))->first(array('id', 'category_id'))) {
-die('sub_cat');
+
                     $slug = $this->createSlug(trim($row->sub_category));
                     $sub_category = SubCategory::insert(array('category_id' => $category->id, 'name' => trim($row->sub_category), 'slug' => $slug));
                 }
                 if (!$vehicle_company = VehicleCompany::where('name', 'like', trim($row->vehicle_make))->first(array('id'))) {
-                    die('comp');
                     $vehicle_company = VehicleCompany::insert(array('name' => trim($row->vehicle_make)));
                 }
                 if (!$vehicle_model = VehicleModel::where('name', 'like', trim($row->vehicle_model))->first(array('id'))) {
-                 die('model');
                     $vehicle_model = VehicleModel::insert(array('name' => trim($row->vehicle_model)));
                 }
-                
-                die('ddddd');
 
                 $product_array = array(
                     'product_name' => trim($row->product_name),
