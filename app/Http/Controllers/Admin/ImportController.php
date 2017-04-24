@@ -44,7 +44,7 @@ class ImportController extends Controller {
                     $vehicle_company = VehicleCompany::insert(array('name' => trim($row->vehicle_make)));
                 }
                 if (!$vehicle_model = VehicleModel::where('name', 'like', trim($row->vehicle_model))->first(array('id'))) {
-                    $vehicle_company = VehicleModel::insert(array('name' => trim($row->vehicle_model)));
+                    $vehicle_model = VehicleModel::insert(array('name' => trim($row->vehicle_model)));
                 }
 
                 $product_array = array(
