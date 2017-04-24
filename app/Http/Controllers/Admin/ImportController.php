@@ -34,10 +34,7 @@ class ImportController extends Controller {
                 if (!$category = Category::where('name', 'like', trim($row->category))->first(array('id'))) {
                     $category = Category::insert(array('name' => trim($row->category)));
                 }
-                
-                
-                echo '******'.trim($row->sub_category).'*******';
-                
+
                 if (!$sub_category = SubCategory::where('category_id', $category->id)->where('name', 'like', trim($row->sub_category))->first(array('id', 'category_id'))) {
 
                     $slug = $this->createSlug(trim($row->sub_category));
@@ -63,9 +60,7 @@ class ImportController extends Controller {
                     'updated_at' => Carbon::now()
                 );
 
-                      
-                die('hello');
-                
+
                 $products = Product::where('part_number', 'like', $row->sku)->first();
 
                 if (!$products) {
