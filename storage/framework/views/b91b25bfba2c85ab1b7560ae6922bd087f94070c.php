@@ -42,7 +42,7 @@
                 {data: 'updated_at', name: 'updated_at'},
                 {data: 'Action',orderable: false,searchable: false, render: function (data, type, row) {
                         //console.log(row.id);
-                        return '<a href="'+ "" +'" data-toggle="tooltip" title="update" class="glyphicon glyphicon-edit"></a>'; 
+                        return row.action; 
                     }
 
                 }

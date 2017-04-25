@@ -16,5 +16,15 @@ class ProductSubCategory extends Model {
     protected $fillable = [
         'product_id', 'sub_category_id'
     ];
+    
+    /**
+     * function to get customer detail from order table.
+     *
+     * @return Response
+     */
+    
+    public function getProducts(){
+        return $this->hasMany('App\Product');
+    }
 
 }
