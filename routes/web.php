@@ -39,7 +39,7 @@ Route::post('login', 'Auth\LoginController@login');
 Route::get('register', 'Auth\RegisterController@index');
 Route::post('register', 'Auth\RegisterController@create');
 Route::get('logout', 'Auth\LoginController@logout');
-Route::get('products', 'ProductController@index');
+//Route::get('products', 'ProductController@index');
 Route::get('single-product', 'ProductController@singleProduct');
 Route::get('cart', 'ProductController@Cart');
 Route::get('my-account', 'AccountController@index');

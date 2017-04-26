@@ -24,7 +24,7 @@ class ProductSubCategory extends Model {
      */
     
     public function getProducts(){
-        return $this->hasMany('App\Product');
+        return $this->hasOne('App\Product','id','product_id');
     }
 
 }

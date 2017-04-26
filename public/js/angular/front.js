@@ -353,6 +353,17 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
             }
         }
 
+        $scope.getProductByPage = function (element) {
+            $http.get(element).
+                    then(function (data, status, headers, config) {
+                        var $e1 = $('#content').html(data.data);
+                        $compile($e1)($scope);
+                        window.history.pushState("", "", element);
+                        $(window).scrollTop(0);
+                    });
+
+        }
+
         $scope.getState = function ($countryId, $type) {
             if ($countryId != undefined) {
                 $http({
