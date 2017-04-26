@@ -4,26 +4,35 @@
 @section('content')
 <div class="container">
     <div class="well well-sm">
-        <strong>Category Title</strong>
-        <div class="btn-group">
-            <a href="#" id="list" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-th-list">
-                </span>List</a> <a href="#" id="grid" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-th"></span>Grid</a>
+        <div class="row">
+        <div class="col-md-4">
+            <strong>Category Title:-</strong>
+            <a href="#" id="list" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-th-list"></span>List</a> 
+            <a href="#" id="grid" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-th"></span>Grid</a>
+        </div>
+        <div class="col-md-4">
+            <label class="col-sm-3 col-md-3 control-label">Sort By:-</label>
+            <div class="col-sm-6 col-md-6">
+                <select class="form-control" name="sortBy"><option>Highest Price</option><option>Lowest Price</option></select>
+            </div>
+        </div>
         </div>
     </div>
     <div class="col-md-9">
         <div id="products-content-area" class="row list-group">
 
             @foreach($products as $key=> $value)
-            <div class="item  col-xs-4 col-lg-4 grid-group-item">
+            <div class="item  col-xs-4 col-lg-4 grid-group-item list-group-item">
                 <div class="thumbnail">
-                    <img class="group list-group-image" src="http://localhost/autoparts/public/images/product1.jpg" alt="" />
+                    <img class="group list-group-image" src="{{ URL::asset('/images/product1.jpg') }}" alt="" />
                     <div class="caption">
-                        <h4 class="group inner list-group-item-heading">{{ str_limit($value->getProducts->product_name, $limit = 43, $end = '...') }}</h4>
+                        <h4 class="group inner list-group-item-heading">{{ $value->getProducts->product_name }}</h4>
+                        <h4 class="group inner grid-group-item-heading">{{ str_limit($value->getProducts->product_name, $limit = 43, $end = '...') }}</h4>
                         <p class="group inner grid-group-item-text">
                             {{ str_limit($value->getProducts->product_long_description, $limit = 50, $end = '...') }}
                         </p>
                         <p class="group inner list-group-item-text">
-                            {{ str_limit($value->getProducts->product_long_description, $limit = 200, $end = '...') }}
+                            {{ $value->getProducts->product_long_description }}
                         </p>
                         <div class="row">
                             <p class="lead">${{ $value->getProducts->price }}</p>
@@ -109,10 +118,10 @@
         });
 
         $(document).on('mouseenter', '#products-content-area .item', function () {
-            $(this).find(".product-card__overlay").addClass("flipInX animated");
+            $(this).find(".product-card__overlay").addClass("fadeInDown animated");
         });
         $(document).on('mouseleave', '#products-content-area .item', function () {
-            $(this).find(".product-card__overlay").removeClass("flipInX");
+            $(this).find(".product-card__overlay").removeClass("fadeInDown");
         });
         $('body').on('click', '.pagination a', function (e) {
             e.preventDefault();
