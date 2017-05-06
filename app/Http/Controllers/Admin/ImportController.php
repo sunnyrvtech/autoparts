@@ -32,23 +32,25 @@ class ImportController extends Controller {
         Excel::filter('chunk')->load($path)->chunk(1000, function($results) {
             foreach ($results as $key => $row) {
                 if (!$category = Category::where('name', 'like', trim($row->category))->first(array('id'))) {
-                    $category = Category::create(array('name' => trim($row->category),'created_at' => Carbon::now(),'updated_at' => Carbon::now()));
+                    $category = Category::create(array('name' => trim($row->category), 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
                 }
 
                 if (!$sub_category = SubCategory::where('category_id', $category->id)->where('name', 'like', trim($row->sub_category))->first(array('id', 'category_id'))) {
-
-                    $slug = $this->createSlug(trim($row->sub_category));
-                    $sub_category = SubCategory::create(array('category_id' => $category->id, 'name' => trim($row->sub_category), 'slug' => $slug,'created_at' => Carbon::now(),'updated_at' => Carbon::now()));
+                    $slug = $this->createSlug(trim($row->sub_category),'category');
+                    $sub_category = SubCategory::create(array('category_id' => $category->id, 'name' => trim($row->sub_category), 'slug' => $slug, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
                 }
                 if (!$vehicle_company = VehicleCompany::where('name', 'like', trim($row->vehicle_make))->first(array('id'))) {
-                    $vehicle_company = VehicleCompany::create(array('name' => trim($row->vehicle_make),'created_at' => Carbon::now(),'updated_at' => Carbon::now()));
+                    $vehicle_company = VehicleCompany::create(array('name' => trim($row->vehicle_make), 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
                 }
                 if (!$vehicle_model = VehicleModel::where('name', 'like', trim($row->vehicle_model))->first(array('id'))) {
-                    $vehicle_model = VehicleModel::create(array('name' => trim($row->vehicle_model),'created_at' => Carbon::now(),'updated_at' => Carbon::now()));
+                    $vehicle_model = VehicleModel::create(array('name' => trim($row->vehicle_model), 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
                 }
-
+                
+                $product_slug = $this->createSlug(trim($row->product_name), 'product');
+                    
                 $product_array = array(
                     'product_name' => trim($row->product_name),
+                    'product_slug' => $product_slug,
                     'product_long_description' => trim($row->product_description),
                     'part_number' => trim($row->sku),
                     'price' => $row->price,
@@ -107,7 +109,7 @@ class ImportController extends Controller {
             foreach ($results as $key => $row) {
                 $category = Category::where('name', 'like', trim($row->category))->first();
                 if ($category) {
-                    $slug = $this->createSlug(trim($row->sub_category));
+                    $slug = $this->createSlug(trim($row->sub_category), 'category');
                     $sub_category = SubCategory::where('category_id', $category->id)->where('name', 'like', trim($row->sub_category))->first();
                     if (!$sub_category) {
                         SubCategory::insert(array('category_id' => $category->id, 'name' => trim($row->sub_category), 'slug' => $slug));
@@ -161,12 +163,12 @@ class ImportController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function createSlug($title) {
+    public function createSlug($title, $table) {
         // Normalize the title
         $slug = str_slug($title);
         // Get any that could possibly be related.
         // This cuts the queries down by doing it once.
-        $allSlugs = $this->getRelatedSlugs($slug);
+        $allSlugs = $this->getRelatedSlugs($slug, $table);
         // If we haven't used it before then we are all good.
         if (!$allSlugs->contains('slug', $slug)) {
             return $slug;
@@ -181,9 +183,14 @@ class ImportController extends Controller {
         throw new \Exception('Can not create a unique slug');
     }
 
-    protected function getRelatedSlugs($slug) {
-        return SubCategory::select('slug')->where('slug', 'like', $slug . '%')
-                        ->get();
+    protected function getRelatedSlugs($slug, $table) {
+        if ($table == 'category') {
+            return SubCategory::select('slug')->where('slug', 'like', $slug . '%')
+                            ->get();
+        } else {
+            return Product::select('product_slug')->where('product_slug', 'like', $slug . '%')
+                            ->get();
+        }
     }
 
 }

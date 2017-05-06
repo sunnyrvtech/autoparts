@@ -5,7 +5,7 @@
     <section>
         <div id="breadcrumb" itemprop="breadcrumb" itemscope="itemscope" itemtype="http://www.schema.org/BreadcrumbList">
             <a href="<?php echo e(url('/')); ?>">Home</a>
-            <span class="divider"> &gt; </span><span><?php echo e(Request::segment(1)); ?></span>
+            <span class="divider"> &gt; </span><span><?php echo e(Request::segment(2)); ?></span>
         </div>
     </section>
      <?php if(!empty($products->toArray()['data'])): ?>
@@ -34,28 +34,26 @@
             $brand_array = [];
             $vehicle_company_array = [];
             $vehicle_model_array = [];
-
             $minYear = date('Y', strtotime('-50 year'));
             $maxYear = date('Y', strtotime('+1 year'));
             // set start and end year range
             $yearArray = range($maxYear, $minYear);
-                
             ?>
             <?php $__empty_1 = true; $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key=> $value): $__env->incrementLoopIndices(); $loop = $__env->getFirstLoop(); $__empty_1 = false; ?>
 
             <?php
             //this is used to create brand filter 
-            if (!empty($value->getProducts->brand_id)) {
-                $brand_array[$key]['id'] = $value->getProducts->brand_id;
-                $brand_array[$key]['name'] = isset($value->getProducts->get_brands->name) ? $value->getProducts->get_brands->name : '';
+            if (!empty($value->brand_id)) {
+                $brand_array[$key]['id'] = $value->brand_id;
+                $brand_array[$key]['name'] = isset($value->get_brands->name) ? $value->get_brands->name : '';
             }
-            if (!empty($value->getProducts->vehicle_make_id)) {
-                $vehicle_company_array[$key]['id'] = $value->getProducts->vehicle_make_id;
-                $vehicle_company_array[$key]['name'] = isset($value->getProducts->get_vehicle_company->name) ? $value->getProducts->get_vehicle_company->name : '';
+            if (!empty($value->vehicle_make_id)) {
+                $vehicle_company_array[$key]['id'] = $value->vehicle_make_id;
+                $vehicle_company_array[$key]['name'] = isset($value->get_vehicle_company->name) ? $value->get_vehicle_company->name : '';
             }
-            if (!empty($value->getProducts->vehicle_model_id)) {
-                $vehicle_model_array[$key]['id'] = $value->getProducts->vehicle_model_id;
-                $vehicle_model_array[$key]['name'] = isset($value->getProducts->get_vehicle_model->name) ? $value->getProducts->get_vehicle_model->name : '';
+            if (!empty($value->vehicle_model_id)) {
+                $vehicle_model_array[$key]['id'] = $value->vehicle_model_id;
+                $vehicle_model_array[$key]['name'] = isset($value->get_vehicle_model->name) ? $value->get_vehicle_model->name : '';
             }
             ?>
 
@@ -63,30 +61,30 @@
                 <div class="thumbnail">
                     <img class="group list-group-image" src="<?php echo e(URL::asset('/images/product1.jpg')); ?>" alt="" />
                     <div class="caption">
-                        <h4 class="group inner list-group-item-heading"><?php echo e($value->getProducts->product_name); ?></h4>
-                        <!--<h4 class="group inner grid-group-item-heading"><?php echo e(str_limit($value->getProducts->product_name, $limit = 43, $end = '...')); ?></h4>-->
+                        <h4 class="group inner list-group-item-heading"><?php echo e($value->product_name); ?></h4>
+                        <h4 class="group inner grid-group-item-heading"><?php echo e(str_limit($value->product_name, $limit = 43, $end = '...')); ?></h4>
                         <p class="group inner grid-group-item-text">
-                            <?php echo e(str_limit($value->getProducts->product_long_description, $limit = 50, $end = '...')); ?>
+                            <?php echo e(str_limit($value->product_long_description, $limit = 50, $end = '...')); ?>
 
                         </p>
                         <p class="group inner list-group-item-text">
-                            <?php echo e($value->getProducts->product_long_description); ?>
+                            <?php echo e($value->product_long_description); ?>
 
                         </p>
                         <div class="row">
-                            <p class="lead">$<?php echo e($value->getProducts->price); ?></p>
+                            <p class="lead">$<?php echo e($value->price); ?></p>
                         </div>
                     </div>
                 </div>
                 <div class="product-card__overlay">
-                    <a class="btn am-black product-card__overlay-btn" href="<?php echo e(URL('products').'/'.$value->getProducts->product_slug); ?>">View <span class="glyphicon glyphicon-eye-open"></span></a>
+                    <a class="btn am-black product-card__overlay-btn" href="<?php echo e(URL('products').'/'.$value->product_slug); ?>">View <span class="glyphicon glyphicon-eye-open"></span></a>
                     <a class="btn am-orange product-card__overlay-btn" href="javascript:void(0);">Add to cart <span class="glyphicon glyphicon-shopping-cart"></span></a>
                 </div>
             </div>
             <?php endforeach; $__env->popLoop(); $loop = $__env->getFirstLoop(); if ($__empty_1): ?>
                 <div class="col-md-12">
                     <div class="alert alert-success" role="alert">
-                        <strong>Sorry,</strong> no products found!
+                        <strong>Sorry,</strong> no matches were found containing (<?php echo e(Request::input('q')); ?>).Please try some other keyword!
                     </div>
                 </div>
             <?php endif; ?>
@@ -107,7 +105,7 @@
                 </div>
                 <div class="panel-collapse collapse in" role="tabpanel" id="search-ymm-collapse-plain" style="">
                     <div class="panel-body">
-                         <form id="am-ymm-home-form" class="form-horizontal" role="form">
+                        <form id="am-ymm-home-form" class="form-horizontal" role="form">
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <div class="btn-group year-select ymm-select">
@@ -189,7 +187,6 @@
                                 <li>
                                     <?php if($key !=0): ?>
                                     <label class="checkbox-inline">
-                                        <!--<input type="checkbox" checked  value="<?php echo e($val['id']); ?>"><a class="filter-applied" href="javascript:void(0);"><?php echo e($val['name']); ?></a>-->
                                         <span class="glyphicon glyphicon-chevron-right"></span>
                                         <a class="<?php if(Request::input('q') == $val['name']): ?>filter-applied <?php endif; ?>" href="<?php echo e(URL('/products/search').'?q='.urlencode($val['name'])); ?>"><?php echo e($val['name']); ?></a>
                                     </label>

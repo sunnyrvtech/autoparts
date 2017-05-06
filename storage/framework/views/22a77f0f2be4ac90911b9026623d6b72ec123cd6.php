@@ -1,13 +1,12 @@
-@extends('layouts.app')
-@push('stylesheet')
-@endpush
-@section('content')
+<?php $__env->startPush('stylesheet'); ?>
+<?php $__env->stopPush(); ?>
+<?php $__env->startSection('content'); ?>
 <div class="container">
     <section>
         <div id="breadcrumb" itemprop="breadcrumb" itemscope="itemscope" itemtype="http://www.schema.org/BreadcrumbList">
-            <a href="{{ url('/') }}">Home</a>
-            <span class="divider"> &gt; </span><span>{{ Request::segment(1) }}</span>
-            <span class="divider"> &gt; </span><span>{{ Request::segment(2) }}</span>
+            <a href="<?php echo e(url('/')); ?>">Home</a>
+            <span class="divider"> &gt; </span><span><?php echo e(Request::segment(1)); ?></span>
+            <span class="divider"> &gt; </span><span><?php echo e(Request::segment(2)); ?></span>
         </div>
     </section>
     <?php
@@ -17,19 +16,19 @@
         <div class="col-md-6">
             <div class="product-images">
                 <ul class="thumbs">
-                    @if($product_images)
-                    @foreach($product_images as $val)
+                    <?php if($product_images): ?>
+                    <?php $__currentLoopData = $product_images; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $val): $__env->incrementLoopIndices(); $loop = $__env->getFirstLoop(); ?>
                     <li class="current">
                         <a href="javascript:void(0);">
-                            <img class="img" src="{{ URL::asset('/product_images').'/'.$val}}">
+                            <img class="img" src="<?php echo e(URL::asset('/product_images').'/'.$val); ?>">
                         </a>
                     </li>
-                    @endforeach
-                    @endif
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getFirstLoop(); ?>
+                    <?php endif; ?>
                 </ul>
                 <div id="product-image">
                     <span>
-                        <img class="img current-image" id="ShowImage" src="{{ URL::asset('/product_images').'/' }}{{ isset($product_images[0])?$product_images[0]:'default.jpg' }}">
+                        <img class="img current-image" id="ShowImage" src="<?php echo e(URL::asset('/product_images').'/'); ?><?php echo e(isset($product_images[0])?$product_images[0]:'default.jpg'); ?>">
                     </span>
                 </div>
             </div>
@@ -37,7 +36,7 @@
         <div class="col-md-6">
             <div class="row">
                 <div id="product-promo">
-                    <h3>{{ $products->product_name }}</h3>
+                    <h3><?php echo e($products->product_name); ?></h3>
                 </div>
             </div>
             <div class=" row material" elevation="1">
@@ -45,28 +44,29 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label for="price">Part Number:</label><span> {{ $products->part_number }}</span>
+                                <label for="price">Part Number:</label><span> <?php echo e($products->part_number); ?></span>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label for="price">Price:</label><span> ${{ $products->price }}</span>
+                                <label for="price">Price:</label><span> $<?php echo e($products->price); ?></span>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label for="quantity">Available Quantity:</label><span> {{ $products->quantity }}</span>
+                                <label for="quantity">Available Quantity:</label><span> <?php echo e($products->quantity); ?></span>
                             </div>
                         </div>
                     </div>
                     <div class="row form-inline">
                         <div class="col-md-12">
-                            <form name="cartForm" role="form" method="POST" action="javascript:void(0);" ng-submit="submitCart(cartForm.$valid,{{ $products->id }})" novalidate>
-                                {{ csrf_field()}}
+                            <form name="cartForm" role="form" method="POST" action="javascript:void(0);" ng-submit="submitCart(cartForm.$valid,<?php echo e($products->id); ?>)" novalidate>
+                                <?php echo e(csrf_field()); ?>
+
                                 <div class="form-group" ng-class="{ 'has-error' : submitted && cartForm.quantity.$error.required }">
                                     <span ng-show="submitted && cartForm.quantity.$error.required" class="help-block">
                                         <strong>Please select quantity</strong>
@@ -95,21 +95,24 @@
                     <div class="tab-pane active" id="productDetails">     
 <!--                        <p><span class="am-orange-text">Part Number: <em>AM-2048461716</em></span></p>-->
                         <div class="product-details-body">
-                            {!!  $products->product_long_description !!}    
+                            <?php echo $products->product_long_description; ?>    
                         </div>
                     </div> 
                     <div class="tab-pane" id="vehicleFit">
                         <h4 class="part-replaces-header">Vehicle Fit</h4>
-                        {!! $products->vehicle_fit !!}
+                        <?php echo $products->vehicle_fit; ?>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-@endsection
-@push('scripts')
+<?php $__env->stopSection(); ?>
+<?php $__env->startPush('scripts'); ?>
 <!--<script type="text/javascript">
     
 </script>-->
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.app', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

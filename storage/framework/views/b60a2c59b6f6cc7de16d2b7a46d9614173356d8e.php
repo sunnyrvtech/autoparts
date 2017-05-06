@@ -60,7 +60,7 @@
                             <span class="fab-cirle am-bg-dark-blue">
                                 <span aria-hidden="true" class="glyphicon glyphicon-shopping-cart"></span>
                             </span>
-                            <span class="mini-cart-count">0</span>
+                            <span class="mini-cart-count"><?php echo e($cart_count); ?></span>
                             <span class="hidden-xxs"> items in cart:</span>
 <!--                            <span class="visible-xxs-inline"> / </span>
                             <span class="mini-cart-total">$0.00</span>-->
@@ -84,7 +84,7 @@
                                     <span class="fab-cirle am-bg-dark-blue">
                                         <span aria-hidden="true" class="glyphicon glyphicon-shopping-cart"></span>
                                     </span>
-                                    <span class="mini-cart-count">0</span>  items in cart:
+                                    <span class="mini-cart-count"><?php echo e($cart_count); ?></span>  items in cart:
                                     <!--<span class="mini-cart-total">$0.00</span>-->
                                 </a>
                             </li>
@@ -123,7 +123,7 @@
                         <div class="bottom-phone-and-mini-cart">
 
                         </div>
-                        <form action="javascript:void(0);" class="navbar-form navbar-right" id="search-form" method="get" role="search">
+                        <form action="<?php echo e(URL('products/search')); ?>" class="navbar-form navbar-right" id="search-form" method="get" role="search">
                             <div class="input-group input-group-lg" id="search-phrase-container">
                                 <input aria-label="Enter Search" autocomplete="off" class="form-control" id="search-phrase" name="q" placeholder="Search" type="text" value="" />
                                 <span class="input-group-addon" id="search-glass">
@@ -255,6 +255,16 @@
                                             setTimeout(function () {
                                                 $("#redirect_alert").remove();
                                             }, 8000);
+                                           
+                                           $(document).ready(function () {
+                                                $(document).on('click', '#am-ymm-home-form li a', function (e) {
+                                                    e.preventDefault();
+                                                    angular.element(this).scope().getProductVehicleData($(this));
+                                                });
+                                                $(document).on("click","#search-glass",function(){
+                                                    $( "#search-form" ).submit();
+                                                });
+                                            });
 
         </script>
         <script src="<?php echo e(URL::asset('/js/angular/front.js')); ?>"></script>

@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Lang;
+use Auth;
+use Session;
+use App\Cart;
 use View;
 
 class LoginController extends Controller {
@@ -47,6 +50,17 @@ use AuthenticatesUsers;
             return $sections['content'];
         }
         return $view;
+    }
+
+    protected function authenticated($request, $user) {
+        if (Session::has('cartItem')) { // this is used to save guest cart data
+            $cart_data = Session::pull('cartItem');
+
+            foreach ($cart_data as $key => $value) {
+                $value['user_id'] = $user->id;
+                Cart::create($value);
+            }
+        }
     }
 
     /**

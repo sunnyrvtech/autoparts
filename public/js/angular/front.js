@@ -8,6 +8,7 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
         $scope.login = {};
         $scope.shipping = {};
         $scope.billing = {};
+        $scope.cart = {};
         $scope.loading = false;
         $("#loaderOverlay").show();
         $("#alert_loading").show();
@@ -352,6 +353,39 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
                 });
             }
         }
+        
+        $scope.submitCart = function (isValid,$productId) {
+           
+            $scope.cart.product_id = $productId;
+            var data = $scope.cart;
+            if (isValid) {
+                $scope.loading = true;
+                $http({
+                    method: 'POST',
+                    url: BaseUrl + '/cart/add',
+                    data: data,
+                    headers: {'Content-Type': 'application/json'}
+                }).then(function (data, status, headers, config) {
+                    $scope.loading = false;
+                    $scope.alert_loading = true;
+                    $scope.alertClass = 'alert-success';
+                    $scope.alertLabel = 'Success!';
+                    $scope.alert_messages = data.data.messages;
+                    $scope.alertHide();
+                    $(window).scrollTop(0);
+                    $scope.loading = false;
+                }, function errorCallback(data) {
+                    $scope.loading = false;
+                    $scope.alert_loading = true;
+                    $scope.alertClass = 'alert-danger';
+                    $scope.alertLabel = 'Error!';
+                    $scope.alert_messages = data.data.error;
+                    $scope.alertHide();
+                    $(window).scrollTop(0);
+
+                });
+            }
+        }
 
         $scope.getProductByPage = function (element) {
             $http.get(element).
@@ -362,6 +396,41 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
                         $(window).scrollTop(0);
                     });
 
+        }
+
+        $scope.getProductVehicleData = function (element) {
+            var id = element.attr('data-id');
+            var URL = element.attr('data-url');
+            var method = element.attr('data-method');
+            if (method != 'vehicle_year') {
+                element.closest(".ymm-select.open").find('.select-text').attr('data-id', id).text(element.text());
+            } else {
+                $(".dropdown-menu .ng-scope").remove();
+                element.closest(".ymm-select.open").find('.select-text').attr('data-id', id).text(id);
+            }
+            if (method != 'vehicle_model') {
+                $http({
+                    method: 'POST',
+                    url: URL,
+                    data: {id: id},
+                }).then(function (data, status, headers, config) {
+                    if (method == 'vehicle_year') {
+                        $scope.result_vehicle_company = data.data;
+                    } else {
+                        $scope.result_vehicle_model = data.data;
+                    }
+
+                });
+            }
+
+        }
+
+        $scope.searchProduct = function (element) {
+            var year = $("#vehicle_year").attr('data-id');
+            var make_id = $("#vehicle_make").attr('data-id');
+            var model_id = $("#vehicle_model").attr('data-id');
+            var url = BaseUrl+'/products/search'+'?year='+year+'&make_id='+make_id+'&model_id='+model_id;
+            window.location.href = url;
         }
 
         $scope.getState = function ($countryId, $type) {

@@ -18,7 +18,7 @@ class ProductSubCategory extends Model {
     ];
     
     /**
-     * function to get customer detail from order table.
+     * function to get product detail based on product sub category id.
      *
      * @return Response
      */

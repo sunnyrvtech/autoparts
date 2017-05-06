@@ -29,7 +29,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'IsAdmin'], function () {
     Route::resource('orders', 'Admin\OrderController');
     Route::post('import/csv', 'Admin\ImportController@uploadCsv')->name('import.csv');
 });
-Route::get('/', 'HomeController@index');
 Route::get('login', 'Auth\LoginController@index');
 Route::get('password/email', 'Auth\ForgotPasswordController@index');
 Route::post('password/email', 'Auth\ForgotPasswordController@getEmail');
@@ -40,7 +39,11 @@ Route::get('register', 'Auth\RegisterController@index');
 Route::post('register', 'Auth\RegisterController@create');
 Route::get('logout', 'Auth\LoginController@logout');
 //Route::get('products', 'ProductController@index');
-Route::get('single-product', 'ProductController@singleProduct');
+Route::post('products/vehicle', 'ProductController@getProductVehicleCompanyByYear');
+Route::post('products/vehicle_model', 'ProductController@getProductVehicleModelByMakeId');
+Route::get('products/search', 'ProductController@searchProduct');
+Route::get('products/{slug}', 'ProductController@singleProduct');
+Route::post('cart/add', 'ProductController@addCart')->middleware('web');
 Route::get('cart', 'ProductController@Cart');
 Route::get('my-account', 'AccountController@index');
 Route::post('my-account/profile', 'AccountController@updateProfile');
@@ -54,15 +57,13 @@ Route::get('account/activate/{code}', array(
     'uses' => 'AccountController@getActivate'
 ));
 Route::get('/{slug}', 'SubCategoryController@getSubSubcategory');
-Route::get('/{company}/{slug}', 'SubSubCategoryController@getSubSubSubcategory');
+//Route::get('/{company}/{slug}', 'SubSubCategoryController@getSubSubSubcategory');
 
 // Auth::routes();
  
  
 //Route::group(['prefix' => 'api'], function () {
    
-
-//    Route::resource('api/todos', 'TodosController');
 
    
 //});

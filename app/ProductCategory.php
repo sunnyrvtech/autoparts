@@ -16,5 +16,17 @@ class ProductCategory extends Model {
     protected $fillable = [
         'product_id', 'category_id'
     ];
+    
+    
+    
+    /**
+     * function to search product based on category name 
+     *
+     * @return Response
+     */
+
+    public function category() {
+        return $this->belongsTo('App\Category', 'category_id','id');
+    }
 
 }

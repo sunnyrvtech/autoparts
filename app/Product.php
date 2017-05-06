@@ -31,4 +31,37 @@ class Product extends Model {
         return $this->hasMany('App\ProductSubSubCategory');
     }
 
+    public function get_brands() {
+        return $this->hasOne('App\Brand', 'id', 'brand_id');
+    }
+    
+    
+    /**
+     * function to search product based on category name 
+     *
+     * @return Response
+     */
+
+    public function product_category() {
+        return $this->belongsTo('App\ProductCategory', 'id','product_id');
+    }
+
+    /**
+     * function to get vehicle company 
+     *
+     * @return Response
+     */
+    public function get_vehicle_company() {
+        return $this->hasOne('App\VehicleCompany', 'id', 'vehicle_make_id');
+    }
+
+    /**
+     * function to get vehicle model 
+     *
+     * @return Response
+     */
+    public function get_vehicle_model() {
+        return $this->hasOne('App\VehicleModel', 'id', 'vehicle_model_id');
+    }
+
 }

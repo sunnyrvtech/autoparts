@@ -22,36 +22,47 @@
         <div class="col-md-12 material" elevation="1">
             <div class="am-ymm horizontal hide-header full-width">
                 <h2>Select your vehicle</h2>
+                <?php
+                $minYear = date('Y', strtotime('-50 year'));
+                $maxYear = date('Y', strtotime('+1 year'));
+                // set start and end year range
+                $yearArray = range($maxYear, $minYear);
+                ?>
                 <div class="am-ymm-inner">
                     <h3 id="ymm-header">Find parts for your car</h3>
                     <form id="am-ymm-home-form">
                         <div class="btn-group year-select ymm-select">
                             <button class="btn btn-default dropdown-toggle input-xlg" data-toggle="dropdown" type="button">
-                                <span class="select-text">Select Vehicle Year</span><span class="caret"></span>
+                                <span class="select-text" id="vehicle_year">Select Vehicle Year</span><span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu scrollable-menu">
                                 <li><a role="button">Select Vehicle Year</a></li>
+                                <?php $__currentLoopData = $yearArray; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $val): $__env->incrementLoopIndices(); $loop = $__env->getFirstLoop(); ?>
+                                <li><a data-id="<?php echo e($val); ?>" data-method="vehicle_year" data-url="<?php echo e(url('products/vehicle')); ?>" role="button"><?php echo e($val); ?></a></li>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getFirstLoop(); ?>
                             </ul>
                         </div>
 
                         <div class="btn-group make-select ymm-select">
                             <button class="btn btn-default dropdown-toggle input-xlg" data-toggle="dropdown" type="button">
-                                <span class="select-text">Select Vehicle Make</span><span class="caret"></span>
+                                <span class="select-text" id="vehicle_make">Select Vehicle Make</span><span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu scrollable-menu">
                                 <li><a role="button">Select Vehicle Make</a></li>
+                                <li ng-repeat="x in result_vehicle_company"><a data-id="<%x.get_vehicle_company.id%>" data-method="vehicle_company" data-url="<?php echo e(url('products/vehicle_model')); ?>" role="button"><%x.get_vehicle_company.name%></a></li>
                             </ul>
                         </div>
 
                         <div class="btn-group model-select ymm-select">
                             <button class="btn btn-default dropdown-toggle input-xlg" data-toggle="dropdown" type="button">
-                                <span class="select-text">Select Vehicle Model</span><span class="caret"></span>
+                                <span class="select-text" id="vehicle_model">Select Vehicle Model</span><span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu scrollable-menu">
-                                <li><a role="button">Select Vehicle Model</a></li>
+                                 <li><a role="button">Select Vehicle Model</a></li>
+                                <li ng-repeat="x in result_vehicle_model"><a data-id="<%x.get_vehicle_model.id%>" data-method="vehicle_model"  role="button"><%x.get_vehicle_model.name%></a></li>
                             </ul>
                         </div>
-                        <button class="btn btn-xlg am-orange hover material ymm-submit" elevation="1" type="submit">Search</button>
+                        <button class="btn btn-xlg am-orange hover material ymm-submit" elevation="1" ng-click="searchProduct()" type="submit">Search</button>
                         <br class="clearfix" />
                     </form>
                 </div>
@@ -71,7 +82,7 @@
                     <div class="slickSlider-con slickSlider" type="TOP_BASIC_MAKE" style="overflow: initial; display: block;">
                         <?php $__currentLoopData = $featured_category; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key=>$value): $__env->incrementLoopIndices(); $loop = $__env->getFirstLoop(); ?>
                         <div class="thumbnail-wrapper">
-                            <a class="thumbnail" href="javascript:void(0);">
+                            <a class="thumbnail" href="<?php echo e(url('/'.$value->slug)); ?>">
                                 <!--                            <div class="img-wrapper">
                                                                 <img class="" src="https://db08le7w43ifw.cloudfront.net/catimage/19/main.JPG" alt="Headlight Assemblies" />
                                                             </div>  -->
@@ -84,7 +95,7 @@
                     </div>
                     <div class="full-list-widget">
                         <div class="actions">
-                            <a class="btn am-orange hover material" elevation="1" href="javascript:void(0);">View All</a>
+                            <!--<a class="btn am-orange hover material" elevation="1" href="javascript:void(0);">View All</a>-->
                         </div>
                     </div>
                 </div>
@@ -105,7 +116,7 @@
                         <div class="slickSlider-half slickSlider"  type="TOP_BASIC_MAKE" style="overflow: initial; display: block;">
                             <?php $__currentLoopData = $brands; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key=>$value): $__env->incrementLoopIndices(); $loop = $__env->getFirstLoop(); ?>
                             <div class="thumbnail-wrapper">
-                                <a class="thumbnail" href="javascript:void(0);">
+                                <a class="thumbnail" href="<?php echo e(URL('products/search').'?q='.urlencode($value->name)); ?>">
                                     <!--                                <div class="img-wrapper">
                                                                         <img class="" src="" alt="" />
                                                                     </div>-->
@@ -118,7 +129,7 @@
                         </div>
                         <div class="full-list-widget">
                             <div class="actions">
-                                <a class="btn am-orange hover material" elevation="1" href="javascript:void(0);">View All</a>
+                                <!--<a class="btn am-orange hover material" elevation="1" href="javascript:void(0);">View All</a>-->
                             </div>
                         </div>
                     </div>
@@ -131,7 +142,7 @@
                         <div class="slickSlider-half slickSlider" type="TOP_BASIC_MAKE" style="overflow: initial; display: block;">
                             <?php $__currentLoopData = $vehicles; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key=>$value): $__env->incrementLoopIndices(); $loop = $__env->getFirstLoop(); ?>
                             <div class="thumbnail-wrapper">
-                                <a class="thumbnail" href="javascript:void(0);">
+                                <a class="thumbnail" href="<?php echo e(URL('products/search').'?q='.urlencode($value->name)); ?>">
                                     <div class="caption">
                                         <div class="caption-text truncate"><?php echo e($value->name); ?></div>
                                     </div>
@@ -141,7 +152,7 @@
                         </div>
                         <div class="full-list-widget">
                             <div class="actions">
-                                <a class="btn am-orange hover material" elevation="1" href="javascript:void(0);">View All</a>
+                                <!--<a class="btn am-orange hover material" elevation="1" href="javascript:void(0);">View All</a>-->
                             </div>
                         </div>
                     </div>
@@ -219,7 +230,7 @@
                     </div>
                     <div class="full-list-widget">
                         <div class="actions">
-                            <a class="btn am-orange hover material" elevation="1" href="javascript:void(0);">View All</a>
+<!--                            <a class="btn am-orange hover material" elevation="1" href="javascript:void(0);">View All</a>-->
                         </div>
                     </div>
                 </div>
