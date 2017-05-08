@@ -21,9 +21,10 @@ class AppServiceProvider extends ServiceProvider {
         
         View::composer('*', function($view) {  // this is used to share cart item count 
             if (auth()->check()) {
-                $cart_count = Cart::where('user_id',auth()->id())->count();
+                $cart_count = Cart::where('user_id',auth()->id())->sum('quantity');
             } else {
-                $cart_count = Session::has('cartItem') ? count(Session::get('cartItem')) : '0';  
+                // array_sum and array_column function is used to count sum for quantity 
+                $cart_count = Session::has('cartItem') ? array_sum(array_column(Session::get('cartItem'),'quantity')) : '0';  
             }
             $view->with('cart_count', $cart_count);
         });

@@ -58,7 +58,10 @@ use AuthenticatesUsers;
 
             foreach ($cart_data as $key => $value) {
                 $value['user_id'] = $user->id;
-                Cart::create($value);
+                $cart = Cart::Where('user_id', $user->id)->where('product_id', $value['product_id'])->first(array('id', 'quantity'));
+                if (!$cart) {
+                    Cart::create($value);
+                }
             }
         }
     }

@@ -353,10 +353,13 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
                 });
             }
         }
-        
-        $scope.submitCart = function (isValid,$productId) {
-           
+
+        $scope.submitCart = function (isValid, $productId) {
+
             $scope.cart.product_id = $productId;
+            if ($scope.cart.quantity == undefined) {
+                $scope.cart.quantity = 1;
+            }
             var data = $scope.cart;
             if (isValid) {
                 $scope.loading = true;
@@ -366,6 +369,7 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
                     data: data,
                     headers: {'Content-Type': 'application/json'}
                 }).then(function (data, status, headers, config) {
+                    $scope.cart_count = parseInt($scope.cart_count) + parseInt($scope.cart.quantity); //  this is used to update cart count
                     $scope.loading = false;
                     $scope.alert_loading = true;
                     $scope.alertClass = 'alert-success';
@@ -429,7 +433,7 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
             var year = $("#vehicle_year").attr('data-id');
             var make_id = $("#vehicle_make").attr('data-id');
             var model_id = $("#vehicle_model").attr('data-id');
-            var url = BaseUrl+'/products/search'+'?year='+year+'&make_id='+make_id+'&model_id='+model_id;
+            var url = BaseUrl + '/products/search' + '?year=' + year + '&make_id=' + make_id + '&model_id=' + model_id;
             window.location.href = url;
         }
 

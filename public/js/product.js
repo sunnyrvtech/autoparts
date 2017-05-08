@@ -33,6 +33,9 @@ $(document).ready(function () {
         if (qs['make_id'] != undefined) {
             URL =URL+'&model_id='+qs['model_id'];
         }
+        if (qs['q'] != undefined) {
+            URL =URL+'&q='+qs['q'];
+        }
         
         angular.element(this).scope().getProductByPage(URL);
     });

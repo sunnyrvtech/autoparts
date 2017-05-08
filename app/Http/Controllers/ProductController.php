@@ -41,7 +41,41 @@ class ProductController extends Controller {
      * @return Response
      */
     public function Cart() {
-        return View::make('carts.index');
+        if (Auth::check()) {
+            $carts = Cart::where('user_id', Auth::id())->get(array('product_id', 'quantity', 'total_price'));
+            if (empty($carts->toArray())) {
+                $carts = array();
+            }
+        } else {
+            if (Session::has('cartItem')) {
+                $carts = json_decode(json_encode(Session::get('cartItem')));
+            } else {
+                $carts = array();
+            }
+        }
+        if (!empty($carts)) {
+            $cart_data = array();
+            foreach ($carts as $key => $value) {
+                $products = Product::where('id', $value->product_id)->first();
+                $product_image = json_decode($products->product_details->product_images);
+
+                $cart_data[$key] = array(
+                    'product_name' => $products->product_name,
+                    'product_image' => isset($product_image[0]) ? $product_image[0] : 'default.jpg',
+                    'product_slug' => $products->product_slug,
+                    'part_number' => $products->part_number,
+                    'vehicle_company' => $products->get_vehicle_company->name,
+                    'vehicle_model' => $products->get_vehicle_model->name,
+                    'vehicle_year' => $products->vehicle_year,
+                    'quantity' => $value->quantity,
+                    'price' => $products->price,
+                    'total_price' => $value->total_price,
+                );
+            }
+        } else {
+            $cart_data = array();
+        }
+        return View::make('carts.index', compact('cart_data'));
     }
 
     /**
@@ -53,7 +87,7 @@ class ProductController extends Controller {
         $data = $request->all();
         //get product quantity and price based on product id
         $products = Product::select(array('id', 'price', 'quantity'))->find($data['product_id']);
-        $data['quantity'] = (int) $data['quantity'] ? (int) $data['quantity'] : 1;
+        $data['quantity'] = isset($data['quantity']) ? (int) $data['quantity'] : 1;
 
         if (Auth::check()) {   ///  if user logged in then we insert his cart details in the database
             $data['user_id'] = Auth::id();

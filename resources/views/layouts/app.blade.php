@@ -56,11 +56,11 @@
                             <span class="icon-bar"></span>
                         </button>
 
-                        <a class="mini-cart pull-right hidden-md hidden-lg" id="mobile-mini-cart" href="javascript:void(0);">
+                        <a class="mini-cart pull-right hidden-md hidden-lg" id="mobile-mini-cart" href="{{ URL('/cart') }}">
                             <span class="fab-cirle am-bg-dark-blue">
                                 <span aria-hidden="true" class="glyphicon glyphicon-shopping-cart"></span>
                             </span>
-                            <span class="mini-cart-count">{{ $cart_count }}</span>
+                            <span class="mini-cart-count" ng-bind="cart_count" ng-init="cart_count='{{ $cart_count }}'"></span>
                             <span class="hidden-xxs"> items in cart:</span>
 <!--                            <span class="visible-xxs-inline"> / </span>
                             <span class="mini-cart-total">$0.00</span>-->
@@ -80,11 +80,11 @@
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
                             <li class="active mini-cart dropdown" id="desktop-mini-cart">
-                                <a href="javascript:void(0);">
+                                <a href="{{ URL('/cart') }}">
                                     <span class="fab-cirle am-bg-dark-blue">
                                         <span aria-hidden="true" class="glyphicon glyphicon-shopping-cart"></span>
                                     </span>
-                                    <span class="mini-cart-count">{{ $cart_count }}</span>  items in cart:
+                                    <span class="mini-cart-count" ng-bind="cart_count" ng-init="cart_count='{{ $cart_count }}'"></span>  items in cart:
                                     <!--<span class="mini-cart-total">$0.00</span>-->
                                 </a>
                             </li>

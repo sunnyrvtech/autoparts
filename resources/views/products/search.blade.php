@@ -56,11 +56,11 @@
                 $vehicle_model_array[$key]['id'] = $value->vehicle_model_id;
                 $vehicle_model_array[$key]['name'] = isset($value->get_vehicle_model->name) ? $value->get_vehicle_model->name : '';
             }
+            $product_images = json_decode($value->product_details->product_images);
             ?>
-
             <div class="item  col-xs-4 col-lg-4 grid-group-item list-group-item">
                 <div class="thumbnail">
-                    <img class="group list-group-image" src="{{ URL::asset('/images/product1.jpg') }}" alt="" />
+                    <img width="250" height="250" class="group list-group-image" src="{{ URL::asset('/product_images').'/' }}{{ isset($product_images[0])?$product_images[0]:'default.jpg' }}" alt="" />
                     <div class="caption">
                         <h4 class="group inner list-group-item-heading">{{ $value->product_name }}</h4>
                         <h4 class="group inner grid-group-item-heading">{{ str_limit($value->product_name, $limit = 43, $end = '...') }}</h4>
@@ -77,7 +77,7 @@
                 </div>
                 <div class="product-card__overlay">
                     <a class="btn am-black product-card__overlay-btn" href="{{ URL('products').'/'.$value->product_slug }}">View <span class="glyphicon glyphicon-eye-open"></span></a>
-                    <a class="btn am-orange product-card__overlay-btn" href="javascript:void(0);">Add to cart <span class="glyphicon glyphicon-shopping-cart"></span></a>
+                    <a class="btn am-orange product-card__overlay-btn" href="javascript:void(0);" ng-click="submitCart(true,{{ $value->id }})">Add to cart <span class="glyphicon glyphicon-shopping-cart"></span></a>
                 </div>
             </div>
             @empty
