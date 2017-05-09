@@ -11,13 +11,13 @@ $(document).ready(function () {
         $('#products-content-area .item').addClass('grid-group-item');
     });
 
-    $(document).on('mouseenter', '#products-content-area .item', function () {
-        $(this).find(".product-card__overlay").addClass("fadeInDown animated");
-    });
-    
-    $(document).on('mouseleave', '#products-content-area .item', function () {
-        $(this).find(".product-card__overlay").removeClass("fadeInDown");
-    });
+//    $(document).on('mouseenter', '#products-content-area .item', function () {
+//        $(this).find(".product-card__overlay").addClass("fadeInDown animated");
+//    });
+//    
+//    $(document).on('mouseleave', '#products-content-area .item', function () {
+//        $(this).find(".product-card__overlay").removeClass("fadeInDown");
+//    });
     
     $(document).on('click', '.pagination a', function (e) {
         e.preventDefault();

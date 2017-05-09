@@ -83,6 +83,9 @@ class AccountController extends Controller {
                     'zip' => 'required|max:6'
         ]);
 
+
+        $data = $this->getLatLong($data['state_id'], $data['city'], $data['address1'], $data['zip']);
+
         $data['user_id'] = Auth::id();
 
         $errors = $validator->errors();
@@ -98,6 +101,35 @@ class AccountController extends Controller {
             BillingAddress::create($data);   // billing address same as shipping address when user enter first time
         }
         return response()->json(['success' => true, 'messages' => "Shipping address updated successfully."]);
+    }
+
+    /**
+     * function to get latitude and longitude.
+     *
+     * @return Response
+     */
+    public function getLatLong($state_id, $city, $address, $zip) {
+        $states = State::where('id', $state_id)->first();
+
+        $address = str_replace(" ", "+", $states->get_countries->name) . "+" . str_replace(" ", "+", $states->name) . "+" . str_replace(" ", "+", $city) . "+" . str_replace(" ", "+", $address) . "+" . $zip;
+        $url = "http://maps.google.com/maps/api/geocode/json?address=$address&sensor=false&region=USA";
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_PROXYPORT, 3128);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        $response = curl_exec($ch);
+        curl_close($ch);
+        $response_a = json_decode($response);
+        if (isset($response_a->results[0]->geometry->location->lat)) {
+            $result['latitude'] = $response_a->results[0]->geometry->location->lat;
+            $result['longitude'] = $response_a->results[0]->geometry->location->lng;
+        } else {
+            $result['latitude'] = null;
+            $result['longitude'] = null;
+        }
+        return $result;
     }
 
     /**
