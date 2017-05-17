@@ -10,6 +10,7 @@ use Auth;
 use Session;
 use App\Cart;
 use View;
+use URL;
 
 class LoginController extends Controller {
     /*
@@ -32,6 +33,21 @@ use AuthenticatesUsers;
      */
     protected $redirectTo = '/';
 
+    public function __construct(Request $request) {
+        
+        $this->middleware('guest', ['except' => 'logout']);
+        $previous_url =  explode("/", parse_url(URL::previous(), PHP_URL_PATH));
+        if ($previous_url[3] == 'cart') {
+            Session::set('backUrl', URL::previous());
+        }else{
+            Session::set('backUrl', URL::to('/my-account'));
+        }
+    }
+
+//    public function redirectTo() {
+//        return Session::get('backUrl') ? Session::get('backUrl') : $this->redirectTo;
+//    }
+
     /**
      * Create a new controller instance.
      *
@@ -53,16 +69,20 @@ use AuthenticatesUsers;
     }
 
     protected function authenticated($request, $user) {
-        if (Session::has('cartItem')) { // this is used to save guest cart data
-            $cart_data = Session::pull('cartItem');
 
-            foreach ($cart_data as $key => $value) {
-                $value['user_id'] = $user->id;
-                $cart = Cart::Where('user_id', $user->id)->where('product_id', $value['product_id'])->first(array('id', 'quantity'));
-                if (!$cart) {
-                    Cart::create($value);
+        if ($request->wantsJson()) {
+            if (Session::has('cartItem')) { // this is used to save guest user cart data
+                $cart_data = Session::pull('cartItem');
+
+                foreach ($cart_data as $key => $value) {
+                    $value['user_id'] = $user->id;
+                    $cart = Cart::Where('user_id', $user->id)->where('product_id', $value['product_id'])->first(array('id', 'quantity'));
+                    if (!$cart) {
+                        Cart::create($value);
+                    }
                 }
             }
+            return response()->json(['intended' => Session::get('backUrl')]);
         }
     }
 
@@ -99,10 +119,6 @@ use AuthenticatesUsers;
         return redirect()->back()
                         ->withInput($request->only($this->username(), 'remember'))
                         ->withErrors([$this->username() => $message]);
-    }
-
-    public function __construct() {
-        $this->middleware('guest', ['except' => 'logout']);
     }
 
 }

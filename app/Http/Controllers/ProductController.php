@@ -9,6 +9,7 @@ use App\VehicleCompany;
 use App\VehicleModel;
 use App\Cart;
 use App\SubCategory;
+use App\ShippingAddress;
 use Session;
 use Auth;
 use Carbon\Carbon;
@@ -40,18 +41,22 @@ class ProductController extends Controller {
      *
      * @return Response
      */
-    public function Cart() {
+    public function Cart(Request $request) {
+
         if (Auth::check()) {
-            $carts = Cart::where('user_id', Auth::id())->get(array('product_id', 'quantity', 'total_price'));
+            $carts = Cart::where('user_id', Auth::id())->get(array('id', 'product_id', 'quantity', 'total_price'));
+            $shipping_address = ShippingAddress::where('user_id', Auth::id())->first();
             if (empty($carts->toArray())) {
                 $carts = array();
             }
+            
         } else {
             if (Session::has('cartItem')) {
                 $carts = json_decode(json_encode(Session::get('cartItem')));
             } else {
                 $carts = array();
             }
+            $shipping_address = '';
         }
         if (!empty($carts)) {
             $cart_data = array();
@@ -60,6 +65,8 @@ class ProductController extends Controller {
                 $product_image = json_decode($products->product_details->product_images);
 
                 $cart_data[$key] = array(
+                    'product_id' => $products->id,
+                    'cart_id' => Auth::check() ? $value->id : $products->id, //   if user not logged in then we have removed item in the session array based on product id otherwise from database
                     'product_name' => $products->product_name,
                     'product_image' => isset($product_image[0]) ? $product_image[0] : 'default.jpg',
                     'product_slug' => $products->product_slug,
@@ -75,11 +82,17 @@ class ProductController extends Controller {
         } else {
             $cart_data = array();
         }
-        return View::make('carts.index', compact('cart_data'));
+
+        $view = View::make('carts.index', compact('cart_data', 'shipping_address'));
+        if ($request->wantsJson()) {
+            $sections = $view->renderSections();
+            return $sections['content'];
+        }
+        return $view;
     }
 
     /**
-     * Cart function.
+     * Add to cart function.
      *
      * @return Response
      */
@@ -87,12 +100,12 @@ class ProductController extends Controller {
         $data = $request->all();
         //get product quantity and price based on product id
         $products = Product::select(array('id', 'price', 'quantity'))->find($data['product_id']);
-        $data['quantity'] = isset($data['quantity']) ? (int) $data['quantity'] : 1;
+        $data['quantity'] = isset($data['quantity']) && ((int) $data['quantity'] > 0) ? (int) $data['quantity'] : 1;
 
         if (Auth::check()) {   ///  if user logged in then we insert his cart details in the database
             $data['user_id'] = Auth::id();
             // this is used to check if user already insert same item in the cart
-            $cart = Cart::Where('user_id', $data['user_id'])->where('product_id', $data['product_id'])->first(array('id', 'quantity'));
+            $cart = Cart::Where('user_id', $data['user_id'])->Where('product_id', $data['product_id'])->first(array('id', 'quantity'));
             if ($cart) {
                 $data['quantity'] = $cart->quantity + $data['quantity'];  // if item already exist then we update same product quantity with current quantity 
             }
@@ -139,6 +152,88 @@ class ProductController extends Controller {
             Session::save();
         }
         return response()->json(['success' => true, 'messages' => "Item Added to cart successfully!"]);
+    }
+
+    /**
+     * update cart function.
+     *
+     * @return Response
+     */
+    public function updateCart(Request $request) {
+        $data = $request->all();
+        //get product quantity and price based on product id
+        $products = Product::select(array('id', 'price', 'quantity'))->find($data['product_id']);
+        $data['quantity'] = isset($data['quantity']) && ((int) $data['quantity'] > 0) ? (int) $data['quantity'] : 1;
+
+        if ($data['quantity'] > $products->quantity) {  // this is used to check if product quantity less than the available quantity
+            return response()->json(array('error' => 'Quantity should be less than available quantity'), 401);
+        }
+        if (Auth::check()) {   ///  if user logged in then we insert his cart details in the database
+            $data['user_id'] = Auth::id();
+
+            $data['total_price'] = $products->price * $data['quantity'];
+            $cart = Cart::Where('user_id', $data['user_id'])->Where('product_id', $data['product_id'])->first(array('id'));
+
+            if ($cart) {
+                $cart->fill(array('quantity' => $data['quantity'], 'total_price' => $data['total_price']))->save();
+            }
+        } else {
+            $data_array = array(
+                'product_id' => $data['product_id'],
+                'quantity' => $data['quantity'],
+                'total_price' => $products->price * $data['quantity'],
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            );
+
+            if (Session::has('cartItem')) {
+                $cart_array = Session::get('cartItem');
+                $cart_array[] = $data_array;
+
+                $merged = array();
+                foreach ($cart_array as $key => $val) {   // this is used to check if same item is already exist in the session array
+                    $merged[$val['product_id']] = $val;
+                }
+                Session::put('cartItem', array_values($merged));
+            } else {
+                $cart_array[] = $data_array;
+                Session::put('cartItem', $cart_array);
+            }
+            Session::save();
+        }
+        return response()->json(['success' => true, 'html' => $this->cart($request), 'messages' => "Quantity updated successfully!"]);
+    }
+
+    /**
+     * delete cart function.
+     *
+     * @return Response
+     */
+    public function deleteCart(Request $request) {
+
+        if (Auth::check()) {///  if user logged in then we delete item from cart table otherwise delete from session array
+            $cart = Cart::find($request->get('id'));
+            if (!$cart) {
+                return response()->json(array('error' => 'Something went wrong .Please try again later!'), 401);
+            } else {
+                $cart->delete();
+                //return response()->json(['success' => true, 'messages' => "Item deleted successfully !"]);
+            }
+        } else {
+
+            if (Session::has('cartItem')) {
+                $cart_array = Session::pull('cartItem');
+                foreach ($cart_array as $key => $val) {
+                    if ($val['product_id'] == $request->get('id')) {
+                        unset($cart_array[$key]);
+                    }
+                }
+                if (count($cart_array) > 0) {
+                    Session::put('cartItem', array_values($cart_array));
+                }
+            }
+        }
+        return response()->json(['success' => true, 'html' => $this->cart($request), 'messages' => "Item deleted successfully!"]);
     }
 
     /**

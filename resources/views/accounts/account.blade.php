@@ -5,7 +5,7 @@
 <div class="container"><!-- /#content.container -->   
     <div class="my-account">
         <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
-            <div class="btn-group btn-group-vertical" ng-init="selectedTab = 'profile'">
+            <div class="btn-group btn-group-vertical" ng-init="selectedTab = 'shipping-address'">
                 <div class="btn-group"> 
                     <a class="btn btn-nav" ng-class="{'active':selectedTab === 'profile'}" ng-click="selectedTab = 'profile'" href="#profile" data-toggle="tab">
                         <span class="glyphicon glyphicon-user"></span>
@@ -41,7 +41,7 @@
         <div class="col-xs-12 col-sm-9 col-md-6 col-lg-6">
             <!-- Tab panes -->
             <div class="tab-content">
-                <div class="tab-pane active" id="profile">
+                <div class="tab-pane" id="profile">
                     <div class="row">
                         <h3>Update Account Details:</h3>
                         <hr class="colorgraph">
@@ -88,7 +88,7 @@
                         </form>
                     </div>
                 </div>
-                <div class="tab-pane" id="shipping-address">
+                <div class="tab-pane active" id="shipping-address">
                     <div class="row">
                         <h3>Update Shipping Address:</h3>
                         <hr class="colorgraph">
@@ -165,6 +165,10 @@
                                     </span> 
                                 </div>
                             </div>
+                            <?php $previous_url =  explode("/", parse_url(URL::previous(), PHP_URL_PATH)); ?>
+                            @if($previous_url[3] == 'cart')
+                            <input type="hidden" ng-model="shipping.redirect_url" ng-init="shipping.redirect_url='cart'">
+                            @endif
                             <div class="row">
                                 <button type="submit" class="btn btn-success btn-block btn-lg">Submit</button>
                             </div>

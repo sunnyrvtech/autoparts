@@ -75,6 +75,15 @@ class AccountController extends Controller {
     public function updateShipping(Request $request) {
 
         $data = $request->all();
+        if ($request->get('redirect_url') != null) {
+            if ($request->get('redirect_url') == 'cart')
+                $intented = $request->get('redirect_url');
+            else
+                $intented = 'my-account';
+        } else {
+            $intented = 'my-account';
+        }
+
         $validator = Validator::make($data, [
                     'address1' => 'required|max:150',
                     'country_id' => 'required',
@@ -84,8 +93,10 @@ class AccountController extends Controller {
         ]);
 
 
-        $data = $this->getLatLong($data['state_id'], $data['city'], $data['address1'], $data['zip']);
+        $lat_long = $this->getLatLong($data['state_id'], $data['city'], $data['address1'], $data['zip']);
 
+        $data['latitude'] = $lat_long['latitude'];
+        $data['longitude'] = $lat_long['longitude'];
         $data['user_id'] = Auth::id();
 
         $errors = $validator->errors();
@@ -100,7 +111,43 @@ class AccountController extends Controller {
             ShippingAddress::create($data);
             BillingAddress::create($data);   // billing address same as shipping address when user enter first time
         }
-        return response()->json(['success' => true, 'messages' => "Shipping address updated successfully."]);
+        return response()->json(['success' => true, 'intended' => $intented, 'messages' => "Shipping address updated successfully."]);
+    }
+
+    /**
+     * Update billing function.
+     *
+     * @return Response
+     */
+    public function updateBilling(Request $request) {
+
+        $data = $request->all();
+        $validator = Validator::make($data, [
+                    'address1' => 'required|max:150',
+                    'country_id' => 'required',
+                    'state_id' => 'required',
+                    'city' => 'required',
+                    'zip' => 'required|max:6'
+        ]);
+
+        $lat_long = $this->getLatLong($data['state_id'], $data['city'], $data['address1'], $data['zip']);
+        $data['latitude'] = $lat_long['latitude']; 
+        $data['longitude'] = $lat_long['longitude']; 
+        $data['user_id'] = Auth::id();
+
+        $errors = $validator->errors();
+        if (!empty($errors->messages())) {
+            return response()->json($errors, 401);
+        }
+
+        $billings = BillingAddress::where('user_id', Auth::id())->first();
+        if (!empty($billings)) {
+            $billings->fill($data)->save();
+        } else {
+            BillingAddress::create($data);
+            ShippingAddress::create($data); // billing address same as shipping address when user enter first time
+        }
+        return response()->json(['success' => true, 'messages' => "Billing address updated successfully."]);
     }
 
     /**
@@ -133,40 +180,7 @@ class AccountController extends Controller {
     }
 
     /**
-     * Update billing function.
-     *
-     * @return Response
-     */
-    public function updateBilling(Request $request) {
-
-        $data = $request->all();
-        $validator = Validator::make($data, [
-                    'address1' => 'required|max:150',
-                    'country_id' => 'required',
-                    'state_id' => 'required',
-                    'city' => 'required',
-                    'zip' => 'required|max:6'
-        ]);
-
-        $data['user_id'] = Auth::id();
-
-        $errors = $validator->errors();
-        if (!empty($errors->messages())) {
-            return response()->json($errors, 401);
-        }
-
-        $billings = BillingAddress::where('user_id', Auth::id())->first();
-        if (!empty($billings)) {
-            $billings->fill($data)->save();
-        } else {
-            BillingAddress::create($data);
-            ShippingAddress::create($data); // billing address same as shipping address when user enter first time
-        }
-        return response()->json(['success' => true, 'messages' => "Billing address updated successfully."]);
-    }
-
-    /**
-     * Chnage password function.
+     * Change password function.
      *
      * @return Response
      */

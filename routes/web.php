@@ -43,7 +43,10 @@ Route::post('products/vehicle', 'ProductController@getProductVehicleCompanyByYea
 Route::post('products/vehicle_model', 'ProductController@getProductVehicleModelByMakeId');
 Route::get('products/search', 'ProductController@searchProduct');
 Route::get('products/{slug}', 'ProductController@singleProduct');
+Route::resource('payment','PaymentController');
 Route::post('cart/add', 'ProductController@addCart')->middleware('web');
+Route::post('cart/update', 'ProductController@updateCart')->middleware('web');
+Route::post('cart/delete', 'ProductController@deleteCart');
 Route::get('cart', 'ProductController@Cart');
 Route::get('my-account', 'AccountController@index');
 Route::post('my-account/profile', 'AccountController@updateProfile');
