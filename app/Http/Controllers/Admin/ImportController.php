@@ -93,6 +93,10 @@ class ImportController extends Controller {
                 if (!$category) {
                     Category::insert(array('name' => trim($row->category)));
                 }
+                if (!$sub_category = SubCategory::where('category_id', $category->id)->where('name', 'like', trim($row->sub_category))->first(array('id', 'category_id'))) {
+                    $slug = $this->createSlug(trim($row->sub_category),'category');
+                    $sub_category = SubCategory::create(array('category_id' => $category->id, 'name' => trim($row->sub_category), 'slug' => $slug, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
+                }
             }
         });
     }

@@ -28,6 +28,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'IsAdmin'], function () {
     Route::resource('products', 'Admin\ProductController');
     Route::resource('orders', 'Admin\OrderController');
     Route::post('import/csv', 'Admin\ImportController@uploadCsv')->name('import.csv');
+    Route::post('import/category', 'Admin\ImportController@createCategoryByCsv')->name('import.category');
 });
 Route::get('login', 'Auth\LoginController@index');
 Route::get('password/email', 'Auth\ForgotPasswordController@index');
@@ -43,7 +44,8 @@ Route::post('products/vehicle', 'ProductController@getProductVehicleCompanyByYea
 Route::post('products/vehicle_model', 'ProductController@getProductVehicleModelByMakeId');
 Route::get('products/search', 'ProductController@searchProduct');
 Route::get('products/{slug}', 'ProductController@singleProduct');
-Route::resource('payment','PaymentController');
+Route::get('checkout/success','PaymentController@paymentSuccess');
+Route::resource('checkout','PaymentController');
 Route::post('cart/add', 'ProductController@addCart')->middleware('web');
 Route::post('cart/update', 'ProductController@updateCart')->middleware('web');
 Route::post('cart/delete', 'ProductController@deleteCart');

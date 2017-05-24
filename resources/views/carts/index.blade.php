@@ -13,7 +13,7 @@
     <div id="checkout-final-con" class="container-fluid order-container">
         @if(!empty($cart_data))
         
-        <form class="form-horizontal" action="{{ route('payment.store') }}" method="post">
+        <form class="form-horizontal" action="{{ route('checkout.store') }}" method="post">
             <div class="row cart-list material" elevation="1">
                 <div class="col-md-12">
                     <div class="table-responsive order-items">

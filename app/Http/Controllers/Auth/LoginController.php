@@ -37,7 +37,7 @@ use AuthenticatesUsers;
         
         $this->middleware('guest', ['except' => 'logout']);
         $previous_url =  explode("/", parse_url(URL::previous(), PHP_URL_PATH));
-        if ($previous_url[3] == 'cart') {
+        if (!empty($previous_url[3]) && $previous_url[3] == 'cart') {
             Session::set('backUrl', URL::previous());
         }else{
             Session::set('backUrl', URL::to('/my-account'));

@@ -16,11 +16,7 @@ class CreateOrdersTable extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
-            $table->integer('product_id');
             $table->integer('transaction_id');
-            $table->integer('quantity');
-            $table->decimal('total_price', 5, 2);
-            $table->decimal('discount', 5, 2)->nullable();
             $table->enum('order_status', ['pending', 'failed','processing','shipped','completed']); 	
             $table->timestamps();
         });

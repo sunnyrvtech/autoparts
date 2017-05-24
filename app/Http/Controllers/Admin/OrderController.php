@@ -20,7 +20,7 @@ class OrderController extends Controller
     public function index(Request $request) {
         $title = 'Orders';
         if ($request->ajax()) {
-            $orders = Order::with(['getCustomer','getProduct'])->get();
+            $orders = Order::with(['getCustomer','getOrderDetails','getOrderDetails.getProduct'])->get();
 //            foreach ($orders as $key => $value) {
 //                $orders[$key]['action'] = '<a href="' . route('products.show', $value->id) . '" data-toggle="tooltip" title="update" class="glyphicon glyphicon-edit"></a>&nbsp;&nbsp;<a href="' . route('products.destroy', $value->id) . '" data-toggle="tooltip" title="delete" data-method="delete" class="glyphicon glyphicon-trash deleteRow"></a>';
 //            }

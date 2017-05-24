@@ -1,6 +1,4 @@
-@extends('admin/layouts.master')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="container-fluid">
     <div class="row form-group">
         <div class="col-md-12">
@@ -28,13 +26,13 @@
         </div>
     </div>
 </div>
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script type="text/javascript">
     $(function () {
         $('#brand-table').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ route('orders.index') }}",
+            ajax: "<?php echo e(route('orders.index')); ?>",
             order: [[ 9, "desc" ]],
             columns: [
                 {data: 'id', name: 'id'},
@@ -70,5 +68,7 @@
         });
     });
 </script>
-@endpush
-@endsection
+<?php $__env->stopPush(); ?>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('admin/layouts.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

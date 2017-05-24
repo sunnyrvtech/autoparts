@@ -7,6 +7,7 @@ use Paypalpayment;
 use App\Cart;
 use App\ShippingAddress;
 use Auth;
+use View;
 
 class PaymentController extends Controller {
 
@@ -154,6 +155,10 @@ class PaymentController extends Controller {
         }
 
         dd($payment);
+    }
+    
+    public function paymentSuccess(){
+        return View::make('carts.success');
     }
 
 }

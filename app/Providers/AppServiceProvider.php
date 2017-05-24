@@ -16,7 +16,7 @@ class AppServiceProvider extends ServiceProvider {
      * @return void
      */
     public function boot() {
-        $categories = Category::where('status', 1)->get(array('name', 'id'));
+        $categories = Category::where('status', 1)->orderBy('name')->get(array('name', 'id'));
         view()->share('categories', $categories);
         
         View::composer('*', function($view) {  // this is used to share cart item count 

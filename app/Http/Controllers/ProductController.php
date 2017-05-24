@@ -52,7 +52,7 @@ class ProductController extends Controller {
             
         } else {
             if (Session::has('cartItem')) {
-                $carts = json_decode(json_encode(Session::get('cartItem')));
+                $carts = json_decode(json_encode(Session::get('cartItem')));  // here json_encode and decode is used to covert simple array to object array
             } else {
                 $carts = array();
             }

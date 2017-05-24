@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model {
 
-    protected $fillable = ['user_id', 'transaction_id', 'product_id', 'quantity', 'total_price', 'discount', 'order_status'];
+    protected $fillable = ['user_id', 'transaction_id', 'order_status'];
 
     /**
      * function to get customer detail from order table.
@@ -18,12 +18,12 @@ class Order extends Model {
     }
 
     /**
-     * function to get product detail from order table.
+     * function to get order detail based on order id.
      *
      * @return Response
      */
-    public function getProduct() {
-        return $this->hasOne('App\Product', 'id', 'product_id');
+    public function getOrderDetails() {
+        return $this->hasOne('App\OrderDetail', 'order_id', 'id');
     }
 
 }

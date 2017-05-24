@@ -1,11 +1,9 @@
-@extends('admin/layouts.master')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="container-fluid">
     <div class="row form-group">
         <div class="col-md-12">
             <div class="col-md-4">
-                <a href="{{ route('categories.create') }}" class="btn btn-primary">Add New</a>
+                <a href="<?php echo e(route('categories.create')); ?>" class="btn btn-primary">Add New</a>
             </div>
             <div class="col-md-8">
                 <div class="text-right">
@@ -34,20 +32,20 @@
     </div>
 </div>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script>
     $(function () {
         $('#category-table').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ url('admin/categories') }}",
+            ajax: "<?php echo e(url('admin/categories')); ?>",
 //            order: [[ 1, "asc" ]],
             columns: [
                 {data: 'id', name: 'id'},
                 {data: 'name', name: 'name'},
                 {data: "category_image", render: function (data, type, row) {
                         if (data != null) {
-                            return '<img width="100px" src="' + "{{ URL::asset('/category_images') }}" + "/" + data + '" />';
+                            return '<img width="100px" src="' + "<?php echo e(URL::asset('/category_images')); ?>" + "/" + data + '" />';
                         }
                         return '';
                     }
@@ -79,7 +77,7 @@
 
             $.post({
                 data: {'id': $this.data('id'), 'status': $this.val()},
-                url: "{{ route('categories-status') }}"
+                url: "<?php echo e(route('categories-status')); ?>"
             }).done(function (data) {
                 var HTML = '<div class="alert alert-success fade in">';
                 HTML += '<a href="javascript:void(0);" onclick="$(this).parent().remove();" class="close" title="close">×</a>';
@@ -100,7 +98,7 @@
             var formData = new FormData();
             formData.append('csvFile', $('input[type=file]')[0].files[0]);
             $.ajax({
-                url: "{{ route('import.category') }}",
+                url: "<?php echo e(route('import.category')); ?>",
                 type: 'POST',
                 data: formData,
                 async: false,
@@ -121,5 +119,7 @@
 
     });
 </script>
-@endpush
-@endsection
+<?php $__env->stopPush(); ?>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('admin/layouts.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

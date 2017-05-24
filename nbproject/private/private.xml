@@ -3,11 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/var/www/html/autoparts/resources/views/index.blade.php</file>
             <file>file:/var/www/html/autoparts/app/Http/Controllers/ProductController.php</file>
-            <file>file:/var/www/html/autoparts/config/app.php</file>
             <file>file:/var/www/html/autoparts/app/Http/Controllers/PaymentController.php</file>
-            <file>file:/var/www/html/autoparts/resources/views/carts/index.blade.php</file>
+            <file>file:/var/www/html/autoparts/routes/web.php</file>
+            <file>file:/var/www/html/autoparts/resources/views/carts/success.blade.php</file>
         </group>
     </open-files>
 </project-private>
