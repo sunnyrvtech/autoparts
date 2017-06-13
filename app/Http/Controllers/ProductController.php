@@ -42,7 +42,6 @@ class ProductController extends Controller {
      * @return Response
      */
     public function Cart(Request $request) {
-
         if (Auth::check()) {
             $carts = Cart::where('user_id', Auth::id())->get(array('id', 'product_id', 'quantity', 'total_price'));
             $shipping_address = ShippingAddress::where('user_id', Auth::id())->first();

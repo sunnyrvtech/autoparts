@@ -41,7 +41,7 @@
             </div>
             <h2 class="sub-title">Thank you for your purchase!</h2>
 
-            <p>Your order # is: <a href="#">100000004</a>.</p>
+            <p>Your order # is: <a href="#"><?php echo e($transaction_id); ?></a>.</p>
             <p>You will receive an order confirmation email with details of your order.</p>
             <div class="buttons-set">
                 <button type="button" class="btn btn-success" title="Continue Shopping" onclick="window.location = '<?php echo e(url('/')); ?>'"><span><span>Continue Shopping</span></span></button>

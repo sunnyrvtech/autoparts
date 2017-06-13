@@ -1574,14 +1574,14 @@ h4.confirmation-email-sent-message {
 }
 section.top-header-section { position: relative;z-index: 99999; }
 nav.navbar-categories { border-radius: 0 }
-.navbar-categories .dropdown-menu { min-width: 810px; }
+.navbar-categories .dropdown-menu { min-width: 750px; }
 .navbar-categories .category-lists { padding-left: 70px; }
 .navbar-categories .category-lists .single-li { padding-bottom: 15px;padding-top: 10px; }
 .navbar-categories .category-lists .single-li a { color: #000; }
 .navbar-categories .category-lists .single-li a:hover { text-decoration:underline; }
 #dropdown-navbar-target li:hover .dropdown-menu { display: block; }
 #dropdown-navbar-target li:nth-child(5) .dropdown-menu,#dropdown-navbar-target li:nth-child(6) .dropdown-menu,#dropdown-navbar-target li:nth-child(7) .dropdown-menu { left: inherit;right: 0; }
-#dropdown-navbar-target li:nth-child(4) .dropdown-menu,#dropdown-navbar-target li:nth-child(5) .dropdown-menu { min-width: 680px; }
+#dropdown-navbar-target li:nth-child(4) .dropdown-menu,#dropdown-navbar-target li:nth-child(5) .dropdown-menu { min-width: 608px; }
 #dropdown-navbar-target li:last-child .dropdown-menu { left: inherit;right: 0; }
 .override-tax-dialog-content form>div { margin: 10px; }
 form.subscription-form .email-field span { color: red ;}

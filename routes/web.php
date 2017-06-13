@@ -16,6 +16,7 @@ Route::get('/', 'HomeController@index');
 Route::group(['prefix' => 'admin', 'middleware' => 'IsAdmin'], function () {
     Route::get('/', 'Admin\IndexController@index');
     Route::resource('customers', 'Admin\CustomerController');
+    Route::resource('warehouses', 'Admin\WareHouseController');
     Route::resource('categories', 'Admin\CategoryController');
     Route::post('categories/status', 'Admin\CategoryController@categoryStatus')->name('categories-status');
     Route::resource('subcategories', 'Admin\SubCategoryController');
@@ -44,7 +45,6 @@ Route::post('products/vehicle', 'ProductController@getProductVehicleCompanyByYea
 Route::post('products/vehicle_model', 'ProductController@getProductVehicleModelByMakeId');
 Route::get('products/search', 'ProductController@searchProduct');
 Route::get('products/{slug}', 'ProductController@singleProduct');
-Route::get('checkout/success','PaymentController@paymentSuccess');
 Route::resource('checkout','PaymentController');
 Route::post('cart/add', 'ProductController@addCart')->middleware('web');
 Route::post('cart/update', 'ProductController@updateCart')->middleware('web');

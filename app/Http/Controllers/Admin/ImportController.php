@@ -99,6 +99,7 @@ class ImportController extends Controller {
                 }
             }
         });
+        Session::flash('success-message', 'Categories import successfully !');
     }
 
     /**

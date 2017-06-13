@@ -6,7 +6,12 @@ use Illuminate\Http\Request;
 use Paypalpayment;
 use App\Cart;
 use App\ShippingAddress;
+use App\BillingAddress;
+use App\Order;
+use App\OrderDetail;
 use Auth;
+use App\WarehouseStore;
+use Mail;
 use View;
 
 class PaymentController extends Controller {
@@ -32,7 +37,7 @@ class PaymentController extends Controller {
         // (that ensures idempotency). The SDK generates
         // a request id if you do not pass one explicitly. 
 
-        $this->_apiContext = Paypalpayment::apiContext(env('PAYPAL_CLIENT_ID'), env('PAYPAL_CLIENT_SECRET'));
+        $this->_apiContext = Paypalpayment::ApiContext(config('paypal_payment.Account.ClientId'), config('paypal_payment.Account.ClientSecret'));
     }
 
     public function index() {
@@ -46,7 +51,7 @@ class PaymentController extends Controller {
     public function store(Request $request) {
 
         $data = $request->all();
-       
+
         $shipping_address = ShippingAddress::where('user_id', Auth::id())->first();
         $carts = Cart::find($data['cart_id']);
 
@@ -100,18 +105,17 @@ class PaymentController extends Controller {
                     ->setQuantity($value->quantity)
                     // ->setTax(0.3)
                     ->setPrice($value->get_products->price);
-
         }
-        
+
         $itemList = Paypalpayment::itemList();
         $itemList->setItems($item);
 
 
         $details = Paypalpayment::details();
-       // $details->setShipping("1.2")
-                //->setTax("1.3")
-                //total of items prices
-               $details->setSubtotal($total_price);
+        // $details->setShipping("1.2")
+        //->setTax("1.3")
+        //total of items prices
+        $details->setSubtotal($total_price);
 
         //Payment Amount
         $amount = Paypalpayment::amount();
@@ -153,11 +157,96 @@ class PaymentController extends Controller {
             echo $ex->getData();
             die;
         }
-
-        dd($payment);
+        $transaction_id = $payment->id;
+        if ($this->savePaymentDetails($payment, $carts,$shipping_address)) {
+            return View::make('carts.success', compact('transaction_id'));
+        }
     }
-    
-    public function paymentSuccess(){
+
+    public function savePaymentDetails($payment, $carts,$shipping_address) {
+
+        $order_array = array(
+            'user_id' => Auth::id(),
+            'transaction_id' => $payment->id,
+            'order_status' => 'processing'
+        );
+        $orders = Order::create($order_array);
+        $transaction_details = array(
+            'transaction_id'=>$payment->id,
+            'order_time'=>  date('M d,Y H:i:s A',strtotime($payment->create_time))
+        );
+        $transaction_id = $payment->id;
+        if ($orders) {
+            foreach ($carts as $value) {
+                $detail_array = array(
+                    'order_id' => $orders->id,
+                    'product_id' => $value->product_id,
+                    'quantity' => $value->quantity,
+                    'total_price' => $value->total_price
+                );
+                OrderDetail::create($detail_array);
+            }
+            
+             if ($this->sendInvoice($transaction_details,$carts, $shipping_address)){
+                 return true;
+             }
+        }
+        return true;
+    }
+
+    public function sendInvoice($transaction_details,$carts, $shipping_address) {
+        $billing_address = BillingAddress::where('user_id', Auth::id())->first();
+        
+        $all_store = WarehouseStore::get();
+        $distance_array = array();
+        $store_email = '';
+
+        // this is used to get the nearest store
+        foreach ($all_store as $key => $value) {
+            $distance = $this->getDistanceBetweenPointsNew($shipping_address->latitude, $shipping_address->longitude, $value->latitude, $value->longitude);
+            $distance_array[] = $distance;
+            if (min($distance_array) <= $distance) {
+                $store_email = $value->email;
+            }
+        }
+
+        $data = array(
+        'transaction_id' =>$transaction_details['transaction_id'],
+        'email' => $store_email
+        );
+        
+       if (!empty($store_email)) {
+            Mail::send('auth.emails.order_invoice', array('transaction_details'=>$transaction_details,'carts'=>$carts, 'shipping_address'=>$shipping_address,'billing_address'=>$billing_address), function($message) use ($data) {
+                $message->from('test4rvtech@gmail.com', " Welcome To Autolighthouse");
+                $message->to($data['email'])->subject('Autolighthouse Store:New Order #' . $data['transaction_id']);
+            });
+        }
+        
+        $data['email'] = Auth::user()->email;
+
+        Mail::send('auth.emails.order_invoice', array('transaction_details'=>$transaction_details,'carts'=>$carts, 'shipping_address'=>$shipping_address,'billing_address'=>$billing_address), function($message) use ($data) {
+            $message->from('test4rvtech@gmail.com', " Welcome To Autolighthouse");
+            $message->to($data['email'])->subject('Autolighthouse Store:New Order #' . $data['transaction_id']);
+        });
+        
+        return true;
+    }
+
+    function getDistanceBetweenPointsNew($latitude1, $longitude1, $latitude2, $longitude2, $unit = 'Mi') {
+        $theta = $longitude1 - $longitude2;
+        $distance = (sin(deg2rad($latitude1)) * sin(deg2rad($latitude2)) + (cos(deg2rad($latitude1)) * cos(deg2rad($latitude2)) * cos(deg2rad($theta))));
+        $distance = acos($distance);
+        $distance = rad2deg($distance);
+        $distance = $distance * 60 * 1.1515;
+
+        switch ($unit) {
+            case 'Mi': break;
+            case 'Km' : $distance = $distance * 1.609344;
+        }
+        return (round($distance, 2));
+    }
+
+    public function paymentSuccess() {
         return View::make('carts.success');
     }
 

@@ -96,6 +96,9 @@
                         <li class="<?php if(Request::segment(2) == 'orders'): ?>active <?php endif; ?>">
                             <a href="<?php echo e(route('orders.index')); ?>"><i class="fa fa-fw fa-shopping-cart"></i> Orders</a>
                         </li>
+                        <li class="<?php if(Request::segment(2) == 'warehouses'): ?>active <?php endif; ?>">
+                            <a href="<?php echo e(route('warehouses.index')); ?>"><i class="fa fa-fw fa-shopping-cart"></i> Warehouse Store</a>
+                        </li>
                         <!--
                         <li>
                             <a href="javascript:void(0);"><i class="fa fa-fw fa-desktop"></i> Bootstrap Elements</a>

@@ -9,7 +9,7 @@
             </div>
             <div class="col-md-8">
                 <div class="text-right">
-                    <a class="browse btn btn-primary" type="button"><i class="glyphicon glyphicon-search"></i>Import</a>
+                    <a class="browse btn btn-primary" type="button"><i class="glyphicon glyphicon-import"></i>Import Category</a>
                     <input style="display: none;" id="file_type" name="csvFile" class="uploadCsv" type="file">
                 </div>
             </div>
@@ -109,6 +109,7 @@
                 processData: false,
                 success: function (data) {
                     $("#loaderOverlay").hide();
+                    window.location.reload();
                     //alert("Process completed.Please shut down system now");
                 }
                 

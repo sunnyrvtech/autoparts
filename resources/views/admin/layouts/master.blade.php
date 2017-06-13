@@ -96,6 +96,9 @@
                         <li class="@if(Request::segment(2) == 'orders')active @endif">
                             <a href="{{ route('orders.index')}}"><i class="fa fa-fw fa-shopping-cart"></i> Orders</a>
                         </li>
+                        <li class="@if(Request::segment(2) == 'warehouses')active @endif">
+                            <a href="{{ route('warehouses.index')}}"><i class="fa fa-fw fa-shopping-cart"></i> Warehouse Store</a>
+                        </li>
                         <!--
                         <li>
                             <a href="javascript:void(0);"><i class="fa fa-fw fa-desktop"></i> Bootstrap Elements</a>
