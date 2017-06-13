@@ -187,9 +187,14 @@
 															<table border="0" cellpadding="30" cellspacing="0" width="100%">
 																<tr>
 																	<td align="center" valign="top" class="textContent">
-																		<h1 style="color:#FFFFFF;line-height:100%;font-family:Helvetica,Arial,sans-serif;font-size:30px;font-weight:normal;margin-bottom:5px;text-align:center;">Thank you for your order from Auto Light House.</h1>
-																		<div style="text-align:center;font-family:Helvetica,Arial,sans-serif;font-size:15px;margin-bottom:0;color:#FFFFFF;line-height:135%;">Your order summary is below. Thank you again for your business.</div>
-																	</td>
+                                                                                                                                                @if($transaction_details['store_email'])
+                                                                                                                                                    <h1 style="color:#FFFFFF;line-height:100%;font-family:Helvetica,Arial,sans-serif;font-size:30px;font-weight:normal;margin-bottom:5px;text-align:center;">New order has been placed from Auto Light House.</h1>
+                                                                                                                                                    <div style="text-align:center;font-family:Helvetica,Arial,sans-serif;font-size:15px;margin-bottom:0;color:#FFFFFF;line-height:135%;">Order summary is below.Thank you again for your business.</div>
+																		@else
+                                                                                                                                                    <h1 style="color:#FFFFFF;line-height:100%;font-family:Helvetica,Arial,sans-serif;font-size:30px;font-weight:normal;margin-bottom:5px;text-align:center;">Thank you for your order from Auto Light House.</h1>
+                                                                                                                                                    <div style="text-align:center;font-family:Helvetica,Arial,sans-serif;font-size:15px;margin-bottom:0;color:#FFFFFF;line-height:135%;">Your order summary is below. Thank you again for your business.</div>
+																		@endif
+                                                                                                                                        </td>
 																</tr>
 															</table>
 															<!-- // CONTENT TABLE -->

@@ -157,8 +157,7 @@ class PaymentController extends Controller {
             echo $ex->getData();
             die;
         }
-        $transaction_id = $payment->id;
-        if ($this->savePaymentDetails($payment, $carts,$shipping_address)) {
+        if ($transaction_id = $this->savePaymentDetails($payment, $carts,$shipping_address)) {
             return View::make('carts.success', compact('transaction_id'));
         }
     }
@@ -172,10 +171,9 @@ class PaymentController extends Controller {
         );
         $orders = Order::create($order_array);
         $transaction_details = array(
-            'transaction_id'=>$payment->id,
+            'transaction_id'=>$orders->id,
             'order_time'=>  date('M d,Y H:i:s A',strtotime($payment->create_time))
         );
-        $transaction_id = $payment->id;
         if ($orders) {
             foreach ($carts as $value) {
                 $detail_array = array(
@@ -188,7 +186,7 @@ class PaymentController extends Controller {
             }
             
              if ($this->sendInvoice($transaction_details,$carts, $shipping_address)){
-                 return true;
+                 return $transaction_details['transaction_id'];
              }
         }
         return true;
@@ -205,7 +203,7 @@ class PaymentController extends Controller {
         foreach ($all_store as $key => $value) {
             $distance = $this->getDistanceBetweenPointsNew($shipping_address->latitude, $shipping_address->longitude, $value->latitude, $value->longitude);
             $distance_array[] = $distance;
-            if (min($distance_array) <= $distance) {
+            if (min($distance_array) >= $distance) {
                 $store_email = $value->email;
             }
         }
@@ -216,6 +214,7 @@ class PaymentController extends Controller {
         );
         
        if (!empty($store_email)) {
+           $transaction_details['store_email'] = true;
             Mail::send('auth.emails.order_invoice', array('transaction_details'=>$transaction_details,'carts'=>$carts, 'shipping_address'=>$shipping_address,'billing_address'=>$billing_address), function($message) use ($data) {
                 $message->from('test4rvtech@gmail.com', " Welcome To Autolighthouse");
                 $message->to($data['email'])->subject('Autolighthouse Store:New Order #' . $data['transaction_id']);
@@ -223,7 +222,7 @@ class PaymentController extends Controller {
         }
         
         $data['email'] = Auth::user()->email;
-
+        $transaction_details['store_email'] = false;
         Mail::send('auth.emails.order_invoice', array('transaction_details'=>$transaction_details,'carts'=>$carts, 'shipping_address'=>$shipping_address,'billing_address'=>$billing_address), function($message) use ($data) {
             $message->from('test4rvtech@gmail.com', " Welcome To Autolighthouse");
             $message->to($data['email'])->subject('Autolighthouse Store:New Order #' . $data['transaction_id']);
