@@ -1893,8 +1893,8 @@ footer.footer .container { padding-bottom: 15px; }
     left: 50%;
 }
 .my-account .btn-nav .glyphicon { padding-top: 16px;font-size: 40px; }
-.my-account .tab-content { background-color: #fff;border-left: medium none;border-radius: 0 20px 20px 0;min-height: 500px; }
-.my-account .tab-content .tab-pane { padding: 40px; }
+.my-account .tab-pane .colsm { background-color: #fff;border-left: medium none;border-radius: 0 20px 20px 0;min-height: 650px; }
+.my-account .tab-pane .colsm-row { padding: 40px; }
 .col-centered { display:inline-block;float:none;text-align:left;margin-right:-4px; }
 .divcontainer { background-color: #fff;border-radius: 20px;padding-bottom: 20px; }
 #dropdown-navbar-target { text-align: center; }

@@ -12,6 +12,7 @@ use App\OrderDetail;
 use Auth;
 use App\WarehouseStore;
 use Mail;
+use Redirect;
 use View;
 
 class PaymentController extends Controller {
@@ -53,7 +54,8 @@ class PaymentController extends Controller {
         $data = $request->all();
 
         $shipping_address = ShippingAddress::where('user_id', Auth::id())->first();
-        $carts = Cart::find($data['cart_id']);
+        $cart_ids = $data['cart_id'];
+        $carts = Cart::find($cart_ids);
 
         // ### Address
         // Base Address object used as shipping or billing
@@ -154,10 +156,12 @@ class PaymentController extends Controller {
             $payment->create($this->_apiContext);
         } catch (\PayPal\Exception\PayPalConnectionException $ex) {
             // echo $ex->getCode(); 
-            echo $ex->getData();
-            die;
+            $error = json_decode($ex->getData());
+            return Redirect::back()
+                        ->with('error-message',$error->details[0]->issue);
         }
         if ($transaction_id = $this->savePaymentDetails($payment, $carts,$shipping_address)) {
+            Cart::destroy($cart_ids); ///  empty cart table after payment successfull
             return View::make('carts.success', compact('transaction_id'));
         }
     }

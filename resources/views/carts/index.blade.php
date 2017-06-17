@@ -199,8 +199,8 @@
                                 <label class="col-sm-4 control-label" for="card-number">Expiration Date: *</label>
                                 <div class="col-sm-8">
                                     <div class="col-sm-6">
-                                        <select class="form-control"  name="expiry_month" required="">
-                                            <option>--Select Month--</option>
+                                        <select class="form-control" name="expiry_month" required="">
+                                            <option value="">--Select Month--</option>
                                             <?php
                                             $month = 1;
                                             for ($i = 0; $i < 12; $i++) {
@@ -213,7 +213,7 @@
                                     </div>
                                     <div class="col-sm-6">
                                         <select class="form-control"  name="expiry_year" required="">
-                                            <option>--Select Year--</option>
+                                            <option value="">--Select Year--</option>
                                             <?php
                                             $currentYear = date('Y');
                                             $nextYear = date('Y', strtotime('+10 year'));

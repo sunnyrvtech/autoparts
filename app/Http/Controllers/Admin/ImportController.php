@@ -91,7 +91,7 @@ class ImportController extends Controller {
             foreach ($results as $key => $row) {
                 $category = Category::where('name', 'like', trim($row->category))->first();
                 if (!$category) {
-                    Category::insert(array('name' => trim($row->category)));
+                    $category = Category::create(array('name' => trim($row->category), 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
                 }
                 if (!$sub_category = SubCategory::where('category_id', $category->id)->where('name', 'like', trim($row->sub_category))->first(array('id', 'category_id'))) {
                     $slug = $this->createSlug(trim($row->sub_category),'category');
