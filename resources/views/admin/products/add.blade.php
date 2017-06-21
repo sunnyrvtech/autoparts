@@ -195,7 +195,7 @@
                         <div class="col-lg-6">
                             <div class="form-group {{ $errors->has('vehicle_make_id') ? ' has-error' : '' }}">
                                 <label class="control-label">Vehicle Make</label>
-                                {{ Form::select('vehicle_make_id', [], null, ['class' => 'form-control']) }}
+                                {{ Form::select('vehicle_make_id', $vehicle_company, null, ['class' => 'form-control']) }}
                                 @if ($errors->has('vehicle_make_id'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('vehicle_make_id') }}</strong>
@@ -206,7 +206,7 @@
                         <div class="col-lg-6">
                             <div class="form-group {{ $errors->has('vehicle_model_id') ? ' has-error' : '' }}">
                                 <label class="control-label">Vehicle Model</label>
-                                {{ Form::select('vehicle_model_id', [], null, ['class' => 'form-control']) }}
+                                {{ Form::select('vehicle_model_id', $vehicle_model, null, ['class' => 'form-control']) }}
                                 @if ($errors->has('vehicle_model_id'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('vehicle_model_id') }}</strong>
@@ -217,7 +217,7 @@
                         <div class="col-lg-6">
                             <div class="form-group {{ $errors->has('brand_id') ? ' has-error' : '' }}">
                                 <label class="control-label">Brand</label>
-                                {{ Form::select('brand_id', [], null, ['class' => 'form-control']) }}
+                                {{ Form::select('brand_id', $brands, null, ['class' => 'form-control']) }}
                                 @if ($errors->has('brand_id'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('brand_id') }}</strong>

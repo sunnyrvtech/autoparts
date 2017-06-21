@@ -209,7 +209,7 @@
                         <div class="col-lg-6">
                             <div class="form-group <?php echo e($errors->has('vehicle_make_id') ? ' has-error' : ''); ?>">
                                 <label class="control-label">Vehicle Make</label>
-                                <?php echo e(Form::select('vehicle_make_id', [], null, ['class' => 'form-control'])); ?>
+                                <?php echo e(Form::select('vehicle_make_id', $vehicle_company, null, ['class' => 'form-control'])); ?>
 
                                 <?php if($errors->has('vehicle_make_id')): ?>
                                 <span class="help-block">
@@ -221,7 +221,7 @@
                         <div class="col-lg-6">
                             <div class="form-group <?php echo e($errors->has('vehicle_model_id') ? ' has-error' : ''); ?>">
                                 <label class="control-label">Vehicle Model</label>
-                                <?php echo e(Form::select('vehicle_model_id', [], null, ['class' => 'form-control'])); ?>
+                                <?php echo e(Form::select('vehicle_model_id', $vehicle_model, null, ['class' => 'form-control'])); ?>
 
                                 <?php if($errors->has('vehicle_model_id')): ?>
                                 <span class="help-block">
@@ -233,7 +233,7 @@
                         <div class="col-lg-6">
                             <div class="form-group <?php echo e($errors->has('brand_id') ? ' has-error' : ''); ?>">
                                 <label class="control-label">Brand</label>
-                                <?php echo e(Form::select('brand_id', [], null, ['class' => 'form-control'])); ?>
+                                <?php echo e(Form::select('brand_id', $brands, null, ['class' => 'form-control'])); ?>
 
                                 <?php if($errors->has('brand_id')): ?>
                                 <span class="help-block">
