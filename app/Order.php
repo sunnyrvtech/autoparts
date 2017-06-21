@@ -25,5 +25,14 @@ class Order extends Model {
     public function getOrderDetails() {
         return $this->hasOne('App\OrderDetail', 'order_id', 'id');
     }
+    
+     /**
+     * function to get order detail based on order id.
+     *
+     * @return Response
+     */
+    public function getTotalPriceByOrderId() {
+        return $this->hasMany('App\OrderDetail', 'order_id', 'id');
+    }
 
 }

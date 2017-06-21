@@ -10,6 +10,7 @@ use App\BillingAddress;
 use App\Country;
 use App\State;
 use App\City;
+use App\Order;
 use Auth;
 use Redirect;
 use View;
@@ -27,8 +28,9 @@ class AccountController extends Controller {
             $users = User::where('id', Auth::id())->first();
             $shipping_address = ShippingAddress::where('user_id', Auth::id())->first();
             $billing_address = BillingAddress::where('user_id', Auth::id())->first();
+            $orders = Order::get();
             $countries = Country::get(array('name', 'id'));
-            return View::make('accounts.account', compact('users', 'shipping_address', 'billing_address', 'countries'));
+            return View::make('accounts.account', compact('users', 'shipping_address', 'billing_address', 'countries', 'orders'));
         }
         return redirect('/login');
     }
@@ -131,8 +133,8 @@ class AccountController extends Controller {
         ]);
 
         $lat_long = $this->getLatLong($data['state_id'], $data['city'], $data['address1'], $data['zip']);
-        $data['latitude'] = $lat_long['latitude']; 
-        $data['longitude'] = $lat_long['longitude']; 
+        $data['latitude'] = $lat_long['latitude'];
+        $data['longitude'] = $lat_long['longitude'];
         $data['user_id'] = Auth::id();
 
         $errors = $validator->errors();
@@ -251,6 +253,15 @@ class AccountController extends Controller {
         }
         return Redirect::to('/')
                         ->with('success-message', 'Your account is already activated! You may now sign in!');
+    }
+
+    /**
+     * view order detail by order id.
+     *
+     * @return Response
+     */
+    public function viewOrderDetail() {
+        return View::make('accounts.view_order');
     }
 
 }

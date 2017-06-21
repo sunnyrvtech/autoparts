@@ -27,6 +27,10 @@ class CreateProductsTable extends Migration
            $table->integer('vehicle_year')->nullable();
            $table->integer('vehicle_make_id')->nullable();
            $table->integer('vehicle_model_id')->nullable();
+           $table->decimal('length', 5, 2)->nullable();
+           $table->decimal('weight', 5, 2)->nullable();
+           $table->decimal('width', 5, 2)->nullable();
+           $table->decimal('height', 5, 2)->nullable();
            $table->string('part_type')->nullable();
            $table->integer('brand_id')->nullable();
            $table->string('operation')->nullable();

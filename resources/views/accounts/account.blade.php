@@ -271,31 +271,31 @@
                             <table class="table">
                                 <thead class="thead-inverse">
                                   <tr>
-                                    <th>#</th>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
-                                    <th>Username</th>
+                                    <th>Order#</th>
+                                    <th>Date</th>
+                                    <th>Ship To</th>
+                                    <th>Order Total</th>
+                                    <th>Order Status</th>
+                                    <th></th>
                                   </tr>
                                 </thead>
                                 <tbody>
-                                  <tr>
-                                    <th scope="row">1</th>
-                                    <td>Mark</td>
-                                    <td>Otto</td>
-                                    <td>@mdo</td>
-                                  </tr>
-                                  <tr>
-                                    <th scope="row">2</th>
-                                    <td>Jacob</td>
-                                    <td>Thornton</td>
-                                    <td>@fat</td>
-                                  </tr>
-                                  <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                  </tr>
+                                    @foreach($orders as $value)
+                                        <?php $total_price = ''; ?>
+                                        @foreach($value->getTotalPriceByOrderId as $val)
+                                            <?php $total_price += $val->total_price; ?>
+                                        @endforeach
+                                        <tr>
+                                          <th scope="row">{{ $value->id }}</th>
+                                          <td>{{ date('m-d-Y H:i:s',strtotime($value->created_at)) }}</td>
+                                          <td>{{ Auth::user()->first_name.' '.Auth::user()->last_name }}</td>
+                                          <td>${{ $total_price }}</td>
+                                          <td>{{ $value->order_status }}</td>
+                                          <td>
+                                              <span class="nobr"><a href="javascript:void(0);">View Order</a></span>
+                                          </td>
+                                        </tr>
+                                  @endforeach
                                 </tbody>
                               </table>
                         </div>

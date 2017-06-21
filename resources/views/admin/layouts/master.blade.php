@@ -93,9 +93,21 @@
                         <li class="@if(Request::segment(2) == 'products')active @endif">
                             <a href="{{ route('products.index')}}"><i class="fa fa-fw fa-tag"></i> Products</a>
                         </li>
+                        <li class="@if(Request::segment(2) == 'shipping' || Request::segment(2) == 'shipping_rates')active @endif">
+                            <a href="javascript:void(0);" data-toggle="collapse" data-target="#shipping-menu"><i class="fa fa-fw fa-ship"></i> Shipping Methods<i class="fa fa-fw fa-caret-down"></i></a>
+                            <ul id="shipping-menu" class="collapse @if(Request::segment(2) == 'shipping' || Request::segment(2) == 'shipping_rates')in @endif" >
+                                <li class="">
+                                    <a href="{{ route('shipping.index')}}"><i class="fa fa-fw fa-ship"></i> Shipping Methods</a>
+                                </li>
+                                <li class="">
+                                    <a href="{{ route('shipping_rates.index')}}"><i class="fa fa-fw fa-truck"></i> Shipping Rates</a>
+                                </li>
+                            </ul>
+                        </li>
                         <li class="@if(Request::segment(2) == 'orders')active @endif">
                             <a href="{{ route('orders.index')}}"><i class="fa fa-fw fa-shopping-cart"></i> Orders</a>
                         </li>
+
                         <li class="@if(Request::segment(2) == 'warehouses')active @endif">
                             <a href="{{ route('warehouses.index')}}"><i class="fa fa-fw fa-shopping-cart"></i> Warehouse Store</a>
                         </li>
@@ -168,48 +180,48 @@
         <!--<script src="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.6/semantic.min.js "></script>-->
         <script src="{{ URL::asset('/js/bootstrap-datetimepicker.js') }}"></script> 
         <script type="text/javascript">
-                        $(document).ready(function () {
+                            $(document).ready(function () {
 
-                            if ($("li").hasClass("categoryExist")) {/// this code is used to check if list contain one value then display block ul list -->
-                                $(".categoryExist").parent().show();
-                                $(".categoryExist").parent().parent().parent().show();
-                            }
-                            $("body").tooltip({selector: '[data-toggle=tooltip]', trigger: 'hover'});
-                            //initialize ckeditor        
-                            $('textarea').ckeditor();
-                            //initialize datepicker
-                            $('.datepicker').datetimepicker({
-                                format: "yyyy",
-                                startView: 'decade',
-                                minView: 'decade',
-                                viewSelect: 'decade',
-                                autoclose: true,
+                                if ($("li").hasClass("categoryExist")) {/// this code is used to check if list contain one value then display block ul list -->
+                                    $(".categoryExist").parent().show();
+                                    $(".categoryExist").parent().parent().parent().show();
+                                }
+                                $("body").tooltip({selector: '[data-toggle=tooltip]', trigger: 'hover'});
+                                //initialize ckeditor        
+                                $('textarea').ckeditor();
+                                //initialize datepicker
+                                $('.datepicker').datetimepicker({
+                                    format: "yyyy",
+                                    startView: 'decade',
+                                    minView: 'decade',
+                                    viewSelect: 'decade',
+                                    autoclose: true,
 
-                            });
-                            $(document).on('click', '.browse', function () {
-                                var file = $("#file_type");
-                                file.trigger('click');
-                            });
-                            $(document).on('change', '.file', function (e) {
-                                $(".renderPreviewImage").html('');
-                                $.each(e.originalEvent.target.files, function (i, file) {
+                                });
+                                $(document).on('click', '.browse', function () {
+                                    var file = $("#file_type");
+                                    file.trigger('click');
+                                });
+                                $(document).on('change', '.file', function (e) {
+                                    $(".renderPreviewImage").html('');
+                                    $.each(e.originalEvent.target.files, function (i, file) {
 //                                    var img = document.createElement("img");
 //                                    img.id = "image" + (i + 1);
-                                    var reader = new FileReader();
-                                    reader.onloadend = function () {
-                                        var HTML = '<div class="col-md-2">';
-                                        HTML += '<img width="100px" src="' + reader.result + '">';
-                                        HTML += '</div>';
-                                        $(".renderPreviewImage").append(HTML);
-                                    }
-                                    reader.readAsDataURL(file);
+                                        var reader = new FileReader();
+                                        reader.onloadend = function () {
+                                            var HTML = '<div class="col-md-2">';
+                                            HTML += '<img width="100px" src="' + reader.result + '">';
+                                            HTML += '</div>';
+                                            $(".renderPreviewImage").append(HTML);
+                                        }
+                                        reader.readAsDataURL(file);
+                                    });
                                 });
-                            });
 
-                            $(document).on('click', '.removePreviewImage', function () {
-                                var ele = document.getElementById('product_images');
-                                ele.value = "";
-                                $(".renderPreviewImage").html('');
+                                $(document).on('click', '.removePreviewImage', function () {
+                                    var ele = document.getElementById('product_images');
+                                    ele.value = "";
+                                    $(".renderPreviewImage").html('');
 //                                var result = ele.files;
 //                              console.log(result);
 
@@ -218,50 +230,50 @@
 //                                     //delete files(2)
 //                                });
 
-                            });
-                            $(document).on('change', '.preview-image', function (e) {
-                                if (this.files && this.files[0]) {
-                                    var img = document.createElement("img");
-                                    var reader = new FileReader();
+                                });
+                                $(document).on('change', '.preview-image', function (e) {
+                                    if (this.files && this.files[0]) {
+                                        var img = document.createElement("img");
+                                        var reader = new FileReader();
 
-                                    reader.onload = function (e) {
-                                        img.src = e.target.result;
-                                        img.width = 200;
-                                        $('#image_prev').html(img);
-                                    };
-                                    reader.readAsDataURL(this.files[0]);
-                                }
-                            });
+                                        reader.onload = function (e) {
+                                            img.src = e.target.result;
+                                            img.width = 200;
+                                            $('#image_prev').html(img);
+                                        };
+                                        reader.readAsDataURL(this.files[0]);
+                                    }
+                                });
 
-                            $(document).on('click', '.toggleCategory', function () {
-                                $(this).next().slideToggle();
-                            });
+                                $(document).on('click', '.toggleCategory', function () {
+                                    $(this).next().slideToggle();
+                                });
 
-                            $.ajaxSetup({
-                                headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                }
-                            });
-                            $(document).on('click', '.deleteRow', function (e) {
-                                e.preventDefault(); // does not go through with the link.
-                                var $this = $(this);
-                                $("#deleteModal").modal('show');
-                                $(".deleteRowRecord").attr('data-method',$this.data('method'));
-                                $(".deleteRowRecord").attr('data-href',$this.attr('href'));
-                            });
-                            $(document).on('click', '.deleteRowRecord', function (e) {
-                               
-                                e.preventDefault(); // does not go through with the link.
-                                var $this = $(this);
-                                $this.attr('disabled','disabled');
-                                $.post({
-                                    type: $this.data('method'),
-                                    url: $this.data('href')
-                                }).done(function (data) {
-                                    window.location.reload();
+                                $.ajaxSetup({
+                                    headers: {
+                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                    }
+                                });
+                                $(document).on('click', '.deleteRow', function (e) {
+                                    e.preventDefault(); // does not go through with the link.
+                                    var $this = $(this);
+                                    $("#deleteModal").modal('show');
+                                    $(".deleteRowRecord").attr('data-method', $this.data('method'));
+                                    $(".deleteRowRecord").attr('data-href', $this.attr('href'));
+                                });
+                                $(document).on('click', '.deleteRowRecord', function (e) {
+
+                                    e.preventDefault(); // does not go through with the link.
+                                    var $this = $(this);
+                                    $this.attr('disabled', 'disabled');
+                                    $.post({
+                                        type: $this.data('method'),
+                                        url: $this.data('href')
+                                    }).done(function (data) {
+                                        window.location.reload();
+                                    });
                                 });
                             });
-                        });
         </script>
         <!-- App scripts -->
         @stack('scripts')

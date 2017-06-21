@@ -30,7 +30,7 @@ class ProductController extends Controller {
     public function index(Request $request) {
         $title = 'Products';
         if ($request->ajax()) {
-            $products = Product::get();
+            $products = Product::limit(6)->get();
             foreach ($products as $key => $value) {
                 $products[$key]['action'] = '<a href="' . route('products.show', $value->id) . '" data-toggle="tooltip" title="update" class="glyphicon glyphicon-edit"></a>&nbsp;&nbsp;<a href="' . route('products.destroy', $value->id) . '" data-toggle="tooltip" title="delete" data-method="delete" class="glyphicon glyphicon-trash deleteRow"></a>';
             }

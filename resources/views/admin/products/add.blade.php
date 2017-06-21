@@ -112,6 +112,50 @@
                             </div>
                         </div>
                         <div class="col-lg-6">
+                            <div class="form-group {{ $errors->has('weight') ? ' has-error' : '' }}">
+                                <label class="control-label">Weight</label>
+                                {{ Form::text('weight', null,array('class'=>'form-control')) }}
+                                @if ($errors->has('weight'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('weight') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group {{ $errors->has('length') ? ' has-error' : '' }}">
+                                <label class="control-label">Product Length</label>
+                                {{ Form::text('length', null,array('class'=>'form-control')) }}
+                                @if ($errors->has('length'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('length') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group {{ $errors->has('width') ? ' has-error' : '' }}">
+                                <label class="control-label">Product Width</label>
+                                {{ Form::text('width', null,array('class'=>'form-control')) }}
+                                @if ($errors->has('width'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('width') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group {{ $errors->has('height') ? ' has-error' : '' }}">
+                                <label class="control-label">Product Height</label>
+                                {{ Form::text('height', null,array('class'=>'form-control')) }}
+                                @if ($errors->has('height'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('height') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
                             <div class="form-group {{ $errors->has('status') ? ' has-error' : '' }}">
                                 <label class="control-label">Status</label>
                                 {{ Form::select('status', ['1' => 'Enabled','0'=>'Disabled'], null, ['required','class' => 'form-control']) }}

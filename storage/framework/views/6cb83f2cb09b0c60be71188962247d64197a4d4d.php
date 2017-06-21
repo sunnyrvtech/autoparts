@@ -273,31 +273,31 @@
                             <table class="table">
                                 <thead class="thead-inverse">
                                   <tr>
-                                    <th>#</th>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
-                                    <th>Username</th>
+                                    <th>Order#</th>
+                                    <th>Date</th>
+                                    <th>Ship To</th>
+                                    <th>Order Total</th>
+                                    <th>Order Status</th>
+                                    <th></th>
                                   </tr>
                                 </thead>
                                 <tbody>
-                                  <tr>
-                                    <th scope="row">1</th>
-                                    <td>Mark</td>
-                                    <td>Otto</td>
-                                    <td>@mdo</td>
-                                  </tr>
-                                  <tr>
-                                    <th scope="row">2</th>
-                                    <td>Jacob</td>
-                                    <td>Thornton</td>
-                                    <td>@fat</td>
-                                  </tr>
-                                  <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                  </tr>
+                                    <?php $__currentLoopData = $orders; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $value): $__env->incrementLoopIndices(); $loop = $__env->getFirstLoop(); ?>
+                                        <?php $total_price = ''; ?>
+                                        <?php $__currentLoopData = $value->getTotalPriceByOrderId; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $val): $__env->incrementLoopIndices(); $loop = $__env->getFirstLoop(); ?>
+                                            <?php $total_price += $val->total_price; ?>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getFirstLoop(); ?>
+                                        <tr>
+                                          <th scope="row"><?php echo e($value->id); ?></th>
+                                          <td><?php echo e(date('m-d-Y H:i:s',strtotime($value->created_at))); ?></td>
+                                          <td><?php echo e(Auth::user()->first_name.' '.Auth::user()->last_name); ?></td>
+                                          <td>$<?php echo e($total_price); ?></td>
+                                          <td><?php echo e($value->order_status); ?></td>
+                                          <td>
+                                              <span class="nobr"><a href="javascript:void(0);">View Order</a></span>
+                                          </td>
+                                        </tr>
+                                  <?php endforeach; $__env->popLoop(); $loop = $__env->getFirstLoop(); ?>
                                 </tbody>
                               </table>
                         </div>

@@ -27,6 +27,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'IsAdmin'], function () {
     Route::resource('vehicle_model', 'Admin\VehicleModelController');
     Route::resource('brands', 'Admin\BrandController');
     Route::resource('products', 'Admin\ProductController');
+    Route::resource('shipping', 'Admin\ShippingController');
+    Route::resource('shipping_rates', 'Admin\ShippingRateController');
     Route::resource('orders', 'Admin\OrderController');
     Route::post('import/csv', 'Admin\ImportController@uploadCsv')->name('import.csv');
     Route::post('import/category', 'Admin\ImportController@createCategoryByCsv')->name('import.category');
@@ -40,6 +42,7 @@ Route::post('login', 'Auth\LoginController@login');
 Route::get('register', 'Auth\RegisterController@index');
 Route::post('register', 'Auth\RegisterController@create');
 Route::get('logout', 'Auth\LoginController@logout');
+Route::get('order/view/{id}','AccountController@viewOrderDetail');
 //Route::get('products', 'ProductController@index');
 Route::post('products/vehicle', 'ProductController@getProductVehicleCompanyByYear');
 Route::post('products/vehicle_model', 'ProductController@getProductVehicleModelByMakeId');

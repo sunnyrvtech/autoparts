@@ -171,7 +171,8 @@ class PaymentController extends Controller {
         $order_array = array(
             'user_id' => Auth::id(),
             'transaction_id' => $payment->id,
-            'order_status' => 'processing'
+            'order_status' => 'processing',
+            'created_at' => date('Y-m-d H:i:s',strtotime($payment->create_time))
         );
         $orders = Order::create($order_array);
         $transaction_details = array(
