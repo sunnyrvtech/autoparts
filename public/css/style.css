@@ -2499,6 +2499,15 @@ h1.welcome-msg {
 		.row.cat-list {
   margin: 0;
 }
+#breadcrumb {
+
+  padding: 0 15px;
+}
+.well.well-sm {
+  
+  margin: 15px;
+
+}
 }
 @media(min-width: 992px) and (max-width: 1025px){
 
@@ -2767,15 +2776,7 @@ ul.creditcards img {
 .row.about-us-con h1.welcome-msg{
 	  font-size: 30px;
 }
-#breadcrumb {
 
-  padding: 0 15px;
-}
-.well.well-sm {
-  
-  margin: 15px;
-
-}
 }
 @media(min-width: 481px) and (max-width: 767px){
 .list-group-item .img-wrp {
