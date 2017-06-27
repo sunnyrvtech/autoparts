@@ -17,6 +17,8 @@ class CreateOrdersTable extends Migration
             $table->increments('id');
             $table->integer('user_id');
             $table->string('transaction_id');
+            $table->decimal('total_price', 5, 2);
+            $table->decimal('ship_price', 5, 2);
             $table->enum('order_status', ['pending', 'failed','processing','shipped','completed']); 	
             $table->timestamps();
         });

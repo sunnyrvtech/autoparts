@@ -193,7 +193,7 @@
         <footer class="footer">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-4 col-md-6 col-sm-6">
+                     <div class="col-lg-4 col-md-4 col-sm-4">
                         <h3>Customer Service<span class="footer-header-border"></span></h3>
                         <ul>
                             <!-- <li>Chat with an                                        agent</li> -->
@@ -203,7 +203,7 @@
                             <li><a href="javascript:void(0);" title="Email Customer Care">Email Customer Care</a></li>
                         </ul>
                     </div>
-                    <div class="col-lg-4 col-md-6 col-sm-6">
+                     <div class="col-lg-4 col-md-4 col-sm-4">
                         <h3>Sign up For Special Deals<span class="footer-header-border"></span></h3>
                         <ul class="">
                             <li>Get Special Offers &amp; Discounts</li>
@@ -220,7 +220,7 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="col-lg-4 col-md-6 col-sm-6">
+                    <div class="col-lg-4 col-md-4 col-sm-4">
                         <h3>Secure Checkout<span c                                                                                                                                                                                  lass="footer-header-border"></span></h3>
                         <ul class="secure-checkout">
                             <li></li>

@@ -8,6 +8,8 @@ use App\Product;
 use App\VehicleCompany;
 use App\VehicleModel;
 use App\Cart;
+use App\ShippingMethod;
+use App\ShippingRate;
 use App\SubCategory;
 use App\ShippingAddress;
 use Session;
@@ -48,7 +50,6 @@ class ProductController extends Controller {
             if (empty($carts->toArray())) {
                 $carts = array();
             }
-            
         } else {
             if (Session::has('cartItem')) {
                 $carts = json_decode(json_encode(Session::get('cartItem')));  // here json_encode and decode is used to covert simple array to object array
@@ -57,11 +58,15 @@ class ProductController extends Controller {
             }
             $shipping_address = '';
         }
+        $total_price_cart = '';
         if (!empty($carts)) {
             $cart_data = array();
+            $total_weight = '';
             foreach ($carts as $key => $value) {
                 $products = Product::where('id', $value->product_id)->first();
                 $product_image = json_decode($products->product_details->product_images);
+                $total_price_cart += $value->total_price;
+                $total_weight += $value->quantity * $products->weight;
 
                 $cart_data[$key] = array(
                     'product_id' => $products->id,
@@ -81,8 +86,38 @@ class ProductController extends Controller {
         } else {
             $cart_data = array();
         }
+        
+        if ($request->get('shipping_method') == '') {
+            $method_name = "Free Delivery";
+        } else {
+            $method_name = $request->get('shipping_method');
+        }
+        // calculate total price based on shipping method and rates
+        $shipping_methods = ShippingMethod::where('status', 1)->get();
+        $shipping_price = 0;
+        if (!empty($shipping_methods->toArray()) && $shipping_address != '' && $method_name != 'Free Delivery') {
 
-        $view = View::make('carts.index', compact('cart_data', 'shipping_address'));
+            $shipping_rates = ShippingRate::where('country_id', $shipping_address->country_id)->where(function ($query) use ($total_weight) {
+                        $query->where('low_weight', '>=', $total_weight)
+                                ->where('low_weight', '<=', $total_weight)
+                                ->orwhere('high_weight', '>=', $total_weight)
+                                ->where('high_weight', '<=', $total_weight);
+                    })->first(array('price'));
+            if ($shipping_rates != '') {
+                $shipping_price = $shipping_rates->price;
+                $total_price_cart = $total_price_cart + $shipping_price;
+            } else {
+                $shipping_price = ShippingRate::max('price');
+                $total_price_cart = $total_price_cart + $shipping_price;
+            }
+        }
+        $other_cart_data = array(
+            'shipping_price' => $shipping_price,
+            'total_price_cart' => $total_price_cart,
+            'method_name' => $method_name
+        );
+
+        $view = View::make('carts.index', compact('cart_data', 'shipping_address', 'shipping_methods', 'shipping_rates', 'other_cart_data'));
         if ($request->wantsJson()) {
             $sections = $view->renderSections();
             return $sections['content'];

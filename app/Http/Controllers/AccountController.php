@@ -23,14 +23,20 @@ class AccountController extends Controller {
      *
      * @return Response
      */
-    public function index(Request $request) {
+    public function index(Request $request,$id=null) {
         if (Auth::check()) {
             $users = User::where('id', Auth::id())->first();
             $shipping_address = ShippingAddress::where('user_id', Auth::id())->first();
             $billing_address = BillingAddress::where('user_id', Auth::id())->first();
             $orders = Order::get();
+            if($id != null){
+                $order_details = Order::where('user_id',Auth::id())->where('id',$id)->first();
+            }else{
+                $order_details = '';
+            }
+            
             $countries = Country::get(array('name', 'id'));
-            return View::make('accounts.account', compact('users', 'shipping_address', 'billing_address', 'countries', 'orders'));
+            return View::make('accounts.account', compact('users', 'shipping_address', 'billing_address', 'countries', 'orders','order_details'));
         }
         return redirect('/login');
     }

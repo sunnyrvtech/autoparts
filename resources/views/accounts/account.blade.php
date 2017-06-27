@@ -5,7 +5,7 @@
 <div class="container"><!-- /#content.container -->   
     <div class="my-account">
         <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
-            <div class="btn-group btn-group-vertical" ng-init="selectedTab = 'shipping-address'">
+            <div class="btn-group btn-group-vertical" @if($order_details == '') ng-init="selectedTab = 'shipping-address'" @else ng-init="selectedTab = 'orders'" @endif>
                 <div class="btn-group"> 
                     <a class="btn btn-nav" ng-class="{'active':selectedTab === 'profile'}" ng-click="selectedTab = 'profile'" href="#profile" data-toggle="tab">
                         <span class="glyphicon glyphicon-user"></span>
@@ -89,7 +89,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane active" id="shipping-address">
+                <div class="tab-pane @if($order_details == '') active @endif" id="shipping-address">
                     <div class="col-xs-12 col-sm-9 col-md-6 col-lg-6 colsm">
                         <div class="row colsm-row">
                             <h3>Update Shipping Address:</h3>
@@ -263,42 +263,108 @@
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane" id="orders">
+                <div class="tab-pane @if($order_details != '') active @endif" id="orders">
                     <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 colsm">
-                        <div class="row colsm-row">
+                        @if($order_details == '')
+                            <div class="row colsm-row">
                             <h3>Your Orders:</h3>
                             <hr class="colorgraph">
                             <table class="table">
                                 <thead class="thead-inverse">
                                   <tr>
-                                    <th>Order#</th>
-                                    <th>Date</th>
-                                    <th>Ship To</th>
-                                    <th>Order Total</th>
-                                    <th>Order Status</th>
+                                      <th><label>Order#</label></th>
+                                      <th><label>Date</label></th>
+                                      <th><label>Ship To</label></th>
+                                      <th><label>Order Total</label></th>
+                                      <th><label>Order Status</label></th>
                                     <th></th>
                                   </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($orders as $value)
                                         <?php $total_price = ''; ?>
-                                        @foreach($value->getTotalPriceByOrderId as $val)
+                                        @foreach($value->getOrderDetailById as $val)
                                             <?php $total_price += $val->total_price; ?>
                                         @endforeach
                                         <tr>
-                                          <th scope="row">{{ $value->id }}</th>
+                                          <td>{{ $value->id }}</td>
                                           <td>{{ date('m-d-Y H:i:s',strtotime($value->created_at)) }}</td>
                                           <td>{{ Auth::user()->first_name.' '.Auth::user()->last_name }}</td>
-                                          <td>${{ $total_price }}</td>
+                                          <td>${{ $total_price+$value->ship_price }}</td>
                                           <td>{{ $value->order_status }}</td>
                                           <td>
-                                              <span class="nobr"><a href="javascript:void(0);">View Order</a></span>
+                                              <span class="nobr"><a href="{{ URL('/my-account/view').'/'.$value->id }}">View Order</a></span>
                                           </td>
                                         </tr>
                                   @endforeach
                                 </tbody>
                               </table>
                         </div>
+                        @else
+                            <div class="row colsm-row">
+                                <h3>Order Details:</h3>
+                                <table class="table order-detail">
+                                <thead>
+                                    <tr>
+                                        <th><label>Item Details</label></th>
+                                        <th><label>Quantity</label></th>
+                                        <th><label>Price</label></th>
+                                        <th><label>Total</label></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php $sub_total='' ?>
+                                    @foreach($order_details->getOrderDetailById as $val)
+                                        <?php $sub_total += $val->total_price; ?>
+                                    <tr>
+                                        <td>
+                                            <a class="ga-product-link" href="{{ URL('products').'/'.$val->getProduct->product_slug }}">{{ $val->getProduct->product_name }}</a>
+                                            <div class="product-sku">Part Number: {{ $val->getProduct->part_number }}</div>
+                                        </td>
+                                        <td>
+                                            <div>{{ $val->quantity }}</div>
+                                        </td>
+                                        <td>
+                                            <div>${{ $val->getProduct->price }}</div>
+                                        </td>
+                                        <td>
+                                            <div class="">${{ $val->total_price }}</div>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                                <div class="col-md-4 pull-right">
+                                    <h4>Order Total:</h4>
+                                    <div class="row">
+                                        <div class="row">
+                                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                                <label>Subtotal:</label>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                                <span>${{ number_format($sub_total,2) }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                                <label>Shipping & Handling:</label>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                                <span>${{ $order_details->ship_price }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                                <label>Total:</label>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                                <span class="price">${{ number_format($sub_total+$order_details->ship_price,2) }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
                 <div class="tab-pane" id="change-password">

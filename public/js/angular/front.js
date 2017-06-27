@@ -303,7 +303,7 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
                     $(window).scrollTop(0);
                     $scope.loading = false;
                     $timeout(function () {
-                        window.location = BaseUrl + "/"+data.data.intended;
+                        window.location = BaseUrl + "/" + data.data.intended;
                     }, 200);
 
                 }, function errorCallback(data) {
@@ -391,8 +391,8 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
                 });
             }
         }
-        
-        $scope.submitUpdateCart = function ($quantity,$productId,$cart_count) {
+
+        $scope.submitUpdateCart = function ($quantity, $productId, $cart_count) {
 
             $scope.cart.product_id = $productId;
             $scope.cart.quantity = $quantity;
@@ -415,7 +415,6 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
                     var $e1 = $('#content').html(data.data.html);
                     $compile($e1)($scope);
                     $(window).scrollTop(0);
-                    $scope.loading = false;
                 }, function errorCallback(data) {
                     $scope.loading = false;
                     $scope.alert_loading = true;
@@ -428,36 +427,63 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
                 });
             }
         }
-        
-        $scope.submitDeleteCart = function ($id,$qty) {
+
+        $scope.get_payment_form = function (ship_method) {
+            if (ship_method == '') {
+                $("#shipping_method_error").show();
+                $("#account_cart_area").hide();
+                return false;
+            }
+            $("#shipping_method_error").hide();
+            $("#account_cart_area").show();
+        }
+
+        $scope.changeShippingMethod = function (ship_method) {
+            if (ship_method != null) {
                 $scope.loading = true;
                 $http({
-                    method: 'POST',
-                    url: BaseUrl + '/cart/delete',
-                    data: {'id':$id},
+                    method: 'GET',
+                    url: BaseUrl + '/cart',
+                    params: {shipping_method: ship_method},
                     headers: {'Content-Type': 'application/json'}
                 }).then(function (data, status, headers, config) {
-                    $scope.cart_count = $scope.cart_count-$qty; //  this is used to update cart count
                     $scope.loading = false;
-                    $scope.alert_loading = true;
-                    $scope.alertClass = 'alert-success';
-                    $scope.alertLabel = 'Success!';
-                    $scope.alert_messages = data.data.messages;
-                    $scope.alertHide();
-                    var $e1 = $('#content').html(data.data.html);
+                    var $e1 = $('#content').html(data.data);
                     $compile($e1)($scope);
-                    $(window).scrollTop(0);
-                    $scope.loading = false;
-                }, function errorCallback(data) {
-                    $scope.loading = false;
-                    $scope.alert_loading = true;
-                    $scope.alertClass = 'alert-danger';
-                    $scope.alertLabel = 'Error!';
-                    $scope.alert_messages = data.data.error;
-                    $scope.alertHide();
-                    $(window).scrollTop(0);
-
+                    (window).scrollTop(0);
                 });
+            }
+        }
+
+        $scope.submitDeleteCart = function ($id, $qty) {
+            $scope.loading = true;
+            $http({
+                method: 'POST',
+                url: BaseUrl + '/cart/delete',
+                data: {'id': $id},
+                headers: {'Content-Type': 'application/json'}
+            }).then(function (data, status, headers, config) {
+                $scope.cart_count = $scope.cart_count - $qty; //  this is used to update cart count
+                $scope.loading = false;
+                $scope.alert_loading = true;
+                $scope.alertClass = 'alert-success';
+                $scope.alertLabel = 'Success!';
+                $scope.alert_messages = data.data.messages;
+                $scope.alertHide();
+                var $e1 = $('#content').html(data.data.html);
+                $compile($e1)($scope);
+                $(window).scrollTop(0);
+                $scope.loading = false;
+            }, function errorCallback(data) {
+                $scope.loading = false;
+                $scope.alert_loading = true;
+                $scope.alertClass = 'alert-danger';
+                $scope.alertLabel = 'Error!';
+                $scope.alert_messages = data.data.error;
+                $scope.alertHide();
+                $(window).scrollTop(0);
+
+            });
         }
 
         $scope.getProductByPage = function (element) {

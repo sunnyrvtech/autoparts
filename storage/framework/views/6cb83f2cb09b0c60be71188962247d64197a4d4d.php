@@ -4,7 +4,7 @@
 <div class="container"><!-- /#content.container -->   
     <div class="my-account">
         <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
-            <div class="btn-group btn-group-vertical" ng-init="selectedTab = 'shipping-address'">
+            <div class="btn-group btn-group-vertical" <?php if($order_details == ''): ?> ng-init="selectedTab = 'shipping-address'" <?php else: ?> ng-init="selectedTab = 'orders'" <?php endif; ?>>
                 <div class="btn-group"> 
                     <a class="btn btn-nav" ng-class="{'active':selectedTab === 'profile'}" ng-click="selectedTab = 'profile'" href="#profile" data-toggle="tab">
                         <span class="glyphicon glyphicon-user"></span>
@@ -89,7 +89,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane active" id="shipping-address">
+                <div class="tab-pane <?php if($order_details == ''): ?> active <?php endif; ?>" id="shipping-address">
                     <div class="col-xs-12 col-sm-9 col-md-6 col-lg-6 colsm">
                         <div class="row colsm-row">
                             <h3>Update Shipping Address:</h3>
@@ -265,42 +265,108 @@
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane" id="orders">
+                <div class="tab-pane <?php if($order_details != ''): ?> active <?php endif; ?>" id="orders">
                     <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 colsm">
-                        <div class="row colsm-row">
+                        <?php if($order_details == ''): ?>
+                            <div class="row colsm-row">
                             <h3>Your Orders:</h3>
                             <hr class="colorgraph">
                             <table class="table">
                                 <thead class="thead-inverse">
                                   <tr>
-                                    <th>Order#</th>
-                                    <th>Date</th>
-                                    <th>Ship To</th>
-                                    <th>Order Total</th>
-                                    <th>Order Status</th>
+                                      <th><label>Order#</label></th>
+                                      <th><label>Date</label></th>
+                                      <th><label>Ship To</label></th>
+                                      <th><label>Order Total</label></th>
+                                      <th><label>Order Status</label></th>
                                     <th></th>
                                   </tr>
                                 </thead>
                                 <tbody>
                                     <?php $__currentLoopData = $orders; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $value): $__env->incrementLoopIndices(); $loop = $__env->getFirstLoop(); ?>
                                         <?php $total_price = ''; ?>
-                                        <?php $__currentLoopData = $value->getTotalPriceByOrderId; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $val): $__env->incrementLoopIndices(); $loop = $__env->getFirstLoop(); ?>
+                                        <?php $__currentLoopData = $value->getOrderDetailById; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $val): $__env->incrementLoopIndices(); $loop = $__env->getFirstLoop(); ?>
                                             <?php $total_price += $val->total_price; ?>
                                         <?php endforeach; $__env->popLoop(); $loop = $__env->getFirstLoop(); ?>
                                         <tr>
-                                          <th scope="row"><?php echo e($value->id); ?></th>
+                                          <td><?php echo e($value->id); ?></td>
                                           <td><?php echo e(date('m-d-Y H:i:s',strtotime($value->created_at))); ?></td>
                                           <td><?php echo e(Auth::user()->first_name.' '.Auth::user()->last_name); ?></td>
-                                          <td>$<?php echo e($total_price); ?></td>
+                                          <td>$<?php echo e($total_price+$value->ship_price); ?></td>
                                           <td><?php echo e($value->order_status); ?></td>
                                           <td>
-                                              <span class="nobr"><a href="javascript:void(0);">View Order</a></span>
+                                              <span class="nobr"><a href="<?php echo e(URL('/my-account/view').'/'.$value->id); ?>">View Order</a></span>
                                           </td>
                                         </tr>
                                   <?php endforeach; $__env->popLoop(); $loop = $__env->getFirstLoop(); ?>
                                 </tbody>
                               </table>
                         </div>
+                        <?php else: ?>
+                            <div class="row colsm-row">
+                                <h3>Order Details:</h3>
+                                <table class="table order-detail">
+                                <thead>
+                                    <tr>
+                                        <th><label>Item Details</label></th>
+                                        <th><label>Quantity</label></th>
+                                        <th><label>Price</label></th>
+                                        <th><label>Total</label></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php $sub_total='' ?>
+                                    <?php $__currentLoopData = $order_details->getOrderDetailById; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $val): $__env->incrementLoopIndices(); $loop = $__env->getFirstLoop(); ?>
+                                        <?php $sub_total += $val->total_price; ?>
+                                    <tr>
+                                        <td>
+                                            <a class="ga-product-link" href="<?php echo e(URL('products').'/'.$val->getProduct->product_slug); ?>"><?php echo e($val->getProduct->product_name); ?></a>
+                                            <div class="product-sku">Part Number: <?php echo e($val->getProduct->part_number); ?></div>
+                                        </td>
+                                        <td>
+                                            <div><?php echo e($val->quantity); ?></div>
+                                        </td>
+                                        <td>
+                                            <div>$<?php echo e($val->getProduct->price); ?></div>
+                                        </td>
+                                        <td>
+                                            <div class="">$<?php echo e($val->total_price); ?></div>
+                                        </td>
+                                    </tr>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getFirstLoop(); ?>
+                                </tbody>
+                            </table>
+                                <div class="col-md-4 pull-right">
+                                    <h4>Order Total:</h4>
+                                    <div class="row">
+                                        <div class="row">
+                                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                                <label>Subtotal:</label>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                                <span>$<?php echo e(number_format($sub_total,2)); ?></span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                                <label>Shipping & Handling:</label>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                                <span>$<?php echo e($order_details->ship_price); ?></span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                                <label>Total:</label>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                                <span class="price">$<?php echo e(number_format($sub_total+$order_details->ship_price,2)); ?></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </div>
                 <div class="tab-pane" id="change-password">

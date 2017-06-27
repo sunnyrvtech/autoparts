@@ -28,9 +28,9 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php  $total_price_cart=''; ?>
+                                <?php $total_price = ''; ?>
                                 <?php $__currentLoopData = $cart_data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $value): $__env->incrementLoopIndices(); $loop = $__env->getFirstLoop(); ?>
-                                <?php $total_price_cart += $value['total_price']; ?>
+                                <?php $total_price += $value['total_price']; ?>
                                 <tr>
                                     <td>
                                         <div class="product-image"><img src="<?php echo e(URL::asset('/product_images').'/'.$value['product_image']); ?>" alt="<?php echo e($value['product_name']); ?>" width="120" height="120"></div>
@@ -44,6 +44,7 @@
                                     <td>
                                         <input class="order-quantity-dropdown form-control" value="<?php echo e($value['quantity']); ?>" data-product-id="<?php echo e($value['product_id']); ?>">
                                         <input type="hidden" name="cart_id[]" value="<?php echo e($value['cart_id']); ?>">
+                                        <input type="hidden" name="shipping_price" value="<?php echo e($other_cart_data['shipping_price']); ?>">
                                     </td>
                                     <td>
                                         <div>$<?php echo e($value['price']); ?></div>
@@ -71,7 +72,7 @@
                                 </div>
                             </div>
 
-                            <!--                        <div class="product-shipping-text">
+<!--                                                    <div class="product-shipping-text">
                                                         In Stock Ships Within 1 Business Day<br>
                                                         FREE SHIPPING AND HANDLING!
                                                     </div>-->
@@ -131,16 +132,23 @@
                 <div class="col-md-2"></div>
                 <div class="col-md-4">
                     <h4>Order Total: </h4>
-                    <!--                <div class="row">
-                                        <form method="post" action="javascript:void(0);">
-                                            <select class="form-control">
-                                                <option>Select Shipping Method</option>
-                                                <option>Ground</option>
-                                                <option>UPS Next Day Air</option>
-                                                <option>UPS 2nd Day Air</option>
-                                            </select>
-                                        </form>
-                                    </div>-->
+                    <div class="row">
+                        <?php if(!empty($shipping_methods->toArray())): ?>
+                        <select id="changeShippingMethod" class="form-control">
+                                <option value="">Select Shipping Method</option>
+                                <?php $__currentLoopData = $shipping_methods; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $val): $__env->incrementLoopIndices(); $loop = $__env->getFirstLoop(); ?>
+                                <option <?php if($val->name == $other_cart_data['method_name']): ?> selected <?php endif; ?> value="<?php echo e($val->name); ?>"><?php echo e($val->name); ?></option>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getFirstLoop(); ?>
+                        </select>
+                        <span id="shipping_method_error" class="help-block" style="display:none;">
+                            <strong style="color:#a94442;">Please select shipping method first.</strong>
+                        </span> 
+                        <?php else: ?>
+                        <span id="shipping_method_error" class="help-block" style="display:none;">
+                            <strong style="color:#a94442;">Shipping method not activated yet!</strong>
+                        </span> 
+                        <?php endif; ?>
+                    </div>
                     <div class="row total-price-section material" elevation="1">
                         <div class="row">
                             <!--                        <div class="col-md-6 col-sm-6 col-xs-6">
@@ -155,7 +163,7 @@
                                 <label>Subtotal:</label>
                             </div>
                             <div class="col-md-6 col-sm-6 col-xs-6">
-                                <span>$<?php echo e($total_price_cart); ?></span>
+                                <span>$<?php echo e(number_format($total_price,2)); ?></span>
                             </div>
                         </div>
                         <div class="row">
@@ -163,13 +171,13 @@
                                 <label>Total:</label>
                             </div>
                             <div class="col-md-6 col-sm-6 col-xs-6">
-                                <span class="price">$<?php echo e($total_price_cart); ?></span>
+                                <span class="price">$<?php echo e(number_format($other_cart_data['total_price_cart'],2)); ?></span>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <?php if(Auth::check() && !empty($shipping_address)): ?>
-                        <a class="btn btn-success btn-block" ng-click="account_cart_area=true" ng-show="!account_cart_area">Checkout</a>
+                        <a class="btn btn-success btn-block" id="checkout_btn">Checkout</a>
                         <?php elseif(empty($shipping_address)): ?>
                         <a class="btn btn-success btn-block" href="<?php echo e(URL('/my-account')); ?>" type="button">Checkout</a>
                         <?php else: ?>
@@ -178,7 +186,7 @@
                     </div>`
                 </div>
                 <?php if(Auth::check()): ?>
-                 <div class="row" ng-show="account_cart_area">
+                <div class="row" id="account_cart_area" style="display:none;">
                      <div class="col-md-6"></div>
                      <div class="col-md-6">
                         <h4>Enter Payment Information:</h4>
@@ -265,6 +273,18 @@
             var productId = $(this).attr('data-product-id');
             angular.element(this).scope().submitUpdateCart(quantity, productId, cart_count);
         });
+        
+        $(document).on('change', '#changeShippingMethod', function (e) {
+              e.preventDefault();
+              var ship_method = $(this).val();
+              angular.element(this).scope().changeShippingMethod(ship_method);
+       });
+       
+       $(document).on('click', '#checkout_btn', function (e) {
+              e.preventDefault();
+              var ship_method = $("#changeShippingMethod").val();
+              angular.element(this).scope().get_payment_form(ship_method);
+       });
     });
 </script>
 <?php $__env->stopPush(); ?>

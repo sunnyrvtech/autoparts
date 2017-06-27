@@ -52,6 +52,7 @@ class PaymentController extends Controller {
     public function store(Request $request) {
 
         $data = $request->all();
+        $shipping_price = $data['shipping_price'];
 
         $shipping_address = ShippingAddress::where('user_id', Auth::id())->first();
         $cart_ids = $data['cart_id'];
@@ -114,16 +115,16 @@ class PaymentController extends Controller {
 
 
         $details = Paypalpayment::details();
-        // $details->setShipping("1.2")
+        $details->setShipping($shipping_price)
         //->setTax("1.3")
         //total of items prices
-        $details->setSubtotal($total_price);
+        ->setSubtotal($total_price);
 
         //Payment Amount
         $amount = Paypalpayment::amount();
         $amount->setCurrency("USD")
                 // the total is $17.8 = (16 + 0.6) * 1 ( of quantity) + 1.2 ( of Shipping).
-                ->setTotal($total_price)
+                ->setTotal($total_price+$shipping_price)
                 ->setDetails($details);
 
         // ### Transaction
@@ -160,6 +161,7 @@ class PaymentController extends Controller {
             return Redirect::back()
                         ->with('error-message',$error->details[0]->issue);
         }
+        
         if ($transaction_id = $this->savePaymentDetails($payment, $carts,$shipping_address)) {
             Cart::destroy($cart_ids); ///  empty cart table after payment successfull
             return View::make('carts.success', compact('transaction_id'));
@@ -171,12 +173,15 @@ class PaymentController extends Controller {
         $order_array = array(
             'user_id' => Auth::id(),
             'transaction_id' => $payment->id,
+            'total_price' => $payment->transactions[0]->amount->total,
+            'ship_price' => $payment->transactions[0]->amount->details->shipping,
             'order_status' => 'processing',
             'created_at' => date('Y-m-d H:i:s',strtotime($payment->create_time))
         );
         $orders = Order::create($order_array);
         $transaction_details = array(
             'transaction_id'=>$orders->id,
+            'shipping_price'=>$payment->transactions[0]->amount->details->shipping,
             'order_time'=>  date('M d,Y H:i:s A',strtotime($payment->create_time))
         );
         if ($orders) {

@@ -18,7 +18,7 @@
 </div>
 <div class="container"><!-- /#content.container -->                 
     <div class="row ymm-con">
-        <div class="col-md-0"></div>
+        
         <div class="col-md-12 material" elevation="1">
             <div class="am-ymm horizontal hide-header full-width">
                 <h2>Select your vehicle</h2>
@@ -68,7 +68,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-0"></div>
+       
     </div>
     <div class="row featured-cats-con">
         <div class="col-md-12 material" elevation="1">
@@ -105,7 +105,7 @@
 
     <div class="row popular-brands-con" >
         <div class="col-md-12">
-            <div class="col-md-6">
+            <div class="col-md-6 col-sm-12">
                 <!-- Popular Brands -->
                 <div class="home-page-card-con material" elevation="1">
                     <div class="home-page-card-con-inner">
@@ -135,7 +135,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 col-sm-12">
                 <div class="home-page-card-con material" elevation="1">
                     <div class="home-page-card-con-inner">
                         <h3>Shop by Vehicle</h3>
@@ -238,16 +238,17 @@
         </div>
     </div>
 
-    <div class="row about-us-con">
-        <div class="col-md-0"></div>
+    <div class="row about-con-wrp">
+       
         <div class="col-md-12 material" elevation="1">
+        <div class="welcome-wrp">
             <br />
             <h1 class="welcome-msg">Welcome to Auto Light House!</h1>
             <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
             <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.<a href="<?php echo e(url('.')); ?>">AUTOLIGHTHOUSE.COM</a>!</p>
+            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.<a href="<?php echo e(url('.')); ?>">AUTOLIGHTHOUSE.COM</a>!</p></div>
         </div>
-        <div class="col-md-0"></div>
+       
     </div>
 </div><!-- /#content.container -->
 <div class="testimonial-section">
@@ -300,9 +301,30 @@ $(".slickSlider-half").slick({
     autoplay: false,
     infinite: true,
     slidesToShow: 3,
-    slidesToScroll: 1,
+    slidesToScroll: 1, 
+    responsive: [
+        {
+            breakpoint: 900,
+            settings: {
+                slidesToShow: 3
+            }
+        },
+         {
+            breakpoint: 767,
+            settings: {
+                slidesToShow: 2
+            }
+        },
+        {
+            breakpoint: 480,
+            settings: {
+                slidesToShow: 1
+            }
+        }
+    ]
 
 });
+
 $(".slickSlider-con").slick({
     autoplay: false,
     infinite: true,
@@ -315,10 +337,16 @@ $(".slickSlider-con").slick({
                 slidesToShow: 3
             }
         },
-        {
-            breakpoint: 500,
+         {
+            breakpoint: 767,
             settings: {
                 slidesToShow: 2
+            }
+        },
+        {
+            breakpoint: 480,
+            settings: {
+                slidesToShow: 1
             }
         }
     ]

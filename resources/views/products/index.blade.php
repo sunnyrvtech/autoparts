@@ -17,18 +17,21 @@
                         <a href="#" id="list" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-th-list"></span>List</a> 
                         <a href="#" id="grid" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-th"></span>Grid</a>
                     </div>
-                    <div class="pull-right">
-                        <label class="col-sm-1 control-label">Sort By:-</label>
-                        <div class="col-md-8">
+                    <div class="col-md-4 sort pull-right">
+                        <div class="row">
+                        <label class="col-sm-3 control-label">Sort By:-</label>
+                        <div class="col-sm-9">
                             <select class="form-control" name="sortBy">
                                 <option>Highest Price</option>
                                 <option>Lowest Price</option>
                             </select>
                         </div>
+                        </div>
                     </div>
                 </div>
             </div>
      @endif
+  <div class="row cat-list">
     <div class="col-md-9">
         <div id="products-content-area" class="row list-group">
             <?php
@@ -61,6 +64,7 @@
             $product_images = json_decode($value->getProducts->product_details->product_images);
             ?>
             <div class="item  col-xs-4 col-lg-4 grid-group-item list-group-item">
+               <div class="list-wrp grid-wrp">
                 <div class="thumbnail">
                     <img width="250" height="250" class="group list-group-image" src="{{ URL::asset('/product_images').'/' }}{{ isset($product_images[0])?$product_images[0]:'default.jpg' }}" alt="" />
                     <div class="caption">
@@ -80,6 +84,7 @@
                 <div class="product-card__overlay">
                     <a class="btn am-black product-card__overlay-btn" href="{{ URL('products').'/'.$value->getProducts->product_slug }}">View <span class="glyphicon glyphicon-eye-open"></span></a>
                     <a class="btn am-orange product-card__overlay-btn" href="javascript:void(0);" ng-click="submitCart(true,{{ $value->getProducts->id }})">Add to cart <span class="glyphicon glyphicon-shopping-cart"></span></a>
+                </div>
                 </div>
             </div>
             @empty
@@ -149,6 +154,7 @@
                         </form>
                     </div>
                 </div>
+                </div>
                 <?php
                 $filter_array = array(
                     0 => [
@@ -204,10 +210,11 @@
                 </div>
                 @endif
                 @endforeach
-            </div>
+           
         </div>
     </div>
     @endif
+    </div>
     <div class="pagination_main_wrapper">{{ $products->links() }}</div>
 </div>
 @endsection
