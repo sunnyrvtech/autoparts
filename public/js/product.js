@@ -3,6 +3,7 @@ $(document).ready(function () {
     $(document).on('click', '#list', function (event) {
         event.preventDefault();
         $('#products-content-area .item').addClass('list-group-item');
+        $('#products-content-area .item').removeClass('grid-group-item');
     });
 
     $(document).on('click', '#grid', function (event) {

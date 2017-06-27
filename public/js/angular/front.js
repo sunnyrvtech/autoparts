@@ -439,7 +439,7 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
         }
 
         $scope.changeShippingMethod = function (ship_method) {
-            if (ship_method != null) {
+            if (ship_method != '') {
                 $scope.loading = true;
                 $http({
                     method: 'GET',

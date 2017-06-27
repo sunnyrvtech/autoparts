@@ -1630,6 +1630,7 @@ section.scrollActive { position: fixed;width: 100%;z-index: 999999; }
   padding: 15px;
   position: relative;
 }
+
 #products-content-area .item.list-group-item {
   background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
   border: medium none;
@@ -2778,13 +2779,15 @@ ul.creditcards img {
   width: 100px !important;
 }
 ul.creditcards img {
-
   width: 100%;
 }
 #products-content-area .item.list-group-item .caption {
   display: inline-block;
 }
-
+.img-wrp img {
+  height: auto;
+  width: 100%;
+}
 .item.col-xs-4.col-lg-4.grid-group-item {
   width: 100%;
 }
