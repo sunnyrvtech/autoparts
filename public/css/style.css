@@ -1656,7 +1656,7 @@ section.scrollActive { position: fixed;width: 100%;z-index: 999999; }
 #products-content-area .item.list-group-item img { float: left; }
 #products-content-area .thumbnail { border: none; }
 #products-content-area .product-card__overlay { height: 100%;left: 0;text-align: center;position: absolute;top: 0;transition: all 0.15s ease-in 0s;visibility: hidden;width: 100%; }
-#products-content-area .item.grid-group-item:hover .product-card__overlay { visibility: visible;opacity: 1; }
+#products-content-area .item.grid-group-item:hover .product-card__overlay ,#products-content-area .item.list-group-item:hover .product-card__overlay { visibility: visible;opacity: 1; }
 #products-content-area .product-card__overlay-btn { position: relative;top: 90%;transform: translateY(-45%);transition: all 0.15s ease-in 0s; }
 .am-black { background: #000000;color: #fff;padding: 6px 12px; }
 .am-black:hover,.am-black:focus { background: #585858;color: #fff;box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.4); }
@@ -2480,7 +2480,9 @@ h1.welcome-msg {
 .panel.panel-default .panel-heading{
 	border-radius: 0px;
 }
-
+.grid-group-item .img-wrp img{
+	width: 100%;height: auto;
+}
 @media(min-width:992px) and (max-width: 1300px){
 	.navbar-categories .dropdown-menu {
   min-width: 700px !important;
@@ -2491,6 +2493,11 @@ h1.welcome-msg {
 	ul.creditcards img {
 
   width: 100%;
+}
+}
+@media(max-width: 1025px){
+		.row.cat-list {
+  margin: 0;
 }
 }
 @media(min-width: 992px) and (max-width: 1025px){
@@ -2683,9 +2690,7 @@ nav.navbar.navbar-categories .navbar-categories .category-lists {
 /**********/
 }
 @media(max-width: 767px){
-	.row.cat-list {
-  margin: 0;
-}
+
 #products-content-area .product-card__overlay {
   position: static;
 }
@@ -2772,6 +2777,40 @@ ul.creditcards img {
 
 }
 }
+@media(min-width: 481px) and (max-width: 767px){
+.list-group-item .img-wrp {
+  display: inline-block;
+  vertical-align: top;
+  width: 25%;
+}
+.list-group-item .caption {
+  display: inline-block;
+  width: 73%;
+}
+.list-group-item .img-wrp img{
+	width: 100%;height: auto;
+}
+.item.col-xs-4.col-lg-4.grid-group-item {
+  width: 50%;
+}
+.cate .col-md-4.col-sm-6 {
+  float: left;
+  width: 50%;
+}
+.cate .col-md-4.col-sm-6 {
+  float: left;
+  width: 50%;
+}
+.cate .col-md-4.col-sm-6 strong {
+  display: block;
+}
+.grid-group-item .am-black{
+	padding: 5px;
+}
+.grid-group-item .group.inner.grid-group-item-text {
+  min-height: 65px;
+}
+}
 @media(max-width: 480px){
 	.testimonial-section .col-md-12.material img.img-circle {
   height: 100px !important;
@@ -2789,6 +2828,9 @@ ul.creditcards img {
   width: 100%;
 }
 .item.col-xs-4.col-lg-4.grid-group-item {
+  width: 100%;
+}
+.cate .col-md-4.col-sm-6 {
   width: 100%;
 }
 }

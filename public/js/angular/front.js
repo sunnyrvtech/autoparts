@@ -429,7 +429,7 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
         }
 
         $scope.get_payment_form = function (ship_method) {
-            if (ship_method == '') {
+            if (ship_method == undefined || ship_method == 'null') {
                 $("#shipping_method_error").show();
                 $("#account_cart_area").hide();
                 return false;

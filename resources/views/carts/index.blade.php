@@ -278,6 +278,9 @@
         $(document).on('change', '#changeShippingMethod', function (e) {
               e.preventDefault();
               var ship_method = $(this).val();
+              if(ship_method == ''){
+                  ship_method = null;
+              }
               angular.element(this).scope().changeShippingMethod(ship_method);
        });
        

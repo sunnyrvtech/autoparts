@@ -10,14 +10,14 @@
         </div>
     </section>
      @if(!empty($products->toArray()['data']))
-            <div class="well well-sm">
+            <div class="well well-sm cate">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-4 col-sm-6">
                         <strong>Category Title:-</strong>
                         <a href="#" id="list" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-th-list"></span>List</a> 
                         <a href="#" id="grid" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-th"></span>Grid</a>
                     </div>
-                    <div class="col-md-4 sort pull-right">
+                    <div class="col-md-4 col-sm-6 sort pull-right">
                         <div class="row">
                         <label class="col-sm-3 control-label">Sort By:-</label>
                         <div class="col-sm-9">
