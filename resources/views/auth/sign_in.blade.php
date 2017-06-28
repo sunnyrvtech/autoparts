@@ -3,10 +3,13 @@
 @section('content')
 <div class="container animated slideInDown"><!-- /#content.container -->    
     <div class="row">
+        <div class="col-sm-12">
         <h2>Welcome Back to <small>Auto Light House!</small></h2>
         <hr class="colorgraph">
-        <div class="row text-center">
-            <div class="col-xs-12 col-md-6 col-centered divcontainer">
+        </div>
+        <div class="text-center">
+            <div class="col-xs-12 col-md-6 col-centered">
+              <div class="divcontainer">
                 <form name="loginForm" role="form" action="javascript:void(0);" ng-submit="submitLogin(loginForm.$valid)" novalidate>
                     {{ csrf_field()}}
                     <h2>Login In <small>It's free and always will be.</small></h2>
@@ -43,6 +46,7 @@
                         <button type="submit" class="btn btn-success btn-block btn-lg">Sign In</button>
                     </div>
                 </form>
+                </div>
             </div>
         </div>
     </div>

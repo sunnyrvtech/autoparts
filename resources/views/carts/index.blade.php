@@ -3,19 +3,19 @@
 @endpush
 @section('content')
 <div class="container">
-    <div class="container-fluid page-header-wrapper cart-header">
+    <div class="page-header-wrapper cart-header">
         <div class="row">
             <div class="col-md-12 col-sm-8 col-xs-12">
                 <h1 class="onea-page-header">View Cart</h1>
             </div>
         </div>
     </div>
-    <div id="checkout-final-con" class="container-fluid order-container">
+    <div id="checkout-final-con" class="order-container">
         @if(!empty($cart_data))
         
         <form class="form-horizontal" action="{{ route('checkout.store') }}" method="post">
-            <div class="row cart-list material" elevation="1">
-                <div class="col-md-12">
+            <div class="cart-list material" elevation="1">
+                <div class="col-12">
                     <div class="table-responsive order-items">
                         <table class="table order">
                             <thead>
@@ -70,6 +70,8 @@
                                 </div>
                                 <div class="title">
                                     <a class="ga-product-link" href="{{ URL('products').'/'.$value['product_slug']}}">{{ $value['product_name']}}</a>
+                                      <div class="product-sku">Part Number: {{ $value['part_number']}}</div>
+                            <div class="product-fit">Make: {{ $value['vehicle_company']}} / Model: {{ $value['vehicle_model']}} / Year: {{ $value['vehicle_year']}}</div>
                                 </div>
                             </div>
 
@@ -77,8 +79,7 @@
                                                         In Stock Ships Within 1 Business Day<br>
                                                         FREE SHIPPING AND HANDLING!
                                                     </div>-->
-                            <div class="product-sku">Part Number: {{ $value['part_number']}}</div>
-                            <div class="product-fit">Make: {{ $value['vehicle_company']}} / Model: {{ $value['vehicle_model']}} / Year: {{ $value['vehicle_year']}}</div>
+                          
 
                             <table class="table">
                                 <thead>
@@ -111,12 +112,14 @@
                     </div>
                 </div>
             </div>
-            <div class="row shipping-section material" elevation="1">
+            <div class="shipping-section material" elevation="1">
+               <div class="row">
                 <div class="col-md-6">
                     @if(!empty($shipping_address) && Auth::check())
                     <div class="row">
-                        <h4>Shipping To: </h4>
+                        
                         <div class="col-md-6">
+                        <h4>Shipping To: </h4>
                             <span>{{ Auth::user()->first_name }}</span><span> {{ Auth::user()->last_name }}</span>,
                             <span>{{ Auth::user()->email }}</span>
                             <span>
@@ -127,13 +130,14 @@
 
                         </div>
                     </div>
-                    <div class="row"><a href="{{ URL('/my-account') }}" class="btn btn-success" type="submit">Edit Shipping Address</a></div>
+                    <div class="btn-wrp">
+                    <a href="{{ URL('/my-account') }}" class="btn btn-success" type="submit">Edit Shipping Address</a></div>
                     @endif
                 </div>
-                <div class="col-md-2"></div>
-                <div class="col-md-4">
+              
+                <div class="col-md-4 col-xs-12 pull-right">
                     <h4>Order Total: </h4>
-                    <div class="row">
+                    <div class="delivery-wrp">
                         @if(!empty($shipping_methods->toArray()))
                         <select id="changeShippingMethod" class="form-control">
                                 <option value="">Select Shipping Method</option>
@@ -150,15 +154,15 @@
                         </span> 
                         @endif
                     </div>
-                    <div class="row total-price-section material" elevation="1">
-                        <div class="row">
+                    <div class="total-price-section material" elevation="1">
+                        <!--<div class="row">
                             <!--                        <div class="col-md-6 col-sm-6 col-xs-6">
                                                         <label>Tax: </label>
                                                     </div>-->
                             <!--                        <div class="col-md-6 col-sm-6 col-xs-6">
                                                         <span>$0.00</span>
-                                                    </div>-->
-                        </div>
+                                                    </div>
+                        </div>-->
                         <div class="row">
                             <div class="col-md-6 col-sm-6 col-xs-6">
                                 <label>Subtotal:</label>
@@ -176,7 +180,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="btn-deliver">
                         @if(Auth::check() && !empty($shipping_address))
                         <a class="btn btn-success btn-block" id="checkout_btn">Checkout</a>
                         @elseif(empty($shipping_address))
@@ -184,7 +188,8 @@
                         @else
                         <button class="btn btn-success btn-block" ng-click="login()" type="button">Checkout</button>
                         @endif
-                    </div>`
+                    </div>
+                </div>
                 </div>
                 @if(Auth::check())
                 <div class="row" id="account_cart_area" style="display:none;">
@@ -206,6 +211,7 @@
                             <div class="form-group form-group-sm">
                                 <label class="col-sm-4 control-label" for="card-number">Expiration Date: *</label>
                                 <div class="col-sm-8">
+                                   <div class="row expiry-wrp">
                                     <div class="col-sm-6">
                                         <select class="form-control" name="expiry_month" required="">
                                             <option value="">--Select Month--</option>
@@ -232,6 +238,7 @@
                                                <option value="{{ $val }}">{{ $val }}</option>
                                              @endforeach
                                         </select>
+                                    </div>
                                     </div>
                                 </div>
                             </div>

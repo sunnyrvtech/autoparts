@@ -1,10 +1,13 @@
 <?php $__env->startSection('content'); ?>
 <div class="container animated slideInDown"><!-- /#content.container -->    
     <div class="row">
+        <div class="col-sm-12">
         <h2>Welcome Back to <small>Auto Light House!</small></h2>
         <hr class="colorgraph">
-        <div class="row text-center">
-            <div class="col-xs-12 col-md-6 col-centered divcontainer">
+        </div>
+        <div class="text-center">
+            <div class="col-xs-12 col-md-6 col-centered">
+              <div class="divcontainer">
                 <form name="registerForm" role="form" role="form" method="POST" action="javascript:void(0);" ng-submit="submitRegister(registerForm.$valid)" novalidate>
                     <input type='text' style="display:none;">
                     <input type='password' style="display:none;">
@@ -59,6 +62,7 @@
                         <input type="submit" ng-disabled="register.password !== register.password_confirmation" value="Register" class="btn btn-primary btn-block btn-lg" tabindex="7">
                     </div>
                 </form>
+                </div>
             </div>
         </div>
     </div>

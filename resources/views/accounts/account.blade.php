@@ -5,7 +5,7 @@
 <div class="container"><!-- /#content.container -->   
     <div class="my-account">
         <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
-            <div class="btn-group btn-group-vertical" @if($order_details == '') ng-init="selectedTab = 'shipping-address'" @else ng-init="selectedTab = 'orders'" @endif>
+            <div class="btn-group btn-group-vertical" @if($order_details == '' && Request::segment(2) != 'order') ng-init="selectedTab = 'shipping-address'" @else ng-init="selectedTab = 'orders'" @endif>
                 <div class="btn-group"> 
                     <a class="btn btn-nav" ng-class="{'active':selectedTab === 'profile'}" ng-click="selectedTab = 'profile'" href="#profile" data-toggle="tab">
                         <span class="glyphicon glyphicon-user"></span>
@@ -25,7 +25,7 @@
                     </a>
                 </div>
                 <div class="btn-group">
-                    <a class="btn btn-nav" ng-class="{'active':selectedTab === 'orders'}" ng-click="selectedTab = 'orders'" href="#orders" data-toggle="tab">
+                    <a class="btn btn-nav" id="order_tab" ng-class="{'active':selectedTab === 'orders'}" ng-click="selectedTab = 'orders'" href="#orders" data-toggle="tab">
                         <span class="glyphicon fa fa-cart-arrow-down"></span>
                         <p>My Orders</p>
                     </a>
@@ -48,7 +48,7 @@
                             <hr class="colorgraph">
                             <form name="profileForm" role="form" method="POST" action="javascript:void(0);" ng-submit="submitProfile(profileForm.$valid)" novalidate>
                                 {{ csrf_field()}}
-                                <div class="row">
+                                <div class="row1">
                                     <div class="form-group" ng-class="{ 'has-error' : profileForm.first_name.$invalid && !profileForm.first_name.$pristine }">
                                         <input type="text" name="first_name" required="" ng-model="profile.first_name" ng-init="profile.first_name='{{ $users->first_name }}'" class="form-control" placeholder="First Name">
                                         <span ng-show="profileForm.first_name.$invalid && !profileForm.first_name.$pristine" class="help-block">
@@ -56,7 +56,7 @@
                                         </span> 
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="row1">
                                     <div class="form-group" ng-class="{ 'has-error' : profileForm.last_name.$invalid && !profileForm.last_name.$pristine }">
                                         <input type="text" name="last_name" required="" ng-model="profile.last_name" ng-init="profile.last_name='{{ $users->last_name }}'" class="form-control" placeholder="Last Name">
                                         <span ng-show="profileForm.last_name.$invalid && !profileForm.last_name.$pristine" class="help-block">
@@ -64,7 +64,7 @@
                                         </span> 
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="row1">
                                     <div class="form-group" style="border:1px solid #ccc;">
                                         <div style="position:relative;padding: 10px;">
                                             <a class="btn btn-primary" href="javascript:void(0);">
@@ -75,21 +75,21 @@
                                         </div>
                                       </div>
                                 </div>
-                                <div class="row">
+                                <div class="row1">
                                     <div class="form-group text-center" id="previewImage">
                                            @if(!empty($users->user_image))
                                                 <img width="200px" src="{{ URL::asset('/user_images').'/'.$users->user_image }}">
                                            @endif
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="row1">
                                     <button type="submit" class="btn btn-success btn-block btn-lg">Update</button>
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane @if($order_details == '') active @endif" id="shipping-address">
+                <div class="tab-pane @if($order_details == '' && Request::segment(2) != 'order') active @endif" id="shipping-address">
                     <div class="col-xs-12 col-sm-9 col-md-6 col-lg-6 colsm">
                         <div class="row colsm-row">
                             <h3>Update Shipping Address:</h3>
@@ -171,7 +171,7 @@
                                 @if($previous_url[3] == 'cart')
                                 <input type="hidden" ng-model="shipping.redirect_url" ng-init="shipping.redirect_url='cart'">
                                 @endif
-                                <div class="row">
+                                <div class="row1">
                                     <button type="submit" class="btn btn-success btn-block btn-lg">Submit</button>
                                 </div>
                             </form>
@@ -256,19 +256,19 @@
                                         </span> 
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="row1">
                                     <button type="submit" class="btn btn-success btn-block btn-lg">Submit</button>
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane @if($order_details != '') active @endif" id="orders">
-                    <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9 colsm">
-                        @if($order_details == '')
-                            <div class="row colsm-row">
+                <div class="tab-pane @if($order_details != '' || Request::segment(2) == 'order') active @endif" id="orders">
+                    <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9 colsm">
+                        <div class="row colsm-row" id="order_listing" @if($order_details != '' || Request::segment(2) == 'order') style="display:none;" @endif>
                             <h3>Your Orders:</h3>
                             <hr class="colorgraph">
+                          <div class="table-wrp">
                             <table class="table">
                                 <thead class="thead-inverse">
                                   <tr>
@@ -293,15 +293,16 @@
                                           <td>${{ $total_price+$value->ship_price }}</td>
                                           <td>{{ $value->order_status }}</td>
                                           <td>
-                                              <span class="nobr"><a href="{{ URL('/my-account/view').'/'.$value->id }}">View Order</a></span>
+                                              <span class="nobr"><a href="{{ URL('/my-account/order/view').'/'.$value->id }}">View Order</a></span>
                                           </td>
                                         </tr>
                                   @endforeach
                                 </tbody>
                               </table>
+                              </div>
                         </div>
-                        @else
-                            <div class="row colsm-row">
+                        @if($order_details != '')
+                        <div class="row colsm-row" id="order_details">
                                 <h3>Order Details:</h3>
                                 <table class="table order-detail">
                                 <thead>
@@ -334,14 +335,14 @@
                                     @endforeach
                                 </tbody>
                             </table>
-                                <div class="col-md-4 pull-right">
+                                <div class="col-md-12 col-sm-12 col-xs-12 pull-right">
                                     <h4>Order Total:</h4>
-                                    <div class="row">
+                                    <div class="outer-order">
                                         <div class="row">
                                             <div class="col-md-6 col-sm-6 col-xs-6">
                                                 <label>Subtotal:</label>
                                             </div>
-                                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                            <div class="col-md-6 col-sm-6 col-xs-6 text-right">
                                                 <span>${{ number_format($sub_total,2) }}</span>
                                             </div>
                                         </div>
@@ -349,7 +350,7 @@
                                             <div class="col-md-6 col-sm-6 col-xs-6">
                                                 <label>Shipping & Handling:</label>
                                             </div>
-                                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                            <div class="col-md-6 col-sm-6 col-xs-6 text-right">
                                                 <span>${{ $order_details->ship_price }}</span>
                                             </div>
                                         </div>
@@ -357,7 +358,7 @@
                                             <div class="col-md-6 col-sm-6 col-xs-6">
                                                 <label>Total:</label>
                                             </div>
-                                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                            <div class="col-md-6 col-sm-6 col-xs-6 text-right">
                                                 <span class="price">${{ number_format($sub_total+$order_details->ship_price,2) }}</span>
                                             </div>
                                         </div>
@@ -365,6 +366,7 @@
                                 </div>
                             </div>
                         @endif
+                        
                     </div>
                 </div>
                 <div class="tab-pane" id="change-password">
@@ -403,7 +405,7 @@
                                         </span> 
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="row1">
                                     <button type="submit" ng-disabled="password.password !== password.confirm_password" class="btn btn-success btn-block btn-lg">Submit</button>
                                 </div>
                             </form>
@@ -414,4 +416,12 @@
 </div>
 @endsection
 @push('scripts')
+<script type="text/javascript">
+ $(document).ready(function () {
+     $(document).on("click","#order_tab",function(){
+        $("#order_listing").show();
+        $("#order_details").remove();
+     });    
+ });
+</script>
 @endpush

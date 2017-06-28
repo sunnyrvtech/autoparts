@@ -2,19 +2,19 @@
 <?php $__env->stopPush(); ?>
 <?php $__env->startSection('content'); ?>
 <div class="container">
-    <div class="container-fluid page-header-wrapper cart-header">
+    <div class="page-header-wrapper cart-header">
         <div class="row">
             <div class="col-md-12 col-sm-8 col-xs-12">
                 <h1 class="onea-page-header">View Cart</h1>
             </div>
         </div>
     </div>
-    <div id="checkout-final-con" class="container-fluid order-container">
+    <div id="checkout-final-con" class="order-container">
         <?php if(!empty($cart_data)): ?>
         
         <form class="form-horizontal" action="<?php echo e(route('checkout.store')); ?>" method="post">
-            <div class="row cart-list material" elevation="1">
-                <div class="col-md-12">
+            <div class="cart-list material" elevation="1">
+                <div class="col-12">
                     <div class="table-responsive order-items">
                         <table class="table order">
                             <thead>
@@ -69,6 +69,8 @@
                                 </div>
                                 <div class="title">
                                     <a class="ga-product-link" href="<?php echo e(URL('products').'/'.$value['product_slug']); ?>"><?php echo e($value['product_name']); ?></a>
+                                      <div class="product-sku">Part Number: <?php echo e($value['part_number']); ?></div>
+                            <div class="product-fit">Make: <?php echo e($value['vehicle_company']); ?> / Model: <?php echo e($value['vehicle_model']); ?> / Year: <?php echo e($value['vehicle_year']); ?></div>
                                 </div>
                             </div>
 
@@ -76,8 +78,7 @@
                                                         In Stock Ships Within 1 Business Day<br>
                                                         FREE SHIPPING AND HANDLING!
                                                     </div>-->
-                            <div class="product-sku">Part Number: <?php echo e($value['part_number']); ?></div>
-                            <div class="product-fit">Make: <?php echo e($value['vehicle_company']); ?> / Model: <?php echo e($value['vehicle_model']); ?> / Year: <?php echo e($value['vehicle_year']); ?></div>
+                          
 
                             <table class="table">
                                 <thead>
@@ -110,12 +111,14 @@
                     </div>
                 </div>
             </div>
-            <div class="row shipping-section material" elevation="1">
+            <div class="shipping-section material" elevation="1">
+               <div class="row">
                 <div class="col-md-6">
                     <?php if(!empty($shipping_address) && Auth::check()): ?>
                     <div class="row">
-                        <h4>Shipping To: </h4>
+                        
                         <div class="col-md-6">
+                        <h4>Shipping To: </h4>
                             <span><?php echo e(Auth::user()->first_name); ?></span><span> <?php echo e(Auth::user()->last_name); ?></span>,
                             <span><?php echo e(Auth::user()->email); ?></span>
                             <span>
@@ -126,13 +129,14 @@
 
                         </div>
                     </div>
-                    <div class="row"><a href="<?php echo e(URL('/my-account')); ?>" class="btn btn-success" type="submit">Edit Shipping Address</a></div>
+                    <div class="btn-wrp">
+                    <a href="<?php echo e(URL('/my-account')); ?>" class="btn btn-success" type="submit">Edit Shipping Address</a></div>
                     <?php endif; ?>
                 </div>
-                <div class="col-md-2"></div>
-                <div class="col-md-4">
+              
+                <div class="col-md-4 col-xs-12 pull-right">
                     <h4>Order Total: </h4>
-                    <div class="row">
+                    <div class="delivery-wrp">
                         <?php if(!empty($shipping_methods->toArray())): ?>
                         <select id="changeShippingMethod" class="form-control">
                                 <option value="">Select Shipping Method</option>
@@ -149,15 +153,15 @@
                         </span> 
                         <?php endif; ?>
                     </div>
-                    <div class="row total-price-section material" elevation="1">
-                        <div class="row">
+                    <div class="total-price-section material" elevation="1">
+                        <!--<div class="row">
                             <!--                        <div class="col-md-6 col-sm-6 col-xs-6">
                                                         <label>Tax: </label>
                                                     </div>-->
                             <!--                        <div class="col-md-6 col-sm-6 col-xs-6">
                                                         <span>$0.00</span>
-                                                    </div>-->
-                        </div>
+                                                    </div>
+                        </div>-->
                         <div class="row">
                             <div class="col-md-6 col-sm-6 col-xs-6">
                                 <label>Subtotal:</label>
@@ -175,7 +179,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="btn-deliver">
                         <?php if(Auth::check() && !empty($shipping_address)): ?>
                         <a class="btn btn-success btn-block" id="checkout_btn">Checkout</a>
                         <?php elseif(empty($shipping_address)): ?>
@@ -183,7 +187,8 @@
                         <?php else: ?>
                         <button class="btn btn-success btn-block" ng-click="login()" type="button">Checkout</button>
                         <?php endif; ?>
-                    </div>`
+                    </div>
+                </div>
                 </div>
                 <?php if(Auth::check()): ?>
                 <div class="row" id="account_cart_area" style="display:none;">
@@ -205,6 +210,7 @@
                             <div class="form-group form-group-sm">
                                 <label class="col-sm-4 control-label" for="card-number">Expiration Date: *</label>
                                 <div class="col-sm-8">
+                                   <div class="row expiry-wrp">
                                     <div class="col-sm-6">
                                         <select class="form-control" name="expiry_month" required="">
                                             <option value="">--Select Month--</option>
@@ -231,6 +237,7 @@
                                                <option value="<?php echo e($val); ?>"><?php echo e($val); ?></option>
                                              <?php endforeach; $__env->popLoop(); $loop = $__env->getFirstLoop(); ?>
                                         </select>
+                                    </div>
                                     </div>
                                 </div>
                             </div>

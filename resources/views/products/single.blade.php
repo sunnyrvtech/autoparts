@@ -13,8 +13,8 @@
     <?php
     $product_images = json_decode($products->product_details->product_images);
     ?>
-    <div class="row">
-        <div class="col-md-6">
+    <div class="row single-pro-wrp">
+        <div class="col-md-4 col-sm-4">
             <div class="product-images">
                 <ul class="thumbs">
                     @if($product_images)
@@ -34,13 +34,13 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="row">
+        <div class="col-md-8 col-sm-8">
+          
                 <div id="product-promo">
                     <h3>{{ $products->product_name }}</h3>
                 </div>
-            </div>
-            <div class=" row material" elevation="1">
+            
+            <div class="material" elevation="1">
                 <div class="product-details-container">
                     <div class="row">
                         <div class="col-md-12">
