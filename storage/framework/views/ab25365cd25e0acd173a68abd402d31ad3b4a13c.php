@@ -5,12 +5,12 @@
             <div class="col-md-4">
                 <a href="<?php echo e(route('products.create')); ?>" class="btn btn-primary">Add New</a>
             </div>
-<!--            <div class="col-md-8">
+            <div class="col-md-8">
                 <div class="text-right">
-                    <a class="browse btn btn-primary" type="button"><i class="glyphicon glyphicon-search"></i>Import</a>
+                    <a class="browse btn btn-primary" type="button"><i class="glyphicon glyphicon-import"></i>Import Product</a>
                     <input style="display: none;" id="file_type" name="csvFile" class="uploadCsv" type="file">
                 </div>
-            </div>-->
+            </div>
         </div>
     </div>
     <div class="row">
@@ -21,7 +21,7 @@
                         <th>Id</th>
                         <th>Product Name</th>
                         <th>Product Description</th>
-                        <th>Part Number</th>
+                        <th>Sku</th>
                         <th>Price</th>
                         <th>Quantity</th>
                         <th>Status</th>
@@ -46,7 +46,7 @@
                 {data: 'id', name: 'id'},
                 {data: 'product_name', name: 'product_name'},
                 {data: 'product_long_description', name: 'product_long_description'},
-                {data: 'part_number', name: 'part_number'},
+                {data: 'sku', name: 'sku'},
                 {data: 'price', name: 'price'},
                 {data: 'quantity', name: 'quantity'},
                 {data: 'status', render: function (data, type, row) {
@@ -81,6 +81,7 @@
                 processData: false,
                 success: function (data) {
                     $("#loaderOverlay").hide();
+                    window.location.reload();
                     //alert("Process completed.Please shut down system now");
                 }
                 

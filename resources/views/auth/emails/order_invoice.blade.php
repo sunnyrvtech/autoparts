@@ -301,7 +301,7 @@
                                                     @foreach($carts as $key => $value)
                                                     <?php $total_price += $value->total_price; ?>
                                                     <tr style="border-bottom: 1px solid #C8C8C8;">
-                                                        <td align="left" width="80%" style="padding: 15px;"><span style="font-weight: bold;">{{ $value->get_products->product_name }}</span><br><span>SKU: {{ $value->get_products->part_number }}</span></td>
+                                                        <td align="left" width="80%" style="padding: 15px;"><span style="font-weight: bold;">{{ $value->get_products->product_name }}</span><br><span>SKU: {{ $value->get_products->sku }}</span></td>
                                                         <td width="20%" style="padding: 15px;">{{ $value->quantity }}</td>
                                                         <td width="20%" style="padding: 15px;">${{ $value->total_price }}</td>
                                                     </tr>

@@ -65,7 +65,7 @@ Route::get('account/activate/{code}', array(
     'as' => 'account.activate',
     'uses' => 'AccountController@getActivate'
 ));
-Route::get('/{slug}', 'SubCategoryController@getSubSubcategory');
+Route::get('/{slug}', 'SubCategoryController@getProductByCategorySlug');
 //Route::get('/{company}/{slug}', 'SubSubCategoryController@getSubSubSubcategory');
 
 // Auth::routes();

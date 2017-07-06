@@ -267,41 +267,45 @@
                 </div>
                 <div class="tab-pane <?php if($order_details != '' || Request::segment(2) == 'order'): ?> active <?php endif; ?>" id="orders">
                     <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9 colsm">
-                        <div class="row colsm-row" id="order_listing" <?php if($order_details != '' || Request::segment(2) == 'order'): ?> style="display:none;" <?php endif; ?>>
+                        <div class="row colsm-row" id="order_listing" <?php if($order_details != '' || Request::segment(2) != 'order'): ?> style="display:none;" <?php endif; ?>>
                             <h3>Your Orders:</h3>
                             <hr class="colorgraph">
                           <div class="table-wrp">
-                            <table class="table">
-                                <thead class="thead-inverse">
-                                  <tr>
-                                      <th><label>Order#</label></th>
-                                      <th><label>Date</label></th>
-                                      <th><label>Ship To</label></th>
-                                      <th><label>Order Total</label></th>
-                                      <th><label>Order Status</label></th>
-                                    <th></th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                    <?php $__currentLoopData = $orders; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $value): $__env->incrementLoopIndices(); $loop = $__env->getFirstLoop(); ?>
-                                        <?php $total_price = ''; ?>
-                                        <?php $__currentLoopData = $value->getOrderDetailById; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $val): $__env->incrementLoopIndices(); $loop = $__env->getFirstLoop(); ?>
-                                            <?php $total_price += $val->total_price; ?>
-                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getFirstLoop(); ?>
+                                <table class="table">
+                                    <thead class="thead-inverse">
                                         <tr>
-                                          <td><?php echo e($value->id); ?></td>
-                                          <td><?php echo e(date('m-d-Y H:i:s',strtotime($value->created_at))); ?></td>
-                                          <td><?php echo e(Auth::user()->first_name.' '.Auth::user()->last_name); ?></td>
-                                          <td>$<?php echo e($total_price+$value->ship_price); ?></td>
-                                          <td><?php echo e($value->order_status); ?></td>
-                                          <td>
-                                              <span class="nobr"><a href="<?php echo e(URL('/my-account/order/view').'/'.$value->id); ?>">View Order</a></span>
-                                          </td>
+                                            <th><label>Order#</label></th>
+                                            <th><label>Date</label></th>
+                                            <th><label>Ship To</label></th>
+                                            <th><label>Order Total</label></th>
+                                            <th><label>Order Status</label></th>
+                                          <th></th>
                                         </tr>
-                                  <?php endforeach; $__env->popLoop(); $loop = $__env->getFirstLoop(); ?>
-                                </tbody>
-                              </table>
-                              </div>
+                                    </thead>
+                                    <tbody>
+                                        <?php $__empty_1 = true; $__currentLoopData = $orders; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $value): $__env->incrementLoopIndices(); $loop = $__env->getFirstLoop(); $__empty_1 = false; ?>
+                                            <?php $total_price = ''; ?>
+                                            <?php $__currentLoopData = $value->getOrderDetailById; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $val): $__env->incrementLoopIndices(); $loop = $__env->getFirstLoop(); ?>
+                                                <?php $total_price += $val->total_price; ?>
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getFirstLoop(); ?>
+                                            <tr>
+                                              <td><?php echo e($value->id); ?></td>
+                                              <td><?php echo e(date('m-d-Y H:i:s',strtotime($value->created_at))); ?></td>
+                                              <td><?php echo e(Auth::user()->first_name.' '.Auth::user()->last_name); ?></td>
+                                              <td>$<?php echo e($total_price+$value->ship_price); ?></td>
+                                              <td><?php echo e($value->order_status); ?></td>
+                                              <td>
+                                                  <span class="nobr"><a href="<?php echo e(URL('/my-account/order/view').'/'.$value->id); ?>">View Order</a></span>
+                                              </td>
+                                            </tr>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getFirstLoop(); if ($__empty_1): ?>
+                                            <tr>
+                                                <td><p>No Record Found!</p></td>
+                                            </tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                         <?php if($order_details != ''): ?>
                         <div class="row colsm-row" id="order_details">
@@ -322,7 +326,7 @@
                                     <tr>
                                         <td>
                                             <a class="ga-product-link" href="<?php echo e(URL('products').'/'.$val->getProduct->product_slug); ?>"><?php echo e($val->getProduct->product_name); ?></a>
-                                            <div class="product-sku">Part Number: <?php echo e($val->getProduct->part_number); ?></div>
+                                            <div class="product-sku">Sku: <?php echo e($val->getProduct->sku); ?></div>
                                         </td>
                                         <td>
                                             <div><?php echo e($val->quantity); ?></div>

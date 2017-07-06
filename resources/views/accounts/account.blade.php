@@ -265,41 +265,45 @@
                 </div>
                 <div class="tab-pane @if($order_details != '' || Request::segment(2) == 'order') active @endif" id="orders">
                     <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9 colsm">
-                        <div class="row colsm-row" id="order_listing" @if($order_details != '' || Request::segment(2) == 'order') style="display:none;" @endif>
+                        <div class="row colsm-row" id="order_listing" @if($order_details != '' || Request::segment(2) != 'order') style="display:none;" @endif>
                             <h3>Your Orders:</h3>
                             <hr class="colorgraph">
                           <div class="table-wrp">
-                            <table class="table">
-                                <thead class="thead-inverse">
-                                  <tr>
-                                      <th><label>Order#</label></th>
-                                      <th><label>Date</label></th>
-                                      <th><label>Ship To</label></th>
-                                      <th><label>Order Total</label></th>
-                                      <th><label>Order Status</label></th>
-                                    <th></th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($orders as $value)
-                                        <?php $total_price = ''; ?>
-                                        @foreach($value->getOrderDetailById as $val)
-                                            <?php $total_price += $val->total_price; ?>
-                                        @endforeach
+                                <table class="table">
+                                    <thead class="thead-inverse">
                                         <tr>
-                                          <td>{{ $value->id }}</td>
-                                          <td>{{ date('m-d-Y H:i:s',strtotime($value->created_at)) }}</td>
-                                          <td>{{ Auth::user()->first_name.' '.Auth::user()->last_name }}</td>
-                                          <td>${{ $total_price+$value->ship_price }}</td>
-                                          <td>{{ $value->order_status }}</td>
-                                          <td>
-                                              <span class="nobr"><a href="{{ URL('/my-account/order/view').'/'.$value->id }}">View Order</a></span>
-                                          </td>
+                                            <th><label>Order#</label></th>
+                                            <th><label>Date</label></th>
+                                            <th><label>Ship To</label></th>
+                                            <th><label>Order Total</label></th>
+                                            <th><label>Order Status</label></th>
+                                          <th></th>
                                         </tr>
-                                  @endforeach
-                                </tbody>
-                              </table>
-                              </div>
+                                    </thead>
+                                    <tbody>
+                                        @forelse($orders as $value)
+                                            <?php $total_price = ''; ?>
+                                            @foreach($value->getOrderDetailById as $val)
+                                                <?php $total_price += $val->total_price; ?>
+                                            @endforeach
+                                            <tr>
+                                              <td>{{ $value->id }}</td>
+                                              <td>{{ date('m-d-Y H:i:s',strtotime($value->created_at)) }}</td>
+                                              <td>{{ Auth::user()->first_name.' '.Auth::user()->last_name }}</td>
+                                              <td>${{ $total_price+$value->ship_price }}</td>
+                                              <td>{{ $value->order_status }}</td>
+                                              <td>
+                                                  <span class="nobr"><a href="{{ URL('/my-account/order/view').'/'.$value->id }}">View Order</a></span>
+                                              </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td><p>No Record Found!</p></td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                         @if($order_details != '')
                         <div class="row colsm-row" id="order_details">
@@ -320,7 +324,7 @@
                                     <tr>
                                         <td>
                                             <a class="ga-product-link" href="{{ URL('products').'/'.$val->getProduct->product_slug }}">{{ $val->getProduct->product_name }}</a>
-                                            <div class="product-sku">Part Number: {{ $val->getProduct->part_number }}</div>
+                                            <div class="product-sku">Sku: {{ $val->getProduct->sku }}</div>
                                         </td>
                                         <td>
                                             <div>{{ $val->quantity }}</div>

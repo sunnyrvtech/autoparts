@@ -63,7 +63,7 @@
             }
             $product_images = json_decode($value->getProducts->product_details->product_images);
             ?>
-            <div class="item  col-xs-4 col-lg-4 list-group-item">
+            <div class="item col-xs-4 col-lg-4 list-group-item">
                <div class="list-wrp grid-wrp">
                 <div class="thumbnail">
                    <div class="img-wrp">

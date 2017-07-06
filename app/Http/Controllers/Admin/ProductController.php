@@ -30,7 +30,7 @@ class ProductController extends Controller {
     public function index(Request $request) {
         $title = 'Products';
         if ($request->ajax()) {
-            $products = Product::limit(7)->get();
+            $products = Product::get();
             foreach ($products as $key => $value) {
                 $products[$key]['action'] = '<a href="' . route('products.show', $value->id) . '" data-toggle="tooltip" title="update" class="glyphicon glyphicon-edit"></a>&nbsp;&nbsp;<a href="' . route('products.destroy', $value->id) . '" data-toggle="tooltip" title="delete" data-method="delete" class="glyphicon glyphicon-trash deleteRow"></a>';
             }
@@ -63,7 +63,7 @@ class ProductController extends Controller {
             'product_name' => 'required|max:50',
             'price' => 'required|numeric',
             'product_long_description' => 'required|max:50',
-            'part_number' => 'required|max:50',
+            'sku' => 'required|max:50',
             'quantity' => 'required|numeric',
             'status' => 'required',
         ]);
@@ -167,7 +167,7 @@ class ProductController extends Controller {
             'product_name' => 'required|max:50',
             'price' => 'required|numeric',
             'product_long_description' => 'required|max:50',
-            'part_number' => 'required|max:50',
+            'sku' => 'required|max:50',
             'quantity' => 'required|numeric',
             'status' => 'required',
         ]);
@@ -193,7 +193,7 @@ class ProductController extends Controller {
         if ($existing_product_image_array != '') {
             foreach ($existing_product_image_array as $exist_val) {
                 if (!in_array($exist_val, $old_image_data)) {
-                    @unlink(base_path('public/products/') . $exist_val);
+                    @unlink(base_path('public/product_images/') . $exist_val);
                 }
             }
         }

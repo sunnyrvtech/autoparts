@@ -95,13 +95,13 @@
                             </div>
                         </div>
                         <div class="col-lg-6">
-                            <div class="form-group <?php echo e($errors->has('part_number') ? ' has-error' : ''); ?>">
-                                <label class="control-label">Part Number<span class="comps">*</span></label>
-                                <?php echo e(Form::text('part_number', null,array('required', 'class'=>'form-control'))); ?>
+                            <div class="form-group <?php echo e($errors->has('sku') ? ' has-error' : ''); ?>">
+                                <label class="control-label">Sku<span class="comps">*</span></label>
+                                <?php echo e(Form::text('sku', null,array('required', 'class'=>'form-control'))); ?>
 
-                                <?php if($errors->has('part_number')): ?>
+                                <?php if($errors->has('sku')): ?>
                                 <span class="help-block">
-                                    <strong><?php echo e($errors->first('part_number')); ?></strong>
+                                    <strong><?php echo e($errors->first('sku')); ?></strong>
                                 </span>
                                 <?php endif; ?>
                             </div>
@@ -326,7 +326,7 @@
                                 <?php endif; ?>
                             </div>
                         </div>
-                        <div class="col-lg-6">
+<!--                        <div class="col-lg-6">
                             <div class="form-group <?php echo e($errors->has('carpet_color') ? ' has-error' : ''); ?>">
                                 <label class="control-label">Carpet Color</label>
                                 <?php echo e(Form::text('carpet_color', null,array('class'=>'form-control'))); ?>
@@ -337,8 +337,8 @@
                                 </span>
                                 <?php endif; ?>
                             </div>
-                        </div>
-                        <div class="col-lg-6">
+                        </div>-->
+<!--                        <div class="col-lg-6">
                             <div class="form-group <?php echo e($errors->has('light_option') ? ' has-error' : ''); ?>">
                                 <label class="control-label">Light Option</label>
                                 <?php echo e(Form::text('light_option', null,array('class'=>'form-control'))); ?>
@@ -349,8 +349,8 @@
                                 </span>
                                 <?php endif; ?>
                             </div>
-                        </div>
-                        <div class="col-lg-6">
+                        </div>-->
+<!--                        <div class="col-lg-6">
                             <div class="form-group <?php echo e($errors->has('fuel_tank_option') ? ' has-error' : ''); ?>">
                                 <label class="control-label">Fuel Tank Option</label>
                                 <?php echo e(Form::text('fuel_tank_option', null,array('class'=>'form-control'))); ?>
@@ -361,7 +361,7 @@
                                 </span>
                                 <?php endif; ?>
                             </div>
-                        </div>
+                        </div>-->
                         <div class="col-lg-6">
                             <div class="form-group <?php echo e($errors->has('color') ? ' has-error' : ''); ?>">
                                 <label class="control-label">Color</label>
@@ -374,7 +374,7 @@
                                 <?php endif; ?>
                             </div>
                         </div>
-                        <div class="col-lg-6">
+<!--                        <div class="col-lg-6">
                             <div class="form-group <?php echo e($errors->has('hood_type') ? ' has-error' : ''); ?>">
                                 <label class="control-label">Hood Type</label>
                                 <?php echo e(Form::text('hood_type', null,array('class'=>'form-control'))); ?>
@@ -385,7 +385,7 @@
                                 </span>
                                 <?php endif; ?>
                             </div>
-                        </div>
+                        </div>-->
                         <div class="col-lg-6">
                             <div class="form-group <?php echo e($errors->has('front_location') ? ' has-error' : ''); ?>">
                                 <label class="control-label">Front Location</label>
@@ -410,7 +410,7 @@
                                 <?php endif; ?>
                             </div>
                         </div>
-                        <div class="col-lg-6">
+<!--                        <div class="col-lg-6">
                             <div class="form-group <?php echo e($errors->has('tube_size') ? ' has-error' : ''); ?>">
                                 <label class="control-label">Tube Size</label>
                                 <?php echo e(Form::text('tube_size', null,array('class'=>'form-control'))); ?>
@@ -421,8 +421,8 @@
                                 </span>
                                 <?php endif; ?>
                             </div>
-                        </div>
-                        <div class="col-lg-6">
+                        </div>-->
+<!--                        <div class="col-lg-6">
                             <div class="form-group <?php echo e($errors->has('wheel_option') ? ' has-error' : ''); ?>">
                                 <label class="control-label">Wheel Option</label>
                                 <?php echo e(Form::text('wheel_option',null,array('class'=>'form-control'))); ?>
@@ -433,7 +433,7 @@
                                 </span>
                                 <?php endif; ?>
                             </div>
-                        </div>
+                        </div>-->
                     </div>
                 </div>
                 <div class="tab-pane" id="auto_parts2">
@@ -475,18 +475,90 @@
                             </div>
                         </div>
                         <div class="col-lg-6">
-                            <div class="form-group <?php echo e($errors->has('software') ? ' has-error' : ''); ?>">
-                                <label class="control-label">Software</label>
-                                <?php echo e(Form::text('software', null,array('class'=>'form-control'))); ?>
+                            <div class="form-group <?php echo e($errors->has('text') ? ' has-error' : ''); ?>">
+                                <label class="control-label">Text</label>
+                                <?php echo e(Form::text('text', null,array('class'=>'form-control'))); ?>
 
-                                <?php if($errors->has('software')): ?>
+                                <?php if($errors->has('text')): ?>
                                 <span class="help-block">
-                                    <strong><?php echo e($errors->first('software')); ?></strong>
+                                    <strong><?php echo e($errors->first('text')); ?></strong>
                                 </span>
                                 <?php endif; ?>
                             </div>
                         </div>
                         <div class="col-lg-6">
+                            <div class="form-group <?php echo e($errors->has('sale_type') ? ' has-error' : ''); ?>">
+                                <label class="control-label">Sale Type</label>
+                                <?php echo e(Form::text('sale_type', null,array('class'=>'form-control'))); ?>
+
+                                <?php if($errors->has('sale_type')): ?>
+                                <span class="help-block">
+                                    <strong><?php echo e($errors->first('sale_type')); ?></strong>
+                                </span>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group <?php echo e($errors->has('m_code') ? ' has-error' : ''); ?>">
+                                <label class="control-label">M Code</label>
+                                <?php echo e(Form::text('m_code', null,array('class'=>'form-control'))); ?>
+
+                                <?php if($errors->has('m_code')): ?>
+                                <span class="help-block">
+                                    <strong><?php echo e($errors->first('m_code')); ?></strong>
+                                </span>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group <?php echo e($errors->has('class') ? ' has-error' : ''); ?>">
+                                <label class="control-label">Class</label>
+                                <?php echo e(Form::text('class', null,array('class'=>'form-control'))); ?>
+
+                                <?php if($errors->has('class')): ?>
+                                <span class="help-block">
+                                    <strong><?php echo e($errors->first('class')); ?></strong>
+                                </span>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group <?php echo e($errors->has('parse_link') ? ' has-error' : ''); ?>">
+                                <label class="control-label">Parse Link</label>
+                                <?php echo e(Form::text('parse_link', null,array('class'=>'form-control'))); ?>
+
+                                <?php if($errors->has('parse_link')): ?>
+                                <span class="help-block">
+                                    <strong><?php echo e($errors->first('parse_link')); ?></strong>
+                                </span>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group <?php echo e($errors->has('certification') ? ' has-error' : ''); ?>">
+                                <label class="control-label">Certification</label>
+                                <?php echo e(Form::text('certification', null,array('class'=>'form-control'))); ?>
+
+                                <?php if($errors->has('certification')): ?>
+                                <span class="help-block">
+                                    <strong><?php echo e($errors->first('certification')); ?></strong>
+                                </span>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group <?php echo e($errors->has('warranty') ? ' has-error' : ''); ?>">
+                                <label class="control-label">Warranty</label>
+                                <?php echo e(Form::text('warranty', null,array('class'=>'form-control'))); ?>
+
+                                <?php if($errors->has('warranty')): ?>
+                                <span class="help-block">
+                                    <strong><?php echo e($errors->first('warranty')); ?></strong>
+                                </span>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+<!--                        <div class="col-lg-6">
                             <div class="form-group <?php echo e($errors->has('paint_code') ? ' has-error' : ''); ?>">
                                 <label class="control-label">Paint Code</label>
                                 <?php echo e(Form::text('paint_code', null,array('class'=>'form-control'))); ?>
@@ -497,8 +569,8 @@
                                 </span>
                                 <?php endif; ?>
                             </div>
-                        </div>
-                        <div class="col-lg-6">
+                        </div>-->
+<!--                        <div class="col-lg-6">
                             <div class="form-group <?php echo e($errors->has('paint_applicator') ? ' has-error' : ''); ?>">
                                 <label class="control-label">Paint Applicator</label>
                                 <?php echo e(Form::text('paint_applicator', null,array('class'=>'form-control'))); ?>
@@ -509,8 +581,8 @@
                                 </span>
                                 <?php endif; ?>
                             </div>
-                        </div>
-                        <div class="col-lg-6">
+                        </div>-->
+<!--                        <div class="col-lg-6">
                             <div class="form-group <?php echo e($errors->has('brake_pad') ? ' has-error' : ''); ?>">
                                 <label class="control-label">Brake Pad</label>
                                 <?php echo e(Form::text('brake_pad', null,array('class'=>'form-control'))); ?>
@@ -521,8 +593,8 @@
                                 </span>
                                 <?php endif; ?>
                             </div>
-                        </div>
-                        <div class="col-lg-6">
+                        </div>-->
+<!--                        <div class="col-lg-6">
                             <div class="form-group <?php echo e($errors->has('tonneau_cover_type') ? ' has-error' : ''); ?>">
                                 <label class="control-label">Tonneau Cover Type</label>
                                 <?php echo e(Form::text('tonneau_cover_type', null,array('class'=>'form-control'))); ?>
@@ -533,8 +605,8 @@
                                 </span>
                                 <?php endif; ?>
                             </div>
-                        </div>
-                        <div class="col-lg-6">
+                        </div>-->
+<!--                        <div class="col-lg-6">
                             <div class="form-group <?php echo e($errors->has('shaft_size') ? ' has-error' : ''); ?>">
                                 <label class="control-label">Shaft Size</label>
                                 <?php echo e(Form::text('shaft_size', null,array('class'=>'form-control'))); ?>
@@ -545,7 +617,7 @@
                                 </span>
                                 <?php endif; ?>
                             </div>
-                        </div>
+                        </div>-->
                         <div class="col-lg-6">
                             <div class="form-group <?php echo e($errors->has('licensed_by') ? ' has-error' : ''); ?>">
                                 <label class="control-label">Licensed By</label>
@@ -570,7 +642,7 @@
                                 <?php endif; ?>
                             </div>
                         </div>
-                        <div class="col-lg-6">
+<!--                        <div class="col-lg-6">
                             <div class="form-group <?php echo e($errors->has('tow_ball_diameter') ? ' has-error' : ''); ?>">
                                 <label class="control-label">Tow Ball Diameter</label>
                                 <?php echo e(Form::text('tow_ball_diameter', null,array('class'=>'form-control'))); ?>
@@ -581,8 +653,8 @@
                                 </span>
                                 <?php endif; ?>
                             </div>
-                        </div>
-                        <div class="col-lg-6">
+                        </div>-->
+<!--                        <div class="col-lg-6">
                             <div class="form-group <?php echo e($errors->has('trailer_hitch_class') ? ' has-error' : ''); ?>">
                                 <label class="control-label">Trailer Hitch Class</label>
                                 <?php echo e(Form::text('trailer_hitch_class', null,array('class'=>'form-control'))); ?>
@@ -593,7 +665,7 @@
                                 </span>
                                 <?php endif; ?>
                             </div>
-                        </div>
+                        </div>-->
                         <div class="col-lg-6">
                             <div class="form-group <?php echo e($errors->has('kit_includes') ? ' has-error' : ''); ?>">
                                 <label class="control-label">Kit Includes</label>
@@ -606,7 +678,7 @@
                                 <?php endif; ?>
                             </div>
                         </div>
-                        <div class="col-lg-6">
+<!--                        <div class="col-lg-6">
                             <div class="form-group <?php echo e($errors->has('trunk_mat_color') ? ' has-error' : ''); ?>">
                                 <label class="control-label">Trunk Mat Color</label>
                                 <?php echo e(Form::text('trunk_mat_color', null,array('class'=>'form-control'))); ?>
@@ -617,7 +689,7 @@
                                 </span>
                                 <?php endif; ?>
                             </div>
-                        </div>
+                        </div>-->
                         <div class="col-lg-6">
                             <div class="form-group <?php echo e($errors->has('fender_flare_type') ? ' has-error' : ''); ?>">
                                 <label class="control-label">Fender Flare Type</label>
@@ -642,7 +714,7 @@
                                 <?php endif; ?>
                             </div>
                         </div>
-                        <div class="col-lg-6">
+<!--                        <div class="col-lg-6">
                             <div class="form-group <?php echo e($errors->has('lighting_wattage_rating') ? ' has-error' : ''); ?>">
                                 <label class="control-label">Lighting Wattage Rating</label>
                                 <?php echo e(Form::text('lighting_wattage_rating', null,array('class'=>'form-control'))); ?>
@@ -653,7 +725,7 @@
                                 </span>
                                 <?php endif; ?>
                             </div>
-                        </div>
+                        </div>-->
                         <div class="col-lg-6">
                             <div class="form-group <?php echo e($errors->has('lighting_size') ? ' has-error' : ''); ?>">
                                 <label class="control-label">Lighting Size</label>
@@ -706,7 +778,7 @@
                                 <?php endif; ?>
                             </div>
                         </div>
-                        <div class="col-lg-6">
+<!--                        <div class="col-lg-6">
                             <div class="form-group <?php echo e($errors->has('lighting_bulb_count') ? ' has-error' : ''); ?>">
                                 <label class="control-label">Lighting Bulb Count</label>
                                 <?php echo e(Form::text('lighting_bulb_count', null,array('class'=>'form-control'))); ?>
@@ -717,8 +789,8 @@
                                 </span>
                                 <?php endif; ?>
                             </div>
-                        </div>
-                        <div class="col-lg-6">
+                        </div>-->
+<!--                        <div class="col-lg-6">
                             <div class="form-group <?php echo e($errors->has('lighting_usage') ? ' has-error' : ''); ?>">
                                 <label class="control-label">Lighting Usage</label>
                                 <?php echo e(Form::text('lighting_usage', null,array('class'=>'form-control'))); ?>
@@ -729,8 +801,8 @@
                                 </span>
                                 <?php endif; ?>
                             </div>
-                        </div>
-                        <div class="col-lg-6">
+                        </div>-->
+<!--                        <div class="col-lg-6">
                             <div class="form-group <?php echo e($errors->has('lighting_bulb_brand') ? ' has-error' : ''); ?>">
                                 <label class="control-label">Lighting Bulb Brand</label>
                                 <?php echo e(Form::text('lighting_bulb_brand', null,array('class'=>'form-control'))); ?>
@@ -741,7 +813,7 @@
                                 </span>
                                 <?php endif; ?>
                             </div>
-                        </div>
+                        </div>-->
                         <div class="col-lg-6">
                             <div class="form-group <?php echo e($errors->has('lighting_bulb_configuration') ? ' has-error' : ''); ?>">
                                 <label class="control-label">Lighting Bulb Configuration</label>
@@ -814,7 +886,7 @@
                                 <?php endif; ?>
                             </div>
                         </div>
-                        <div class="col-lg-6">
+<!--                        <div class="col-lg-6">
                             <div class="form-group <?php echo e($errors->has('intake_type') ? ' has-error' : ''); ?>">
                                 <label class="control-label">Intake Type</label>
                                 <?php echo e(Form::text('intake_type', null,array('class'=>'form-control'))); ?>
@@ -825,8 +897,8 @@
                                 </span>
                                 <?php endif; ?>
                             </div>
-                        </div>
-                        <div class="col-lg-6">
+                        </div>-->
+<!--                        <div class="col-lg-6">
                             <div class="form-group <?php echo e($errors->has('regulator_option') ? ' has-error' : ''); ?>">
                                 <label class="control-label">Regulator Option</label>
                                 <?php echo e(Form::text('regulator_option', null,array('class'=>'form-control'))); ?>
@@ -837,8 +909,8 @@
                                 </span>
                                 <?php endif; ?>
                             </div>
-                        </div>
-                        <div class="col-lg-6">
+                        </div>-->
+<!--                        <div class="col-lg-6">
                             <div class="form-group <?php echo e($errors->has('manufacturing_process') ? ' has-error' : ''); ?>">
                                 <label class="control-label">Manufacturing Process</label>
                                 <?php echo e(Form::text('manufacturing_process', null,array('class'=>'form-control'))); ?>
@@ -849,8 +921,8 @@
                                 </span>
                                 <?php endif; ?>
                             </div>
-                        </div>
-                        <div class="col-lg-6">
+                        </div>-->
+<!--                        <div class="col-lg-6">
                             <div class="form-group <?php echo e($errors->has('brake_rotor_type') ? ' has-error' : ''); ?>">
                                 <label class="control-label">Brake Rotor Type</label>
                                 <?php echo e(Form::text('brake_rotor_type', null,array('class'=>'form-control'))); ?>
@@ -861,8 +933,8 @@
                                 </span>
                                 <?php endif; ?>
                             </div>
-                        </div>
-                        <div class="col-lg-6">
+                        </div>-->
+<!--                        <div class="col-lg-6">
                             <div class="form-group <?php echo e($errors->has('thread_type') ? ' has-error' : ''); ?>">
                                 <label class="control-label">Thread Type</label>
                                 <?php echo e(Form::text('thread_type', null,array('class'=>'form-control'))); ?>
@@ -873,8 +945,8 @@
                                 </span>
                                 <?php endif; ?>
                             </div>
-                        </div>
-                        <div class="col-lg-6">
+                        </div>-->
+<!--                        <div class="col-lg-6">
                             <div class="form-group <?php echo e($errors->has('spark_plug_type') ? ' has-error' : ''); ?>">
                                 <label class="control-label">Spark Plug Type</label>
                                 <?php echo e(Form::text('spark_plug_type', null,array('class'=>'form-control'))); ?>
@@ -885,7 +957,7 @@
                                 </span>
                                 <?php endif; ?>
                             </div>
-                        </div>
+                        </div>-->
                     </div>
                 </div>
                 <div class="tab-pane" id="meta_information">

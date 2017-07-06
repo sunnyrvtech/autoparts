@@ -66,14 +66,20 @@
                             <span class="mini-cart-total">$0.00</span>-->
                         </a>
 
-                        <a class="navbar-brand" title="Auto-LightHouse" href="/"></a>
+                        <a class="navbar-brand" title="Auto-LightHouse" href="{{ url('/')}}"></a>
                     </div>
                     <div class="navbar-collapse collapse" id="navbar">
                         <ul class="nav navbar-nav">
                             <li><a href="javascript:void(0);" title="Email Customer Care"><span aria-hidden="true" class="glyphicon glyphicon-envelope"></span> Ask a Question</a></li>
                             <li><a href="javascript:void(0);" title="Frequently Asked Questions">FAQ</a></li>
-                            <li><a href="javascript:void(0);" title="Track your order">Order Tracking</a></li>
-
+                            <li>
+                            @if(Auth::check())
+                                <a href="{{ URL('/my-account/order')}}" title="Track your order">Order Tracking</a>
+                            @else
+                                <a href="javascript:void(0);" ng-click="login()" title="Track your order">Order Tracking</a>
+                            @endif
+                            </li>
+                            
                             <li>
                                 <a id="my-account" href="{{ URL('/my-account')}}">My Account</a>
                             </li>
@@ -198,7 +204,13 @@
                         <ul>
                             <!-- <li>Chat with an                                        agent</li> -->
                             <li><a href="javascript:void(0);" title="About Auto Light House">About Us</a></li>
-                            <li><a href="javascript:void(0);" title="Track Your Order">Track Your Order</a></li>
+                            <li>
+                            @if(Auth::check())
+                                <a href="{{ URL('/my-account/order')}}" title="Track your order">Track Your Order</a>
+                            @else
+                                <a href="javascript:void(0);" ng-click="login()" title="Track your order">Track Your Order</a>
+                            @endif
+                            </li>
                             <li><a href="javascript:void(0);" title="Return a Part">Return a Part</a></li>
                             <li><a href="javascript:void(0);" title="Email Customer Care">Email Customer Care</a></li>
                         </ul>
@@ -221,7 +233,7 @@
                         </ul>
                     </div>
                     <div class="col-lg-4 col-md-4 col-sm-4">
-                        <h3>Secure Checkout<span c                                                                                                                                                                                  lass="footer-header-border"></span></h3>
+                        <h3>Secure Checkout<span class="footer-header-border"></span></h3>
                         <ul class="secure-checkout">
                             <li></li>
                         </ul>

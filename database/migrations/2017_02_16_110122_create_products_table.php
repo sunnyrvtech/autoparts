@@ -19,7 +19,7 @@ class CreateProductsTable extends Migration
            $table->string('product_slug');
            $table->string('product_long_description');
            $table->string('product_short_description')->nullable();
-           $table->string('part_number');
+           $table->string('sku');
            $table->integer('quantity')->nullable();
            $table->decimal('price', 5, 2);
            $table->decimal('discount', 5, 2)->nullable();
@@ -39,15 +39,9 @@ class CreateProductsTable extends Migration
            $table->string('location')->nullable();
            $table->string('size')->nullable();
            $table->string('material')->nullable();
-           $table->string('carpet_color')->nullable();
-           $table->string('light_option')->nullable();
-           $table->string('fuel_tank_option')->nullable();
            $table->string('color')->nullable();
-           $table->string('hood_type')->nullable();
            $table->string('front_location')->nullable();
            $table->string('side_location')->nullable();
-           $table->string('tube_size')->nullable();
-           $table->string('wheel_option')->nullable();
            $table->string('includes')->nullable();
            $table->string('design')->nullable();
            $table->string('product_line')->nullable();

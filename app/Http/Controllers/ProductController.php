@@ -74,7 +74,7 @@ class ProductController extends Controller {
                     'product_name' => $products->product_name,
                     'product_image' => isset($product_image[0]) ? $product_image[0] : 'default.jpg',
                     'product_slug' => $products->product_slug,
-                    'part_number' => $products->part_number,
+                    'sku' => $products->sku,
                     'vehicle_company' => $products->get_vehicle_company->name,
                     'vehicle_model' => $products->get_vehicle_model->name,
                     'vehicle_year' => $products->vehicle_year,

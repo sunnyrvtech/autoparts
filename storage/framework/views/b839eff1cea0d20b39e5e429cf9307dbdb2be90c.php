@@ -38,7 +38,7 @@
                                     <td>
                                         <a class="ga-product-link" href="<?php echo e(URL('products').'/'.$value['product_slug']); ?>"><?php echo e($value['product_name']); ?></a>
                                         <!--<div class="product-shipping-text">In Stock Ships Within 1 Business Day FREE SHIPPING AND HANDLING!</div>-->
-                                        <div class="product-sku">Part Number: <?php echo e($value['part_number']); ?></div>
+                                        <div class="product-sku">Sku: <?php echo e($value['sku']); ?></div>
                                         <div class="product-fit">Make: <?php echo e($value['vehicle_company']); ?> / Model: <?php echo e($value['vehicle_model']); ?> / Year: <?php echo e($value['vehicle_year']); ?></div>
                                     </td>
                                     <td>
@@ -69,7 +69,7 @@
                                 </div>
                                 <div class="title">
                                     <a class="ga-product-link" href="<?php echo e(URL('products').'/'.$value['product_slug']); ?>"><?php echo e($value['product_name']); ?></a>
-                                      <div class="product-sku">Part Number: <?php echo e($value['part_number']); ?></div>
+                                      <div class="product-sku">Sku: <?php echo e($value['sku']); ?></div>
                             <div class="product-fit">Make: <?php echo e($value['vehicle_company']); ?> / Model: <?php echo e($value['vehicle_model']); ?> / Year: <?php echo e($value['vehicle_year']); ?></div>
                                 </div>
                             </div>

@@ -5,12 +5,12 @@
             <div class="col-md-4">
                 <a href="<?php echo e(route('categories.create')); ?>" class="btn btn-primary">Add New</a>
             </div>
-            <div class="col-md-8">
+<!--            <div class="col-md-8">
                 <div class="text-right">
                     <a class="browse btn btn-primary" type="button"><i class="glyphicon glyphicon-import"></i>Import Category</a>
                     <input style="display: none;" id="file_type" name="csvFile" class="uploadCsv" type="file">
                 </div>
-            </div>
+            </div>-->
         </div>
     </div>
     <div class="row">

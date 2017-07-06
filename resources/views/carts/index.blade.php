@@ -39,7 +39,7 @@
                                     <td>
                                         <a class="ga-product-link" href="{{ URL('products').'/'.$value['product_slug']}}">{{ $value['product_name']}}</a>
                                         <!--<div class="product-shipping-text">In Stock Ships Within 1 Business Day FREE SHIPPING AND HANDLING!</div>-->
-                                        <div class="product-sku">Part Number: {{ $value['part_number']}}</div>
+                                        <div class="product-sku">Sku: {{ $value['sku']}}</div>
                                         <div class="product-fit">Make: {{ $value['vehicle_company']}} / Model: {{ $value['vehicle_model']}} / Year: {{ $value['vehicle_year']}}</div>
                                     </td>
                                     <td>
@@ -70,7 +70,7 @@
                                 </div>
                                 <div class="title">
                                     <a class="ga-product-link" href="{{ URL('products').'/'.$value['product_slug']}}">{{ $value['product_name']}}</a>
-                                      <div class="product-sku">Part Number: {{ $value['part_number']}}</div>
+                                      <div class="product-sku">Sku: {{ $value['sku']}}</div>
                             <div class="product-fit">Make: {{ $value['vehicle_company']}} / Model: {{ $value['vehicle_model']}} / Year: {{ $value['vehicle_year']}}</div>
                                 </div>
                             </div>

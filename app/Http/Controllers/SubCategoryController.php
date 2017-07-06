@@ -15,7 +15,7 @@ class SubCategoryController extends Controller {
      *
      * @return Response
      */
-    public function getSubSubcategory(Request $request,$slug) {
+    public function getProductByCategorySlug(Request $request,$slug) {
         $title = 'Products';
         $sub_categories = SubCategory::where('slug', $slug)->first();
         $products = ProductSubCategory::where('sub_category_id', $sub_categories->id)->paginate(15);

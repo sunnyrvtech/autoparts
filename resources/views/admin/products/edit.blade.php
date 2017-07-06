@@ -90,12 +90,12 @@
                             </div>
                         </div>
                         <div class="col-lg-6">
-                            <div class="form-group {{ $errors->has('part_number') ? ' has-error' : '' }}">
-                                <label class="control-label">Part Number<span class="comps">*</span></label>
-                                {{ Form::text('part_number', $products->part_number,array('required', 'class'=>'form-control')) }}
-                                @if ($errors->has('part_number'))
+                            <div class="form-group {{ $errors->has('sku') ? ' has-error' : '' }}">
+                                <label class="control-label">Sku<span class="comps">*</span></label>
+                                {{ Form::text('sku', $products->sku,array('required', 'class'=>'form-control')) }}
+                                @if ($errors->has('sku'))
                                 <span class="help-block">
-                                    <strong>{{ $errors->first('part_number') }}</strong>
+                                    <strong>{{ $errors->first('sku') }}</strong>
                                 </span>
                                 @endif
                             </div>
@@ -195,7 +195,7 @@
                         <div class="col-lg-6">
                             <div class="form-group {{ $errors->has('vehicle_make_id') ? ' has-error' : '' }}">
                                 <label class="control-label">Vehicle Make</label>
-                                {{ Form::select('vehicle_make_id', $vehicle_company, null, ['class' => 'form-control']) }}
+                                {{ Form::select('vehicle_make_id', $vehicle_company, $products->vehicle_make_id, ['class' => 'form-control']) }}
                                 @if ($errors->has('vehicle_make_id'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('vehicle_make_id') }}</strong>
@@ -206,7 +206,7 @@
                         <div class="col-lg-6">
                             <div class="form-group {{ $errors->has('vehicle_model_id') ? ' has-error' : '' }}">
                                 <label class="control-label">Vehicle Model</label>
-                                {{ Form::select('vehicle_model_id',$vehicle_model, null, ['class' => 'form-control']) }}
+                                {{ Form::select('vehicle_model_id',$vehicle_model, $products->vehicle_model_id, ['class' => 'form-control']) }}
                                 @if ($errors->has('vehicle_model_id'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('vehicle_model_id') }}</strong>
@@ -302,7 +302,7 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col-lg-6">
+<!--                        <div class="col-lg-6">
                             <div class="form-group {{ $errors->has('carpet_color') ? ' has-error' : '' }}">
                                 <label class="control-label">Carpet Color</label>
                                 {{ Form::text('carpet_color', $products->carpet_color,array('class'=>'form-control')) }}
@@ -312,8 +312,8 @@
                                 </span>
                                 @endif
                             </div>
-                        </div>
-                        <div class="col-lg-6">
+                        </div>-->
+<!--                        <div class="col-lg-6">
                             <div class="form-group {{ $errors->has('light_option') ? ' has-error' : '' }}">
                                 <label class="control-label">Light Option</label>
                                 {{ Form::text('light_option', $products->light_option,array('class'=>'form-control')) }}
@@ -334,7 +334,7 @@
                                 </span>
                                 @endif
                             </div>
-                        </div>
+                        </div>-->
                         <div class="col-lg-6">
                             <div class="form-group {{ $errors->has('color') ? ' has-error' : '' }}">
                                 <label class="control-label">Color</label>
@@ -346,7 +346,7 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col-lg-6">
+<!--                        <div class="col-lg-6">
                             <div class="form-group {{ $errors->has('hood_type') ? ' has-error' : '' }}">
                                 <label class="control-label">Hood Type</label>
                                 {{ Form::text('hood_type', $products->hood_type,array('class'=>'form-control')) }}
@@ -356,7 +356,7 @@
                                 </span>
                                 @endif
                             </div>
-                        </div>
+                        </div>-->
                         <div class="col-lg-6">
                             <div class="form-group {{ $errors->has('front_location') ? ' has-error' : '' }}">
                                 <label class="control-label">Front Location</label>
@@ -379,7 +379,7 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col-lg-6">
+<!--                        <div class="col-lg-6">
                             <div class="form-group {{ $errors->has('tube_size') ? ' has-error' : '' }}">
                                 <label class="control-label">Tube Size</label>
                                 {{ Form::text('tube_size', $products->tube_size,array('class'=>'form-control')) }}
@@ -389,8 +389,8 @@
                                 </span>
                                 @endif
                             </div>
-                        </div>
-                        <div class="col-lg-6">
+                        </div>-->
+<!--                        <div class="col-lg-6">
                             <div class="form-group {{ $errors->has('wheel_option') ? ' has-error' : '' }}">
                                 <label class="control-label">Wheel Option</label>
                                 {{ Form::text('wheel_option', $products->wheel_option,array('class'=>'form-control')) }}
@@ -400,7 +400,7 @@
                                 </span>
                                 @endif
                             </div>
-                        </div>
+                        </div>-->
                     </div>
                 </div>
                 <div class="tab-pane" id="auto_parts2">
@@ -450,6 +450,83 @@
                             </div>
                         </div>
                         <div class="col-lg-6">
+                            <div class="form-group {{ $errors->has('text') ? ' has-error' : '' }}">
+                                <label class="control-label">Text</label>
+                                {{ Form::text('text', $products->product_details->text,array('class'=>'form-control')) }}
+                                @if ($errors->has('text'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('text') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group {{ $errors->has('sale_type') ? ' has-error' : '' }}">
+                                <label class="control-label">Sale Type</label>
+                                {{ Form::text('sale_type', $products->product_details->sale_type,array('class'=>'form-control')) }}
+                                @if ($errors->has('sale_type'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('sale_type') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group {{ $errors->has('m_code') ? ' has-error' : '' }}">
+                                <label class="control-label">M Code</label>
+                                {{ Form::text('m_code', $products->product_details->m_code,array('class'=>'form-control')) }}
+                                @if ($errors->has('m_code'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('m_code') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group {{ $errors->has('class') ? ' has-error' : '' }}">
+                                <label class="control-label">Class</label>
+                                {{ Form::text('class', $products->product_details->class,array('class'=>'form-control')) }}
+                                @if ($errors->has('class'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('class') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group {{ $errors->has('parse_link') ? ' has-error' : '' }}">
+                                <label class="control-label">Parse Link</label>
+                                {{ Form::text('parse_link', $products->product_details->parse_link,array('class'=>'form-control')) }}
+                                @if ($errors->has('parse_link'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('parse_link') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group {{ $errors->has('certification') ? ' has-error' : '' }}">
+                                <label class="control-label">Certification</label>
+                                {{ Form::text('certification', $products->product_details->certification,array('class'=>'form-control')) }}
+                                @if ($errors->has('certification'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('certification') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group {{ $errors->has('warranty') ? ' has-error' : '' }}">
+                                <label class="control-label">Warranty</label>
+                                {{ Form::text('warranty', $products->product_details->warranty,array('class'=>'form-control')) }}
+                                @if ($errors->has('warranty'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('warranty') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+<!--                        <div class="col-lg-6">
                             <div class="form-group {{ $errors->has('paint_code') ? ' has-error' : '' }}">
                                 <label class="control-label">Paint Code</label>
                                 {{ Form::text('paint_code', $products->product_details->paint_code,array('class'=>'form-control')) }}
@@ -503,7 +580,7 @@
                                 </span>
                                 @endif
                             </div>
-                        </div>
+                        </div>-->
                         <div class="col-lg-6">
                             <div class="form-group {{ $errors->has('licensed_by') ? ' has-error' : '' }}">
                                 <label class="control-label">Licensed By</label>
@@ -526,7 +603,7 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col-lg-6">
+<!--                        <div class="col-lg-6">
                             <div class="form-group {{ $errors->has('tow_ball_diameter') ? ' has-error' : '' }}">
                                 <label class="control-label">Tow Ball Diameter</label>
                                 {{ Form::text('tow_ball_diameter', $products->product_details->tow_ball_diameter,array('class'=>'form-control')) }}
@@ -547,7 +624,7 @@
                                 </span>
                                 @endif
                             </div>
-                        </div>
+                        </div>-->
                         <div class="col-lg-6">
                             <div class="form-group {{ $errors->has('kit_includes') ? ' has-error' : '' }}">
                                 <label class="control-label">Kit Includes</label>
@@ -559,7 +636,7 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col-lg-6">
+<!--                        <div class="col-lg-6">
                             <div class="form-group {{ $errors->has('trunk_mat_color') ? ' has-error' : '' }}">
                                 <label class="control-label">Trunk Mat Color</label>
                                 {{ Form::text('trunk_mat_color', $products->product_details->trunk_mat_color,array('class'=>'form-control')) }}
@@ -569,7 +646,7 @@
                                 </span>
                                 @endif
                             </div>
-                        </div>
+                        </div>-->
                         <div class="col-lg-6">
                             <div class="form-group {{ $errors->has('fender_flare_type') ? ' has-error' : '' }}">
                                 <label class="control-label">Fender Flare Type</label>
@@ -592,7 +669,7 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col-lg-6">
+<!--                        <div class="col-lg-6">
                             <div class="form-group {{ $errors->has('lighting_wattage_rating') ? ' has-error' : '' }}">
                                 <label class="control-label">Lighting Wattage Rating</label>
                                 {{ Form::text('lighting_wattage_rating', $products->product_details->lighting_wattage_rating,array('class'=>'form-control')) }}
@@ -602,7 +679,7 @@
                                 </span>
                                 @endif
                             </div>
-                        </div>
+                        </div>-->
                         <div class="col-lg-6">
                             <div class="form-group {{ $errors->has('lighting_size') ? ' has-error' : '' }}">
                                 <label class="control-label">Lighting Size</label>
@@ -651,7 +728,7 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col-lg-6">
+<!--                        <div class="col-lg-6">
                             <div class="form-group {{ $errors->has('lighting_bulb_count') ? ' has-error' : '' }}">
                                 <label class="control-label">Lighting Bulb Count</label>
                                 {{ Form::text('lighting_bulb_count', $products->product_details->lighting_bulb_count,array('class'=>'form-control')) }}
@@ -672,8 +749,8 @@
                                 </span>
                                 @endif
                             </div>
-                        </div>
-                        <div class="col-lg-6">
+                        </div>-->
+<!--                        <div class="col-lg-6">
                             <div class="form-group {{ $errors->has('lighting_bulb_brand') ? ' has-error' : '' }}">
                                 <label class="control-label">Lighting Bulb Brand</label>
                                 {{ Form::text('lighting_bulb_brand', $products->product_details->lighting_bulb_brand,array('class'=>'form-control')) }}
@@ -683,7 +760,7 @@
                                 </span>
                                 @endif
                             </div>
-                        </div>
+                        </div>-->
                         <div class="col-lg-6">
                             <div class="form-group {{ $errors->has('lighting_bulb_configuration') ? ' has-error' : '' }}">
                                 <label class="control-label">Lighting Bulb Configuration</label>
@@ -750,7 +827,7 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col-lg-6">
+<!--                        <div class="col-lg-6">
                             <div class="form-group {{ $errors->has('intake_type') ? ' has-error' : '' }}">
                                 <label class="control-label">Intake Type</label>
                                 {{ Form::text('intake_type', $products->product_details->intake_type,array('class'=>'form-control')) }}
@@ -815,7 +892,7 @@
                                 </span>
                                 @endif
                             </div>
-                        </div>
+                        </div>-->
                     </div>
                 </div>
                 <div class="tab-pane" id="meta_information">
