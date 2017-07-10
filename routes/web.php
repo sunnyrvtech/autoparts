@@ -65,6 +65,9 @@ Route::get('account/activate/{code}', array(
     'as' => 'account.activate',
     'uses' => 'AccountController@getActivate'
 ));
+Route::get('/about-us', function(){
+    return View::make('about-us');
+});
 Route::get('/{slug}', 'SubCategoryController@getProductByCategorySlug');
 //Route::get('/{company}/{slug}', 'SubSubCategoryController@getSubSubSubcategory');
 

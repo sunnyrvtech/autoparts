@@ -109,7 +109,12 @@
 </div>
 @endsection
 @push('scripts')
-<!--<script type="text/javascript">
-    
-</script>-->
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".current img").hover(function(){
+            var url = $(this).attr("src");
+            $("#product-image img").attr("src",url);
+        });
+    });
+</script>
 @endpush

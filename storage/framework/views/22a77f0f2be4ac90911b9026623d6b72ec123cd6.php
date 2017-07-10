@@ -110,9 +110,14 @@
 </div>
 <?php $__env->stopSection(); ?>
 <?php $__env->startPush('scripts'); ?>
-<!--<script type="text/javascript">
-    
-</script>-->
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".current img").hover(function(){
+            var url = $(this).attr("src");
+            $("#product-image img").attr("src",url);
+        });
+    });
+</script>
 <?php $__env->stopPush(); ?>
 
 <?php echo $__env->make('layouts.app', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
