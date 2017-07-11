@@ -10,25 +10,28 @@
         </div>
     </section>
      @if(!empty($products->toArray()['data']))
-            <div class="well well-sm">
+            <div class="well well-sm cate">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-4 col-sm-6">
                         <strong>Category Title:-</strong>
                         <a href="#" id="list" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-th-list"></span>List</a> 
                         <a href="#" id="grid" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-th"></span>Grid</a>
                     </div>
-                    <div class="pull-right">
-                        <label class="col-sm-1 control-label">Sort By:-</label>
-                        <div class="col-md-8">
+                    <div class="col-md-4 col-sm-6 sort pull-right">
+                        <div class="row">
+                        <label class="col-sm-3 control-label">Sort By:-</label>
+                        <div class="col-sm-9">
                             <select class="form-control" name="sortBy">
                                 <option>Highest Price</option>
                                 <option>Lowest Price</option>
                             </select>
                         </div>
+                        </div>
                     </div>
                 </div>
             </div>
      @endif
+    <div class="row cat-list">
     <div class="col-md-9">
         <div id="products-content-area" class="row list-group">
             <?php
@@ -58,26 +61,30 @@
             }
             $product_images = json_decode($value->product_details->product_images);
             ?>
-            <div class="item  col-xs-4 col-lg-4 grid-group-item list-group-item">
+            <div class="item col-xs-4 col-lg-4 list-group-item">
+               <div class="list-wrp grid-wrp">
                 <div class="thumbnail">
+                   <div class="img-wrp">
                     <img width="250" height="250" class="group list-group-image" src="{{ URL::asset('/product_images').'/' }}{{ isset($product_images[0])?$product_images[0]:'default.jpg' }}" alt="" />
+                    </div>
                     <div class="caption">
                         <h4 class="group inner list-group-item-heading">{{ $value->product_name }}</h4>
                         <h4 class="group inner grid-group-item-heading">{{ str_limit($value->product_name, $limit = 43, $end = '...') }}</h4>
-                        <p class="group inner grid-group-item-text">
-                            {{ str_limit($value->product_long_description, $limit = 50, $end = '...') }}
-                        </p>
-                        <p class="group inner list-group-item-text">
-                            {{ $value->product_long_description }}
-                        </p>
+                        <div class="group inner grid-group-item-text">
+                            {!! str_limit($value->product_long_description, $limit = 50, $end = '...') !!}
+                        </div>
+                        <div class="group inner list-group-item-text">
+                            {!! $value->product_long_description !!}
+                        </div>
                         <div class="row">
-                            <p class="lead">${{ $value->price }}</p>
+                            <p class="lead">${{ $value->price  }}</p>
                         </div>
                     </div>
                 </div>
                 <div class="product-card__overlay">
                     <a class="btn am-black product-card__overlay-btn" href="{{ URL('products').'/'.$value->product_slug }}">View <span class="glyphicon glyphicon-eye-open"></span></a>
                     <a class="btn am-orange product-card__overlay-btn" href="javascript:void(0);" ng-click="submitCart(true,{{ $value->id }})">Add to cart <span class="glyphicon glyphicon-shopping-cart"></span></a>
+                </div>
                 </div>
             </div>
             @empty
@@ -104,7 +111,7 @@
                 </div>
                 <div class="panel-collapse collapse in" role="tabpanel" id="search-ymm-collapse-plain" style="">
                     <div class="panel-body">
-                        <form id="am-ymm-home-form" class="form-horizontal" role="form">
+                         <form id="am-ymm-home-form" class="form-horizontal" role="form">
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <div class="btn-group year-select ymm-select">
@@ -147,6 +154,7 @@
                         </form>
                     </div>
                 </div>
+                </div>
                 <?php
                 $filter_array = array(
                     0 => [
@@ -186,6 +194,7 @@
                                 <li>
                                     @if($key !=0)
                                     <label class="checkbox-inline">
+                                        <!--<input type="checkbox" checked  value="{{ $val['id'] }}"><a class="filter-applied" href="javascript:void(0);">{{ $val['name'] }}</a>-->
                                         <span class="glyphicon glyphicon-chevron-right"></span>
                                         <a class="@if(Request::input('q') == $val['name'])filter-applied @endif" href="{{ URL('/products/search').'?q='.urlencode($val['name']) }}">{{ $val['name'] }}</a>
                                     </label>
@@ -201,10 +210,11 @@
                 </div>
                 @endif
                 @endforeach
-            </div>
+           
         </div>
     </div>
     @endif
+    </div>
     <div class="pagination_main_wrapper">{{ $products->links() }}</div>
 </div>
 @endsection

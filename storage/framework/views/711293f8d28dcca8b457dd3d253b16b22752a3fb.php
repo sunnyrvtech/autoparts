@@ -70,15 +70,15 @@
                     </div>
                     <div class="caption">
                         <h4 class="group inner list-group-item-heading"><?php echo e($value->getProducts->product_name); ?></h4>
-                        <!--<h4 class="group inner grid-group-item-heading"><?php echo e(str_limit($value->getProducts->product_name, $limit = 43, $end = '...')); ?></h4>-->
-                        <p class="group inner grid-group-item-text">
-                            <?php echo e(str_limit($value->getProducts->product_long_description, $limit = 50, $end = '...')); ?>
+                        <h4 class="group inner grid-group-item-heading"><?php echo e(str_limit($value->getProducts->product_name, $limit = 43, $end = '...')); ?></h4>
+                        <div class="group inner grid-group-item-text">
+                            <?php echo str_limit($value->getProducts->product_long_description, $limit = 50, $end = '...'); ?>
 
-                        </p>
-                        <p class="group inner list-group-item-text">
-                            <?php echo e($value->getProducts->product_long_description); ?>
+                        </div>
+                        <div class="group inner list-group-item-text">
+                            <?php echo $value->getProducts->product_long_description; ?>
 
-                        </p>
+                        </div>
                         <div class="row">
                             <p class="lead">$<?php echo e($value->getProducts->price); ?></p>
                         </div>

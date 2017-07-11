@@ -95,7 +95,7 @@
                     <div class="tab-pane active" id="productDetails">     
 <!--                        <p><span class="am-orange-text">Part Number: <em>AM-2048461716</em></span></p>-->
                         <div class="product-details-body">
-                            {!!  $products->product_long_description !!}    
+                            {!! $products->product_long_description !!}    
                         </div>
                     </div> 
                     <div class="tab-pane" id="vehicleFit">
