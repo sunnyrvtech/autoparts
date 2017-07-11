@@ -22,7 +22,7 @@
                     <tr>
                         <th>Id</th>
                         <th>Product Name</th>
-                        <th>Product Description</th>
+                     //   <th>Product Description</th>
                         <th>Sku</th>
                         <th>Price</th>
                         <th>Quantity</th>
@@ -47,7 +47,7 @@
             columns: [
                 {data: 'id', name: 'id'},
                 {data: 'product_name', name: 'product_name'},
-                {data: 'product_long_description', name: 'product_long_description'},
+              //  {data: 'product_long_description', name: 'product_long_description'},
                 {data: 'sku', name: 'sku'},
                 {data: 'price', name: 'price'},
                 {data: 'quantity', name: 'quantity'},
@@ -83,7 +83,7 @@
                 processData: false,
                 success: function (data) {
                     $("#loaderOverlay").hide();
-                    window.location.reload();
+                  //  window.location.reload();
                     //alert("Process completed.Please shut down system now");
                 }
                 

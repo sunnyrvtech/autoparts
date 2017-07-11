@@ -17,13 +17,13 @@ class CreateProductsTable extends Migration
            $table->increments('id');
            $table->string('product_name');
            $table->string('product_slug');
-           $table->string('product_long_description');
-           $table->string('product_short_description')->nullable();
+           $table->text('product_long_description');
+           $table->text('product_short_description')->nullable();
            $table->string('sku');
            $table->integer('quantity')->nullable();
            $table->decimal('price', 5, 2);
            $table->decimal('discount', 5, 2)->nullable();
-           $table->string('vehicle_fit')->nullable();
+           $table->text('vehicle_fit')->nullable();
            $table->integer('vehicle_year')->nullable();
            $table->integer('vehicle_make_id')->nullable();
            $table->integer('vehicle_model_id')->nullable();

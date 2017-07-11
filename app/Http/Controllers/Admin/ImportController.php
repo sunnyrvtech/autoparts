@@ -54,6 +54,7 @@ class ImportController extends Controller {
                     'product_slug' => $product_slug,
                     'product_long_description' => trim($row->product_long_description),
                     'product_short_description' => trim($row->product_short_description),
+                    'vehicle_fit' => trim($row->vehicle_fit),
                     'sku' => trim($row->sku),
                     'price' => $row->price,
                     'quantity' => $row->quantity,
