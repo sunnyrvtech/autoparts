@@ -22,7 +22,7 @@
                     <tr>
                         <th>Id</th>
                         <th>Product Name</th>
-                     //   <th>Product Description</th>
+                        <!--<th>Product Description</th>-->
                         <th>Sku</th>
                         <th>Price</th>
                         <th>Quantity</th>
