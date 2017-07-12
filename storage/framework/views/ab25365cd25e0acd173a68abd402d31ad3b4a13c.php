@@ -1,11 +1,9 @@
-@extends('admin/layouts.master')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="container-fluid">
     <div class="row form-group">
         <div class="col-md-12">
             <div class="col-md-4">
-                <a href="{{ route('products.create') }}" class="btn btn-primary">Add New</a>
+                <a href="<?php echo e(route('products.create')); ?>" class="btn btn-primary">Add New</a>
             </div>
             <div class="col-md-8">
                 <div class="text-right">
@@ -36,13 +34,13 @@
         </div>
     </div>
 </div>
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script type="text/javascript">
     $(function () {
         $('#brand-table').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ route('products.index') }}",
+            ajax: "<?php echo e(route('products.index')); ?>",
 //            order: [[ 1, "asc" ]],
             columns: [
                 {data: 'id', name: 'id'},
@@ -74,7 +72,7 @@
             var formData = new FormData();
             formData.append('csvFile', $('input[type=file]')[0].files[0]);
             $.ajax({
-                url: "{{ route('import.csv') }}",
+                url: "<?php echo e(route('import.csv')); ?>",
                 type: 'POST',
                 data: formData,
                 async: false,
@@ -92,5 +90,7 @@
         });
     });
 </script>
-@endpush
-@endsection
+<?php $__env->stopPush(); ?>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('admin/layouts.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

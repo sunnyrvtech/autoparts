@@ -1,6 +1,4 @@
-@extends('admin/layouts.master')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="container-fluid">
         <!-- Page Heading -->
         <div class="row">
@@ -244,4 +242,6 @@
         <!-- /.row -->
     </div>
     <!-- /.container-fluid -->
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('admin/layouts.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
