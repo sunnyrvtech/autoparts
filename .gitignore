@@ -2,6 +2,7 @@
 /public/storage
 /public/product_images
 /storage/*.key
+/storage
 /vendor
 /nbproject
 /.idea
