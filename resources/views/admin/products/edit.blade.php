@@ -182,12 +182,23 @@
                 <div class="tab-pane" id="auto_parts1">
                     <div class="row">
                         <div class="col-lg-6">
-                            <div class="form-group {{ $errors->has('vehicle_year') ? ' has-error' : '' }}">
-                                <label class="control-label">Vehicle Year</label>
-                                {{ Form::text('vehicle_year', $products->vehicle_year,array('class'=>'form-control datepicker')) }}
-                                @if ($errors->has('vehicle_year'))
+                            <div class="form-group {{ $errors->has('vehicle_year_from') ? ' has-error' : '' }}">
+                                <label class="control-label">Vehicle Year From</label>
+                                {{ Form::text('vehicle_year_from', $products->vehicle_year_from,array('class'=>'form-control datepicker')) }}
+                                @if ($errors->has('vehicle_year_from'))
                                 <span class="help-block">
-                                    <strong>{{ $errors->first('vehicle_year') }}</strong>
+                                    <strong>{{ $errors->first('vehicle_year_from') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group {{ $errors->has('vehicle_year_to') ? ' has-error' : '' }}">
+                                <label class="control-label">Vehicle Year To</label>
+                                {{ Form::text('vehicle_year_to', $products->vehicle_year_to,array('class'=>'form-control datepicker')) }}
+                                @if ($errors->has('vehicle_year_to'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('vehicle_year_to') }}</strong>
                                 </span>
                                 @endif
                             </div>

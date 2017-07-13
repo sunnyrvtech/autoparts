@@ -9,8 +9,6 @@
 
         <!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token()}}">
-
-        <title>Laravel</title>
         <link rel="shortcut icon" href="assets/images/gt_favicon.png">
         <!-- Styles -->
         <link href="{{ URL::asset('/css/app.css') }}" rel="stylesheet">
@@ -71,7 +69,7 @@
                     <div class="navbar-collapse collapse" id="navbar">
                         <ul class="nav navbar-nav">
                             <li><a href="javascript:void(0);" title="Email Customer Care"><span aria-hidden="true" class="glyphicon glyphicon-envelope"></span> Ask a Question</a></li>
-                            <li><a href="javascript:void(0);" title="Frequently Asked Questions">FAQ</a></li>
+                            <li><a href="{{ url('/faq')}}" title="Frequently Asked Questions">FAQ</a></li>
                             <li>
                             @if(Auth::check())
                                 <a href="{{ URL('/my-account/order')}}" title="Track your order">Order Tracking</a>
@@ -122,8 +120,8 @@
                         </ul>
                         <ul class="free-shipping">
                             <li>
-                                <h3>&nbsp;CAPA & NSF Certified Parts</h3>
-                                <div class="order-by-text">Order by 5 P.M. EST M-F and your order ships same day</div>
+                                <h3>&nbsp;{{ $header_content->custom_field1 or '' }}</h3>
+                                <div class="order-by-text">{{ $header_content->custom_field2 or '' }}</div>
                             </li>
                         </ul>
                         <div class="bottom-phone-and-mini-cart">
@@ -203,7 +201,7 @@
                         <h3>Customer Service<span class="footer-header-border"></span></h3>
                         <ul>
                             <!-- <li>Chat with an                                        agent</li> -->
-                            <li><a href="javascript:void(0);" title="About Auto Light House">About Us</a></li>
+                            <li><a href="{{ url('/about-us')}}" title="About Auto Light House">About Us</a></li>
                             <li>
                             @if(Auth::check())
                                 <a href="{{ URL('/my-account/order')}}" title="Track your order">Track Your Order</a>

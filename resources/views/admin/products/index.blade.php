@@ -83,7 +83,7 @@
                 processData: false,
                 success: function (data) {
                     $("#loaderOverlay").hide();
-                    window.location.reload();
+                   // window.location.reload();
                     //alert("Process completed.Please shut down system now");
                 }
                 

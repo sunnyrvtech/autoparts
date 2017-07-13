@@ -24,7 +24,8 @@ class CreateProductsTable extends Migration
            $table->decimal('price', 5, 2);
            $table->decimal('discount', 5, 2)->nullable();
            $table->text('vehicle_fit')->nullable();
-           $table->integer('vehicle_year')->nullable();
+           $table->integer('vehicle_year_from',4)->nullable();
+           $table->integer('vehicle_year_to',4)->nullable();
            $table->integer('vehicle_make_id')->nullable();
            $table->integer('vehicle_model_id')->nullable();
            $table->decimal('length', 5, 2)->nullable();

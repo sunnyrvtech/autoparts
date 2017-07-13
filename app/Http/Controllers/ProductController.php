@@ -77,7 +77,7 @@ class ProductController extends Controller {
                     'sku' => $products->sku,
                     'vehicle_company' => $products->get_vehicle_company->name,
                     'vehicle_model' => $products->get_vehicle_model->name,
-                    'vehicle_year' => $products->vehicle_year,
+                    'vehicle_year' => $products->vehicle_year_from.'-'.$products->vehicle_year_to,
                     'quantity' => $value->quantity,
                     'price' => $products->price,
                     'total_price' => $value->total_price,
@@ -281,7 +281,7 @@ class ProductController extends Controller {
         // get vehicle company data from product table and vehicle company table
         $vehicle_companies = Product::with(['get_vehicle_company' => function ($q) {
                         $q->select(['vehicle_companies.id', 'vehicle_companies.name']);
-                    }])->where('products.vehicle_year', $year)->groupby('products.vehicle_make_id')->get(array('products.vehicle_make_id'));
+                    }])->where([['products.vehicle_year_from','<=',$year],['products.vehicle_year_to','>=',$year]])->groupby('products.vehicle_make_id')->get(array('products.vehicle_make_id'));
 
         return $vehicle_companies;
     }
@@ -313,6 +313,9 @@ class ProductController extends Controller {
 
 
         $keyword = $request->input('q');
+        $year    = $request->input('year');
+        $make_id = $request->input('make_id');
+        $model_id = $request->input('model_id');
 
         if ($keyword != null) {
             $products = Product::whereHas('product_category.category', function($query) use($keyword) {
@@ -326,7 +329,7 @@ class ProductController extends Controller {
                     })->orWhere('products.product_name', 'LIKE', '%' . $keyword . '%')
                     ->paginate(15);
         } else {
-            $whereCond = ['products.vehicle_year' => $request->input('year'), 'products.vehicle_make_id' => $request->input('make_id'), 'products.vehicle_model_id' => $request->input('model_id')];
+            $whereCond = [['products.vehicle_year_from','<=',$year],['products.vehicle_year_to','>=',$year], 'products.vehicle_make_id' => $make_id, 'products.vehicle_model_id' => $model_id];
             $products = Product::Where($whereCond)->paginate(15);
         }
 

@@ -188,7 +188,10 @@
                                 }
                                 $("body").tooltip({selector: '[data-toggle=tooltip]', trigger: 'hover'});
                                 //initialize ckeditor        
-                                $('textarea').ckeditor();
+                                $('textarea').ckeditor({
+                                    enterMode : CKEDITOR.ENTER_DIV,
+                                    allowedContent : true
+                                });
                                 //initialize datepicker
                                 $('.datepicker').datetimepicker({
                                     format: "yyyy",

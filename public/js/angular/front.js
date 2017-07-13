@@ -9,6 +9,7 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
         $scope.shipping = {};
         $scope.billing = {};
         $scope.cart = {};
+        $scope.contact = {};
         $scope.loading = false;
         $("#loaderOverlay").show();
         $("#alert_loading").show();
@@ -315,6 +316,35 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
                     $scope.alertHide();
                     $(window).scrollTop(0);
 
+                });
+            }
+        }
+        
+        $scope.submitContact = function (isValid) {
+            //$scope.loading = true;
+            var data = $scope.contact;
+            // check to make sure the form is completely valid
+            if (isValid) {
+                $http({
+                    method: 'POST',
+                    url: BaseUrl + '/contact-us',
+                    data: data,
+                    headers: {'Content-Type': 'application/json'}
+                }).then(function (data, status, headers, config) {
+                    $scope.loading = false;
+                    $scope.alert_loading = true;
+                    $scope.alertClass = 'alert-success';
+                    $scope.alertLabel = '';
+                    $scope.alert_messages = 'Form submitted successfully!';
+                    $(window).scrollTop(0);
+                }, function errorCallback(data) {
+                    $scope.loading = false;
+                    $scope.alert_loading = true;
+                    $scope.alertClass = 'alert-danger';
+                    $scope.alertLabel = 'Error!';
+                    $scope.alert_messages = data.data.error;
+                    $scope.alertHide();
+                    $(window).scrollTop(0);
                 });
             }
         }

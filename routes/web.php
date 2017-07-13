@@ -29,6 +29,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'IsAdmin'], function () {
     Route::resource('products', 'Admin\ProductController');
     Route::resource('shipping', 'Admin\ShippingController');
     Route::resource('shipping_rates', 'Admin\ShippingRateController');
+    Route::resource('static_page', 'Admin\StaticPageController');
     Route::resource('orders', 'Admin\OrderController');
     Route::post('import/csv', 'Admin\ImportController@uploadCsv')->name('import.csv');
     Route::post('import/category', 'Admin\ImportController@createCategoryByCsv')->name('import.category');
@@ -65,9 +66,9 @@ Route::get('account/activate/{code}', array(
     'as' => 'account.activate',
     'uses' => 'AccountController@getActivate'
 ));
-Route::get('/about-us', function(){
-    return View::make('about-us');
-});
+Route::get('/about-us', 'HomeController@getAboutUs');
+Route::get('/faq', 'HomeController@getFaq');
+Route::get('/contact-us', 'HomeController@getContactUs');
 Route::get('/{slug}', 'SubCategoryController@getProductByCategorySlug');
 //Route::get('/{company}/{slug}', 'SubSubCategoryController@getSubSubSubcategory');
 
