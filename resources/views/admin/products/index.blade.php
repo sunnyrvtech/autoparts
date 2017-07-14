@@ -85,7 +85,10 @@
                     $("#loaderOverlay").hide();
                     window.location.reload();
                     //alert("Process completed.Please shut down system now");
-                }
+                },
+                error: function (error) {
+                   alert('Something went wrong,please try again later!');
+                 }
                 
             });
             return false;
