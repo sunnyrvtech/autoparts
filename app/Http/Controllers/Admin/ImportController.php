@@ -34,25 +34,17 @@ class ImportController extends Controller {
 
                 if (!$category = Category::where('name', 'like', trim($row->category))->first(array('id'))) {
                     $category = Category::create(array('name' => trim($row->category), 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
-                
-                    die('category');
                 }
 
                 if (!$sub_category = SubCategory::where('category_id', $category->id)->where('name', 'like', trim($row->sub_category))->first(array('id', 'category_id'))) {
                     $slug = $this->createSlug(trim($row->sub_category), 'category');
                     $sub_category = SubCategory::create(array('category_id' => $category->id, 'name' => trim($row->sub_category), 'slug' => $slug, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
-                die('sub');
-                    
                 }
                 if (!$vehicle_company = VehicleCompany::where('name', 'like', trim(ucfirst(strtolower($row->vehicle_make))))->first(array('id'))) {
                     $vehicle_company = VehicleCompany::create(array('name' => trim(ucfirst(strtolower($row->vehicle_make))), 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
-                die('comp');
-                    
                 }
                 if (!$vehicle_model = VehicleModel::where('name', 'like', trim(ucfirst(strtolower($row->vehicle_model))))->first(array('id'))) {
                     $vehicle_model = VehicleModel::create(array('name' => trim(ucfirst(strtolower($row->vehicle_model))), 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
-                die('model');
-                    
                 }
 
                 $product_slug = $this->createSlug(trim($row->product_name), 'product');
@@ -124,7 +116,6 @@ class ImportController extends Controller {
                 $products = Product::where('sku', 'like', $row->sku)->first();
 
                 if (!$products) {
-                    die('hello');
                     if ($product = Product::create($product_array)) {
                         $product_images = $this->product_image_upload($row->product_image);
                         $product_detail_array['product_id'] = $product->id;
