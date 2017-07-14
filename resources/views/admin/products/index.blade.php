@@ -87,6 +87,7 @@
                     //alert("Process completed.Please shut down system now");
                 },
                 error: function (error) {
+                    $("#loaderOverlay").hide();
                    alert('Something went wrong,please try again later!');
                  }
                 
