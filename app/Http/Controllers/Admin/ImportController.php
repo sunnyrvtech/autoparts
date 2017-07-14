@@ -184,11 +184,13 @@ class ImportController extends Controller {
                 $url = $val;
                 $extention = pathinfo($url, PATHINFO_EXTENSION);
                 $filename = str_random(15) . $extention;
-                $file = file_get_contents($url);
-                $save = file_put_contents($path . $filename, $file);
-                $imageArray[$key] = $filename;
+                if (@getimagesize($url)) {
+                    $file = file_get_contents($url);
+                    $save = file_put_contents($path . $filename, $file);
+                    $imageArray[$key] = $filename;
+                }
             }
-            return json_encode($imageArray);
+            return json_encode(array_values($imageArray));
         } else {
             return null;
         }
