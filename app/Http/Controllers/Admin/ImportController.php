@@ -124,6 +124,7 @@ class ImportController extends Controller {
                 $products = Product::where('sku', 'like', $row->sku)->first();
 
                 if (!$products) {
+                    die('hello');
                     if ($product = Product::create($product_array)) {
                         $product_images = $this->product_image_upload($row->product_image);
                         $product_detail_array['product_id'] = $product->id;
