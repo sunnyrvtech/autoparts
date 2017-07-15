@@ -343,7 +343,7 @@
                                                                                                 <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:right;">Shipping & Handling</h3>
                                                                                             </td>
                                                                                             <td>
-                                                                                                <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:right;">${{ $transaction_details['shipping_price'] }}</h3>
+                                                                                                <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:right;">${{ !empty($transaction_details['shipping_price'])?$transaction_details['shipping_price']:'0.00' }}</h3>
                                                                                             </td>
                                                                                         </tr>
                                                                                         <tr>

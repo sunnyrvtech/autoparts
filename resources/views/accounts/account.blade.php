@@ -355,7 +355,7 @@
                                                 <label>Shipping & Handling:</label>
                                             </div>
                                             <div class="col-md-6 col-sm-6 col-xs-6 text-right">
-                                                <span>${{ $order_details->ship_price }}</span>
+                                                <span>${{ $order_details->ship_price or '0.00' }}</span>
                                             </div>
                                         </div>
                                         <div class="row">
