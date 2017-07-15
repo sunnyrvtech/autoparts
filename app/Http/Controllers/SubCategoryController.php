@@ -18,7 +18,9 @@ class SubCategoryController extends Controller {
     public function getProductByCategorySlug(Request $request,$slug) {
         $title = 'Products';
         $sub_categories = SubCategory::where('slug', $slug)->first();
-        $products = ProductSubCategory::where('sub_category_id', $sub_categories->id)->paginate(15);
+        $products = ProductSubCategory::whereHas('getProducts', function($query) {
+                        $query->where('products.quantity', '>',0);
+        })->where('sub_category_id', $sub_categories->id)->paginate(15);
         $all_categories = SubCategory::groupBy('name')->get();
         $view = View::make('products.index', compact('title', 'products','all_categories'));
         if ($request->wantsJson()) {

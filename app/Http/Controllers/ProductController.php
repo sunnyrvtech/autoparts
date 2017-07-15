@@ -312,9 +312,9 @@ class ProductController extends Controller {
         $title = 'Products | Search';
 
 
-        $keyword = $request->input('q');
-        $year    = $request->input('year');
-        $make_id = $request->input('make_id');
+        $keyword  = $request->input('q');
+        $year     = $request->input('year');
+        $make_id  = $request->input('make_id');
         $model_id = $request->input('model_id');
 
         if ($keyword != null) {
@@ -327,7 +327,7 @@ class ProductController extends Controller {
                     })->orWhereHas('get_vehicle_model', function ($query) use($keyword) {
                         $query->where('vehicle_models.name', 'LIKE', '%' . $keyword . '%');
                     })->orWhere('products.product_name', 'LIKE', '%' . $keyword . '%')
-                    ->paginate(15);
+                    ->Where('products.quantity','>',0)->paginate(15);
         } else {
             $whereCond = [['products.vehicle_year_from','<=',$year],['products.vehicle_year_to','>=',$year], 'products.vehicle_make_id' => $make_id, 'products.vehicle_model_id' => $model_id];
             $products = Product::Where($whereCond)->paginate(15);
