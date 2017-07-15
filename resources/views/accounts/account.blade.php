@@ -83,7 +83,7 @@
                                     </div>
                                 </div>
                                 <div class="row1">
-                                    <button type="submit" class="btn btn-success btn-block btn-lg">Update</button>
+                                    <button type="submit" class="btn am-orange btn-block btn-lg">Update</button>
                                 </div>
                             </form>
                         </div>
@@ -172,7 +172,7 @@
                                 <input type="hidden" ng-model="shipping.redirect_url" ng-init="shipping.redirect_url='cart'">
                                 @endif
                                 <div class="row1">
-                                    <button type="submit" class="btn btn-success btn-block btn-lg">Submit</button>
+                                    <button type="submit" class="btn am-orange btn-block btn-lg">Submit</button>
                                 </div>
                             </form>
                         </div>
@@ -257,7 +257,7 @@
                                     </div>
                                 </div>
                                 <div class="row1">
-                                    <button type="submit" class="btn btn-success btn-block btn-lg">Submit</button>
+                                    <button type="submit" class="btn am-orange btn-block btn-lg">Submit</button>
                                 </div>
                             </form>
                         </div>
@@ -410,7 +410,7 @@
                                     </div>
                                 </div>
                                 <div class="row1">
-                                    <button type="submit" ng-disabled="password.password !== password.confirm_password" class="btn btn-success btn-block btn-lg">Submit</button>
+                                    <button type="submit" ng-disabled="password.password !== password.confirm_password" class="btn am-orange btn-block btn-lg">Submit</button>
                                 </div>
                             </form>
                         </div>

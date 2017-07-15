@@ -60,7 +60,7 @@
                     </div>
                     <hr class="colorgraph">
                     <div class="form-group">
-                        <input type="submit" ng-disabled="register.password !== register.password_confirmation" value="Register" class="btn btn-primary btn-block btn-lg" tabindex="7">
+                        <input type="submit" ng-disabled="register.password !== register.password_confirmation" value="Register" class="btn am-orange btn-block btn-lg" tabindex="7">
                     </div>
                 </form>
                 </div>
