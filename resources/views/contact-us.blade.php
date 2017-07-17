@@ -61,10 +61,10 @@
                                 <strong>Please enter item number.</strong>
                             </span> 
                         </div>
-                        <div class="form-group" ng-class="{ 'has-error' : contactForm.message.$invalid && !contactForm.message.$pristine }">
+                        <div class="form-group" ng-class="{ 'has-error' : contactForm.comment.$invalid && !contactForm.comment.$pristine }">
                             <label for="message">Message/Comments:<span class="required">*</span> </label>
-                            <textarea class="form-control" name="message" cols="6" required="" rows="6" ng-model="contact.message" placeholder="Message/Comments"></textarea>
-                            <span ng-show="contactForm.message.$invalid && !contactForm.message.$pristine" class="help-block">
+                            <textarea class="form-control" name="comment" cols="6" required="" rows="6" ng-model="contact.comment" placeholder="Message/Comments"></textarea>
+                            <span ng-show="contactForm.comment.$invalid && !contactForm.comment.$pristine" class="help-block">
                                 <strong>Please enter your message.</strong>
                             </span> 
                         </div>

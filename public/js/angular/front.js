@@ -321,7 +321,7 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
         }
         
         $scope.submitContact = function (isValid) {
-            //$scope.loading = true;
+            $scope.loading = true;
             var data = $scope.contact;
             // check to make sure the form is completely valid
             if (isValid) {
@@ -335,7 +335,7 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
                     $scope.alert_loading = true;
                     $scope.alertClass = 'alert-success';
                     $scope.alertLabel = '';
-                    $scope.alert_messages = 'Form submitted successfully!';
+                    $scope.alert_messages = 'Your inquiry form submitted successfully!';
                     $(window).scrollTop(0);
                 }, function errorCallback(data) {
                     $scope.loading = false;

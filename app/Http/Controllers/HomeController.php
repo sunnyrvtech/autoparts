@@ -8,6 +8,7 @@ use App\SubCategory;
 use App\Brand;
 use App\StaticPage;
 use App\VehicleCompany;
+use Mail;
 
 class HomeController extends Controller {
 
@@ -71,9 +72,19 @@ class HomeController extends Controller {
         $faq_content = StaticPage::where('slug', 'faq')->first();
         return View::make('faq', compact('faq_content'));
     }
-    
+
     public function getContactUs() {
         return View::make('contact-us');
+    }
+
+    public function postContactUs(Request $request) {
+
+        $data = $request->all();
+      
+        Mail::send('auth.emails.contact',$data, function($message) {
+            $message->from('test4rvtech@gmail.com', " Welcome To Autolighthouse");
+            $message->to('sunny_kumar@rvtechnologies.co.in')->subject('Autolighthouse inquiry email !!!');
+        });
     }
 
 }

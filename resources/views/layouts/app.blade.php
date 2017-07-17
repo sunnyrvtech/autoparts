@@ -68,7 +68,7 @@
                     </div>
                     <div class="navbar-collapse collapse" id="navbar">
                         <ul class="nav navbar-nav">
-                            <li><a href="javascript:void(0);" title="Email Customer Care"><span aria-hidden="true" class="glyphicon glyphicon-envelope"></span> Ask a Question</a></li>
+                            <li><a href="{{ URL('/contact-us') }}" title="Email Customer Care"><span aria-hidden="true" class="glyphicon glyphicon-envelope"></span> Ask a Question</a></li>
                             <li><a href="{{ url('/faq')}}" title="Frequently Asked Questions">FAQ</a></li>
                             <li>
                             @if(Auth::check())
@@ -201,7 +201,7 @@
                         <h3>Customer Service<span class="footer-header-border"></span></h3>
                         <ul>
                             <!-- <li>Chat with an                                        agent</li> -->
-                            <li><a href="{{ url('/about-us')}}" title="About Auto Light House">About Us</a></li>
+                            <li><a href="{{ URL('/about-us')}}" title="About Auto Light House">About Us</a></li>
                             <li>
                             @if(Auth::check())
                                 <a href="{{ URL('/my-account/order')}}" title="Track your order">Track Your Order</a>
@@ -209,8 +209,8 @@
                                 <a href="javascript:void(0);" ng-click="login()" title="Track your order">Track Your Order</a>
                             @endif
                             </li>
-                            <li><a href="javascript:void(0);" title="Return a Part">Return a Part</a></li>
-                            <li><a href="javascript:void(0);" title="Email Customer Care">Email Customer Care</a></li>
+                            <!--<li><a href="javascript:void(0);" title="Return a Part">Return a Part</a></li>-->
+                            <li><a href="{{ URL('/contact-us') }}" title="Email Customer Care">Email Customer Care</a></li>
                         </ul>
                     </div>
                      <div class="col-lg-4 col-md-4 col-sm-4">

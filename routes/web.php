@@ -69,6 +69,7 @@ Route::get('account/activate/{code}', array(
 Route::get('/about-us', 'HomeController@getAboutUs');
 Route::get('/faq', 'HomeController@getFaq');
 Route::get('/contact-us', 'HomeController@getContactUs');
+Route::post('/contact-us', 'HomeController@postContactUs');
 Route::get('/{slug}', 'SubCategoryController@getProductByCategorySlug');
 //Route::get('/{company}/{slug}', 'SubSubCategoryController@getSubSubSubcategory');
 
