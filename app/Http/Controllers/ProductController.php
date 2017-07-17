@@ -88,7 +88,7 @@ class ProductController extends Controller {
         }
         
         if ($request->get('shipping_method') == '') {
-            $method_name = "Free Delivery";
+            $method_name = "Free shipping";
         } else {
             $method_name = $request->get('shipping_method');
         }
@@ -107,7 +107,7 @@ class ProductController extends Controller {
                 $shipping_price = $shipping_rates->price;
                 $total_price_cart = $total_price_cart + $shipping_price;
             } else {
-                $shipping_price = ShippingRate::max('price');
+                $shipping_price = ShippingRate::where('country_id', $shipping_address->country_id)->max('price');
                 $total_price_cart = $total_price_cart + $shipping_price;
             }
         }
