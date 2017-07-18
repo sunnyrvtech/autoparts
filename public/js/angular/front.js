@@ -321,10 +321,11 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
         }
         
         $scope.submitContact = function (isValid) {
-            $scope.loading = true;
+      
             var data = $scope.contact;
             // check to make sure the form is completely valid
             if (isValid) {
+                $scope.loading = true;
                 $http({
                     method: 'POST',
                     url: BaseUrl + '/contact-us',

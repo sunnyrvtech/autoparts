@@ -14,8 +14,13 @@
     $product_images = json_decode($products->product_details->product_images);
     ?>
     <div class="row single-pro-wrp">
-        <div class="col-md-5 col-sm-5">
+        <div class="col-md-6 col-sm-6 cal-width1">
             <div class="product-images">
+               <div id="product-image">
+                    <span>
+                        <img class="img current-image" id="ShowImage" src="{{ URL::asset('/product_images').'/' }}{{ isset($product_images[0])?$product_images[0]:'default.jpg' }}">
+                    </span>
+                </div>
                 <ul class="thumbs">
                     @if($product_images)
                     @foreach($product_images as $val)
@@ -27,14 +32,10 @@
                     @endforeach
                     @endif
                 </ul>
-                <div id="product-image">
-                    <span>
-                        <img class="img current-image" id="ShowImage" src="{{ URL::asset('/product_images').'/' }}{{ isset($product_images[0])?$product_images[0]:'default.jpg' }}">
-                    </span>
-                </div>
+               
             </div>
         </div>
-        <div class="col-md-7 col-sm-7">
+        <div class="col-md-6 col-sm-6 cal-width2">
           
                 <div id="product-promo">
                     <h3>{{ $products->product_name }}</h3>

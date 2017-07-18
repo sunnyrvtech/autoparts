@@ -59,9 +59,9 @@ class ProductController extends Controller {
             $shipping_address = '';
         }
         $total_price_cart = '';
+        $total_weight = '';
         if (!empty($carts)) {
             $cart_data = array();
-            $total_weight = '';
             foreach ($carts as $key => $value) {
                 $products = Product::where('id', $value->product_id)->first();
                 $product_image = json_decode($products->product_details->product_images);
@@ -327,10 +327,10 @@ class ProductController extends Controller {
                     })->orWhereHas('get_vehicle_model', function ($query) use($keyword) {
                         $query->where('vehicle_models.name', 'LIKE', '%' . $keyword . '%');
                     })->orWhere('products.product_name', 'LIKE', '%' . $keyword . '%')
-                    ->Where('products.quantity','>',0)->paginate(15);
+                    ->Where('products.quantity','>',0)->paginate(20);
         } else {
             $whereCond = [['products.vehicle_year_from','<=',$year],['products.vehicle_year_to','>=',$year], 'products.vehicle_make_id' => $make_id, 'products.vehicle_model_id' => $model_id];
-            $products = Product::Where($whereCond)->paginate(15);
+            $products = Product::Where($whereCond)->paginate(20);
         }
 
         $all_categories = SubCategory::groupBy('name')->get();

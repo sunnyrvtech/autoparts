@@ -968,9 +968,9 @@ table {
     background-size: 386px 386px;
     border: 1px solid rgb(187, 187, 187);
     display: block;
-    height: 300px;
+    height: 386px;
     margin-left: 130px;
-    width: 300px;
+    width: 386px;
 }
 .product-images .thumbs .img {
     background-size: 120px 120px;
@@ -2523,6 +2523,23 @@ h1.welcome-msg {
 .grid-group-item .img-wrp img{
     width: 100%;height: auto;
 }
+@media(min-width:768px) and (max-width: 1200px){
+     .product-images .img.current-image {
+  height: 266px;
+  margin-left: 90px;
+  width: 266px;
+}
+.product-images .thumbs .img {
+  height: 80px;
+  width: 80px;
+}
+.cal-width1 {
+  width: 400px;
+}
+.cal-width2 {
+  width: calc(100% - 400px);
+}
+}
 @media(min-width:992px) and (max-width: 1300px){
     .navbar-categories .dropdown-menu {
         min-width: 700px !important;
@@ -2614,11 +2631,7 @@ h1.welcome-msg {
     ul.creditcards img {
         width: 100%;
     }
-    .product-images .img.current-image {
 
-        height: auto;
-        width: 100%;
-    }
 }
 @media(max-width: 991px){
     .btn-group.btn-group-vertical .btn-group {
@@ -2751,6 +2764,12 @@ h1.welcome-msg {
     /**********/
 }
 @media(max-width: 767px){
+.product-images .thumbs {
+  margin-bottom: 10px;
+  max-height: inherit;
+  position: static;
+  text-align: center;
+}
     .expiry-wrp > .col-sm-6 {
         margin-bottom: 10px;
     }
@@ -2852,6 +2871,12 @@ h1.welcome-msg {
     .my-account .btn-group.btn-group-vertical{
         width: 100%;
     }
+    .product-images .thumbs li {
+  background-color: rgb(255, 255, 255);margin-top: 10px;
+}
+.product-images .thumbs li:last-child{
+    margin-top: 10px;
+}
 }
 @media(min-width: 481px) and (max-width: 767px){
     .list-group-item .img-wrp {
@@ -2886,7 +2911,12 @@ h1.welcome-msg {
     .grid-group-item .group.inner.grid-group-item-text {
         min-height: 65px;
     }
-
+    .product-images .thumbs li {
+  width: 31.8%;float: left;
+}
+.product-images .thumbs li:last-child {
+  margin-right: 0;
+}
 }
 @media(max-width: 480px){
     .testimonial-section .col-md-12.material img.img-circle {
