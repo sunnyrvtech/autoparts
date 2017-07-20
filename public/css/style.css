@@ -979,7 +979,7 @@ table {
     height: 120px
 }
 #content {
-    overflow: hidden;
+    overflow: hidden;padding-top:190px;
     min-height: 650px;
 }
 #content .ymm-con {
@@ -1582,9 +1582,11 @@ h4.confirmation-email-sent-message {
     padding-left: 40px
 }
 section.top-header-section { position: absolute;top:0;width:100%;z-index: 99999; }
-section + #alert_loading + #content {
+/*section + #alert_loading + #content {
 padding-top: 190px;
-}
+}*/
+.alert-message { left: 0;position: absolute;right: 0;top: 190px;z-index: 99999;}
+.alert-message #alert_loading{ margin:0px; background-color: rgb(240,119,108); }
 nav.navbar-categories { border-radius: 0 }
 .navbar-categories .dropdown-menu { min-width: 750px; }
 .navbar-categories .category-lists { padding-left: 0px; }
