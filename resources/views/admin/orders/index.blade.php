@@ -15,13 +15,11 @@
                         <th>Product Name</th>
                         <th>Customer Name</th>
                         <th>Customer Email</th>
-                        <th>Transaction Id</th>
                         <th>Quantity</th>
                         <th>Total Price</th>
                         <th>Discount</th>
                         <th>Status</th>
                         <th>Created At</th>
-                        <th>Updated At</th>
                     </tr>
                 </thead>
             </table>
@@ -35,7 +33,7 @@
             processing: true,
             serverSide: true,
             ajax: "{{ route('orders.index') }}",
-            order: [[ 9, "desc" ]],
+            order: [[ 8, "desc" ]],
             columns: [
                 {data: 'id', name: 'id'},
                 {data: 'product_name',orderable: false, searchable: false, render: function (data, type, row) {
@@ -50,7 +48,6 @@
                         return row.get_customer.email;
                     }
                 },
-                {data: 'transaction_id', name: 'transaction_id'},
                 {data: 'quantity',orderable: false, searchable: false,  render: function (data, type, row) {
                         return row.get_order_details.quantity;
                     }
@@ -63,10 +60,36 @@
                         return row.get_order_details.discount;
                     }
                 },
-                {data: 'order_status', name: 'order_status'},
-                {data: 'created_at', name: 'created_at'},
-                {data: 'updated_at', name: 'updated_at'}
+                {data: 'order_status', render: function (data, type, row) {
+                        return row.status;
+                    }
+                },
+                {data: 'created_at', name: 'created_at'}
             ]
+        });
+        
+        $(document).on('change', '#order_status', function (e) {
+            e.preventDefault(); // does not go through with the link.
+            $(".alert-danger").remove();
+            $(".alert-success").remove();
+            var $this = $(this);
+
+            $.post({
+                data: {'id': $this.data('id'), 'status': $this.val()},
+                url: "{{ route('orders-status') }}"
+            }).done(function (data) {
+                var HTML = '<div class="alert alert-success fade in">';
+                HTML += '<a href="javascript:void(0);" onclick="$(this).parent().remove();" class="close" title="close">×</a>';
+                HTML += '<strong>Success! </strong>' + data.messages + '</div>';
+                $("#page-wrapper .container-fluid").before(HTML);
+                $(window).scrollTop(0);
+            }).fail(function (data) {
+                var HTML = '<div class="alert alert-danger fade in">';
+                HTML += '<a href="javascript:void(0);" onclick="$(this).parent().remove();" class="close" title="close">×</a>';
+                HTML += '<strong>Error! </strong>' + data.responseJSON.error + '</div>';
+                $("#page-wrapper .container-fluid").before(HTML);
+                $(window).scrollTop(0);
+            });
         });
     });
 </script>

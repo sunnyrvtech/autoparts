@@ -318,7 +318,7 @@ class ProductController extends Controller {
         $model_id = $request->input('model_id');
 
         if ($keyword != null) {
-            $products = Product::whereHas('product_category.category', function($query) use($keyword) {
+            $products = Product::with(['product_details','get_brands','get_vehicle_company','get_vehicle_model'])->whereHas('product_category.category', function($query) use($keyword) {
                         $query->where('categories.name', 'LIKE', '%' . $keyword . '%');
                     })->orWhereHas('get_brands', function ($query) use($keyword) {
                         $query->where('brands.name', 'LIKE', '%' . $keyword . '%');

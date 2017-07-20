@@ -21,10 +21,17 @@
                         <div class="row">
                         <label class="col-sm-3 control-label">Sort By:-</label>
                         <div class="col-sm-9">
-                            <select class="form-control" name="sortBy">
-                                <option>Highest Price</option>
-                                <option>Lowest Price</option>
-                            </select>
+                            <form method="get">
+                                <input type="hidden" name='q' value="{{ Request::get('q') }}">
+                                @if(Request::get('page') != null)
+                                <input type="hidden" name='page' value="{{ Request::get('page') }}">
+                                @endif
+                                <select class="form-control" name="sort_by" onchange="this.form.submit()">
+                                    <option value="">Default Sorting</option>
+                                    <option @if(Request::get('sort_by') == 'high') selected @endif value="high">Highest Price</option>
+                                    <option @if(Request::get('sort_by') == 'low') selected @endif value="low">Lowest Price</option>
+                                </select>
+                            </form>
                         </div>
                         </div>
                     </div>
@@ -42,24 +49,40 @@
             $maxYear = date('Y', strtotime('+1 year'));
             // set start and end year range
             $yearArray = range($maxYear, $minYear);
+            function my_sort($a, $b) {
+                    if (Request::get('sort_by') == 'high') {
+                        return ($a['price'] > $b['price']) ? -1 : 1;
+                    } else {
+                        return ($a['price'] < $b['price']) ? -1 : 1;
+                    }
+                }
+
+                if (Request::get('sort_by') != null) {
+                    $pro_arr = $products->toArray();
+                    usort($pro_arr['data'], 'my_sort');
+                    $prod_data = $pro_arr['data'];
+                } else {
+                    $prod_data = $products->toArray();
+                    $prod_data = $prod_data['data'];
+                }
             ?>
-            @forelse($products as $key=> $value)
+            @forelse($prod_data as $key=> $value)
 
             <?php
             //this is used to create brand filter 
-            if (!empty($value->brand_id)) {
-                $brand_array[$key]['id'] = $value->brand_id;
-                $brand_array[$key]['name'] = isset($value->get_brands->name) ? $value->get_brands->name : '';
+            if (!empty($value['brand_id'])) {
+                $brand_array[$key]['id'] = $value['brand_id'];
+                $brand_array[$key]['name'] = isset($value['get_brands']['name']) ? $value['get_brands']['name'] : '';
             }
-            if (!empty($value->vehicle_make_id)) {
-                $vehicle_company_array[$key]['id'] = $value->vehicle_make_id;
-                $vehicle_company_array[$key]['name'] = isset($value->get_vehicle_company->name) ? $value->get_vehicle_company->name : '';
+            if (!empty($value['vehicle_make_id'])) {
+                $vehicle_company_array[$key]['id'] = $value['vehicle_make_id'];
+                $vehicle_company_array[$key]['name'] = isset($value['get_vehicle_company']['name']) ? $value['get_vehicle_company']['name'] : '';
             }
-            if (!empty($value->vehicle_model_id)) {
-                $vehicle_model_array[$key]['id'] = $value->vehicle_model_id;
-                $vehicle_model_array[$key]['name'] = isset($value->get_vehicle_model->name) ? $value->get_vehicle_model->name : '';
+            if (!empty($value['vehicle_model_id'])) {
+                $vehicle_model_array[$key]['id'] = $value['vehicle_model_id'];
+                $vehicle_model_array[$key]['name'] = isset($value['get_vehicle_model']['name']) ? $value['get_vehicle_model']['name'] : '';
             }
-            $product_images = json_decode($value->product_details->product_images);
+            $product_images = json_decode($value['product_details']['product_images']);
             ?>
             <div class="item col-xs-4 col-lg-4 list-group-item">
                <div class="list-wrp grid-wrp">
@@ -68,22 +91,22 @@
                     <img width="250" height="250" class="group list-group-image" src="{{ URL::asset('/product_images').'/' }}{{ isset($product_images[0])?$product_images[0]:'default.jpg' }}" alt="" />
                     </div>
                     <div class="caption">
-                        <h4 class="group inner list-group-item-heading">{{ $value->product_name }}</h4>
-                        <h4 class="group inner grid-group-item-heading">{{ str_limit($value->product_name, $limit = 43, $end = '...') }}</h4>
+                        <h4 class="group inner list-group-item-heading">{{ $value['product_name'] }}</h4>
+                        <h4 class="group inner grid-group-item-heading">{{ str_limit($value['product_name'], $limit = 43, $end = '...') }}</h4>
                         <div class="group inner grid-group-item-text">
-                            {!! str_limit($value->product_long_description, $limit = 50, $end = '...') !!}
+                            {!! str_limit($value['product_long_description'], $limit = 50, $end = '...') !!}
                         </div>
                         <div class="group inner list-group-item-text">
-                            {!! $value->product_long_description !!}
+                            {!! $value['product_long_description'] !!}
                         </div>
                         <div class="row">
-                            <p class="lead">${{ $value->price  }}</p>
+                            <p class="lead">${{ $value['price']  }}</p>
                         </div>
                     </div>
                 </div>
                 <div class="product-card__overlay">
-                    <a class="btn am-black product-card__overlay-btn" href="{{ URL('products').'/'.$value->product_slug }}">View <span class="glyphicon glyphicon-eye-open"></span></a>
-                    <a class="btn am-orange product-card__overlay-btn" href="javascript:void(0);" ng-click="submitCart(true,{{ $value->id }})">Add to cart <span class="glyphicon glyphicon-shopping-cart"></span></a>
+                    <a class="btn am-black product-card__overlay-btn" href="{{ URL('products').'/'.$value['product_slug'] }}">View <span class="glyphicon glyphicon-eye-open"></span></a>
+                    <a class="btn am-orange product-card__overlay-btn" href="javascript:void(0);" ng-click="submitCart(true,{{ $value['id'] }})">Add to cart <span class="glyphicon glyphicon-shopping-cart"></span></a>
                 </div>
                 </div>
             </div>

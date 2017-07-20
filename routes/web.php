@@ -31,6 +31,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'IsAdmin'], function () {
     Route::resource('shipping_rates', 'Admin\ShippingRateController');
     Route::resource('static_page', 'Admin\StaticPageController');
     Route::resource('orders', 'Admin\OrderController');
+    Route::post('orders/status', 'Admin\OrderController@orderStatus')->name('orders-status');
     Route::post('import/csv', 'Admin\ImportController@uploadCsv')->name('import.csv');
     Route::post('import/category', 'Admin\ImportController@createCategoryByCsv')->name('import.category');
 });
