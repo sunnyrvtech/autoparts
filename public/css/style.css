@@ -1586,7 +1586,7 @@ section.top-header-section { position: absolute;top:0;width:100%;z-index: 99999;
 padding-top: 190px;
 }*/
 .alert-message { left: 0;position: absolute;right: 0;top: 190px;z-index: 99999;}
-.alert-message #alert_loading{ margin:0px; background-color: rgb(240,119,108); }
+.alert-message .alert-danger{ background-color: rgb(240,119,108); }
 nav.navbar-categories { border-radius: 0 }
 .navbar-categories .dropdown-menu { min-width: 750px; }
 .navbar-categories .category-lists { padding-left: 0px; }
