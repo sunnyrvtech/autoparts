@@ -168,7 +168,7 @@
                                     </div>
                                 </div>
                                 <?php $previous_url =  explode("/", parse_url(URL::previous(), PHP_URL_PATH)); ?>
-                                @if($previous_url[3] == 'cart')
+                                @if(isset($previous_url[3]) && $previous_url[3] == 'cart')
                                 <input type="hidden" ng-model="shipping.redirect_url" ng-init="shipping.redirect_url='cart'">
                                 @endif
                                 <div class="row1">

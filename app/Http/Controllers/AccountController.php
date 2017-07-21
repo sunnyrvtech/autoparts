@@ -23,20 +23,20 @@ class AccountController extends Controller {
      *
      * @return Response
      */
-    public function index(Request $request,$id=null) {
+    public function index(Request $request, $id = null) {
         if (Auth::check()) {
             $users = User::where('id', Auth::id())->first();
             $shipping_address = ShippingAddress::where('user_id', Auth::id())->first();
             $billing_address = BillingAddress::where('user_id', Auth::id())->first();
-            $orders = Order::Where('user_id',Auth::id())->get();
-            if($id != null){
-                $order_details = Order::where('user_id',Auth::id())->where('id',$id)->first();
-            }else{
+            $orders = Order::Where('user_id', Auth::id())->get();
+            if ($id != null) {
+                $order_details = Order::where('user_id', Auth::id())->where('id', $id)->first();
+            } else {
                 $order_details = '';
             }
-            
+
             $countries = Country::get(array('name', 'id'));
-            return View::make('accounts.account', compact('users', 'shipping_address', 'billing_address', 'countries', 'orders','order_details'));
+            return View::make('accounts.account', compact('users', 'shipping_address', 'billing_address', 'countries', 'orders', 'order_details'));
         }
         return redirect('/login');
     }
@@ -257,8 +257,12 @@ class AccountController extends Controller {
                                 ->with('error-message', 'We could not activate your account, please try again later.');
             }
         }
-        return Redirect::to('/')
-                        ->with('success-message', 'Your account is already activated! You may now sign in!');
+        if (!Auth::check()) {
+            return Redirect::to('/')
+                            ->with('success-message', 'Your account is already activated! You may now sign in!');
+        } else {
+            return Redirect::to('/my-account')->with('success-message', 'Your account has been activated and successfully logged in!');
+        }
     }
 
     /**
