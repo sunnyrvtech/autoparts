@@ -40,6 +40,7 @@
 <script type="text/javascript">
     $(function () {
         $('#brand-table').DataTable({
+            pageLength: 10,
             processing: true,
             serverSide: true,
             ajax: "{{ route('products.index') }}",
