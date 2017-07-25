@@ -291,7 +291,7 @@ class ImportController extends Controller {
    
             foreach ($existing_product_image_array as $exist_val) {
                 echo base_path('public/product_images/') . $exist_val;
-                @unlink(base_path('public/product_images/') . $exist_val);
+                @unlink('/var/www/html/autoparts/public/product_images/fYbAB448V9rowcEjpg');
             }
         }
     }
