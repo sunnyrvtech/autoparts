@@ -283,16 +283,18 @@ class ImportController extends Controller {
     }
 
     public function unlinkImages() {
-        $products = ProductDetail::Where('id', '>', 9997)->get(array('product_images'));
+        $products = ProductDetail::Where('id', '>', 1)->get(array('product_images'));
         
         foreach($products as $val) {
-            
+             if($val->product_images !=null){
             $existing_product_image_array = json_decode($val->product_images, true);
-   
+            
+            
             foreach ($existing_product_image_array as $exist_val) {
-                echo base_path('public/product_images/') . $exist_val;
-                @unlink('/var/www/html/autoparts/public/product_images/fYbAB448V9rowcEjpg');
+                @unlink(base_path('public/product_images/') . $exist_val);
+               // die;
             }
+             }
         }
     }
 
