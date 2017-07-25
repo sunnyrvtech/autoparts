@@ -288,9 +288,9 @@ class ImportController extends Controller {
         foreach($products as $val) {
             
             $existing_product_image_array = json_decode($val->product_images, true);
-            echo "<pre>";
-            print_r($existing_product_image_array);
+   
             foreach ($existing_product_image_array as $exist_val) {
+                echo base_path('public/product_images/') . $exist_val;
                 @unlink(base_path('public/product_images/') . $exist_val);
             }
         }
