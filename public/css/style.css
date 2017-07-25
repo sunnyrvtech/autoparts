@@ -3009,10 +3009,11 @@ ul.free-shipping {
   float: left;  position: relative;
 }
 .select-apperance select {
-  -moz-appearance: none;
-  border-radius: 3px 0 0 3px;
-  border-right: medium none;
-  box-shadow: none;
+ -moz-appearance: none;
+ border-radius: 3px 0 0 3px;
+ border-right: medium none;
+ box-shadow: none;
+ max-width: 150px;
 }
 .select-apperance::after {
   border-left: 5px solid rgba(0, 0, 0, 0);
