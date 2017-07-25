@@ -282,6 +282,17 @@ class ImportController extends Controller {
         throw new \Exception('Can not create a unique slug');
     }
 
+    public function unlinkImages() {
+        $products = ProductDetail::Where('id', '>', 9997)->get(array('product_images'));
+        foreach($products as $val) {
+            
+            $existing_product_image_array = json_decode($val->product_images);
+            foreach ($existing_product_image_array as $exist_val) {
+                @unlink(base_path('public/product_images/') . $exist_val);
+            }
+        }
+    }
+
     protected function getRelatedSlugs($slug, $table) {
         if ($table == 'category') {
             return SubCategory::select('slug')->where('slug', 'like', $slug . '%')
