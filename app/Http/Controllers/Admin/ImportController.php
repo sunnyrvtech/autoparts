@@ -283,7 +283,7 @@ class ImportController extends Controller {
     }
 
     public function unlinkImages() {
-        $products = ProductDetail::Where('id', '>', 1)->get(array('product_images'));
+        $products = ProductDetail::Where('id', '>', 'dsfsfsdf')->get(array('product_images'));
         
         foreach($products as $val) {
              if($val->product_images !=null){

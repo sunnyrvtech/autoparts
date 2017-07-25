@@ -36,7 +36,10 @@ class ProductController extends Controller {
     public function singleProduct(Request $request, $slug) {
         $title = 'Products';
         $products = Product::where('product_slug', $slug)->first();
-        return View::make('products.single', compact('title', 'products'));
+        if ($products) {
+            return View::make('products.single', compact('title', 'products'));
+        }
+        return View::make('errors.404');
     }
 
     /**
@@ -337,10 +340,9 @@ class ProductController extends Controller {
                             })->orWhere('products.product_name', 'LIKE', '%' . $keyword . '%')
                             ->Where('products.quantity', '>', 0)
                             ->where(function($query) use ($product_sub_category_ids) {
-                                if($product_sub_category_ids !=null)
+                                if ($product_sub_category_ids != null)
                                     $query->whereIn('products.id', $product_sub_category_ids);
                             })->paginate(20);
-                            
         } else {
             $whereCond = [['products.vehicle_year_from', '<=', $year], ['products.vehicle_year_to', '>=', $year], 'products.vehicle_make_id' => $make_id, 'products.vehicle_model_id' => $model_id];
             $products = Product::Where($whereCond)->paginate(20);
