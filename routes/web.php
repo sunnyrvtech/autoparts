@@ -34,7 +34,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'IsAdmin'], function () {
     Route::post('orders/status', 'Admin\OrderController@orderStatus')->name('orders-status');
     Route::post('import/csv', 'Admin\ImportController@uploadCsv')->name('import.csv');
     Route::post('import/category', 'Admin\ImportController@createCategoryByCsv')->name('import.category');
-    Route::post('import/unlink_images', 'Admin\ImportController@unlinkImages');
+    Route::get('import/unlink_images', 'Admin\ImportController@unlinkImages');
 });
 Route::get('login', 'Auth\LoginController@index');
 Route::get('password/email', 'Auth\ForgotPasswordController@index');
