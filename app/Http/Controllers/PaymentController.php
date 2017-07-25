@@ -9,6 +9,7 @@ use App\ShippingAddress;
 use App\BillingAddress;
 use App\Order;
 use App\OrderDetail;
+use App\Product;
 use Auth;
 use App\WarehouseStore;
 use Mail;
@@ -193,6 +194,7 @@ class PaymentController extends Controller {
                     'total_price' => $value->total_price
                 );
                 OrderDetail::create($detail_array);
+                Product::decrement('quantity', $value->quantity);   ///   quantity decrement after successfull purchase
             }
             
              if ($this->sendInvoice($transaction_details,$carts, $shipping_address)){

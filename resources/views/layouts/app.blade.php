@@ -79,7 +79,11 @@
                             </li>
                             
                             <li>
-                                <a id="my-account" href="{{ URL('/my-account')}}">My Account</a>
+                                @if(Auth::check())
+                                    <a id="my-account" href="{{ URL('/my-account')}}">My Account</a>
+                                @else
+                                <a id="my-account" href="javascript:void(0);" ng-click="login()">My Account</a>
+                                @endif
                             </li>
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
@@ -124,10 +128,17 @@
                                 <div class="order-by-text">{{ $header_content->custom_field2 or '' }}</div>
                             </li>
                         </ul>
-                        <div class="bottom-phone-and-mini-cart">
-
-                        </div>
                         <form action="{{ URL('products/search') }}" class="navbar-form navbar-right" id="search-form" method="get" role="search">
+                           <div class="select-apperance">
+                            <select class="form-control" name="cat">
+                                <option value="">All Categories</option>
+                                 @foreach($categories as $key=>$cat_value)
+                                    @foreach ($cat_value->sub_categories as $sub_key => $sub_value)
+                                    <option value="{{ $sub_value->id }}">{{ $sub_value->name  }}</option>
+                                    @endforeach
+                                @endforeach
+                            </select>
+                            </div>
                             <div class="input-group input-group-lg" id="search-phrase-container">
                                 <input aria-label="Enter Search" autocomplete="off" class="form-control" id="search-phrase" name="q" placeholder="Search" type="text" value="" />
                                 <span class="input-group-addon" id="search-glass">

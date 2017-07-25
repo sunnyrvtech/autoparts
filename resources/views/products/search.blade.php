@@ -94,7 +94,7 @@
                         <h4 class="group inner list-group-item-heading">{{ $value['product_name'] }}</h4>
                         <h4 class="group inner grid-group-item-heading">{{ str_limit($value['product_name'], $limit = 43, $end = '...') }}</h4>
                         <div class="group inner grid-group-item-text">
-                            {!! str_limit($value['product_long_description'], $limit = 50, $end = '...') !!}
+                            {!! str_limit(strip_tags($value['product_long_description']), $limit = 50, $end = '...') !!}
                         </div>
                         <div class="group inner list-group-item-text">
                             {!! $value['product_long_description'] !!}

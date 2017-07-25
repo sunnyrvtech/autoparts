@@ -12,6 +12,7 @@ use App\ShippingMethod;
 use App\ShippingRate;
 use App\SubCategory;
 use App\ShippingAddress;
+use App\ProductSubCategory;
 use Session;
 use Auth;
 use Carbon\Carbon;
@@ -77,7 +78,7 @@ class ProductController extends Controller {
                     'sku' => $products->sku,
                     'vehicle_company' => $products->get_vehicle_company->name,
                     'vehicle_model' => $products->get_vehicle_model->name,
-                    'vehicle_year' => $products->vehicle_year_from.'-'.$products->vehicle_year_to,
+                    'vehicle_year' => $products->vehicle_year_from . '-' . $products->vehicle_year_to,
                     'quantity' => $value->quantity,
                     'price' => $products->price,
                     'total_price' => $value->total_price,
@@ -86,7 +87,7 @@ class ProductController extends Controller {
         } else {
             $cart_data = array();
         }
-        
+
         if ($request->get('shipping_method') == '') {
             $method_name = "Free shipping";
         } else {
@@ -281,7 +282,7 @@ class ProductController extends Controller {
         // get vehicle company data from product table and vehicle company table
         $vehicle_companies = Product::with(['get_vehicle_company' => function ($q) {
                         $q->select(['vehicle_companies.id', 'vehicle_companies.name']);
-                    }])->where([['products.vehicle_year_from','<=',$year],['products.vehicle_year_to','>=',$year]])->groupby('products.vehicle_make_id')->get(array('products.vehicle_make_id'));
+                    }])->where([['products.vehicle_year_from', '<=', $year], ['products.vehicle_year_to', '>=', $year]])->groupby('products.vehicle_make_id')->get(array('products.vehicle_make_id'));
 
         return $vehicle_companies;
     }
@@ -312,24 +313,36 @@ class ProductController extends Controller {
         $title = 'Products | Search';
 
 
-        $keyword  = $request->input('q');
-        $year     = $request->input('year');
-        $make_id  = $request->input('make_id');
+        $keyword = $request->input('q') ? $request->input('q') : 'null';
+        $cat_id = $request->input('cat');
+        $year = $request->input('year');
+        $make_id = $request->input('make_id');
         $model_id = $request->input('model_id');
 
+
         if ($keyword != null) {
-            $products = Product::with(['product_details','get_brands','get_vehicle_company','get_vehicle_model'])->whereHas('product_category.category', function($query) use($keyword) {
-                        $query->where('categories.name', 'LIKE', '%' . $keyword . '%');
-                    })->orWhereHas('get_brands', function ($query) use($keyword) {
-                        $query->where('brands.name', 'LIKE', '%' . $keyword . '%');
-                    })->orWhereHas('get_vehicle_company', function ($query) use($keyword) {
-                        $query->where('vehicle_companies.name', 'LIKE', '%' . $keyword . '%');
-                    })->orWhereHas('get_vehicle_model', function ($query) use($keyword) {
-                        $query->where('vehicle_models.name', 'LIKE', '%' . $keyword . '%');
-                    })->orWhere('products.product_name', 'LIKE', '%' . $keyword . '%')
-                    ->Where('products.quantity','>',0)->paginate(20);
+            $product_sub_category_ids = ProductSubCategory::whereHas('getProducts', function($query) {
+                        $query->Where('products.quantity', '>', 0);
+                    })->Where('sub_category_id', $cat_id)->pluck('id')->toArray();
+
+
+            $products = Product::with(['product_details', 'get_brands', 'get_vehicle_company', 'get_vehicle_model'])->whereHas('product_category.category', function($query) use($keyword) {
+                                $query->where('categories.name', 'LIKE', '%' . $keyword . '%');
+                            })->orWhereHas('get_brands', function ($query) use($keyword) {
+                                $query->where('brands.name', 'LIKE', '%' . $keyword . '%');
+                            })->orWhereHas('get_vehicle_company', function ($query) use($keyword) {
+                                $query->where('vehicle_companies.name', 'LIKE', '%' . $keyword . '%');
+                            })->orWhereHas('get_vehicle_model', function ($query) use($keyword) {
+                                $query->where('vehicle_models.name', 'LIKE', '%' . $keyword . '%');
+                            })->orWhere('products.product_name', 'LIKE', '%' . $keyword . '%')
+                            ->Where('products.quantity', '>', 0)
+                            ->where(function($query) use ($product_sub_category_ids) {
+                                if($product_sub_category_ids !=null)
+                                    $query->whereIn('products.id', $product_sub_category_ids);
+                            })->paginate(20);
+                            
         } else {
-            $whereCond = [['products.vehicle_year_from','<=',$year],['products.vehicle_year_to','>=',$year], 'products.vehicle_make_id' => $make_id, 'products.vehicle_model_id' => $model_id];
+            $whereCond = [['products.vehicle_year_from', '<=', $year], ['products.vehicle_year_to', '>=', $year], 'products.vehicle_make_id' => $make_id, 'products.vehicle_model_id' => $model_id];
             $products = Product::Where($whereCond)->paginate(20);
         }
 

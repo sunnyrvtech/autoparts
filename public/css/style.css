@@ -24,7 +24,10 @@ body {
     cursor: pointer
 }
 #navbar-lower {
-    min-height: 80px;
+  float: left;
+  min-height: auto;
+  padding: 20px 0;
+  width: 100%;
 }
 .free-shipping h3 {
     margin-bottom: 3px;
@@ -383,15 +386,12 @@ body>nav.navbar.logo-navbar.navbar-default.navbar-static-top {
     background-color: #fff;
 }
 .free-shipping {
-    margin-left: 8.5%;
-    margin-right: 8.5%;
-    position: relative;
-    top: 5px;
     float: left;
     list-style: none
 }
 ul.free-shipping {
-    margin-bottom: 0
+    margin-bottom: 0;
+    padding: 0px;
 }
 li.phone-number>a {
     color: #0c4b7e!important;
@@ -456,7 +456,7 @@ body>nav.navbar.dropdowns-navbar.navbar-default.navbar-static-top>div>div.navbar
 }
 #search-form {
     position: relative;
-    top: 10px;
+    top: 4px;
 }
 /*#search-form input {
     border: 0;
@@ -979,7 +979,7 @@ table {
     height: 120px
 }
 #content {
-    overflow: hidden;padding-top:190px;
+    overflow: hidden;padding-top:208px;
     min-height: 650px;
 }
 #content .ymm-con {
@@ -1237,7 +1237,7 @@ table {
     margin-left: 3em
 }
 .product-details-con {
-    margin-top: 1em
+    margin: 40px 0;
 }
 .product-details-con p {
     padding: 0 15px;
@@ -1734,7 +1734,7 @@ nav.navbar.logo-navbar.navbar-default #search-form input {
     box-shadow: none;
     font-family: 'Open Sans', sans-serif;
     font-weight: 500;
-    border: 1px solid #f7efef;
+    border: 1px solid #ccc;
     height: 34px;
     border-radius: 0px;
     font-size: 13px;
@@ -2054,7 +2054,14 @@ footer.footer .container { padding-bottom: 15px; }
         display: none
     }
 }
+
+@media(min-width:681px) and (max-width: 992px) {
+    #content {
+  padding-top: 240px;
+}
+}
 @media(max-width:992px) {
+
     #mobile-mini-cart {
         margin-bottom: 4px;
         margin-top: 4px;
@@ -2081,7 +2088,7 @@ footer.footer .container { padding-bottom: 15px; }
         margin-bottom: 0
     }
     .free-shipping .order-by-text {
-        display: none
+        text-align: center;
     }
     #navbar-lower>ul:nth-child(1) {
         display: none
@@ -2125,8 +2132,7 @@ footer.footer .container { padding-bottom: 15px; }
         border: 0
     }
     #search-form .input-group {
-        width: 100%;
-        margin-top: 5px
+       margin-top: 5px
     }
     .free-shipping,
     .free-shipping li {
@@ -2195,6 +2201,10 @@ footer.footer .container { padding-bottom: 15px; }
     }
 }
 @media(max-width:680px) {
+    #content {
+    padding-top:185px;
+ 
+}
     .am-ymm .am-ymm-inner button, .am-ymm .am-ymm-inner div.ymm-select {
         width: 100%!important
     }
@@ -2596,8 +2606,26 @@ h1.welcome-msg {
         margin-right: 4.5%;
         top: 16px;
     }
+#navbar-lower #search-form {
+  top: 0;
+  width: calc(100% - 600px);
+}
+nav #navbar-lower .nav.navbar-nav .am-logo {
+  padding:0;
+}
+.navbar-form .input-group {
+  width: calc(100% - 155px);
+}
+ul.free-shipping {
+  top: 0;
+}
 }
 @media(min-width: 992px) and (max-width: 1200px){
+	ul.free-shipping {
+  margin-left: 0;
+  margin-right: 0;
+
+}
     #dropdown-navbar-target li:nth-child(4) .dropdown-menu, 
     #dropdown-navbar-target li:nth-child(5) .dropdown-menu,.navbar-categories .dropdown-menu {
         min-width: 580px !important;
@@ -2631,6 +2659,12 @@ h1.welcome-msg {
 
     }
 
+}
+@media(min-width:767px) and (max-width: 992px){
+	#search-form .input-group {
+  margin-top: 0;
+  width: calc(100% - 155px);
+}
 }
 @media(min-width: 768px) and (max-width: 991px){
     ul.creditcards img {
@@ -2784,10 +2818,9 @@ h1.welcome-msg {
     h1.welcome-msg {
         font-size: 24px;
     }
-    #search-form .input-group {
-        margin-top: 8px;
-
-    }
+   #search-form .input-group {
+  margin-top: 0;
+}
     .am-ymm.horizontal .am-ymm-inner div.ymm-select,
     .am-ymm.horizontal .am-ymm-inner button.ymm-submit {
         margin-right: 0;
@@ -2951,4 +2984,45 @@ h1.welcome-msg {
         width: 100%;
     }
 
+}
+
+
+
+
+#navbar-lower .nav.navbar-nav {
+  float: none;
+  left: 0;
+  margin: 0 auto;
+  position: absolute;
+  right: 0;
+  text-align: center;
+}
+#navbar-lower .nav.navbar-nav .am-logo, #navbar-lower .nav.navbar-nav .am-logo a {
+  float: none;
+  margin: 0 auto;
+  padding: 0;
+}
+#navbar-lower .nav.navbar-nav .am-logo {
+  padding: 0;
+}
+.select-apperance {
+  float: left;  position: relative;
+}
+.select-apperance select {
+  -moz-appearance: none;
+  border-radius: 3px 0 0 3px;
+  border-right: medium none;
+  box-shadow: none;
+}
+.select-apperance::after {
+  border-left: 5px solid rgba(0, 0, 0, 0);
+  border-right: 5px solid rgba(0, 0, 0, 0);
+  border-top: 5px solid rgb(51, 51, 51);
+  content: "";
+  position: absolute;
+  right: 8px;
+  top: 15px;
+}
+.home-page-card-con-inner .slickSlider-full{
+	overflow: visible !important;
 }

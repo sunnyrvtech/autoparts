@@ -88,14 +88,14 @@
             <div class="item col-xs-4 col-lg-4 list-group-item">
                <div class="list-wrp grid-wrp">
                 <div class="thumbnail">
-                   <div class="img-wrp">
-                    <img width="250" height="250" class="group list-group-image" src="{{ URL::asset('/product_images').'/' }}{{ isset($product_images[0])?$product_images[0]:'default.jpg' }}" alt="" />
+                    <div class="img-wrp">
+                        <img width="250" height="250" class="group list-group-image" src="{{ URL::asset('/product_images').'/' }}{{ isset($product_images[0])?$product_images[0]:'default.jpg' }}" alt="" />
                     </div>
                     <div class="caption">
                         <h4 class="group inner list-group-item-heading">{{ $value['get_products']['product_name'] }}</h4>
                         <h4 class="group inner grid-group-item-heading">{{ str_limit($value['get_products']['product_name'], $limit = 43, $end = '...') }}</h4>
                         <div class="group inner grid-group-item-text">
-                            {!! str_limit($value['get_products']['product_long_description'], $limit = 50, $end = '...') !!}
+                            {!! str_limit(strip_tags($value['get_products']['product_long_description']), $limit = 50, $end = '...') !!}
                         </div>
                         <div class="group inner list-group-item-text">
                             {!! $value['get_products']['product_long_description'] !!}

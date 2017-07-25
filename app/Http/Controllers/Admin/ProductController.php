@@ -30,11 +30,14 @@ class ProductController extends Controller {
     public function index(Request $request) {
         $title = 'Products';
         if ($request->ajax()) {
-            $products = Product::get();
+            $skip = $request->get('start') != null?$request->get('start'):0;
+            $take = $request->get('length') != null?$request->get('length'):10;
+            $products = Product::skip($skip)->take($take)->get();
+            $count = Product::get()->count();
             foreach ($products as $key => $value) {
                 $products[$key]['action'] = '<a href="' . route('products.show', $value->id) . '" data-toggle="tooltip" title="update" class="glyphicon glyphicon-edit"></a>&nbsp;&nbsp;<a href="' . route('products.destroy', $value->id) . '" data-toggle="tooltip" title="delete" data-method="delete" class="glyphicon glyphicon-trash deleteRow"></a>';
             }
-            return Datatables::of($products)->make(true);
+            return Datatables::of($products)->setTotalRecords($count)->make(true);
         }
         return View::make('admin.products.index', compact('title'));
     }

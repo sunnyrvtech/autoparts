@@ -44,14 +44,36 @@
             <div class="material" elevation="1">
                 <div class="product-details-container">
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-6 col-xs-6">
                             <div class="form-group">
-                                <label for="price">Sku:</label><span> {{ $products->sku }}</span>
+                                <label for="parse_link">Parse Link:</label><span> {{ $products->product_details->parse_link }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-xs-6">
+                            <div class="form-group">
+                                <label for="vehicle_make">Make:</label><span> {{ $products->get_vehicle_company->name }}</span>
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-6 col-xs-6">
+                            <div class="form-group">
+                                <label for="certification">Certifications:</label><span> {{ $products->product_details->certification }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-xs-6">
+                            <div class="form-group">
+                                <label for="warranty">Warranty:</label><span> {{ $products->product_details->warranty }}</span>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="row">
+                        <div class="col-md-6 col-xs-6">
+                            <div class="form-group">
+                                <label for="model">Model:</label><span> {{ $products->get_vehicle_model->name }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-xs-6">
                             <div class="form-group">
                                 <label for="price">Price:</label><span> ${{ $products->price }}</span>
                             </div>

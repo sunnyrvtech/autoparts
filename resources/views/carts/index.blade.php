@@ -183,7 +183,7 @@
                     <div class="btn-deliver">
                         @if(Auth::check() && !empty($shipping_address))
                         <a class="btn btn-success btn-block" id="checkout_btn">Checkout</a>
-                        @elseif(empty($shipping_address))
+                        @elseif(Auth::check() && empty($shipping_address))
                         <a class="btn btn-success btn-block" href="{{ URL('/my-account')}}" type="button">Checkout</a>
                         @else
                         <button class="btn btn-success btn-block" ng-click="login()" type="button">Checkout</button>
