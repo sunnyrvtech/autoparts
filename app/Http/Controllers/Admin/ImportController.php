@@ -128,11 +128,13 @@ class ImportController extends Controller {
                     $products->fill($product_array)->save();
                     $product_details = ProductDetail::where('product_id', $products->id);
                     $product_details = $product_details->first();
-                    $existing_product_image_array = json_decode($product_details->product_images);
+                    if ($product_details->product_images != null) {
+                        $existing_product_image_array = json_decode($product_details->product_images);
 
-                    if ($existing_product_image_array != '') {
-                        foreach ($existing_product_image_array as $exist_val) {
-                            @unlink(base_path('public/product_images/') . $exist_val);
+                        if ($existing_product_image_array != '') {
+                            foreach ($existing_product_image_array as $exist_val) {
+                                @unlink(base_path('public/product_images/') . $exist_val);
+                            }
                         }
                     }
 
@@ -284,17 +286,17 @@ class ImportController extends Controller {
 
     public function unlinkImages() {
         $products = ProductDetail::Where('id', '>', 'dsfsfsdf')->get(array('product_images'));
-        
-        foreach($products as $val) {
-             if($val->product_images !=null){
-            $existing_product_image_array = json_decode($val->product_images, true);
-            
-            
-            foreach ($existing_product_image_array as $exist_val) {
-                @unlink(base_path('public/product_images/') . $exist_val);
-               // die;
+
+        foreach ($products as $val) {
+            if ($val->product_images != null) {
+                $existing_product_image_array = json_decode($val->product_images, true);
+
+
+                foreach ($existing_product_image_array as $exist_val) {
+                    @unlink(base_path('public/product_images/') . $exist_val);
+                    // die;
+                }
             }
-             }
         }
     }
 
