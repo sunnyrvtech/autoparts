@@ -18,6 +18,7 @@ use Redirect;
 use Session;
 use Excel;
 use Carbon\Carbon;
+use DB;
 
 class ImportController extends Controller {
 
@@ -284,19 +285,28 @@ class ImportController extends Controller {
         throw new \Exception('Can not create a unique slug');
     }
 
-    public function unlinkImages() {
-        $products = ProductDetail::Where('id', '>', 'dsfsfsdf')->get(array('product_images'));
+    public function deleteProductData(Request $request) {
 
-        foreach ($products as $val) {
-            if ($val->product_images != null) {
-                $existing_product_image_array = json_decode($val->product_images, true);
+        if ($request->get('method') == 'delete_product_data') {
+            $products = ProductDetail::Where('id', '>', 1)->get(array('product_images'));
 
-
-                foreach ($existing_product_image_array as $exist_val) {
-                    @unlink(base_path('public/product_images/') . $exist_val);
-                    // die;
+            foreach ($products as $val) {
+                if ($val->product_images != null) {
+                    $existing_product_image_array = json_decode($val->product_images, true);
+                    foreach ($existing_product_image_array as $exist_val) {
+                        @unlink(base_path('public/product_images/') . $exist_val);
+                        // die;
+                    }
                 }
             }
+            DB::statement('DELETE FROM products');
+            DB::statement('DELETE FROM categories');
+            DB::statement('ALTER TABLE products AUTO_INCREMENT=1');
+            DB::statement('ALTER TABLE categories AUTO_INCREMENT=1');
+            DB::statement('ALTER TABLE sub_categories AUTO_INCREMENT=1');
+            DB::statement('ALTER TABLE product_details AUTO_INCREMENT=1');
+            DB::statement('ALTER TABLE product_categories AUTO_INCREMENT=1');
+            DB::statement('ALTER TABLE product_sub_categories AUTO_INCREMENT=1');
         }
     }
 

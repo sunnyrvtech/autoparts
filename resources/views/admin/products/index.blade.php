@@ -7,7 +7,12 @@
             <div class="col-md-4">
                 <a href="{{ route('products.create') }}" class="btn btn-primary">Add New</a>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-6">
+                <div class="text-right">
+                    <a class="btn btn-success" onclick="$('#deleteProductModal').modal('show');" href="javascript:void(0);" type="button"><i class="glyphicon glyphicon-remove"></i>Delete All Product</a>
+                </div>
+            </div>
+            <div class="col-md-2">
                 <div class="text-right">
                     <a class="browse btn btn-primary" type="button"><i class="glyphicon glyphicon-import"></i>Import Product</a>
                     <input style="display: none;" id="file_type" name="csvFile" class="uploadCsv" type="file">
@@ -35,6 +40,26 @@
             </table>
         </div>
     </div>
+    <!-- Modal -->
+    <div class="modal fade" id="deleteProductModal" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Are you sure you want to delete product data ?</h4>
+                </div>
+                <div class="modal-body">
+                    <p>It will delete all data related to products i.e categories,sub_categories,products and all order details.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" id="deleteProductData">Yes</button>
+                    <button type="button" class="btn btn-default" onclick="$('#deleteProductModal').modal('hide');">No</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
 </div>
 @push('scripts')
 <script type="text/javascript">
@@ -47,7 +72,7 @@
             columns: [
                 {data: 'id', name: 'id'},
                 {data: 'product_name', name: 'product_name'},
-              //  {data: 'product_long_description', name: 'product_long_description'},
+                //  {data: 'product_long_description', name: 'product_long_description'},
                 {data: 'sku', name: 'sku'},
                 {data: 'price', name: 'price'},
                 {data: 'quantity', name: 'quantity'},
@@ -84,15 +109,30 @@
                 success: function (data) {
                     $("#loaderOverlay").hide();
                     window.location.reload();
-                    //alert("Process completed.Please shut down system now");
                 },
                 error: function (error) {
                     $("#loaderOverlay").hide();
-                   alert('Something went wrong,please try again later!');
-                 }
-                
+                    alert('Something went wrong,please try again later!');
+                }
+
             });
             return false;
+        });
+
+        $(document).on('click', '#deleteProductData', function (e) {
+            $.ajax({
+                url: "{{ route('import.delete_product') }}",
+                type: 'POST',
+                data: {'method': 'delete_product_data'},
+                success: function (data) {
+                    $("#loaderOverlay").hide();
+                    //  window.location.reload();
+                },
+                error: function (error) {
+                    $("#loaderOverlay").hide();
+                    alert('Something went wrong,please try again later!');
+                }
+            });
         });
     });
 </script>
