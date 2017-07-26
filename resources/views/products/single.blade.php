@@ -58,29 +58,34 @@
                     <div class="row">
                         <div class="col-md-6 col-xs-6">
                             <div class="form-group">
-                                <label for="certification">Certifications:</label><span> {{ $products->product_details->certification }}</span>
+                                <label for="oem_number">OEM:</label><span> {{ $products->product_details->oem_number }}</span>
                             </div>
                         </div>
                         <div class="col-md-6 col-xs-6">
                             <div class="form-group">
-                                <label for="warranty">Warranty:</label><span> {{ $products->product_details->warranty }}</span>
+                                <label for="certification">Certifications:</label><span> {{ $products->product_details->certification }}</span>
                             </div>
                         </div>
                     </div>
                      <div class="row">
                         <div class="col-md-6 col-xs-6">
                             <div class="form-group">
+                                <label for="warranty">Warranty:</label><span> {{ $products->product_details->warranty }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-xs-6">
+                            <div class="form-group">
                                 <label for="model">Model:</label><span> {{ $products->get_vehicle_model->name }}</span>
                             </div>
                         </div>
+                    </div>
+                    <div class="row">
                         <div class="col-md-6 col-xs-6">
                             <div class="form-group">
                                 <label for="price">Price:</label><span> ${{ $products->price }}</span>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-6 col-xs-6">
                             <div class="form-group">
                                 <label for="quantity">Available Quantity:</label><span> {{ $products->quantity }}</span>
                             </div>
