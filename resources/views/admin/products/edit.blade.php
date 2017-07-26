@@ -516,6 +516,17 @@
                             </div>
                         </div>
                         <div class="col-lg-6">
+                            <div class="form-group {{ $errors->has('oem_number') ? ' has-error' : '' }}">
+                                <label class="control-label">OEM Number</label>
+                                {{ Form::text('oem_number', $products->product_details->oem_number,array('class'=>'form-control')) }}
+                                @if ($errors->has('oem_number'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('oem_number') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
                             <div class="form-group {{ $errors->has('certification') ? ' has-error' : '' }}">
                                 <label class="control-label">Certification</label>
                                 {{ Form::text('certification', $products->product_details->certification,array('class'=>'form-control')) }}

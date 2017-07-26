@@ -94,6 +94,7 @@ class ImportController extends Controller {
                     'm_code' => empty($row->m_code) ? null : trim($row->m_code),
                     'class' => empty($row->class) ? null : trim($row->class),
                     'parse_link' => empty($row->parse_link) ? null : trim($row->parse_link),
+                    'oem_number' => empty($row->oem_number) ? null : trim($row->oem_number),
                     'certification' => empty($row->certification) ? null : trim($row->certification),
                     'warranty' => empty($row->warranty) ? null : trim($row->warranty),
                     'software' => empty($row->software) ? null : trim($row->software),

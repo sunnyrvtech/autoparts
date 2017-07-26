@@ -26,6 +26,7 @@ class CreateProductsDetailsTable extends Migration
            $table->string('m_code')->nullable();
            $table->string('class')->nullable();
            $table->string('parse_link')->nullable();
+           $table->string('oem_number')->nullable();
            $table->string('certification')->nullable();
            $table->string('warranty')->nullable();
            $table->string('software')->nullable();
