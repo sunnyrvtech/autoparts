@@ -126,6 +126,7 @@
                 data: {'method': 'delete_product_data'},
                 success: function (data) {
                     $("#loaderOverlay").hide();
+                    $('#deleteProductModal').modal('hide')
                     //  window.location.reload();
                 },
                 error: function (error) {
