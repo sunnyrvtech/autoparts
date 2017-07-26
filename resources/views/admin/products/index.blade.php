@@ -120,6 +120,7 @@
         });
 
         $(document).on('click', '#deleteProductData', function (e) {
+            $("#loaderOverlay").show();
             $.ajax({
                 url: "{{ route('import.delete_product') }}",
                 type: 'POST',
