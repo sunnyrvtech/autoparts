@@ -50,7 +50,9 @@
                     <h4 class="modal-title">Are you sure you want to delete product data ?</h4>
                 </div>
                 <div class="modal-body">
-                    <p>It will delete all data related to products i.e categories,sub_categories,products and all order details.</p>
+                    <div class="alert alert-danger" role="alert">
+                        <strong>Warning!</strong>It will delete all data related to products i.e categories, sub_categories, products and all order details.
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" id="deleteProductData">Yes</button>
@@ -128,7 +130,7 @@
                 success: function (data) {
                     $("#loaderOverlay").hide();
                     $('#deleteProductModal').modal('hide')
-                    //  window.location.reload();
+                    window.location.reload();
                 },
                 error: function (error) {
                     $("#loaderOverlay").hide();

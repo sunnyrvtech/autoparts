@@ -308,6 +308,7 @@ class ImportController extends Controller {
             DB::statement('ALTER TABLE product_details AUTO_INCREMENT=1');
             DB::statement('ALTER TABLE product_categories AUTO_INCREMENT=1');
             DB::statement('ALTER TABLE product_sub_categories AUTO_INCREMENT=1');
+            Session::flash('success-message', 'All product data deleted successfully !');
         }
     }
 
