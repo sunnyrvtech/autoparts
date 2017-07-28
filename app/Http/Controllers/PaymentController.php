@@ -190,6 +190,8 @@ class PaymentController extends Controller {
                 $detail_array = array(
                     'order_id' => $orders->id,
                     'product_id' => $value->product_id,
+                    'product_name' => $value->get_products->product_name,
+                    'sku_number' => $value->get_products->sku,
                     'quantity' => $value->quantity,
                     'total_price' => $value->total_price
                 );

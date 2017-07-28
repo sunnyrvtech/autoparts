@@ -323,14 +323,18 @@
                                         <?php $sub_total += $val->total_price; ?>
                                     <tr>
                                         <td>
-                                            <a class="ga-product-link" href="{{ URL('products').'/'.$val->getProduct->product_slug }}">{{ $val->getProduct->product_name }}</a>
-                                            <div class="product-sku">Sku: {{ $val->getProduct->sku }}</div>
+                                            @if(isset($val->getProduct->id))
+                                              <a class="ga-product-link" href="{{ URL('products').'/'.$val->getProduct->product_slug }}">{{ $val->product_name }}</a>
+                                            @else
+                                              <a class="ga-product-link" href="{{ URL('products').'/'.$val->product_id }}">{{ $val->product_name }}</a>
+                                            @endif
+                                            <div class="product-sku">Sku: {{ $val->sku_number }}</div>
                                         </td>
                                         <td>
                                             <div>{{ $val->quantity }}</div>
                                         </td>
                                         <td>
-                                            <div>${{ $val->getProduct->price }}</div>
+                                            <div>${{ $val->total_price/$val->quantity }}</div>
                                         </td>
                                         <td>
                                             <div class="">${{ $val->total_price }}</div>

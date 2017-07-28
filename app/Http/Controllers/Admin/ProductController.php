@@ -30,15 +30,16 @@ class ProductController extends Controller {
     public function index(Request $request) {
         $title = 'Products';
         if ($request->ajax()) {
-            $skip = $request->get('start') != null?$request->get('start'):0;
-            $take = $request->get('length') != null?$request->get('length'):10;
+            $skip = $request->get('start') != null ? $request->get('start') : 0;
+            $take = $request->get('length') != null ? $request->get('length') : 10;
             //$products = Product::skip($skip)->take($take)->get();
-            $products = Product::get();
+             $products = Product::get();
             $count = Product::get()->count();
             foreach ($products as $key => $value) {
                 $products[$key]['action'] = '<a href="' . route('products.show', $value->id) . '" data-toggle="tooltip" title="update" class="glyphicon glyphicon-edit"></a>&nbsp;&nbsp;<a href="' . route('products.destroy', $value->id) . '" data-toggle="tooltip" title="delete" data-method="delete" class="glyphicon glyphicon-trash deleteRow"></a>';
             }
             return Datatables::of($products)->setTotalRecords($count)->make(true);
+//            return Datatables::of($products)->with(['recordsTotal' => $count, 'recordsFiltered' => $count, 'start' => 20])->make(true);
         }
         return View::make('admin.products.index', compact('title'));
     }
@@ -53,7 +54,7 @@ class ProductController extends Controller {
         $brands = Brand::pluck('name', 'id')->prepend('---Please Select---', '');
         $vehicle_model = VehicleModel::pluck('name', 'id')->prepend('---Please Select---', '');
         $vehicle_company = VehicleCompany::pluck('name', 'id')->prepend('---Please Select---', '');
-        return View::make('admin.products.add', compact('title','brands','vehicle_model','vehicle_company'));
+        return View::make('admin.products.add', compact('title', 'brands', 'vehicle_model', 'vehicle_company'));
     }
 
     /**
@@ -181,9 +182,9 @@ class ProductController extends Controller {
         foreach ($data as $key => $value) {
             $data[$key] = empty($value) ? null : $value;
         }
-        
-        $data['status'] = $data['status'] !=null ? 1:0;
-        
+
+        $data['status'] = $data['status'] != null ? 1 : 0;
+
         $existing_product_images = ProductDetail::where('product_id', $id)->first(array('product_images'));
         $existing_product_image_array = json_decode($existing_product_images->product_images, true);
         $old_image_data = $request->get('old_product_image');

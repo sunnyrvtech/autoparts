@@ -17,6 +17,8 @@ class CreateOrdersDetailsTable extends Migration
             $table->increments('id');
             $table->integer('order_id');
             $table->integer('product_id');
+            $table->string('product_name');
+            $table->string('sku_number');
             $table->integer('quantity');
             $table->decimal('total_price', 5, 2);
             $table->decimal('discount', 5, 2)->nullable();

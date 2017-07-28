@@ -51,7 +51,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-danger" role="alert">
-                        <strong>Warning!</strong>It will delete all data related to products i.e categories, sub_categories, products and all order details.
+                        <strong>Warning!</strong>It will delete all data related to products i.e categories, sub_categories and products.
                     </div>
                 </div>
                 <div class="modal-footer">
