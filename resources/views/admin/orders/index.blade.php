@@ -37,7 +37,7 @@
             columns: [
                 {data: 'id', name: 'id'},
                 {data: 'product_name',orderable: false, searchable: false, render: function (data, type, row) {
-                        return row.get_order_details.get_product.product_name;
+                        return row.get_order_details.product_name;
                     }
                 },
                 {data: 'name',orderable: false, searchable: false,  render: function (data, type, row) {
@@ -78,17 +78,19 @@
                 data: {'id': $this.data('id'), 'status': $this.val()},
                 url: "{{ route('orders-status') }}"
             }).done(function (data) {
-                var HTML = '<div class="alert alert-success fade in">';
-                HTML += '<a href="javascript:void(0);" onclick="$(this).parent().remove();" class="close" title="close">×</a>';
-                HTML += '<strong>Success! </strong>' + data.messages + '</div>';
-                $("#page-wrapper .container-fluid").before(HTML);
-                $(window).scrollTop(0);
+                window.location.reload();
+//                var HTML = '<div class="alert alert-success fade in">';
+//                HTML += '<a href="javascript:void(0);" onclick="$(this).parent().remove();" class="close" title="close">×</a>';
+//                HTML += '<strong>Success! </strong>' + data.messages + '</div>';
+//                $("#page-wrapper .container-fluid").before(HTML);
+//                $(window).scrollTop(0);
             }).fail(function (data) {
-                var HTML = '<div class="alert alert-danger fade in">';
-                HTML += '<a href="javascript:void(0);" onclick="$(this).parent().remove();" class="close" title="close">×</a>';
-                HTML += '<strong>Error! </strong>' + data.responseJSON.error + '</div>';
-                $("#page-wrapper .container-fluid").before(HTML);
-                $(window).scrollTop(0);
+                window.location.reload();
+//                var HTML = '<div class="alert alert-danger fade in">';
+//                HTML += '<a href="javascript:void(0);" onclick="$(this).parent().remove();" class="close" title="close">×</a>';
+//                HTML += '<strong>Error! </strong>' + data.responseJSON.messages + '</div>';
+//                $("#page-wrapper .container-fluid").before(HTML);
+//                $(window).scrollTop(0);
             });
         });
     });
