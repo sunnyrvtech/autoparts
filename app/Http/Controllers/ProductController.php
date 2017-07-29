@@ -318,17 +318,16 @@ class ProductController extends Controller {
 
 
         $keyword = $request->input('q') ? $request->input('q') : 'null';
-        $cat_id = $request->input('cat');
+        $cat_name = $request->input('cat');
         $year = $request->input('year');
         $make_id = $request->input('make_id');
         $model_id = $request->input('model_id');
 
 
         if ($keyword != null && !$year) {
-            $product_sub_category_ids = ProductSubCategory::whereHas('getProducts', function($query) {
-                        $query->Where('products.quantity', '>', 0);
-                    })->Where('sub_category_id', $cat_id)->pluck('id')->toArray();
-
+            $product_sub_category_ids = Product::whereHas('product_sub_categories.get_sub_categories', function($query) use ($cat_name) {
+                        $query->Where('sub_categories.name', 'LIKE', '%' . $cat_name . '%');
+                    })->Where('products.quantity', '>', 0)->pluck('id')->toArray();
 
             $products = Product::with(['product_details', 'get_brands', 'get_vehicle_company', 'get_vehicle_model'])->whereHas('product_category.category', function($query) use($keyword) {
                                 $query->where('categories.name', 'LIKE', '%' . $keyword . '%');
