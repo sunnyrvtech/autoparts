@@ -532,17 +532,21 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
             var id = element.attr('data-id');
             var URL = element.attr('data-url');
             var method = element.attr('data-method');
+            var year = '';
             if (method != 'vehicle_year') {
+                year = $("#vehicle_year").attr('data-id');
                 element.closest(".ymm-select.open").find('.select-text').attr('data-id', id).text(element.text());
             } else {
                 $(".dropdown-menu .ng-scope").remove();
+                $("#vehicle_make").attr('data-id','').text('Select Vehicle Make');
+                $("#vehicle_model").attr('data-id','').text('Select Vehicle Model');
                 element.closest(".ymm-select.open").find('.select-text').attr('data-id', id).text(id);
             }
             if (method != 'vehicle_model') {
                 $http({
                     method: 'POST',
                     url: URL,
-                    data: {id: id},
+                    data: {id: id,year:year},
                 }).then(function (data, status, headers, config) {
                     if (method == 'vehicle_year') {
                         $scope.result_vehicle_company = data.data;

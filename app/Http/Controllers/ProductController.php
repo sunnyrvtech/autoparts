@@ -298,10 +298,11 @@ class ProductController extends Controller {
     public function getProductVehicleModelByMakeId(Request $request) {
 
         $make_id = $request->get('id');
+        $year = $request->get('year');
         // get vehicle model data from product table and vehicle model table
         $vehicle_models = Product::with(['get_vehicle_model' => function ($q) {
                         $q->select(['vehicle_models.id', 'vehicle_models.name']);
-                    }])->where('products.vehicle_make_id', $make_id)->groupby('products.vehicle_model_id')->get(array('products.vehicle_model_id'));
+                    }])->where([['products.vehicle_year_from', '<=', $year], ['products.vehicle_year_to', '>=', $year],['products.vehicle_make_id', $make_id]])->groupby('products.vehicle_model_id')->get(array('products.vehicle_model_id'));
 
         return $vehicle_models;
     }
@@ -323,7 +324,7 @@ class ProductController extends Controller {
         $model_id = $request->input('model_id');
 
 
-        if ($keyword != null) {
+        if ($keyword != null && !$year) {
             $product_sub_category_ids = ProductSubCategory::whereHas('getProducts', function($query) {
                         $query->Where('products.quantity', '>', 0);
                     })->Where('sub_category_id', $cat_id)->pluck('id')->toArray();
@@ -345,7 +346,7 @@ class ProductController extends Controller {
                             })->paginate(20);
         } else {
             $whereCond = [['products.vehicle_year_from', '<=', $year], ['products.vehicle_year_to', '>=', $year], 'products.vehicle_make_id' => $make_id, 'products.vehicle_model_id' => $model_id];
-            $products = Product::Where($whereCond)->paginate(20);
+            $products = Product::with(['product_details', 'get_brands', 'get_vehicle_company', 'get_vehicle_model'])->Where($whereCond)->paginate(20);
         }
 
         $all_categories = SubCategory::groupBy('name')->get();

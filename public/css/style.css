@@ -1508,7 +1508,7 @@ a.transfer-cart-link:hover {
     overflow-x: hidden
 }
 div.ymm-select ul.scrollable-menu {
-    max-height: 400px;
+    max-height: 210px;
     width: 100%
 }
 #returns-form div.ymm-select ul.scrollable-menu {

@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\Category;
+use App\SubCategory;
 use App\Cart;
 use App\StaticPage;
 use Session;
@@ -18,6 +19,12 @@ class AppServiceProvider extends ServiceProvider {
      */
     public function boot() {
         $categories = Category::where('status', 1)->orderBy('name')->limit(8)->get(array('name', 'id'));
+        $featured_category = SubCategory::groupBy('name')->get(array('name', 'id', 'slug'));
+        
+        echo "<pre>";
+        print_r($featured_category->toArray());
+        die;
+        
         $header_content = StaticPage::where('slug','header')->first();
         view()->share('categories', $categories);
         view()->share('header_content', $header_content);
