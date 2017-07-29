@@ -23,7 +23,7 @@ class HomeController extends Controller {
      */
     public function index(Request $request) {
         // get sub category data and make it featured category
-        $featured_category = SubCategory::take(40)->get(array('name', 'id', 'slug'));
+//        $featured_category = SubCategory::take(40)->get(array('name', 'id', 'slug'));
         // get vehicle companies data
         $vehicles = VehicleCompany::get(array('name', 'id'));
         $brands = Brand::take(40)->get(array('name', 'id'));

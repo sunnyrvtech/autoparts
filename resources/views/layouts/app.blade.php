@@ -132,11 +132,9 @@
                            <div class="select-apperance">
                             <select class="form-control" name="cat">
                                 <option value="">All Categories</option>
-                                 @foreach($categories as $key=>$cat_value)
-                                    @foreach ($cat_value->sub_categories as $sub_key => $sub_value)
-                                    <option value="{{ $sub_value->id }}">{{ $sub_value->name  }}</option>
+                                 @foreach($featured_category as $key=>$cat_value)
+                                    <option value="{{ $cat_value->id }}">{{ $cat_value->name  }}</option>
                                     @endforeach
-                                @endforeach
                             </select>
                             </div>
                             <div class="input-group input-group-lg" id="search-phrase-container">

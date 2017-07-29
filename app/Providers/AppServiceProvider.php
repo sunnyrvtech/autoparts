@@ -19,15 +19,11 @@ class AppServiceProvider extends ServiceProvider {
      */
     public function boot() {
         $categories = Category::where('status', 1)->orderBy('name')->limit(8)->get(array('name', 'id'));
-        $featured_category = SubCategory::groupBy('name')->get(array('name', 'id', 'slug'));
-        
-        echo "<pre>";
-        print_r($featured_category->toArray());
-        die;
-        
+        $featured_category = SubCategory::groupBy('name')->get(array('name', 'id', 'slug'));    
         $header_content = StaticPage::where('slug','header')->first();
         view()->share('categories', $categories);
         view()->share('header_content', $header_content);
+        view()->share('featured_category', $featured_category);
         
         View::composer('*', function($view) {  // this is used to share cart item count 
             if (auth()->check()) {
