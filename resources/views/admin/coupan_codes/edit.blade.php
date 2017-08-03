@@ -5,19 +5,19 @@
     <div class="row form-group">
         <div class="col-lg-12">
             <h1 class="page-header">
-                Update Customer
+                Update Coupan Code
             </h1>
         </div>
     </div>
     <!-- /.row -->
     <div class="row">
-        <form class="form-horizontal" method="post" enctype="multipart/form-data" action="{{ route('coupan_code.update',$coupan_codes->id)}}">
+        <form class="form-horizontal" method="post" enctype="multipart/form-data" action="{{ route('coupon_code.update',$coupan_codes->id)}}">
             <input name="_method" value="PUT" type="hidden">
             {{ csrf_field()}}
             <div class="row">
                   <div class="col-lg-6">
                     <div class="form-group {{ $errors->has('coupan_type') ? ' has-error' : ''}}">
-                        <label class="col-sm-3 col-md-3 control-label" for="coupan_type">Coupan Type:</label>
+                        <label class="col-sm-3 col-md-3 control-label" for="coupan_type">Coupon Type:</label>
                         <div class="col-sm-9 col-md-9">
                             <input type="text" required="" name="coupan_type" value="{{ $coupan_codes->coupan_type }}" class="form-control" placeholder="Coupan Type">
                             @if ($errors->has('coupan_type'))
@@ -30,7 +30,7 @@
                     <div class="form-group {{ $errors->has('code') ? ' has-error' : ''}}">
                         <label class="col-sm-3 col-md-3 control-label" for="code">Coupan Code:</label>
                         <div class="col-sm-6 col-md-6">
-                            <input required="" type="text"  name="code" class="form-control" value="{{ $coupan_codes->code }}" placeholder="Coupan Code">
+                            <input required="" type="text"  name="code" class="form-control" value="{{ $coupan_codes->code }}" placeholder="Coupon Code">
                             @if ($errors->has('code'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('code')}}</strong>

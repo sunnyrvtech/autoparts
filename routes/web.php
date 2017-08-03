@@ -30,7 +30,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'IsAdmin'], function () {
     Route::resource('shipping', 'Admin\ShippingController');
     Route::resource('shipping_rates', 'Admin\ShippingRateController');
     Route::resource('static_page', 'Admin\StaticPageController');
-    Route::resource('coupan_code', 'Admin\CoupanCodeController');
+    Route::resource('coupon_code', 'Admin\CoupanCodeController');
     Route::resource('orders', 'Admin\OrderController');
     Route::post('orders/status', 'Admin\OrderController@orderStatus')->name('orders-status');
     Route::post('import/csv', 'Admin\ImportController@uploadCsv')->name('import.csv');

@@ -5,20 +5,20 @@
     <div class="row form-group">
         <div class="col-lg-12">
             <h1 class="page-header">
-                Add New Coupan Code
+                Add New Coupon Code
             </h1>
         </div>
     </div>
     <!-- /.row -->
     <div class="row">
-        <form class="form-horizontal" method="post" enctype="multipart/form-data" action="{{ route('coupan_code.store')}}">
+        <form class="form-horizontal" method="post" enctype="multipart/form-data" action="{{ route('coupon_code.store')}}">
             {{ csrf_field()}}
             <div class="row">
                 <div class="col-lg-6">
                     <div class="form-group {{ $errors->has('coupan_type') ? ' has-error' : ''}}">
                         <label class="col-sm-3 col-md-3 control-label" for="coupan_type">Coupan Type:</label>
                         <div class="col-sm-9 col-md-9">
-                            <input type="text" required="" name="coupan_type" class="form-control" placeholder="Coupan Type">
+                            <input type="text" required="" name="coupan_type" class="form-control" placeholder="Coupon Type">
                             @if ($errors->has('coupan_type'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('coupan_type')}}</strong>
@@ -29,7 +29,7 @@
                     <div class="form-group {{ $errors->has('code') ? ' has-error' : ''}}">
                         <label class="col-sm-3 col-md-3 control-label" for="code">Coupan Code:</label>
                         <div class="col-sm-6 col-md-6">
-                            <input required="" type="text"  name="code" class="form-control" placeholder="Coupan Code">
+                            <input required="" type="text"  name="code" class="form-control" placeholder="Coupon Code">
                             @if ($errors->has('code'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('code')}}</strong>

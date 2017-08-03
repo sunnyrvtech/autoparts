@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <div class="row form-group">
         <div class="col-md-12">
-            <a href="{{ route('coupan_code.create') }}" class="btn btn-primary">Add New</a>
+            <a href="{{ route('coupon_code.create') }}" class="btn btn-primary">Add New</a>
         </div>
     </div>
     <div class="row">
@@ -13,7 +13,7 @@
                 <thead>
                     <tr>
                         <th>Id</th>
-                        <th>Coupan Type</th>
+                        <th>Coupon Type</th>
                         <th>Code</th>
                         <th>Usage</th>
                         <th>Expiration Date</th>
@@ -33,7 +33,7 @@
             processing: true,
             serverSide: true,
             order: [[5, "desc"]],
-            ajax: "{{ url('admin/coupan_code') }}",
+            ajax: "{{ url('admin/coupon_code') }}",
             columns: [
                 {data: 'id', name: 'id'},
                 {data: 'coupan_type', name: 'coupan_type'},

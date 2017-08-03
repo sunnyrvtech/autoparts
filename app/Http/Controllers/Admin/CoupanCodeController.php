@@ -18,11 +18,11 @@ class CoupanCodeController extends Controller {
      * @return Response
      */
     public function index(Request $request) {
-        $title = 'Copan Code';
+        $title = 'Copon Code';
         if ($request->ajax()) {
             $coupan_codes = CoupanCode::get();
             foreach ($coupan_codes as $key => $value) {
-                $coupan_codes[$key]['action'] = '<a href="' . route('coupan_code.show', $value->id) . '" data-toggle="tooltip" title="update" class="glyphicon glyphicon-edit"></a><a href="' . route('coupan_code.destroy', $value->id) . '" data-toggle="tooltip" title="delete" data-method="delete" class="glyphicon glyphicon-trash deleteRow"></a>';
+                $coupan_codes[$key]['action'] = '<a href="' . route('coupon_code.show', $value->id) . '" data-toggle="tooltip" title="update" class="glyphicon glyphicon-edit"></a><a href="' . route('coupon_code.destroy', $value->id) . '" data-toggle="tooltip" title="delete" data-method="delete" class="glyphicon glyphicon-trash deleteRow"></a>';
             }
             return Datatables::of($coupan_codes)->make(true);
         }
@@ -35,7 +35,7 @@ class CoupanCodeController extends Controller {
      * @return Response
      */
     public function create() {
-        $title = 'Coupan Code | create';
+        $title = 'Coupon Code | create';
         return View::make('admin.coupan_codes.add', compact('title'));
     }
 
@@ -56,7 +56,7 @@ class CoupanCodeController extends Controller {
 
 
         CoupanCode::create($data);
-        return redirect()->route('coupan_code.index')
+        return redirect()->route('coupon_code.index')
                         ->with('success-message', 'Coupan Code created successfully!');
     }
 
@@ -66,7 +66,7 @@ class CoupanCodeController extends Controller {
      * @return Response
      */
     public function show(Request $request, $id) {
-        $title = 'Coupan Code | update';
+        $title = 'Coupon Code | update';
         $coupan_codes = CoupanCode::where('id', $id)->first();
         return View::make('admin.coupan_codes.edit', compact('title', 'coupan_codes'));
     }
@@ -90,7 +90,7 @@ class CoupanCodeController extends Controller {
         CoupanCode::Where('id','>',1)->update(['status' => 0]);
         $coupan_codes->fill($data)->save();
 
-        return redirect()->route('coupan_code.index')
+        return redirect()->route('coupon_code.index')
                         ->with('success-message', 'Coupan Code updated successfully!');
     }
 
