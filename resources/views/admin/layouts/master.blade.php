@@ -96,6 +96,9 @@
                         <li class="@if(Request::segment(2) == 'products')active @endif">
                             <a href="{{ route('products.index')}}"><i class="fa fa-fw fa-tag"></i> Products</a>
                         </li>
+                        <li class="@if(Request::segment(2) == 'products')active @endif">
+                            <a href="{{ route('coupan_code.index')}}"><i class="fa fa-fw fa-dollar"></i> Coupan Codes</a>
+                        </li>
                         <li class="@if(Request::segment(2) == 'shipping' || Request::segment(2) == 'shipping_rates')active @endif">
                             <a href="javascript:void(0);" data-toggle="collapse" data-target="#shipping-menu"><i class="fa fa-fw fa-ship"></i> Shipping Methods<i class="fa fa-fw fa-caret-down"></i></a>
                             <ul id="shipping-menu" class="collapse @if(Request::segment(2) == 'shipping' || Request::segment(2) == 'shipping_rates')in @endif" >

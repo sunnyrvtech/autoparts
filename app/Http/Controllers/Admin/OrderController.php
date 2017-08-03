@@ -41,7 +41,7 @@ class OrderController extends Controller {
                     $html = $value->order_status;
                 }
                 $orders[$key]['status'] = $html;
-                $orders[$key]['action'] = '<a href="'.route('orders.show', $value->id).'" data-toggle="tooltip" title="View Order Detail" class="glyphicon glyphicon-eye-open"></a>';
+                $orders[$key]['action'] = '<a href="'.route('orders.show', $value->id).'" data-toggle="tooltip" title="View Order Details" class="glyphicon glyphicon-eye-open"></a>';
            
             }
             return Datatables::of($orders)->make(true);
