@@ -33,7 +33,7 @@
         $('#subcategory-table').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ url('admin/subcategories') }}" + "?category_id=" +<?= $category_id ?>,
+            ajax: "{{ $ajaxURL }}",
             columns: [
                 {data: 'id', name: 'id'},
                 {data: 'category_name', name: 'category_name', orderable: false},

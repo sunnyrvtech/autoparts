@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use View;
 use App\Order;
+use App\OrderDetail;
 use App\Product;
 use Redirect;
 use Session;
@@ -21,7 +22,7 @@ class OrderController extends Controller {
     public function index(Request $request) {
         $title = 'Orders';
         if ($request->ajax()) {
-            $orders = Order::with(['getCustomer', 'getOrderDetails'])->get();
+            $orders = Order::with(['getCustomer'])->get();
             $status_array = array('completed', 'failed', 'processing', 'shipped');
             $check_array = array('completed', 'failed');
             foreach ($orders as $key => $value) {
@@ -35,16 +36,34 @@ class OrderController extends Controller {
                         }
                         $html .= '<option ' . $selected . ' value="' . $val . '">' . ucfirst($val) . '</option>';
                     }
-
                     $html .= '</select>';
                 } else {
                     $html = $value->order_status;
                 }
                 $orders[$key]['status'] = $html;
+                $orders[$key]['action'] = '<a href="'.route('orders.show', $value->id).'" data-toggle="tooltip" title="View Order Detail" class="glyphicon glyphicon-eye-open"></a>';
+           
             }
             return Datatables::of($orders)->make(true);
         }
         return View::make('admin.orders.index', compact('title'));
+    }
+    
+    /**
+     * show function.
+     *
+     * @return Response
+     */
+    public function show(Request $request, $orderId) {
+        $title = 'Orders | details';
+    
+        if ($request->ajax()) {
+            $order_details = OrderDetail::Where('order_id',$orderId)->get();
+            
+            return Datatables::of($order_details)->make(true);
+        }
+        $ajaxURL = route('orders.show',$orderId);
+        return View::make('admin.orders.order_details', compact('title','ajaxURL'));
     }
 
     /**

@@ -95,7 +95,8 @@ class SubCategoryController extends Controller {
     public function showSubCategory($id) {
         $category_id = $id;
         $title = 'Sub-Categories';
-        return View::make('admin.sub_categories.index', compact('title', 'category_id'));
+        $ajaxURL = route('subcategories.index').'?category_id='.$category_id;
+        return View::make('admin.sub_categories.index', compact('title', 'ajaxURL'));
     }
 
     /**
