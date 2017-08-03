@@ -11,6 +11,8 @@ use App\Cart;
 use App\ShippingMethod;
 use App\ShippingRate;
 use App\SubCategory;
+use App\CoupanCode;
+use App\CoupanUsage;
 use App\ShippingAddress;
 use App\ProductSubCategory;
 use Session;
@@ -48,6 +50,7 @@ class ProductController extends Controller {
      * @return Response
      */
     public function Cart(Request $request) {
+        $offer_code = $request->get('offer_code');
         if (Auth::check()) {
             $carts = Cart::where('user_id', Auth::id())->get(array('id', 'product_id', 'quantity', 'total_price'));
             $shipping_address = ShippingAddress::where('user_id', Auth::id())->first();
@@ -62,16 +65,17 @@ class ProductController extends Controller {
             }
             $shipping_address = '';
         }
+
         $total_price_cart = '';
         $total_weight = '';
+        $discount = '';
         if (!empty($carts)) {
             $cart_data = array();
             foreach ($carts as $key => $value) {
                 $products = Product::where('id', $value->product_id)->first();
                 $product_image = json_decode($products->product_details->product_images);
-                $total_price_cart += $value->total_price;
                 $total_weight += $value->quantity * $products->weight;
-
+                $discount += $products->discount;
                 $cart_data[$key] = array(
                     'product_id' => $products->id,
                     'cart_id' => Auth::check() ? $value->id : $products->id, //   if user not logged in then we have removed item in the session array based on product id otherwise from database
@@ -84,11 +88,38 @@ class ProductController extends Controller {
                     'vehicle_year' => $products->vehicle_year_from . '-' . $products->vehicle_year_to,
                     'quantity' => $value->quantity,
                     'price' => $products->price,
+                    'discount' => $products->discount,
                     'total_price' => $value->total_price,
                 );
             }
         } else {
             $cart_data = array();
+        }
+        
+        // this code is used to verify coupan code and allow discount 
+        if ($offer_code != null) {
+            $coupan_code = CoupanCode::Where(['code' => $offer_code, 'status' => 1])->first();
+            // this is used to check if the request is ajax json
+            if ($request->wantsJson()) {
+                if ($coupan_code) {
+                    $check_usage = CoupanUsage::Where([['coupan_id','=',$coupan_code->id],['user_id','=',Auth::id()],['usage','>=',$coupan_code->usage]])->first();
+                    $current_date = strtotime(Carbon::now());
+                    if (strtotime($coupan_code->expiration_date) < $current_date) {
+                        return response()->json(array('error' => 'Sorry,this coupan code has neen expired!'), 401);
+                    } else if ($check_usage) {
+                        return response()->json(array('error' => 'Sorry,You have exceed the coupan code usage limit!'), 401);
+                    }else if($discount ==''){
+                        return response()->json(array('error' => 'Sorry discount not available for these products!'), 401);
+                    }
+                    $discount_status = true;
+                } else {
+                    return response()->json(array('error' => 'Sorry,please check your coupan code or try again later!'), 401);
+                }
+            } else {
+                $discount_status = false;
+            }
+        } else {
+            $discount_status = false;
         }
 
         if ($request->get('shipping_method') == '') {
@@ -99,7 +130,7 @@ class ProductController extends Controller {
         // calculate total price based on shipping method and rates
         $shipping_methods = ShippingMethod::where('status', 1)->get();
         $shipping_price = 0;
-        if (!empty($shipping_methods->toArray()) && $shipping_address != '' && $method_name != 'Free Delivery') {
+        if (!empty($shipping_methods->toArray()) && $shipping_address != '' && $method_name != 'Free shipping') {
 
             $shipping_rates = ShippingRate::where('country_id', $shipping_address->country_id)->where(function ($query) use ($total_weight) {
                         $query->where('low_weight', '>=', $total_weight)
@@ -109,19 +140,18 @@ class ProductController extends Controller {
                     })->first(array('price'));
             if ($shipping_rates != '') {
                 $shipping_price = $shipping_rates->price;
-                $total_price_cart = $total_price_cart + $shipping_price;
             } else {
                 $shipping_price = ShippingRate::where('country_id', $shipping_address->country_id)->max('price');
-                $total_price_cart = $total_price_cart + $shipping_price;
             }
         }
         $other_cart_data = array(
             'shipping_price' => $shipping_price,
-            'total_price_cart' => $total_price_cart,
-            'method_name' => $method_name
+            'method_name' => $method_name,
+            'discount_status' => $discount_status,
+            'discount_code' => $offer_code
         );
-
-        $view = View::make('carts.index', compact('cart_data', 'shipping_address', 'shipping_methods', 'shipping_rates', 'other_cart_data'));
+        
+        $view = View::make('carts.index', compact('cart_data', 'shipping_address', 'shipping_methods', 'other_cart_data'));
         if ($request->wantsJson()) {
             $sections = $view->renderSections();
             return $sections['content'];
@@ -302,7 +332,7 @@ class ProductController extends Controller {
         // get vehicle model data from product table and vehicle model table
         $vehicle_models = Product::with(['get_vehicle_model' => function ($q) {
                         $q->select(['vehicle_models.id', 'vehicle_models.name']);
-                    }])->where([['products.vehicle_year_from', '<=', $year], ['products.vehicle_year_to', '>=', $year],['products.vehicle_make_id', $make_id]])->groupby('products.vehicle_model_id')->get(array('products.vehicle_model_id'));
+                    }])->where([['products.vehicle_year_from', '<=', $year], ['products.vehicle_year_to', '>=', $year], ['products.vehicle_make_id', $make_id]])->groupby('products.vehicle_model_id')->get(array('products.vehicle_model_id'));
 
         return $vehicle_models;
     }

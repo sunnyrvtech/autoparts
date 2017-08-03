@@ -176,58 +176,21 @@
                     <h3 class="text-center">Latest Products</h3>
 
                     <div class="slickSlider-con slickSlider"  style="overflow: initial; display: block;">
-
+                        @foreach($latest_product as $value)
+                        <?php
+                         $product_images = json_decode($value->product_details->product_images);
+                        ?>
                         <div class="thumbnail-wrapper">
-                            <a class="thumbnail" href="javascript:void(0);">
+                            <a class="thumbnail" href="{{ URL('products').'/'.$value->product_slug }}">
                                 <div class="img-wrapper">
-                                    <img src="{{ URL::asset('/images/product1.jpg') }}" alt="" />
+                                    <img src="{{ URL::asset('/product_images').'/' }}{{ isset($product_images[0])?$product_images[0]:'default.jpg' }}" alt="" />
                                 </div>  
                                 <div class="caption">
-                                    <div class="caption-text truncate">Product1</div>
+                                    <div class="caption-text truncate">{{ $value->product_name }}</div>
                                 </div>
                             </a>
                         </div>
-                        <div class="thumbnail-wrapper">
-                            <a class="thumbnail" href="javascript:void(0);">
-                                <div class="img-wrapper">
-                                    <img src="{{ URL::asset('/images/product2.jpg') }}" alt="" />
-                                </div>  
-                                <div class="caption">
-                                    <div class="caption-text truncate">Product2</div>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="thumbnail-wrapper">
-                            <a class="thumbnail" href="javascript:void(0);">
-                                <div class="img-wrapper">
-                                    <img src="{{ URL::asset('/images/product3.jpg') }}" alt="" />
-                                </div>  
-                                <div class="caption">
-                                    <div class="caption-text truncate">Product3</div>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="thumbnail-wrapper">
-                            <a class="thumbnail" href="javascript:void(0);">
-                                <div class="img-wrapper">
-                                    <img src="{{ URL::asset('/images/product1.jpg') }}" alt="" />
-                                </div>  
-                                <div class="caption">
-                                    <div class="caption-text truncate">Product4</div>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="thumbnail-wrapper">
-                            <a class="thumbnail" href="javascript:void(0);">
-                                <div class="img-wrapper">
-                                    <img src="{{ URL::asset('/images/product2.jpg') }}" alt="" />
-                                </div>  
-                                <div class="caption">
-                                    <div class="caption-text truncate">Product5</div>
-                                </div>
-                            </a>
-                        </div>
-
+                        @endforeach
                     </div>
                     <div class="full-list-widget">
                         <div class="actions">

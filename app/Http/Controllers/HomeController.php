@@ -7,6 +7,7 @@ use View;
 use App\SubCategory;
 use App\Brand;
 use App\StaticPage;
+use App\Product;
 use App\VehicleCompany;
 use Mail;
 
@@ -27,7 +28,12 @@ class HomeController extends Controller {
         // get vehicle companies data
         $vehicles = VehicleCompany::get(array('name', 'id'));
         $brands = Brand::take(40)->get(array('name', 'id'));
-        $view = View::make('index', compact('categories', 'featured_category', 'brands', 'vehicles'));
+        
+        $latest_product = Product::Where('quantity','>',0)->orderBy('updated_at','DESC')->take('20')->get();
+//        echo "<pre>";
+//        print_r($latest_product->toArray());
+//        die;
+        $view = View::make('index', compact('categories', 'featured_category', 'brands', 'vehicles','latest_product'));
         if ($request->wantsJson()) {
             $sections = $view->renderSections();
             return $sections['content'];

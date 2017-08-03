@@ -66,7 +66,7 @@ class OrderController extends Controller {
             if ($status == 'failed') {
                 foreach ($orders->getOrderDetailById as $val) {
                     if (isset($val->getProduct->id)) {
-                        Product::increment('quantity', $val->quantity);   ///   quantity decrement after successfull purchase
+                        Product::Where('id',$val->getProduct->id)->increment('quantity', $val->quantity);   ///   quantity increment if order cancelled
                     } else {
                         Session::flash('error-message', 'Product id not found!');
 //                        return response()->json(['messages' => "Product id not found!"], 401);

@@ -469,19 +469,45 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
             $("#account_cart_area").show();
         }
 
-        $scope.changeShippingMethod = function (ship_method) {
+        $scope.changeShippingMethod = function (ship_method,offer_code) {
             if (ship_method != '') {
                 $scope.loading = true;
                 $http({
                     method: 'GET',
                     url: BaseUrl + '/cart',
-                    params: {shipping_method: ship_method},
+                    params: {shipping_method: ship_method,offer_code: offer_code},
                     headers: {'Content-Type': 'application/json'}
                 }).then(function (data, status, headers, config) {
                     $scope.loading = false;
                     var $e1 = $('#content').html(data.data);
                     $compile($e1)($scope);
                     (window).scrollTop(0);
+                });
+            }
+        }
+        
+        $scope.submitDiscountCode = function (ship_method,offer_code) {
+            if (offer_code != '') {
+                $scope.loading = true;
+                $http({
+                    method: 'GET',
+                    url: BaseUrl + '/cart',
+                    params: {shipping_method: ship_method,offer_code: offer_code},
+                    headers: {'Content-Type': 'application/json'}
+                }).then(function (data, status, headers, config) {
+                    $scope.loading = false;
+                    var $e1 = $('#content').html(data.data);
+                    $compile($e1)($scope);
+                    (window).scrollTop(0);
+                }, function errorCallback(data) {
+                    $scope.loading = false;
+                    $scope.alert_loading = true;
+                    $scope.alertClass = 'alert-danger';
+                    $scope.alertLabel = 'Error!';
+                    $scope.alert_messages = data.data.error;
+                    $scope.alertHide();
+                    $(window).scrollTop(0);
+
                 });
             }
         }

@@ -24,14 +24,27 @@
                                     <th><label>Item Details</label></th>
                                     <th><label>Quantity</label></th>
                                     <th><label>Price</label></th>
+                                    <th><label>Discount</label></th>
                                     <th><label>Total</label></th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php $total_price = ''; ?>
+                                <?php $total_price = '';$sub_total=0;$total_discount = '' ?>
                                 @foreach($cart_data as $value)
-                                <?php $total_price += $value['total_price']; ?>
+                                <?php 
+                                    //calulate total price after coupan match and discount
+                                    if($other_cart_data['discount_status'] && $value['discount'] != null){
+                                        $total_price = $value['total_price']-($value['total_price']*$value['discount']/100);
+                                        $sub_total += $total_price; 
+                                    }else{
+                                        $total_price = $value['total_price'];
+                                        $sub_total += $total_price;
+                                    }
+                                    
+                                    // just used to hide discount text field if no discount available 
+                                    $total_discount += $value['discount'];
+                                ?>
                                 <tr>
                                     <td>
                                         <div class="product-image"><img src="{{ URL::asset('/product_images').'/'.$value['product_image'] }}" alt="{{ $value['product_name']}}" width="120" height="120"></div>
@@ -48,10 +61,19 @@
                                         <input type="hidden" name="shipping_price" value="{{ $other_cart_data['shipping_price'] }}">
                                     </td>
                                     <td>
-                                        <div>${{ $value['price']}}</div>
+                                        <div>${{ number_format($value['price'],2) }}</div>
                                     </td>
                                     <td>
-                                        <div class="">${{ $value['total_price']}}</div>
+                                        <div>
+                                            @if($other_cart_data['discount_status'] && $value['discount'] != null)
+                                                {{ $value['discount'].'%' }}
+                                            @else
+                                               {{"........"}}
+                                            @endif
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="">${{ number_format($total_price,2) }}</div>
                                     </td>
                                     <td>
                                         <a class="btn btn-danger btn-sm" ng-click="submitDeleteCart({{ $value['cart_id'] }},{{ $value['quantity'] }})"><i class="fa fa-trash-o"></i></a>
@@ -86,6 +108,7 @@
                                     <tr>
                                         <th>Qty</th>
                                         <th>Price</th>
+                                        <th>Discount</th>
                                         <th>Total</th>
                                         <th></th>
                                     </tr>
@@ -96,10 +119,19 @@
                                             <input class="order-quantity-dropdown form-control" value="{{ $value['quantity']}}" data-product-id="{{ $value['product_id']}}">
                                         </td>
                                         <td>
-                                            <div>${{ $value['price']}}</div>
+                                            <div>${{ number_format($value['price'],2) }}</div>
+                                        </td>
+                                         <td>
+                                            <div>
+                                                @if($other_cart_data['discount_status'] && $value['discount'] != null)
+                                                    {{ $value['discount'].'%' }}
+                                                @else
+                                                   {{"..."}}
+                                                @endif
+                                            </div>
                                         </td>
                                         <td>
-                                            <div class="">${{ $value['total_price']}}</div>
+                                            <div class="">${{ number_format($value['total_price'],2) }}</div>
                                         </td>
                                         <td>
                                             <a class="btn btn-danger btn-sm" ng-click="submitDeleteCart({{ $value['cart_id'] }})"><i class="fa fa-trash-o"></i></a>
@@ -113,8 +145,26 @@
                 </div>
             </div>
             <div class="shipping-section material" elevation="1">
-               <div class="row">
-                <div class="col-md-6">
+               @if($total_discount != null && Auth::check())
+                    <div class="row">
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            <div class="discount-text-1">Discount/Gift Certificate</div>
+                            <div class="discount-text-2">If you have a discount or gift certificate code, enter it here:</div>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-6">
+                            <input class="form-control" id="offerCode" @if($other_cart_data['discount_status']) readonly @endif  value="{{ $other_cart_data['discount_code'] }}" name="discount_code" type="text">
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-6">
+                            @if($other_cart_data['discount_status'])
+                                <span class="btn material glyphicon glyphicon-ok" elevation="1" style="color:green"></span>
+                            @else
+                                <button class="btn hover material" elevation="1" id="discountCodeSubmit" type="button">Apply Discount</button>
+                            @endif
+                        </div>
+                    </div>
+                @endif    
+                <div class="row">
+                    <div class="col-md-6">
                     @if(!empty($shipping_address) && Auth::check())
                     <div class="row">
                         
@@ -135,7 +185,7 @@
                     @endif
                 </div>
               
-                <div class="col-md-4 col-xs-12 pull-right">
+                    <div class="col-md-4 col-xs-12 pull-right">
                     <h4>Order Total: </h4>
                     <div class="delivery-wrp">
                         @if(!empty($shipping_methods->toArray()))
@@ -168,15 +218,28 @@
                                 <label>Subtotal:</label>
                             </div>
                             <div class="col-md-6 col-sm-6 col-xs-6">
-                                <span>${{ number_format($total_price,2) }}</span>
+                                <span>${{ number_format($sub_total,2) }}</span>
                             </div>
                         </div>
+                        @if($other_cart_data['shipping_price'] > 0)
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                <label>Shipping:</label>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                <span class="price">${{ number_format($other_cart_data['shipping_price'],2) }}</span>
+                            </div>
+                        </div>
+                        @endif
                         <div class="row">
                             <div class="col-md-6 col-sm-6 col-xs-6">
                                 <label>Total:</label>
                             </div>
                             <div class="col-md-6 col-sm-6 col-xs-6">
-                                <span class="price">${{ number_format($other_cart_data['total_price_cart'],2) }}</span>
+                                <?php 
+                                $total_cart_price = $sub_total+$other_cart_data['shipping_price'];
+                                ?>
+                                <span class="price">${{ number_format($total_cart_price,2) }}</span>
                             </div>
                         </div>
                     </div>
@@ -285,10 +348,20 @@
         $(document).on('change', '#changeShippingMethod', function (e) {
               e.preventDefault();
               var ship_method = $(this).val();
+              var offer_code = $("#offerCode").val();
               if(ship_method == ''){
                   ship_method = null;
               }
-              angular.element(this).scope().changeShippingMethod(ship_method);
+              angular.element(this).scope().changeShippingMethod(ship_method,offer_code);
+       });
+       
+       $(document).on('click', '#discountCodeSubmit', function (e) {
+              var offer_code = $("#offerCode").val();
+              var ship_method = $("#changeShippingMethod").val();
+              if(ship_method == ''){
+                  ship_method = null;
+              }
+              angular.element(this).scope().submitDiscountCode(ship_method,offer_code);
        });
        
        $(document).on('click', '#checkout_btn', function (e) {

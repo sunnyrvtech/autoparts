@@ -314,13 +314,18 @@
                                         <th><label>Item Details</label></th>
                                         <th><label>Quantity</label></th>
                                         <th><label>Price</label></th>
+                                        <th><label>Discount</label></th>
                                         <th><label>Total</label></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php $sub_total='' ?>
                                     @foreach($order_details->getOrderDetailById as $val)
-                                        <?php $sub_total += $val->total_price; ?>
+                                        <?php
+                                        
+                                        $total_price = $val->total_price-($val->total_price*$val->discount/100);
+                                        $sub_total += $total_price; 
+                                        ?>
                                     <tr>
                                         <td>
                                             @if(isset($val->getProduct->id))
@@ -334,10 +339,19 @@
                                             <div>{{ $val->quantity }}</div>
                                         </td>
                                         <td>
-                                            <div>${{ $val->total_price/$val->quantity }}</div>
+                                            <div>${{ number_format($val->total_price/$val->quantity,2) }}</div>
                                         </td>
                                         <td>
-                                            <div class="">${{ $val->total_price }}</div>
+                                            <div>
+                                                @if($val->discount != null)
+                                                    {{ $val->discount.'%' }}
+                                                @else
+                                                   {{"........"}}
+                                                @endif
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="">${{ $total_price }}</div>
                                         </td>
                                     </tr>
                                     @endforeach

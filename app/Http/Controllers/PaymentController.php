@@ -10,11 +10,14 @@ use App\BillingAddress;
 use App\Order;
 use App\OrderDetail;
 use App\Product;
+use App\CoupanCode;
+use App\CoupanUsage;
 use Auth;
 use App\WarehouseStore;
 use Mail;
 use Redirect;
 use View;
+use Carbon\Carbon;
 
 class PaymentController extends Controller {
 
@@ -54,6 +57,7 @@ class PaymentController extends Controller {
 
         $data = $request->all();
         $shipping_price = $data['shipping_price'];
+        $offer_code = $request->get('discount_code');
 
         $shipping_address = ShippingAddress::where('user_id', Auth::id())->first();
         $cart_ids = $data['cart_id'];
@@ -98,34 +102,58 @@ class PaymentController extends Controller {
                 ->setFundingInstruments(array($fi));
 
 
+        $discount_status = false;
+        $check_usage = false;
+        // this code is used to verify coupan code and allow discount 
+        if ($offer_code != null) {
+            $current_date = Carbon::now();
+            $coupan_codes = CoupanCode::Where(['code' => $offer_code, 'status' => 1], ['expiration_date', '>', $current_date])->first();
+            if ($coupan_codes) {
+                $check_usage = CoupanUsage::Where([['coupan_id', '=', $coupan_codes->id], ['user_id', '=', Auth::id()], ['usage', '<', $coupan_codes->usage]])->first();
+                if ($check_usage) {
+                    $discount_status = true;
+                }
+            }
+        }
+
         $item = array();
-        $total_price = 0;
+        $item_price = 0;
+        $sub_total = 0;
         foreach ($carts as $key => $value) {
-            $total_price += $value->total_price;
+            //calulate total price after coupan match and discount
+            if ($discount_status && $value->get_products->discount != null) {
+                $item_price = $value->total_price - ($value->total_price * $value->get_products->discount / 100);
+                $sub_total += number_format($item_price, 2);
+            } else {
+                $item_price = $value->total_price;
+                $sub_total += number_format($item_price, 2);
+            }
+
             $item[$key] = Paypalpayment::item();
             $item[$key]->setName($value->get_products->product_name)
                     ->setDescription($value->get_products->product_long_description)
                     ->setCurrency('USD')
                     ->setQuantity($value->quantity)
                     // ->setTax(0.3)
-                    ->setPrice($value->get_products->price);
+                    ->setPrice($item_price / $value->quantity);
         }
+
+        $total_cart_price = $sub_total + $shipping_price;
 
         $itemList = Paypalpayment::itemList();
         $itemList->setItems($item);
 
-
         $details = Paypalpayment::details();
         $details->setShipping($shipping_price)
-        //->setTax("1.3")
-        //total of items prices
-        ->setSubtotal($total_price);
+                //->setTax("1.3")
+                //total of items prices
+                ->setSubtotal($sub_total);
 
         //Payment Amount
         $amount = Paypalpayment::amount();
         $amount->setCurrency("USD")
                 // the total is $17.8 = (16 + 0.6) * 1 ( of quantity) + 1.2 ( of Shipping).
-                ->setTotal($total_price+$shipping_price)
+                ->setTotal($total_cart_price)
                 ->setDetails($details);
 
         // ### Transaction
@@ -158,57 +186,85 @@ class PaymentController extends Controller {
             $payment->create($this->_apiContext);
         } catch (\PayPal\Exception\PayPalConnectionException $ex) {
             // echo $ex->getCode(); 
-            $error = json_decode($ex->getData());
+            if ($ex->getCode() != 503) {
+                $error = json_decode($ex->getData());
+                return Redirect::back()
+                                ->with('error-message', $error->details[0]->issue);
+            }
             return Redirect::back()
-                        ->with('error-message',$error->details[0]->issue);
+                            ->with('error-message', "Something went wrong,Please try again later !");
         }
-        
-        if ($transaction_id = $this->savePaymentDetails($payment, $carts,$shipping_address)) {
+
+        if ($transaction_id = $this->savePaymentDetails($payment, $carts, $shipping_address, $discount_status, $offer_code, $check_usage)) {
             Cart::destroy($cart_ids); ///  empty cart table after payment successfull
             return View::make('carts.success', compact('transaction_id'));
         }
     }
 
-    public function savePaymentDetails($payment, $carts,$shipping_address) {
-
+    public function savePaymentDetails($payment, $carts, $shipping_address, $discount_status, $offer_code, $check_usage) {
         $order_array = array(
             'user_id' => Auth::id(),
             'transaction_id' => $payment->id,
             'total_price' => $payment->transactions[0]->amount->total,
             'ship_price' => $payment->transactions[0]->amount->details->shipping,
             'order_status' => 'processing',
-            'created_at' => date('Y-m-d H:i:s',strtotime($payment->create_time))
+            'created_at' => date('Y-m-d H:i:s', strtotime($payment->create_time))
         );
+
+        if ($discount_status) {
+            $coupan_codes = CoupanCode::Where(['code' => $offer_code, 'status' => 1])->first();
+            $discount_array = array(
+                'user_id' => Auth::id(),
+                'coupan_id' => $coupan_codes->id,
+                'usage' => 1,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            );
+
+            if ($check_usage) {
+                CoupanUsage::Where('id', $check_usage->id)->increment('usage');   ///   usage increment
+            } else {
+                CoupanUsage::create($discount_array);
+            }
+        }
+
         $orders = Order::create($order_array);
         $transaction_details = array(
-            'transaction_id'=>$orders->id,
-            'shipping_price'=>$payment->transactions[0]->amount->details->shipping,
-            'order_time'=>  date('M d,Y H:i:s A',strtotime($payment->create_time))
+            'discount_status'=> $discount_status,
+            'transaction_id' => $orders->id,
+            'shipping_price' => $payment->transactions[0]->amount->details->shipping,
+            'order_time' => date('M d,Y H:i:s A', strtotime($payment->create_time))
         );
         if ($orders) {
             foreach ($carts as $value) {
+                if ($discount_status) {
+                    $discount = $value->get_products->discount;
+                } else {
+                    $discount = null;
+                }
                 $detail_array = array(
                     'order_id' => $orders->id,
                     'product_id' => $value->product_id,
                     'product_name' => $value->get_products->product_name,
                     'sku_number' => $value->get_products->sku,
                     'quantity' => $value->quantity,
-                    'total_price' => $value->total_price
+                    'total_price' => $value->total_price,
+                    'discount' => $discount
                 );
                 OrderDetail::create($detail_array);
-                Product::decrement('quantity', $value->quantity);   ///   quantity decrement after successfull purchase
+                Product::Where('id', $value->product_id)->decrement('quantity', $value->quantity);   ///   quantity decrement after successfull purchase
             }
-            
-             if ($this->sendInvoice($transaction_details,$carts, $shipping_address)){
-                 return $transaction_details['transaction_id'];
-             }
+
+            if ($this->sendInvoice($transaction_details, $carts, $shipping_address)) {
+                return $transaction_details['transaction_id'];
+            }
         }
         return true;
     }
 
-    public function sendInvoice($transaction_details,$carts, $shipping_address) {
+    public function sendInvoice($transaction_details, $carts, $shipping_address) {
         $billing_address = BillingAddress::where('user_id', Auth::id())->first();
-        
+
         $all_store = WarehouseStore::get();
         $distance_array = array();
         $store_email = '';
@@ -223,25 +279,25 @@ class PaymentController extends Controller {
         }
 
         $data = array(
-        'transaction_id' =>$transaction_details['transaction_id'],
-        'email' => $store_email
+            'transaction_id' => $transaction_details['transaction_id'],
+            'email' => $store_email
         );
-        
-       if (!empty($store_email)) {
-           $transaction_details['store_email'] = true;
-            Mail::send('auth.emails.order_invoice', array('transaction_details'=>$transaction_details,'carts'=>$carts, 'shipping_address'=>$shipping_address,'billing_address'=>$billing_address), function($message) use ($data) {
+
+        if (!empty($store_email)) {
+            $transaction_details['store_email'] = true;
+            Mail::send('auth.emails.order_invoice', array('transaction_details' => $transaction_details, 'carts' => $carts, 'shipping_address' => $shipping_address, 'billing_address' => $billing_address), function($message) use ($data) {
                 $message->from('test4rvtech@gmail.com', " Welcome To Autolighthouse");
                 $message->to($data['email'])->subject('Autolighthouse Store:New Order #' . $data['transaction_id']);
             });
         }
-        
+
         $data['email'] = Auth::user()->email;
         $transaction_details['store_email'] = false;
-        Mail::send('auth.emails.order_invoice', array('transaction_details'=>$transaction_details,'carts'=>$carts, 'shipping_address'=>$shipping_address,'billing_address'=>$billing_address), function($message) use ($data) {
+        Mail::send('auth.emails.order_invoice', array('transaction_details' => $transaction_details, 'carts' => $carts, 'shipping_address' => $shipping_address, 'billing_address' => $billing_address), function($message) use ($data) {
             $message->from('test4rvtech@gmail.com', " Welcome To Autolighthouse");
             $message->to($data['email'])->subject('Autolighthouse Store:New Order #' . $data['transaction_id']);
         });
-        
+
         return true;
     }
 

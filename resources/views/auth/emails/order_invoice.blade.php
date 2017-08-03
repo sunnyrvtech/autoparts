@@ -295,15 +295,35 @@
                                                 <!-- CENTERING TABLE // -->
                                                 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-top: 10px;">
                                                     <tr style="background: #F1F1F1;">
-                                                        <th align="left" width="80%" style="padding: 10px;"><span style="color:#7a7a7a;font-weight: bold;">Item In Your Order</span></th><th width="20%" style="padding: 10px;"><span style="color:#7a7a7a;font-weight: bold;">Qty</span></th><th width="20%" style="padding: 10px;"><span style="color:#7a7a7a;font-weight: bold;">Price</span></th>
+                                                        <th align="left" width="60%" style="padding: 10px;"><span style="color:#7a7a7a;font-weight: bold;">Item In Your Order</span></th>
+                                                        <th width="10%" style="padding: 10px;"><span style="color:#7a7a7a;font-weight: bold;">Qty</span></th>
+                                                        <th width="10%" style="padding: 10px;"><span style="color:#7a7a7a;font-weight: bold;">Price</span></th>
+                                                        <th width="10%" style="padding: 10px;"><span style="color:#7a7a7a;font-weight: bold;">Discount</span></th>
+                                                        <th width="10%" style="padding: 10px;"><span style="color:#7a7a7a;font-weight: bold;">Total</span></th>
                                                     </tr>
-                                                    <?php $total_price = ''; ?>
+                                                    <?php $item_price = 0;$sub_total = 0; ?>
                                                     @foreach($carts as $key => $value)
-                                                    <?php $total_price += $value->total_price; ?>
+                                                    <?php
+                                                    if ($transaction_details['discount_status'] && $value->get_products->discount != null) {
+                                                        $item_price = $value->total_price - ($value->total_price * $value->get_products->discount / 100);
+                                                        $sub_total += number_format($item_price, 2);
+                                                    } else {
+                                                        $item_price = $value->total_price;
+                                                        $sub_total += number_format($item_price, 2);
+                                                    }
+                                                    ?>
                                                     <tr style="border-bottom: 1px solid #C8C8C8;">
-                                                        <td align="left" width="80%" style="padding: 15px;"><span style="font-weight: bold;">{{ $value->get_products->product_name }}</span><br><span>SKU: {{ $value->get_products->sku }}</span></td>
-                                                        <td width="20%" style="padding: 15px;">{{ $value->quantity }}</td>
-                                                        <td width="20%" style="padding: 15px;">${{ $value->total_price }}</td>
+                                                        <td align="left" width="60%" style="padding: 15px;"><span style="font-weight: bold;">{{ $value->get_products->product_name }}</span><br><span>SKU: {{ $value->get_products->sku }}</span></td>
+                                                        <td width="10%" style="padding: 15px;">{{ $value->quantity }}</td>
+                                                        <td width="10%" style="padding: 15px;">${{ number_format($value->total_price/$value->quantity,2) }}</td>
+                                                        <td width="10%" style="padding: 15px;">
+                                                             @if($value->get_products->discount != null)
+                                                                {{ $value->get_products->discount.'%' }}
+                                                             @else
+                                                                {{"..."}}
+                                                             @endif
+                                                        </td>
+                                                        <td width="10%" style="padding: 15px;">${{ $item_price }}</td>
                                                     </tr>
                                                     @endforeach
 
@@ -335,7 +355,7 @@
                                                                                                 <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:right;">Sub Total</h3>
                                                                                             </td>
                                                                                             <td>
-                                                                                                <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:right;">${{ number_format($total_price,2) }}</h3>
+                                                                                                <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:right;">${{ number_format($sub_total,2) }}</h3>
                                                                                             </td>
                                                                                         </tr>
                                                                                         <tr>
@@ -351,7 +371,7 @@
                                                                                                 <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:right;">Grand Total</h3>
                                                                                             </td>
                                                                                             <td>
-                                                                                                <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:right;">${{ number_format($total_price+$transaction_details['shipping_price'],2) }}</h3>
+                                                                                                <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:right;">${{ number_format($sub_total+$transaction_details['shipping_price'],2) }}</h3>
                                                                                             </td>
                                                                                         </tr>
                                                                                     </table>

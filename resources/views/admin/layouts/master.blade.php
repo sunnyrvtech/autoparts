@@ -192,8 +192,8 @@
                                 $("body").tooltip({selector: '[data-toggle=tooltip]', trigger: 'hover'});
                                 //initialize ckeditor        
                                 $('textarea').ckeditor({
-                                    enterMode : CKEDITOR.ENTER_DIV,
-                                    allowedContent : true
+                                    enterMode: CKEDITOR.ENTER_DIV,
+                                    allowedContent: true
                                 });
                                 //initialize datepicker
                                 $('.datepicker').datetimepicker({
@@ -204,6 +204,8 @@
                                     autoclose: true,
 
                                 });
+                                //initialize datepicker
+                                $('.datepicker1').datetimepicker({autoclose: true});
                                 $(document).on('click', '.browse', function () {
                                     var file = $("#file_type");
                                     file.trigger('click');
@@ -279,7 +281,20 @@
                                         window.location.reload();
                                     });
                                 });
+                                // generate 10 digit random number for coupan code
+                                $(".generate_code").click(function () {
+                                    $("input[name='code']").val(randString(10));
+                                });
                             });
+
+                            function randString(x) {
+                                var s = "";
+                                while (s.length < x && x > 0) {
+                                    var r = Math.random();
+                                    s += (r < 0.1 ? Math.floor(r * 100) : String.fromCharCode(Math.floor(r * 26) + (r > 0.5 ? 97 : 65)));
+                                }
+                                return s;
+                            }
         </script>
         <!-- App scripts -->
         @stack('scripts')
