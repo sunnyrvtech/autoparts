@@ -87,7 +87,7 @@ class CoupanCodeController extends Controller {
             'status' => 'required',
         ]);
         $coupan_codes = CoupanCode::findOrFail($id);
-        CoupanCode::Where('id','>',1)->update(['status' => 0]);
+        //CoupanCode::Where('id','>',1)->update(['status' => 0]);
         $coupan_codes->fill($data)->save();
 
         return redirect()->route('coupon_code.index')

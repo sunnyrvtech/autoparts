@@ -29,7 +29,9 @@
                         <th>Product Name</th>
                         <!--<th>Product Description</th>-->
                         <th>Sku</th>
-                        <th>Price</th>
+                        <th>Price($)</th>
+                        <th>Special Price($)</th>
+                        <th>Discount(%)</th>
                         <th>Quantity</th>
                         <th>Status</th>
                         <th>Created At</th>
@@ -77,6 +79,8 @@
                 //  {data: 'product_long_description', name: 'product_long_description'},
                 {data: 'sku', name: 'sku'},
                 {data: 'price', name: 'price'},
+                {data: 'special_price', name: 'special_price'},
+                {data: 'discount', name: 'discount'},
                 {data: 'quantity', name: 'quantity'},
                 {data: 'status', render: function (data, type, row) {
                         if (data == 1) {

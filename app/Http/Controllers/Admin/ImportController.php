@@ -59,6 +59,8 @@ class ImportController extends Controller {
                     'sku' => trim($row->sku),
                     'price' => $row->price,
                     'quantity' => $row->quantity,
+                    'discount' => $row->discount,
+                    'special_price' => $row->special_price,
                     'vehicle_year_from' => $vehicle_year[0],
                     'vehicle_year_to' => $vehicle_year[1],
                     'vehicle_make_id' => $vehicle_company->id,

@@ -34,7 +34,7 @@
             <div class="tab-content">
                 <div class="tab-pane active" id="general">
                     <div class="row">
-                        <div class="col-lg-6">
+                        <div class="col-lg-12">
                             <div class="form-group {{ $errors->has('product_name') ? ' has-error' : '' }}">
                                 <label class="control-label">Product Name<span class="comps">*</span></label>
                                 {{ Form::text('product_name',  $products->product_name,array('required', 'class'=>'form-control')) }}
@@ -48,10 +48,21 @@
                         <div class="col-lg-6">
                             <div class="form-group {{ $errors->has('price') ? ' has-error' : '' }}">
                                 <label class="control-label">Product Price<span class="comps">*</span></label>
-                                {{ Form::text('price', number_format($products->price),array('required', 'class'=>'form-control')) }}
+                                {{ Form::text('price',$products->price,array('required', 'class'=>'form-control')) }}
                                 @if ($errors->has('price'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('price') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group {{ $errors->has('special_price') ? ' has-error' : '' }}">
+                                <label class="control-label">Special Price<span class="comps"></span></label>
+                                {{ Form::text('special_price', $products->special_price,array('class'=>'form-control')) }}
+                                @if ($errors->has('special_price'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('special_price') }}</strong>
                                 </span>
                                 @endif
                             </div>
