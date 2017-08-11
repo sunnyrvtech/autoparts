@@ -1536,7 +1536,7 @@ h1,h2,h3{ font-family: 'Open Sans', sans-serif; font-weight: 700;}
 ul.creditcards img { height: auto; }
 .testimonial-section h3.text-center{color: #4BA8AD;font-size: 38px;}
 /*  bootstrap model css start here */
-/*.modal-open .top-header-section { display: none; }*/
+.modal-open .top-header-section { display: none; }
 #zipModal.modal { text-align: center;padding: 0!important; }
 #zipModal .modal-header { border: none; }
 #zipModal.modal:before { content: '';display: inline-block;height: 100%;vertical-align: middle;margin-right: -4px; }
