@@ -90,13 +90,13 @@ class HomeController extends Controller {
         $address = $request->get('address');
 
         $states = State::Where('postal_code', 'like', trim($address))->first(array('id'));
-
-        $regrex = '"([^"]*)' . $states->id . '([^"]*)"';
-        
-        $regions = ProductZone::whereRaw("state_id REGEXP '" . $regrex . "'")->first(array('id','state_id'));
-        if ($regions) {
-            ////$region = DB::select("SELECT * FROM product_zones WHERE state_id REGEXP"."'".$regrex."'");
-            Session::put('local_region_data', $regions->toArray());
+        if ($states) {
+            $regrex = '"([^"]*)' . $states->id . '([^"]*)"';
+            $regions = ProductZone::whereRaw("state_id REGEXP '" . $regrex . "'")->first(array('id','state_id'));
+            if ($regions) {
+                ////$region = DB::select("SELECT * FROM product_zones WHERE state_id REGEXP"."'".$regrex."'");
+                Session::put('local_region_data', $regions->toArray());
+            }
         }
     }
 
