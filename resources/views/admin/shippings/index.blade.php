@@ -31,7 +31,7 @@
         $('#shipping-table').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ url('admin/shipping') }}",
+            ajax: "{{ route('shipping.index') }}",
             columns: [
                 {data: 'id', name: 'id'},
                 {data: 'name', name: 'name'},

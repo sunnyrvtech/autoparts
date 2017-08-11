@@ -16,10 +16,12 @@
         <link href="{{ URL::asset('/css/sb-admin.css') }}" rel="stylesheet">
         <link href="{{ URL::asset('/css/bootstrap-datetimepicker.min.css') }}" rel="stylesheet">   
         <!-- Custom Fonts -->
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet" type="text/css">
+        <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet" type="text/css">
         <!--<link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css">-->
         <link href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.6/semantic.min.css" rel="stylesheet">   
-        <link href="https://cdn.datatables.net/1.10.13/css/dataTables.semanticui.min.css" rel="stylesheet">   
+        <link href="//cdn.datatables.net/1.10.13/css/dataTables.semanticui.min.css" rel="stylesheet">   
+        <link href="{{ URL::asset('/css/bootstrap-multiselect.css') }}" rel="stylesheet">   
+    
     </head>
 
     <body>
@@ -96,7 +98,10 @@
                         <li class="@if(Request::segment(2) == 'products')active @endif">
                             <a href="{{ route('products.index')}}"><i class="fa fa-fw fa-tag"></i> Products</a>
                         </li>
-                        <li class="@if(Request::segment(2) == 'products')active @endif">
+                        <li class="@if(Request::segment(2) == 'zones')active @endif">
+                            <a href="{{ route('zones.index')}}"><i class="fa fa-fw fa-globe"></i>Zones/Regions</a>
+                        </li>
+                        <li class="@if(Request::segment(2) == 'coupon_code')active @endif">
                             <a href="{{ route('coupon_code.index')}}"><i class="fa fa-fw fa-dollar"></i> Coupon Codes</a>
                         </li>
                         <li class="@if(Request::segment(2) == 'shipping' || Request::segment(2) == 'shipping_rates')active @endif">
@@ -185,6 +190,7 @@
         <script src="https://cdn.datatables.net/1.10.13/js/dataTables.semanticui.min.js"></script>
         <!--<script src="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.6/semantic.min.js "></script>-->
         <script src="{{ URL::asset('/js/bootstrap-datetimepicker.js') }}"></script> 
+        <script src="{{ URL::asset('/js/bootstrap-multiselect.js') }}"></script> 
         <script type="text/javascript">
                             $(document).ready(function () {
 

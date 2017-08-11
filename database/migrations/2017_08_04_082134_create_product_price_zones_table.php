@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePriceZonesTable extends Migration
+class CreateProductPriceZonesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreatePriceZonesTable extends Migration
      */
     public function up()
     {
-        Schema::create('price_zones', function (Blueprint $table) {
+        Schema::create('product_price_zones', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('zone_id')->unsigned();
             $table->foreign('zone_id')->references('id')->on('product_zones')->onDelete('cascade');
@@ -31,6 +31,6 @@ class CreatePriceZonesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('price_zones');
+        Schema::dropIfExists('product_price_zones');
     }
 }

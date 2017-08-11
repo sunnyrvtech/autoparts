@@ -33,7 +33,7 @@
         $('#shipping-table').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ url('admin/shipping_rates') }}",
+            ajax: "{{ route('shipping_rates.index') }}",
             columns: [
                 {data: 'id', name: 'id'},
                 {data: 'country_id',orderable: false, searchable: false, render: function (data, type, row) {

@@ -27,6 +27,10 @@ class Product extends Model {
     public function product_categories() {
         return $this->hasMany('App\ProductCategory');
     }
+    
+    public function product_price_zones(){
+        return $this->hasMany('App\ProductPriceZone','product_id','id');
+    }
 
     public function product_sub_categories() {
         return $this->hasMany('App\ProductSubCategory');

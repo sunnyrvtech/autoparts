@@ -24,6 +24,7 @@
                 <li class=""><a href="#auto_parts1" data-toggle="tab">Auto parts form1</a></li>
                 <li class=""><a href="#auto_parts2" data-toggle="tab">Auto parts form2</a></li>
                 <li class=""><a href="#auto_parts3" data-toggle="tab">Auto parts form3</a></li>
+                <li class=""><a href="#zones" data-toggle="tab">Product Price Based on zones/Region</a></li>
                 <li class=""><a href="#meta_information" data-toggle="tab">Meta Information</a></li>
                 <li class=""><a href="#images" data-toggle="tab">Images</a></li>
                 <li class=""><a href="#categories" data-toggle="tab">Categories</a></li>
@@ -917,6 +918,27 @@
                         </div>-->
                     </div>
                 </div>
+                <div class="tab-pane" id="zones">
+                   <div class="row">
+                        <div class="price_region_content">
+                            <div class="col-lg-5">
+                                <div class="form-group">
+                                    <label class="control-label">Zones/Regions</label>
+                                    {{ Form::select('zone_id[]', $product_zones,null, ['class' => 'form-control']) }}
+                                </div>
+                            </div>
+                            <div class="col-lg-5">
+                                <div class="form-group">
+                                    <label class="control-label">Product Price<span class="comps">*</span></label>
+                                    {{ Form::text('product_price[0]',null,array('class'=>'form-control')) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <a class="glyphicon glyphicon-plus add_more_region"></a>
+                        </div>
+                    </div>
+                </div>
                 <div class="tab-pane" id="meta_information">
                     <div class="row">
                         <div class="form-group {{ $errors->has('meta_title') ? ' has-error' : '' }}">
@@ -1008,5 +1030,16 @@
 <!-- /.container-fluid -->
 @endsection
 @push('scripts')
-
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(document).on("click",".add_more_region",function(){
+            var HTML = $(".price_region_content").html();
+            HTML +='<div class="col-lg-2"><a class="glyphicon glyphicon-minus remove_region"></a></div>';
+            $("#zones").append('<div class="row">'+HTML+'</div>');
+        });
+        $(document).on("click",".remove_region",function(){
+            $(this).parent().parent().remove();
+        });
+    });
+</script>
 @endpush

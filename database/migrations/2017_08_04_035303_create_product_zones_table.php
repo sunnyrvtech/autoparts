@@ -16,7 +16,7 @@ class CreateProductZonesTable extends Migration
         Schema::create('product_zones', function (Blueprint $table) {
             $table->increments('id');
             $table->string('zone_name');
-            $table->integer('state_id');
+            $table->string('state_id');
             $table->timestamps();
         });
     }

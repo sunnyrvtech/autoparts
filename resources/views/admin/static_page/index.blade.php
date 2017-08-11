@@ -31,7 +31,7 @@
         $('#static-table').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ url('admin/static_page') }}",
+            ajax: "{{ route('static_page.index') }}",
             columns: [
                 {data: 'id', name: 'id'},
                 {data: 'title', name: 'title'},

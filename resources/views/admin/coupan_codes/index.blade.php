@@ -33,7 +33,7 @@
             processing: true,
             serverSide: true,
             order: [[5, "desc"]],
-            ajax: "{{ url('admin/coupon_code') }}",
+            ajax: "{{ route('coupon_code.index') }}",
             columns: [
                 {data: 'id', name: 'id'},
                 {data: 'coupan_type', name: 'coupan_type'},

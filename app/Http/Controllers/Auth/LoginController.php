@@ -32,6 +32,12 @@ use AuthenticatesUsers;
      * @var string
      */
     protected $redirectTo = '/';
+    
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
 
     public function __construct(Request $request) {
         
@@ -47,12 +53,6 @@ use AuthenticatesUsers;
 //    public function redirectTo() {
 //        return Session::get('backUrl') ? Session::get('backUrl') : $this->redirectTo;
 //    }
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
 
     /**
      * Display a listing of the resource.

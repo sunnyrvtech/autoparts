@@ -90,6 +90,37 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
                 });
             }
         }
+        
+        $scope.submitZipRegion = function (isValid) {
+            if (isValid) {
+                
+                $.getJSON('http://maps.googleapis.com/maps/api/geocode/json?address='+$scope.zipCode+'&sensor=true', function(data) {
+                        //console.log(data.results[0]);
+                        if(data.status != "ZERO_RESULTS"){
+                            for (var i = 0; i < data.results[0].address_components.length; i++) {
+                                var addr = data.results[0].address_components[i];
+                                if(addr.types[0] == ['administrative_area_level_1']){
+                                    $http({
+                                        method: 'POST',
+                                        url: BaseUrl + '/localZone',
+                                        data: 'address=' + addr.short_name,
+                                            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                                        }).then(function (data, status, headers, config) {
+                                            localStorage.setItem("checkZipModal",true);
+                                            window.location.reload();
+                                        }, function errorCallback(data) {
+
+                                        });
+                                }
+                            }
+                        }else{
+                            localStorage.setItem("checkZipModal",true);
+                            window.location.reload();
+                        }
+                });
+            }
+        }
+        
 
         $scope.submitRegister = function (isValid) {
             $scope.alert_loading = false;

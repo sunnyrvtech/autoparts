@@ -8,6 +8,9 @@ use App\SubCategory;
 use App\Brand;
 use App\StaticPage;
 use App\Product;
+use App\State;
+use App\ProductZone;
+use Session;
 use App\VehicleCompany;
 use Mail;
 
@@ -28,12 +31,12 @@ class HomeController extends Controller {
         // get vehicle companies data
         $vehicles = VehicleCompany::get(array('name', 'id'));
         $brands = Brand::take(40)->get(array('name', 'id'));
-        
-        $latest_product = Product::Where('quantity','>',0)->orderBy('updated_at','DESC')->take('20')->get();
+
+        $latest_product = Product::Where('quantity', '>', 0)->orderBy('updated_at', 'DESC')->take('20')->get();
 //        echo "<pre>";
 //        print_r($latest_product->toArray());
 //        die;
-        $view = View::make('index', compact('categories', 'featured_category', 'brands', 'vehicles','latest_product'));
+        $view = View::make('index', compact('categories', 'featured_category', 'brands', 'vehicles', 'latest_product'));
         if ($request->wantsJson()) {
             $sections = $view->renderSections();
             return $sections['content'];
@@ -83,11 +86,25 @@ class HomeController extends Controller {
         return View::make('contact-us');
     }
 
+    public function getlocalRegion(Request $request) {
+        $address = $request->get('address');
+
+        $states = State::Where('postal_code', 'like', trim($address))->first(array('id'));
+
+        $regrex = '"([^"]*)' . $states->id . '([^"]*)"';
+        
+        $regions = ProductZone::whereRaw("state_id REGEXP '" . $regrex . "'")->first(array('id','state_id'));
+        if ($regions) {
+            ////$region = DB::select("SELECT * FROM product_zones WHERE state_id REGEXP"."'".$regrex."'");
+            Session::put('local_region_data', $regions->toArray());
+        }
+    }
+
     public function postContactUs(Request $request) {
 
         $data = $request->all();
-      
-        Mail::send('auth.emails.contact',$data, function($message) {
+
+        Mail::send('auth.emails.contact', $data, function($message) {
             $message->from('test4rvtech@gmail.com', " Welcome To Autolighthouse");
             $message->to('sunny_kumar@rvtechnologies.co.in')->subject('Autolighthouse inquiry email !!!');
         });

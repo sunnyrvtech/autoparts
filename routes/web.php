@@ -12,7 +12,7 @@
  */
 
 Route::get('/', 'HomeController@index');
-
+Route::post('/localZone','HomeController@getlocalRegion');
 Route::group(['prefix' => 'admin', 'middleware' => 'IsAdmin'], function () {
     Route::get('/', 'Admin\IndexController@index');
     Route::resource('customers', 'Admin\CustomerController');
@@ -27,6 +27,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'IsAdmin'], function () {
     Route::resource('vehicle_model', 'Admin\VehicleModelController');
     Route::resource('brands', 'Admin\BrandController');
     Route::resource('products', 'Admin\ProductController');
+    Route::resource('zones', 'Admin\ProductZoneController');
     Route::resource('shipping', 'Admin\ShippingController');
     Route::resource('shipping_rates', 'Admin\ShippingRateController');
     Route::resource('static_page', 'Admin\StaticPageController');

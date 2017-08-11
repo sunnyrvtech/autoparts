@@ -205,6 +205,29 @@
             @yield('content')
             <!--</div>-->
         </div><!-- /#content -->
+        <div class="modal" id="zipModal" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                      <h3 class="modal-title text-center">Want To Get The Best Deal ?</h3>
+                    </div>
+                    <div class="modal-body">
+                        <h3 class="text-center">Type In Your Zip Code!</h3>
+                        <form name="zipForm" method="post" role="form" ng-submit="submitZipRegion(zipForm.$valid)" action="javascript:void(0);" novalidate>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <input type="text" name="zipCode" ng-model="zipCode" required="" class="form-control input-lg" placeholder="Enter Your Zip Code">
+                                    </div>
+                                </div>
+                                <!--<div class="col-md-2"><button type="submit" class="btn am-orange btn-block btn-lg">Sign In</button></div>-->
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
         <footer class="footer">
             <div class="container">
                 <div class="row">
@@ -266,9 +289,9 @@
             </div>
         </footer>
         <!--AngularJS-->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.2/angular.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-sanitize/1.6.2/angular-sanitize.min.js"></script>
-        <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.2/angular-animate.min.js"></script>-->
+        <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.2/angular.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/angular-sanitize/1.6.2/angular-sanitize.min.js"></script>
+        <!--<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.2/angular-animate.min.js"></script>-->
         <script src="{{ URL::asset('/js/common.js') }}"></script>
         <script type="text/javascript">
                                             var BaseUrl = "<?php echo url('/') ?>";
@@ -278,6 +301,9 @@
                                             }, 8000);
                                            
                                            $(document).ready(function () {
+                                                $('#zipModal').on('hidden.bs.modal', function (e) {
+                                                   localStorage.setItem("checkZipModal",true); 
+                                                });
                                                 $(document).on('click', '#am-ymm-home-form li a', function (e) {
                                                     e.preventDefault();
                                                     angular.element(this).scope().getProductVehicleData($(this));
@@ -285,6 +311,13 @@
                                                 $(document).on("click","#search-glass",function(){
                                                     $( "#search-form" ).submit();
                                                 });
+                                                if(localStorage.getItem("checkZipModal") == null){
+                                                    setTimeout(function(){
+                                                        $("#zipModal").modal({ backdrop: 'static',keyboard: false });
+                                                        $('section').removeClass('scrollActive');
+                                                    },5000);
+                                                }
+                                                
                                             });
 
         </script>

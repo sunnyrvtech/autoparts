@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,400i,600,600i,700,800');
 
 body {
@@ -1115,22 +1114,10 @@ table {
 .search-results .product-row .price-sale .price {
     margin-right: 10px
 }
-.search-results .product-row .price-sale .price,
-.search-results .product-row .price-sale .dollars {
-    font-size: 18px
-}
-.search-results .product-row .add-to-cart-button,
-.search-results .product-row .notify-me-button {
-    position: relative;
-    top: -24px
-}
-#search-filter-results-accordion .panel {
-    border-radius: 0
-}
-#search-filter-results-accordion .panel-default>.panel-heading {
-    background: #4ba8ad;
-    color: #fff
-}
+.search-results .product-row .price-sale .price,.search-results .product-row .price-sale .dollars { font-size: 18px; }
+.search-results .product-row .add-to-cart-button,.search-results .product-row .notify-me-button { position: relative;top: -24px; }
+#search-filter-results-accordion .panel { border-radius: 0; }
+#search-filter-results-accordion .panel-default>.panel-heading { background: #4ba8ad;color: #fff; }
 #search-filter-results-accordion .panel-default>.panel-heading a.accordion-toggle,
 #search-filter-results-accordion .panel-default>.panel-heading a.accordion-toggle:hover { display: block; }
 #search-filter-results-accordion .panel-default>.panel-heading a.accordion-toggle .glyphicon.glyphicon-chevron-down { display: none; }
@@ -1315,30 +1302,9 @@ form.subscription-form .email-field span { color: red ;}
 #content .order-container .mobile-carts-items {display: none;padding-left: 15px;padding-right: 15px; }
 section.scrollActive { position: fixed;width: 100%;z-index: 999999; }
 .scrollActive .navbar-static-top { display: none; }
-#products-content-area .item.grid-group-item .list-wrp.grid-wrp {
-    background: rgb(255, 255, 255) none repeat scroll 0 0;
-    border: 1px solid rgb(221, 221, 221);
-    margin-bottom: 20px;
-    min-height: 465px;
-    padding: 15px;
-    position: relative;
-}
-
-#products-content-area .item.list-group-item {
-    background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
-    border: medium none;
-    float: none;
-    padding: 15px;
-    width: 100%;
-}
-#products-content-area .item.list-group-item .list-wrp.grid-wrp {
-    background-color: rgb(255, 255, 255);
-    border: 1px solid rgb(221, 221, 221);
-    margin-bottom: 0;
-    min-height: 0;
-    padding: 15px;
-    position: relative;
-}
+#products-content-area .item.grid-group-item .list-wrp.grid-wrp { background: rgb(255, 255, 255) none repeat scroll 0 0;border: 1px solid rgb(221, 221, 221);margin-bottom: 20px;min-height: 465px;padding: 15px;position: relative; }
+#products-content-area .item.list-group-item { background: rgba(0, 0, 0, 0) none repeat scroll 0 0;border: medium none;float: none;padding: 15px;width: 100%; }
+#products-content-area .item.list-group-item .list-wrp.grid-wrp { background-color: rgb(255, 255, 255);border: 1px solid rgb(221, 221, 221);margin-bottom: 0;min-height: 0;padding: 15px;position: relative; }
 #products-content-area .item.list-group-item .list-group-image { border: 1px solid #ddd; }
 #products-content-area .item .list-group-item-text,#products-content-area .item .list-group-item-heading { display: none; }
 #products-content-area .item.list-group-item .grid-group-item-text,#products-content-area .item.list-group-item .grid-group-item-heading { display: none; }
@@ -1569,7 +1535,15 @@ h1,h2,h3{ font-family: 'Open Sans', sans-serif; font-weight: 700;}
 .testimonial-section .col-md-12.material .col-sm-9{margin-top: 50px;}
 ul.creditcards img { height: auto; }
 .testimonial-section h3.text-center{color: #4BA8AD;font-size: 38px;}
+/*  bootstrap model css start here */
+/*.modal-open .top-header-section { display: none; }*/
+#zipModal.modal { text-align: center;padding: 0!important; }
+#zipModal .modal-header { border: none; }
+#zipModal.modal:before { content: '';display: inline-block;height: 100%;vertical-align: middle;margin-right: -4px; }
+#zipModal .modal-dialog { color:#fff;display: inline-block;text-align: left;vertical-align: middle; }
+#zipModal .modal-dialog .modal-content { background: url(../images/model_back.jpg) no-repeat center center fixed;-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover; }
 
+/*  bootstrap model css end here */
 .footer form.subscription-form.subscription-simple.ng-pristine.ng-valid table#formTable td { padding: 0px 17px 0 0;font-size: 18px; }
 .footer form.subscription-form.subscription-simple.ng-pristine.ng-valid table#formTable input[type="text"]{
     color: #000;

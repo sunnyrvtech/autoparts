@@ -131,21 +131,30 @@ class ImportController extends Controller {
                 } else {
                     $products->fill($product_array)->save();
                     $product_details = ProductDetail::where('product_id', $products->id);
-                    $product_details = $product_details->first();
-                    if ($product_details->product_images != null) {
-                        $existing_product_image_array = json_decode($product_details->product_images);
-
-                        if ($existing_product_image_array != '') {
-                            foreach ($existing_product_image_array as $exist_val) {
-                                @unlink(base_path('public/product_images/') . $exist_val);
-                            }
-                        }
-                    }
-
                     $product_images = $this->product_image_upload($row->product_image);
                     $product_detail_array['product_id'] = $products->id;
                     $product_detail_array['product_images'] = $product_images;
-                    $product_details->fill($product_detail_array)->save();
+                    if ($product_details->count()) {
+                        $product_details = $product_details->first();
+                        if ($product_details->product_images != null) {
+                            $existing_product_image_array = json_decode($product_details->product_images);
+
+                            if ($existing_product_image_array != '') {
+                                foreach ($existing_product_image_array as $exist_val) {
+                                    @unlink(base_path('public/product_images/') . $exist_val);
+                                }
+                            }
+                        }
+                        $product_details->fill($product_detail_array)->save();
+                    }else{
+                         ProductDetail::create($product_detail_array);
+                    }
+                    // delete all products category while update product data
+                    ProductCategory::where('product_id', $products->id)->delete();
+                    ProductSubCategory::where('product_id', $products->id)->delete();
+                    
+                    ProductCategory::create(array('product_id' => $products->id, 'category_id' => $sub_category->category_id));
+                    ProductSubCategory::create(array('product_id' => $products->id, 'sub_category_id' => $sub_category->id));
                 }
             }
         });
@@ -303,13 +312,22 @@ class ImportController extends Controller {
                 }
             }
             DB::statement('DELETE FROM products');
+            DB::statement('DELETE FROM product_details');
+            DB::statement('DELETE FROM product_categories');
+            DB::statement('DELETE FROM product_sub_categories');
             DB::statement('DELETE FROM categories');
+            DB::statement('DELETE FROM sub_categories');
+            DB::statement('DELETE FROM vehicle_models');
+            DB::statement('DELETE FROM vehicle_companies');
+
             DB::statement('ALTER TABLE products AUTO_INCREMENT=1');
             DB::statement('ALTER TABLE categories AUTO_INCREMENT=1');
             DB::statement('ALTER TABLE sub_categories AUTO_INCREMENT=1');
             DB::statement('ALTER TABLE product_details AUTO_INCREMENT=1');
             DB::statement('ALTER TABLE product_categories AUTO_INCREMENT=1');
             DB::statement('ALTER TABLE product_sub_categories AUTO_INCREMENT=1');
+            DB::statement('ALTER TABLE vehicle_models AUTO_INCREMENT=1');
+            DB::statement('ALTER TABLE vehicle_companies AUTO_INCREMENT=1');
             Session::flash('success-message', 'All products data deleted successfully !');
         }
     }

@@ -40,7 +40,7 @@
         $('#category-table').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ url('admin/categories') }}",
+            ajax: "{{ route('categories.index') }}",
 //            order: [[ 1, "asc" ]],
             columns: [
                 {data: 'id', name: 'id'},

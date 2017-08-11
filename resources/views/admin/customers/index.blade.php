@@ -33,7 +33,7 @@
         $('#users-table').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ url('admin/customers') }}",
+            ajax: "{{ route('customers.index') }}",
             columns: [
                 {data: 'id', name: 'id'},
                 {data: 'first_name', name: 'first_name'},

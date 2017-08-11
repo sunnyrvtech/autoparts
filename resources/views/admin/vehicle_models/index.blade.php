@@ -29,7 +29,7 @@
         $('#category-table').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ url('admin/vehicle_model') }}",
+            ajax: "{{ route('vehicle_model.index') }}",
             columns: [
                 {data: 'id', name: 'id'},
                 {data: 'name', name: 'name'},

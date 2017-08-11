@@ -36,7 +36,7 @@
         $('#warehouse-table').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ url('admin/warehouses') }}",
+            ajax: "{{ route('warehouses.index') }}",
             columns: [
                 {data: 'id', name: 'id'},
                 {data: 'store_name', name: 'store_name'},
