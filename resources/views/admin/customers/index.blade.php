@@ -30,10 +30,9 @@
 @push('scripts')
 <script>
     $(function () {
-          var oTable = $('#users-table').DataTable({
+        $('#users-table').DataTable({
             processing: true,
             serverSide: true,
-            pageLength: 3,
             ajax: "{{ route('customers.index') }}",
             columns: [
                 {data: 'id', name: 'id'},
@@ -58,14 +57,6 @@
                 }
             ]
         });
-        
-        
-        
-        $("input[type='search']").on('change', function(event) {
-             $('#users-table').dataTable().reload();
-        });
-        
-        
     });
 </script>
 @endpush
