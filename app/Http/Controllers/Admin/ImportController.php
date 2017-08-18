@@ -110,6 +110,7 @@ class ImportController extends Controller {
                     'bracket_style' => empty($row->bracket_style) ? null : trim($row->bracket_style),
                     'lighting_size' => empty($row->lighting_size) ? null : trim($row->lighting_size),
                     'lighting_beam_pattern' => empty($row->lighting_beam_pattern) ? null : trim($row->lighting_beam_pattern),
+                    'lighting_lens_material' => empty($row->lighting_lens_material) ? null : trim($row->lighting_lens_material),
                     'lighting_mount_type' => empty($row->lighting_mount_type) ? null : trim($row->lighting_mount_type),
                     'cooling_fan_type' => empty($row->cooling_fan_type) ? null : trim($row->cooling_fan_type),
                     'radiator_row_count' => empty($row->radiator_row_count) ? null : trim($row->radiator_row_count),
@@ -146,13 +147,13 @@ class ImportController extends Controller {
                             }
                         }
                         $product_details->fill($product_detail_array)->save();
-                    }else{
-                         ProductDetail::create($product_detail_array);
+                    } else {
+                        ProductDetail::create($product_detail_array);
                     }
                     // delete all products category while update product data
                     ProductCategory::where('product_id', $products->id)->delete();
                     ProductSubCategory::where('product_id', $products->id)->delete();
-                    
+
                     ProductCategory::create(array('product_id' => $products->id, 'category_id' => $sub_category->category_id));
                     ProductSubCategory::create(array('product_id' => $products->id, 'sub_category_id' => $sub_category->id));
                 }
@@ -329,6 +330,100 @@ class ImportController extends Controller {
             DB::statement('ALTER TABLE vehicle_models AUTO_INCREMENT=1');
             DB::statement('ALTER TABLE vehicle_companies AUTO_INCREMENT=1');
             Session::flash('success-message', 'All products data deleted successfully !');
+        }
+    }
+
+    /**
+     * function to import product data using csv file.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function exportCsv(Request $request) {
+
+        $take = 10000;
+        $limit = $request->get('export_product');
+        $skip = ($limit == 1) ? 0 : ($limit-1) * $take;
+        $filename = 'product' . $limit;
+
+        $products = Product::take($take)->skip($skip)->orderBy('id','DESC')->get();
+        $export_array = array();
+        if (!empty($products->toArray())) {
+
+            foreach ($products as $key => $value) {
+                $export_array[$key] = array(
+                    'sku' => $value->sku,
+                    'text' => @$value->product_details->text,
+                    'sale_type' => @$value->product_details->sale_type,
+                    'vehicle_make' => @$value->get_vehicle_company->name,
+                    'vehicle_model' => @$value->get_vehicle_model->name,
+                    'vehicle_year' => $value->vehicle_year_from . '-' . $value->vehicle_year_to,
+                    'product_name' => $value->product_name,
+                    'product_long_description' => $value->product_long_description,
+                    'product_short_description' => $value->product_short_description,
+                    'vehicle_fit' => $value->vehicle_fit,
+                    'm_code' => @$value->product_details->m_code,
+                    'class' => @$value->product_details->class,
+                    'part_type' => $value->part_type,
+                    'parse_link' => @$value->product_details->parse_link,
+                    'oem_number' => @$value->product_details->oem_number,
+                    'category' => @$value->product_category->category->name,
+                    'sub_category' => @$value->product_sub_category->get_sub_categories->name,
+                    'certification' => @$value->product_details->certification,
+                    'price' => $value->price,
+                    'special_price' => $value->special_price,
+                    'discount' => $value->discount,
+                    'quantity' => $value->quantity,
+                    'status' => $value->status,
+                    'weight' => $value->weight,
+                    'length' => $value->length,
+                    'width' => $value->width,
+                    'height' => $value->height,
+                    'warranty' => @$value->product_details->warranty,
+                    'brand' => @$value->get_brands->name,
+                    'operation' => $value->operation,
+                    'wattage' => $value->wattage,
+                    'mirror_option' => $value->mirror_option,
+                    'location' => $value->location,
+                    'size' => $value->size,
+                    'material' => $value->material,
+                    'color' => $value->color,
+                    'front_location' => $value->front_location,
+                    'side_location' => $value->side_location,
+                    'includes' => $value->includes,
+                    'design' => $value->design,
+                    'product_line' => $value->product_line,
+                    'meta_title' => @$value->product_details->meta_title,
+                    'meta_description' => @$value->product_details->meta_description,
+                    'meta_keyword' => @$value->product_details->meta_keyword,
+                    'software' => @$value->product_details->software,
+                    'licensed_by' => @$value->product_details->licensed_by,
+                    'car_cover' => @$value->product_details->car_cover,
+                    'kit_includes' => @$value->product_details->kit_includes,
+                    'fender_flare_type' => @$value->product_details->fender_flare_type,
+                    'product_grade' => @$value->product_details->product_grade,
+                    'lighting_bulb_configuration' => @$value->product_details->lighting_bulb_configuration,
+                    'lighting_housing_shape' => @$value->product_details->lighting_housing_shape,
+                    'bracket_style' => @$value->product_details->bracket_style,
+                    'lighting_size' => @$value->product_details->lighting_size,
+                    'lighting_beam_pattern' => @$value->product_details->lighting_beam_pattern,
+                    'lighting_lens_material' => @$value->product_details->lighting_lens_material,
+                    'lighting_mount_type' => @$value->product_details->lighting_mount_type,
+                    'cooling_fan_type' => @$value->product_details->cooling_fan_type,
+                    'radiator_row_count' => @$value->product_details->radiator_row_count,
+                    'oil_plan_capacity' => @$value->product_details->oil_plan_capacity);
+            }
+
+
+            Excel::create($filename, function($excel) use ($export_array) {
+                $excel->sheet('Sheetname', function($sheet) use ($export_array) {
+                    $sheet->fromArray($export_array, null, 'A1', true);
+                });
+            })->download('csv');
+
+            return redirect()->route('products.index')->with('success-message', 'Product export successfully !');
+        } else {
+            return redirect()->route('products.index')->with('error-message', 'No Product found to export !');
         }
     }
 

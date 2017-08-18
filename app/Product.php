@@ -54,6 +54,16 @@ class Product extends Model {
     public function product_category() {
         return $this->belongsTo('App\ProductCategory', 'id','product_id');
     }
+    
+    /**
+     * function to get single subcategory
+     *
+     * @return Response
+     */
+
+    public function product_sub_category() {
+        return $this->belongsTo('App\ProductSubCategory', 'id','product_id');
+    }
 
     /**
      * function to get vehicle company 

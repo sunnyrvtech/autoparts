@@ -33,15 +33,16 @@ class ProductController extends Controller {
     public function index(Request $request) {
         $title = 'Products';
         if ($request->ajax()) {
-            $skip = $request->get('start') != null ? $request->get('start') : 0;
-            $take = $request->get('length') != null ? $request->get('length') : 10;
+           // $skip = $request->get('start') != null ? $request->get('start') : 0;
+           // $take = $request->get('length') != null ? $request->get('length') : 10;
             //$products = Product::skip($skip)->take($take)->get();
-            $products = Product::get();
-            $count = Product::get()->count();
+            $products = Product::all();
+//            $count = Product::get()->count();
             foreach ($products as $key => $value) {
                 $products[$key]['action'] = '<a href="' . route('products.show', $value->id) . '" data-toggle="tooltip" title="update" class="glyphicon glyphicon-edit"></a>&nbsp;&nbsp;<a href="' . route('products.destroy', $value->id) . '" data-toggle="tooltip" title="delete" data-method="delete" class="glyphicon glyphicon-trash deleteRow"></a>';
             }
-            return Datatables::of($products)->setTotalRecords($count)->make(true);
+            return Datatables::of($products)->make(true);
+//            return Datatables::of($products)->setTotalRecords($count)->make(true);
 //            return Datatables::of($products)->with(['recordsTotal' => $count, 'recordsFiltered' => $count, 'start' => 20])->make(true);
         }
         return View::make('admin.products.index', compact('title'));
@@ -72,7 +73,7 @@ class ProductController extends Controller {
             'product_name' => 'required|max:200',
             'price' => 'required|numeric',
             'product_long_description' => 'required',
-            'sku' => 'required|max:50',
+            'sku' => 'required|max:50|unique:products',
             'quantity' => 'required|numeric',
             'status' => 'required',
         ]);
@@ -109,7 +110,8 @@ class ProductController extends Controller {
 
             //insert price based on zones
             if ($request->get('zone_id')[0] != null) {
-                foreach ($data['zone_id'] as $ky => $val) {
+                $zone_ids = array_unique($data['zone_id']);
+                foreach ($zone_ids as $ky => $val) {
                     $region_array = array('product_id' => $products->id, 'zone_id' => $val, 'product_price' => $data['product_price'][$ky]);
                     ProductPriceZone::create($region_array);
                 }
@@ -121,7 +123,7 @@ class ProductController extends Controller {
                 foreach ($request->get('parent_category') as $cat_key => $cat_val) {
                     $parent_category_array[$cat_key] = array('product_id' => $products->id, 'category_id' => $cat_val);
                 }
-                ProductCategory::create($parent_category_array);
+                ProductCategory::insert($parent_category_array);
             }
             //insert sub category details in product category table
             if ($request->get('sub_category') != '') {
@@ -129,7 +131,7 @@ class ProductController extends Controller {
                 foreach ($request->get('sub_category') as $sub_cat_key => $sub_cat_val) {
                     $sub_category_array[$sub_cat_key] = array('product_id' => $products->id, 'sub_category_id' => $sub_cat_val);
                 }
-                ProductSubCategory::create($sub_category_array);
+                ProductSubCategory::insert($sub_category_array);
             }
             //insert sub sub category details in product category table
 //            if ($request->get('sub_sub_category') != '') {
@@ -186,7 +188,7 @@ class ProductController extends Controller {
             'product_name' => 'required|max:200',
             'price' => 'required|numeric',
             'product_long_description' => 'required',
-            'sku' => 'required|max:50',
+            'sku' => 'required|max:50|unique:products,sku,'.$id,
             'quantity' => 'required|numeric',
             'status' => 'required',
         ]);

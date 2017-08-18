@@ -1,19 +1,22 @@
 @extends('admin/layouts.master')
 
 @section('content')
+<style>
+    .alert.alert-warning li {
+        display: inline-block;
+        width: 24%;
+    }
+</style>
 <div class="container-fluid">
     <div class="row form-group">
         <div class="col-md-12">
             <div class="col-md-4">
                 <a href="{{ route('products.create') }}" class="btn btn-primary">Add New</a>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-8">
                 <div class="text-right">
                     <a class="btn btn-success" onclick="$('#deleteProductModal').modal('show');" href="javascript:void(0);" type="button"><i class="glyphicon glyphicon-remove"></i>Delete All Product</a>
-                </div>
-            </div>
-            <div class="col-md-2">
-                <div class="text-right">
+                    <a class="btn btn-warning" onclick="$('#exportProductModal').modal('show');" href="javascript:void(0);" type="button"><i class="glyphicon glyphicon-export"></i>Export Product</a>
                     <a class="browse btn btn-primary" type="button"><i class="glyphicon glyphicon-import"></i>Import Product</a>
                     <input style="display: none;" id="file_type" name="csvFile" class="uploadCsv" type="file">
                 </div>
@@ -22,7 +25,7 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <table class="ui celled table" id="brand-table">
+            <table class="ui celled table" id="product-table">
                 <thead>
                     <tr>
                         <th>Id</th>
@@ -64,11 +67,62 @@
 
         </div>
     </div>
+    <div class="modal fade" id="exportProductModal" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Please choose number below to export product details.</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning" role="alert">
+                        <strong>Note! </strong>It will export 10000 records.For example if you select 2 then it will skip first 10000 and export records from 10001 to 20000 and if you select 3 then it will skip first 20000 records and export record from 20001 to 30000 etc.
+                        <ul>
+                            <li><b>1:</b><spam> 1-10000</spam></li>
+                            <li><b>2:</b><spam> 10001-20000</spam></li>
+                            <li><b>3:</b><spam> 20001-30000</spam></li>
+                            <li><b>4:</b><spam> 30001-40000</spam></li>
+                            <li><b>5:</b><spam> 40001-50000</spam></li>
+                            <li><b>6:</b><spam> 50001-60000</spam></li>
+                            <li><b>7:</b><spam> 60001-70000</spam></li>
+                            <li><b>8:</b><spam> 70001-8000</spam></li>
+                            <li><b>9:</b><spam> 80001-90000</spam></li>
+                            <li><b>10:</b><spam> 90001-100000</spam></li>
+                        </ul>
+                    </div>
+                    <form class="form-horizontal" method="post" action="{{ route('export.csv')}}">
+                        {{ csrf_field()}}
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 col-md-3 control-label" for="start"></label>
+                                        <div class="col-sm-9 col-md-9">
+                                            <select required="" name="export_product" class="form-control">
+                                                <?php for ($i = 1; $i <= 10; $i++) { ?>
+                                                    <option value="{{ $i }}">{{ $i }}</option>
+                                                <?php } ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <button type="submit" class="btn btn-success btn-block">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
 </div>
 @push('scripts')
 <script type="text/javascript">
     $(function () {
-        $('#brand-table').DataTable({
+        $('#product-table').DataTable({
             processing: true,
             serverSide: true,
             ajax: "{{ route('products.index') }}",
