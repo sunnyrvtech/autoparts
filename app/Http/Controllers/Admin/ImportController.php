@@ -346,7 +346,7 @@ class ImportController extends Controller {
         $skip = ($limit == 1) ? 0 : ($limit-1) * $take;
         $filename = 'product' . $limit;
 
-        $products = Product::take($take)->skip($skip)->orderBy('id','DESC')->get();
+        $products = Product::take($take)->skip($skip)->get();
         $export_array = array();
         if (!empty($products->toArray())) {
 
