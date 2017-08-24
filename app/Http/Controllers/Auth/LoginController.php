@@ -71,6 +71,12 @@ use AuthenticatesUsers;
     protected function authenticated($request, $user) {
 
         if ($request->wantsJson()) {
+            
+            if (Auth::check() && Auth::user()->status == 0) {
+                Auth::logout();
+                return response()->json(['error' => "Your account is not activated yet! Please check activation email in your inbox and activate your account."], 401);
+            }
+            
             if (Session::has('cartItem')) { // this is used to save guest user cart data
                 $cart_data = Session::pull('cartItem');
 

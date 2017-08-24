@@ -17,7 +17,7 @@ use Mail;
 class HomeController extends Controller {
 
     public function __construct() {
-        $this->middleware('VerifyLoginStatus', ['only' => 'index']);
+//       $this->middleware('VerifyLoginStatus', ['only' => 'index']);
     }
 
     /**

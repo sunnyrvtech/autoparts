@@ -36,14 +36,31 @@
                         <th>Special Price($)</th>
                         <th>Discount(%)</th>
                         <th>Quantity</th>
-                        <th>Status</th>
                         <th>Created At</th>
                         <th>Updated At</th>
                         <th>Action</th>
                     </tr>
                 </thead>
+                <tbody>
+                    @foreach($products as $key=>$value)
+                    <tr class="odd" role="row">
+                        <td>{{ $value->id }}</td>
+                        <td>{{ $value->product_name }}</td>
+                        <td>{{ $value->sku }}</td>
+                        <td>{{ $value->price }}</td>
+                        <td>{{ $value->special_price }}</td>
+                        <td>{{ $value->discount }}</td>
+                        <td>{{ $value->quantity }}</td>
+                        <td>{{ $value->created_at }}</td>
+                        <td>{{ $value->updated_at }}</td>
+                        <td><a href="{{ route('products.show', $value->id) }}" data-toggle="tooltip" title="update" class="glyphicon glyphicon-edit"></a>&nbsp;&nbsp;<a href="{{ route('products.destroy', $value->id) }}" data-toggle="tooltip" title="delete" data-method="delete" class="glyphicon glyphicon-trash deleteRow"></a></td>
+                    </tr>
+                    @endforeach
+                </tbody>
+                </tbody>
             </table>
         </div>
+        <div class="pagination_main_wrapper">{{ $products->links() }}</div>
     </div>
     <!-- Modal -->
     <div class="modal fade" id="deleteProductModal" role="dialog">
@@ -122,38 +139,38 @@
 @push('scripts')
 <script type="text/javascript">
     $(function () {
-        $('#product-table').DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: "{{ route('products.index') }}",
-//            order: [[ 1, "asc" ]],
-            columns: [
-                {data: 'id', name: 'id'},
-                {data: 'product_name', name: 'product_name'},
-                //  {data: 'product_long_description', name: 'product_long_description'},
-                {data: 'sku', name: 'sku'},
-                {data: 'price', name: 'price'},
-                {data: 'special_price', name: 'special_price'},
-                {data: 'discount', name: 'discount'},
-                {data: 'quantity', name: 'quantity'},
-                {data: 'status', render: function (data, type, row) {
-                        if (data == 1) {
-                            return 'Enabled';
-                        }
-                        return 'Disabled';
-                    }
-
-                },
-                {data: 'created_at', name: 'created_at'},
-                {data: 'updated_at', name: 'updated_at'},
-                {data: 'Action', orderable: false, searchable: false, render: function (data, type, row) {
-                        //console.log(row.id);
-                        return row.action;
-                    }
-
-                }
-            ]
-        });
+//        $('#product-table').DataTable({
+//            processing: true,
+//            serverSide: true,
+//            ajax: "{{ route('products.index') }}",
+////            order: [[ 1, "asc" ]],
+//            columns: [
+//                {data: 'id', name: 'id'},
+//                {data: 'product_name', name: 'product_name'},
+//                //  {data: 'product_long_description', name: 'product_long_description'},
+//                {data: 'sku', name: 'sku'},
+//                {data: 'price', name: 'price'},
+//                {data: 'special_price', name: 'special_price'},
+//                {data: 'discount', name: 'discount'},
+//                {data: 'quantity', name: 'quantity'},
+//                {data: 'status', render: function (data, type, row) {
+//                        if (data == 1) {
+//                            return 'Enabled';
+//                        }
+//                        return 'Disabled';
+//                    }
+//
+//                },
+//                {data: 'created_at', name: 'created_at'},
+//                {data: 'updated_at', name: 'updated_at'},
+//                {data: 'Action', orderable: false, searchable: false, render: function (data, type, row) {
+//                        //console.log(row.id);
+//                        return row.action;
+//                    }
+//
+//                }
+//            ]
+//        });
         $(document).on('change', '.uploadCsv', function (e) {
             $("#loaderOverlay").show();
             var formData = new FormData();
