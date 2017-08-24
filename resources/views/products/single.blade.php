@@ -11,7 +11,7 @@
         </div>
     </section>
     <?php
-    $product_images = json_decode($products->product_details->product_images);
+    $product_images = json_decode(@$products->product_details->product_images);
     ?>
     <div class="row single-pro-wrp">
         <div class="col-md-6 col-sm-6 cal-width1">
