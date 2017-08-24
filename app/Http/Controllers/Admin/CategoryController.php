@@ -66,7 +66,7 @@ class CategoryController extends Controller {
         }
 
         Category::create($data);
-        return Redirect::back()
+        return redirect()->route('categories.index')
                         ->with('success-message', 'Category inserted successfully!');
     }
 
@@ -108,7 +108,7 @@ class CategoryController extends Controller {
         }
         $categories = Category::findOrFail($id);
         $categories->fill($data)->save();
-        return Redirect::back()
+        return redirect()->route('categories.index')
                         ->with('success-message', 'Category updated successfully!');
     }
 

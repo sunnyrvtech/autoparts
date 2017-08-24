@@ -56,7 +56,7 @@ class CustomerController extends Controller {
         $data['password'] = bcrypt($data['password']);
 
         User::create($data);
-        return Redirect::back()
+        return redirect()->route('customers.index')
                         ->with('success-message', 'Customer created successfully!');
     }
 
@@ -90,7 +90,7 @@ class CustomerController extends Controller {
         $users = User::findOrFail($id);
         $users->fill($data)->save();
 
-        return Redirect::back()
+        return redirect()->route('customers.index')
                         ->with('success-message', 'Customer updated successfully!');
     }
 

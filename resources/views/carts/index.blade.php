@@ -14,6 +14,7 @@
         @if(!empty($cart_data))
         
         <form class="form-horizontal" action="{{ route('checkout.store') }}" method="post">
+            {{ csrf_field() }}
             <div class="cart-list material" elevation="1">
                 <div class="col-12">
                     <div class="table-responsive order-items">

@@ -14,6 +14,7 @@ use App\Category;
 use App\SubCategory;
 use App\ProductCategory;
 use App\ProductSubCategory;
+use App\ProductPriceZone;
 use Redirect;
 use Session;
 use Excel;
@@ -128,6 +129,11 @@ class ImportController extends Controller {
                         ProductDetail::create($product_detail_array);
                         ProductCategory::create(array('product_id' => $product->id, 'category_id' => $sub_category->category_id));
                         ProductSubCategory::create(array('product_id' => $product->id, 'sub_category_id' => $sub_category->id));
+//                        if (!empty($row->product_region)) {
+//                            $zone_ids = array_unique(json_decode($row->product_region));
+//                            $product_prices = json_decode($row->product_price);
+//                            $this->addZonePrice($products->id, $zone_ids, $product_prices);
+//                        }
                     }
                 } else {
                     $products->fill($product_array)->save();
@@ -156,10 +162,37 @@ class ImportController extends Controller {
 
                     ProductCategory::create(array('product_id' => $products->id, 'category_id' => $sub_category->category_id));
                     ProductSubCategory::create(array('product_id' => $products->id, 'sub_category_id' => $sub_category->id));
+//                    if (!empty($row->product_region)) {
+//                        $zone_ids = array_unique(json_decode($row->product_region));
+//                        $product_prices = json_decode($row->product_price);
+//                        $this->addZonePrice($products->id, $zone_ids, $product_prices);
+//                    }
                 }
             }
         });
         Session::flash('success-message', 'Data import successfully !');
+    }
+
+    public function addZonePrice($product_id, $zone_ids, $product_prices) {
+
+        $old_price_data = ProductPriceZone::where('product_id', $product_id)->pluck('zone_id')->toArray();
+
+        // this is used to check if old region is deleted while update
+        $check_del_zone_price = array_diff($old_price_data, $zone_ids);
+        if ($check_del_zone_price) {
+            ProductPriceZone::whereIn('zone_id', $check_del_zone_price)->delete();
+        }
+        foreach ($zone_ids as $ky => $val) {
+            $product_price_zone = ProductPriceZone::where([['product_id', '=', $product_id], ['zone_id', '=', $val]]);
+            if ($product_price_zone->count()) {
+                $product_price_zone = $product_price_zone->first();
+                $product_price_zone->fill(array('product_price' => $product_prices[$ky]))->save();
+            } else {
+                $region_array = array('product_id' => $product_id, 'zone_id' => $val, 'product_price' => $product_prices[$ky]);
+                ProductPriceZone::create($region_array);
+            }
+        }
+        return true;
     }
 
     /**
@@ -343,7 +376,7 @@ class ImportController extends Controller {
 
         $take = 10000;
         $limit = $request->get('export_product');
-        $skip = ($limit == 1) ? 0 : ($limit-1) * $take;
+        $skip = ($limit == 1) ? 0 : ($limit - 1) * $take;
         $filename = 'product' . $limit;
 
         $products = Product::take($take)->skip($skip)->get();
