@@ -178,7 +178,7 @@
                     <div class="slickSlider-con slickSlider"  style="overflow: initial; display: block;">
                         @foreach($latest_product as $value)
                         <?php
-                         $product_images = json_decode($value->product_details->product_images);
+                         $product_images = json_decode(@$value->product_details->product_images);
                         ?>
                         <div class="thumbnail-wrapper">
                             <a class="thumbnail" href="{{ URL('products').'/'.$value->product_slug }}">
