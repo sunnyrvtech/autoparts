@@ -116,7 +116,7 @@
                                     <div class="form-group">
                                         <label class="col-sm-3 col-md-3 control-label" for="start"></label>
                                         <div class="col-sm-9 col-md-9">
-                                            <select required="" name="export_product" class="form-control">
+                                            <select required="" name="export_product" id="export_product" class="form-control">
                                                 <?php for ($i = 1; $i <= 10; $i++) { ?>
                                                     <option value="{{ $i }}">{{ $i }}</option>
                                                 <?php } ?>
@@ -125,7 +125,7 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
-                                    <button type="button" class="btn btn-success btn-block" id="export_product">Submit</button>
+                                    <button type="button" class="btn btn-success btn-block" id="export_product_data">Submit</button>
                                 </div>
                             </div>
                         </div>
@@ -196,12 +196,12 @@
             return false;
         });
 
-        $(document).on('click', '#export_product', function (e) {
+        $(document).on('click', '#export_product_data', function (e) {
             $("#loaderOverlay").show();
             $.ajax({
                 url: "{{ route('export.csv') }}",
                 type: 'POST',
-                data: {export_product: $(this).val()},
+                data: {export_product: $("#export_product").val()},
                 success: function (response) {
                     $("#loaderOverlay").hide();
                     var a = document.createElement("a");
