@@ -448,15 +448,20 @@ class ImportController extends Controller {
             }
 
 
-            Excel::create($filename, function($excel) use ($export_array) {
-                $excel->sheet('Sheetname', function($sheet) use ($export_array) {
-                    $sheet->fromArray($export_array, null, 'A1', true);
-                });
-            })->download('csv');
-
-            return redirect()->route('products.index')->with('success-message', 'Product export successfully !');
+            $myFile = Excel::create($filename, function($excel) use ($export_array) {
+                        $excel->sheet('Sheetname', function($sheet) use ($export_array) {
+                            $sheet->fromArray($export_array, null, 'A1', true);
+                        });
+                    });
+            $myFile = $myFile->string('csv'); //change csv for the format you want, default is xls
+            $response = array(
+                'name' => $filename . '.' . 'csv', //no extention needed
+                'file' => "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64," . base64_encode($myFile) //mime type of used format
+            );
+            return response()->json($response);
+            //    return redirect()->route('products.index')->with('success-message', 'Product export successfully !');
         } else {
-            return redirect()->route('products.index')->with('error-message', 'No Product found to export !');
+            return response()->json('No Product found to export !', 401);
         }
     }
 

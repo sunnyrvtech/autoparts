@@ -108,7 +108,7 @@
                             <li><b>10:</b><spam> 90001-100000</spam></li>
                         </ul>
                     </div>
-                    <form class="form-horizontal" method="post" action="{{ route('export.csv')}}">
+                    <form class="form-horizontal" method="post" action="javascript:void(0);">
                         {{ csrf_field()}}
                         <div class="row">
                             <div class="col-lg-12">
@@ -125,7 +125,7 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
-                                    <button type="submit" class="btn btn-success btn-block">Submit</button>
+                                    <button type="button" class="btn btn-success btn-block" id="export_product">Submit</button>
                                 </div>
                             </div>
                         </div>
@@ -196,6 +196,29 @@
             return false;
         });
 
+        $(document).on('click', '#export_product', function (e) {
+            $("#loaderOverlay").show();
+            $.ajax({
+                url: "{{ route('export.csv') }}",
+                type: 'POST',
+                data: {export_product: $(this).val()},
+                success: function (response) {
+                    $("#loaderOverlay").hide();
+                    var a = document.createElement("a");
+                    a.href = response.file;
+                    a.download = response.name;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    $("#exportProductModal").modal('hide');
+                },
+                error: function (response) {
+                    $("#loaderOverlay").hide();
+                   alert(response.responseText);
+                }
+            });
+        });
+
         $(document).on('click', '#deleteProductData', function (e) {
             $("#loaderOverlay").show();
             $.ajax({
@@ -204,7 +227,7 @@
                 data: {'method': 'delete_product_data'},
                 success: function (data) {
                     $("#loaderOverlay").hide();
-                    $('#deleteProductModal').modal('hide')
+                    $('#deleteProductModal').modal('hide');
                     window.location.reload();
                 },
                 error: function (error) {
