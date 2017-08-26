@@ -98,7 +98,7 @@ use RegistersUsers;
         ]);
 
         Mail::send('auth.emails.activated', array('link' => route('account.activate', $code), 'username' => $data['first_name'] . ' ' . $data['last_name']), function($message) use ($data) {
-            $message->from('test4rvtech@gmail.com', " Welcome To Autolighthouse");
+            $message->from('jerhica.pe@gmail.com', " Welcome To Autolighthouse");
             $message->to($data['email'], $data['first_name'])->subject('Welcome to Autolighthouse!');
         });
         return response()->json(['success' => true, 'messages' => "Your account has been created! We have sent you an email to activate your account."]);
