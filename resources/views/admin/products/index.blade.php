@@ -108,7 +108,7 @@
                             <li><b>10:</b><spam> 90001-100000</spam></li>
                         </ul>
                     </div>
-                    <form class="form-horizontal" method="post" action="javascript:void(0);">
+                    <form class="form-horizontal" method="post" target="_blank" action="{{ route('export.csv') }}">
                         {{ csrf_field()}}
                         <div class="row">
                             <div class="col-lg-12">
@@ -125,7 +125,7 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
-                                    <button type="button" class="btn btn-success btn-block" id="export_product_data">Submit</button>
+                                    <button type="submit" class="btn btn-success btn-block">Submit</button>
                                 </div>
                             </div>
                         </div>

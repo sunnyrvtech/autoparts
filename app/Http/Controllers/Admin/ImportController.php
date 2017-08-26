@@ -380,7 +380,7 @@ class ImportController extends Controller {
         $filename = 'product' . $limit;
         $products = Product::take($take)->skip($skip)->get();
         $export_array = array();
-        if (!empty($products->toArray())) {
+        if (empty($products->toArray())) {
 
             foreach ($products as $key => $value) {
                 $export_array[$key] = array(
@@ -451,16 +451,17 @@ class ImportController extends Controller {
                         $excel->sheet('Sheetname', function($sheet) use ($export_array) {
                             $sheet->fromArray($export_array, null, 'A1', true);
                         });
-                    });
-            $myFile = $myFile->string('csv'); //change csv for the format you want, default is xls
-            $response = array(
-                'name' => $filename . '.' . 'csv', //no extention needed
-                'file' => "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64," . base64_encode($myFile) //mime type of used format
-            );
-            return response()->json($response);
-            //    return redirect()->route('products.index')->with('success-message', 'Product export successfully !');
+                    })->download('csv');
+//            $myFile = $myFile->string('csv'); //change csv for the format you want, default is xls
+//            $response = array(
+//                'name' => $filename . '.' . 'csv', //no extention needed
+//                'file' => "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64," . base64_encode($myFile) //mime type of used format
+//            );
+//            return response()->json($response);
+                return redirect()->route('products.index')->with('success-message', 'Product export successfully !');
         } else {
-            return response()->json('No Product found to export !', 401);
+            return redirect()->route('products.index')->with('error-message', 'No Product found to export !');
+//            return response()->json('No Product found to export !', 401);
         }
     }
 
