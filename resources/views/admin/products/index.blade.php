@@ -81,7 +81,6 @@
                     <button type="button" class="btn btn-default" onclick="$('#deleteProductModal').modal('hide');">No</button>
                 </div>
             </div>
-
         </div>
     </div>
     <div class="modal fade" id="exportProductModal" role="dialog">
@@ -103,9 +102,7 @@
                             <li><b>5:</b><spam> 40001-50000</spam></li>
                             <li><b>6:</b><spam> 50001-60000</spam></li>
                             <li><b>7:</b><spam> 60001-70000</spam></li>
-                            <li><b>8:</b><spam> 70001-8000</spam></li>
-                            <li><b>9:</b><spam> 80001-90000</spam></li>
-                            <li><b>10:</b><spam> 90001-100000</spam></li>
+                            <li><b>8:</b><spam> many-more...</spam></li>
                         </ul>
                     </div>
                     <form class="form-horizontal" method="post" target="_blank" action="{{ route('export.csv') }}">
@@ -117,7 +114,9 @@
                                         <label class="col-sm-3 col-md-3 control-label" for="start"></label>
                                         <div class="col-sm-9 col-md-9">
                                             <select required="" name="export_product" id="export_product" class="form-control">
-                                                <?php for ($i = 1; $i <= 10; $i++) { ?>
+                                                <?php 
+                                                $total_records = ($products->toArray()['total']/10000)+1;
+                                                for ($i = 1; $i <= $total_records; $i++) { ?>
                                                     <option value="{{ $i }}">{{ $i }}</option>
                                                 <?php } ?>
                                             </select>
