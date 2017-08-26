@@ -380,7 +380,7 @@ class ImportController extends Controller {
         $filename = 'product' . $limit;
         $products = Product::take($take)->skip($skip)->get();
         $export_array = array();
-        if (empty($products->toArray())) {
+        if (!empty($products->toArray())) {
 
             foreach ($products as $key => $value) {
                 $export_array[$key] = array(
