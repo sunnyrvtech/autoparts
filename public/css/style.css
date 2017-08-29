@@ -1300,7 +1300,7 @@ form.subscription-form .email-field span { color: red ;}
 .year-filter-dropdown { position: relative;top: -100px;padding: 10px; }
 .year-filter-dropdown .btn-group { margin-left: 1em; }
 #content .order-container .mobile-carts-items {display: none;padding-left: 15px;padding-right: 15px; }
-section.scrollActive { position: fixed;width: 100%;z-index: 999999; }
+section.scrollActive { position: fixed;width: 100%;z-index: 999; }
 .scrollActive .navbar-static-top { display: none; }
 #products-content-area .item.grid-group-item .list-wrp.grid-wrp { background: rgb(255, 255, 255) none repeat scroll 0 0;border: 1px solid rgb(221, 221, 221);margin-bottom: 20px;min-height: 465px;padding: 15px;position: relative; }
 #products-content-area .item.list-group-item { background: rgba(0, 0, 0, 0) none repeat scroll 0 0;border: medium none;float: none;padding: 15px;width: 100%; }

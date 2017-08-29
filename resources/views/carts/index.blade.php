@@ -13,7 +13,7 @@
     <div id="checkout-final-con" class="order-container">
         @if(!empty($cart_data))
         
-        <form class="form-horizontal" action="{{ route('checkout.store') }}" method="post">
+        <form id="paymentForm" class="form-horizontal" action="{{ route('checkout.store') }}" method="post">
             {{ csrf_field() }}
             <div class="cart-list material" elevation="1">
                 <div class="col-12">
@@ -320,7 +320,7 @@
                                      <input class="form-control" id="cardCvv" name="cardCvv" required="" type="tel">
                                 </div>
                             </div>
-                            <button class="btn btn-lg am-orange pull-right" type="submit"> 
+                            <button class="btn btn-lg am-orange pull-right" id="paymentSubmit" type="submit"> 
                                 <!--<i class="glyphicon glyphicon-repeat gly-spin"></i>-->
                                 <span class="place-text">Place Order</span>
                                 <!--<span class="placing-text">Placing Your Order!</span>-->
@@ -377,6 +377,16 @@
               e.preventDefault();
               var ship_method = $("#changeShippingMethod").val();
               angular.element(this).scope().get_payment_form(ship_method);
+       });
+       
+       $("#paymentSubmit").click(function(){
+        var $myForm = $('#paymentForm');
+           if($myForm[0].checkValidity()) {
+                $(this).prop('disabled', true);
+                var scope = angular.element($("#loaderOverlay")).scope();
+                scope.loading = true;
+                angular.element($("#loaderOverlay")).scope().$apply();
+            }
        });
     });
 </script>
