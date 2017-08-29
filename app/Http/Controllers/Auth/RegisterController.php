@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Mail;
+use Session;
 use View;
 
 class RegisterController extends Controller {
@@ -101,6 +102,7 @@ use RegistersUsers;
             $message->from('jerhica.pe@gmail.com', " Welcome To Autolighthouse");
             $message->to($data['email'], $data['first_name'])->subject('Welcome to Autolighthouse!');
         });
+        Session::flash('success-message', 'Your account has been created! We have sent you an email to activate your account.');
         return response()->json(['success' => true, 'messages' => "Your account has been created! We have sent you an email to activate your account."]);
     }
 

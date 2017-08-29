@@ -14,6 +14,7 @@ use App\Order;
 use Auth;
 use Redirect;
 use View;
+use Session;
 use Hash;
 
 class AccountController extends Controller {
@@ -119,6 +120,9 @@ class AccountController extends Controller {
             ShippingAddress::create($data);
             BillingAddress::create($data);   // billing address same as shipping address when user enter first time
         }
+        if ($intented == 'cart') {
+            Session::flash('success-message', 'Shipping address updated successfully.');
+        }
         return response()->json(['success' => true, 'intended' => $intented, 'messages' => "Shipping address updated successfully."]);
     }
 
@@ -155,6 +159,7 @@ class AccountController extends Controller {
             BillingAddress::create($data);
             ShippingAddress::create($data); // billing address same as shipping address when user enter first time
         }
+        //Session::flash('success-message', 'Billing address updated successfully.');
         return response()->json(['success' => true, 'messages' => "Billing address updated successfully."]);
     }
 

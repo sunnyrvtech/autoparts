@@ -12,6 +12,7 @@ use App\OrderDetail;
 use App\Product;
 use App\CoupanCode;
 use App\CoupanUsage;
+use App\TaxRate;
 use Auth;
 use App\WarehouseStore;
 use Mail;
@@ -137,15 +138,23 @@ class PaymentController extends Controller {
                     // ->setTax(0.3)
                     ->setPrice($item_price / $value->quantity);
         }
-
-        $total_cart_price = $sub_total + $shipping_price;
+        
+        $regrex = '"([^"]*)' . $shipping_address->state_id . '([^"]*)"';
+        $tax_price = TaxRate::Where('country_id',$shipping_address->country_id)->whereRaw("state_id REGEXP '" . $regrex . "'")->first(array('price'));        
+        if($tax_price){
+            $tax_price = $tax_price->price;
+        }else{
+            $tax_price = 0.00;
+        }
+        
+        $total_cart_price = $sub_total + $shipping_price + $tax_price;
 
         $itemList = Paypalpayment::itemList();
         $itemList->setItems($item);
 
         $details = Paypalpayment::details();
         $details->setShipping($shipping_price)
-                //->setTax("1.3")
+                ->setTax($tax_price)
                 //total of items prices
                 ->setSubtotal($sub_total);
 
@@ -207,6 +216,7 @@ class PaymentController extends Controller {
             'transaction_id' => $payment->id,
             'total_price' => $payment->transactions[0]->amount->total,
             'ship_price' => $payment->transactions[0]->amount->details->shipping,
+            'tax_rate' => $payment->transactions[0]->amount->details->tax,
             'order_status' => 'processing',
             'created_at' => date('Y-m-d H:i:s', strtotime($payment->create_time))
         );
@@ -233,6 +243,7 @@ class PaymentController extends Controller {
             'discount_status'=> $discount_status,
             'transaction_id' => $orders->id,
             'shipping_price' => $payment->transactions[0]->amount->details->shipping,
+            'tax_rate' => $payment->transactions[0]->amount->details->tax,
             'order_time' => date('M d,Y H:i:s A', strtotime($payment->create_time))
         );
         if ($orders) {

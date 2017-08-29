@@ -100,7 +100,7 @@
                                         <strong>Please select quantity</strong>
                                     </span> 
                                     <label class="control-label" for="product-add-to-cart-quantity">Quantity:</label>
-                                    <input size="1" ng-model="cart.quantity" class="form-control" name="quantity" required="">
+                                    <input size="1" ng-model="cart.quantity" ng-init="cart.quantity=1" class="form-control" name="quantity" required="">
                                     <button class="btn am-orange" ng-click="submitted=true" type="submit" value="submit">
                                         Add To Cart <span class="glyphicon glyphicon-shopping-cart"></span>
                                     </button>

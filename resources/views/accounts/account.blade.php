@@ -124,12 +124,17 @@
                                         <input type="text" name="address2" ng-model="shipping.address2" ng-init="shipping.address2='{{ @$shipping_address->address2 }}'" class="form-control" placeholder="Address2">
                                     </div>
                                 </div>
-                                <div class="form-group" ng-class="{ 'has-error' : shippingForm.city.$invalid && !shippingForm.city.$pristine }">
-                                    <label class="col-sm-3 col-md-3 control-label" for="city">City:</label>
-                                    <div class="col-sm-9 col-md-9">
-                                        <input type="text" name="city"  ng-required="true" ng-model="shipping.city" ng-init="shipping.city='{{ @$shipping_address->city }}'" class="form-control" placeholder="City">
-                                        <span ng-show="shippingForm.city.$invalid && !shippingForm.city.$pristine" class="help-block">
-                                            <strong>Please select city.</strong>
+                                <div class="form-group" ng-class="{ 'has-error' : shippingForm.country_id.$invalid && !shippingForm.country_id.$pristine }">
+                                    <label class="col-sm-3 col-md-3 control-label" for="country_id">Country:</label>
+                                    <div class="col-sm-9 col-md-9" ng-init="getState(<?php echo isset($shipping_address->country_id)?$shipping_address->country_id:231 ?>,'states1')">
+                                        <select name="country_id" id="country_id" ng-init="shipping.country_id='{{$shipping_address->country_id or 231}}'" required="" ng-model="shipping.country_id" ng-change="getState(shipping.country_id,'states1')" class="form-control">
+                                            <option value="">Please select country</option>
+                                            @foreach($countries as $val)
+                                            <option value="{{ $val->id }}">{{ $val->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        <span ng-show="shippingForm.country_id.$invalid && !shippingForm.country_id.$pristine" class="help-block">
+                                            <strong>Please select country.</strong>
                                         </span> 
                                     </div>
                                 </div>
@@ -144,17 +149,12 @@
                                         </span> 
                                     </div>
                                 </div>
-                                <div class="form-group" ng-class="{ 'has-error' : shippingForm.country_id.$invalid && !shippingForm.country_id.$pristine }">
-                                    <label class="col-sm-3 col-md-3 control-label" for="country_id">Country:</label>
-                                    <div class="col-sm-9 col-md-9" ng-init="getState(<?php echo isset($shipping_address->country_id)?$shipping_address->country_id:'undefined' ?>,'states1')">
-                                        <select name="country_id" id="country_id" ng-init="shipping.country_id='{{@$shipping_address->country_id}}'" required="" ng-model="shipping.country_id" ng-change="getState(shipping.country_id,'states1')" class="form-control">
-                                            <option value="">Please select country</option>
-                                            @foreach($countries as $val)
-                                            <option value="{{ $val->id }}">{{ $val->name }}</option>
-                                            @endforeach
-                                        </select>
-                                        <span ng-show="shippingForm.country_id.$invalid && !shippingForm.country_id.$pristine" class="help-block">
-                                            <strong>Please select country.</strong>
+                                <div class="form-group" ng-class="{ 'has-error' : shippingForm.city.$invalid && !shippingForm.city.$pristine }">
+                                    <label class="col-sm-3 col-md-3 control-label" for="city">City:</label>
+                                    <div class="col-sm-9 col-md-9">
+                                        <input type="text" name="city"  ng-required="true" ng-model="shipping.city" ng-init="shipping.city='{{ @$shipping_address->city }}'" class="form-control" placeholder="City">
+                                        <span ng-show="shippingForm.city.$invalid && !shippingForm.city.$pristine" class="help-block">
+                                            <strong>Please select city.</strong>
                                         </span> 
                                     </div>
                                 </div>
@@ -213,12 +213,17 @@
                                         <input type="text" name="address2" ng-model="billing.address2" ng-init="billing.address2='{{ @$billing_address->address2 }}'" class="form-control" placeholder="Address2">
                                     </div>
                                 </div>
-                                <div class="form-group" ng-class="{ 'has-error' : billingForm.city.$invalid && !billingForm.city.$pristine }">
-                                    <label class="col-sm-3 col-md-3 control-label" for="city">City:</label>
-                                    <div class="col-sm-9 col-md-9">
-                                        <input type="text" name="city"  ng-required="true" ng-model="billing.city" ng-init="billing.city='{{ @$billing_address->city }}'" class="form-control" placeholder="City">
-                                        <span ng-show="billingForm.city.$invalid && !billingForm.city.$pristine" class="help-block">
-                                            <strong>Please select city.</strong>
+                                <div class="form-group" ng-class="{ 'has-error' : billingForm.country_id.$invalid && !billingForm.country_id.$pristine }">
+                                    <label class="col-sm-3 col-md-3 control-label" for="country_id">Country:</label>
+                                    <div class="col-sm-9 col-md-9" ng-init="getState(<?php echo isset($billing_address->country_id)?$billing_address->country_id:'231' ?>,'states2')">
+                                        <select name="country_id" id="country_id" ng-init="billing.country_id='{{$billing_address->country_id or 231}}'" required="" ng-model="billing.country_id" ng-change="getState(billing.country_id)" class="form-control">
+                                            <option value="">Please select country</option>
+                                            @foreach($countries as $val)
+                                            <option value="{{ $val->id }}">{{ $val->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        <span ng-show="billingForm.country_id.$invalid && !billingForm.country_id.$pristine" class="help-block">
+                                            <strong>Please select country.</strong>
                                         </span> 
                                     </div>
                                 </div>
@@ -233,17 +238,12 @@
                                         </span> 
                                     </div>
                                 </div>
-                                <div class="form-group" ng-class="{ 'has-error' : billingForm.country_id.$invalid && !billingForm.country_id.$pristine }">
-                                    <label class="col-sm-3 col-md-3 control-label" for="country_id">Country:</label>
-                                    <div class="col-sm-9 col-md-9" ng-init="getState(<?php echo isset($billing_address->country_id)?$billing_address->country_id:'undefined' ?>,'states2')">
-                                        <select name="country_id" id="country_id" ng-init="billing.country_id='{{@$billing_address->country_id}}'" required="" ng-model="billing.country_id" ng-change="getState(billing.country_id)" class="form-control">
-                                            <option value="">Please select country</option>
-                                            @foreach($countries as $val)
-                                            <option value="{{ $val->id }}">{{ $val->name }}</option>
-                                            @endforeach
-                                        </select>
-                                        <span ng-show="billingForm.country_id.$invalid && !billingForm.country_id.$pristine" class="help-block">
-                                            <strong>Please select country.</strong>
+                                <div class="form-group" ng-class="{ 'has-error' : billingForm.city.$invalid && !billingForm.city.$pristine }">
+                                    <label class="col-sm-3 col-md-3 control-label" for="city">City:</label>
+                                    <div class="col-sm-9 col-md-9">
+                                        <input type="text" name="city"  ng-required="true" ng-model="billing.city" ng-init="billing.city='{{ @$billing_address->city }}'" class="form-control" placeholder="City">
+                                        <span ng-show="billingForm.city.$invalid && !billingForm.city.$pristine" class="help-block">
+                                            <strong>Please select city.</strong>
                                         </span> 
                                     </div>
                                 </div>
@@ -370,6 +370,14 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6 col-sm-6 col-xs-6">
+                                                <label>Tax:</label>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6 col-xs-6 text-right">
+                                                <span>${{ $order_details->tax_rate or '0.00' }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 col-sm-6 col-xs-6">
                                                 <label>Shipping & Handling:</label>
                                             </div>
                                             <div class="col-md-6 col-sm-6 col-xs-6 text-right">
@@ -381,7 +389,7 @@
                                                 <label>Total:</label>
                                             </div>
                                             <div class="col-md-6 col-sm-6 col-xs-6 text-right">
-                                                <span class="price">${{ number_format($sub_total+$order_details->ship_price,2) }}</span>
+                                                <span class="price">${{ number_format($sub_total+$order_details->ship_price+$order_details->tax_rate,2) }}</span>
                                             </div>
                                         </div>
                                     </div>

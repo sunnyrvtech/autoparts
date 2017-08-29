@@ -360,6 +360,14 @@
                                                                                         </tr>
                                                                                         <tr>
                                                                                             <td>
+                                                                                                <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:right;">Tax</h3>
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:right;">${{ !empty($transaction_details['tax_rate'])?$transaction_details['tax_rate']:'0.00' }}</h3>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <td>
                                                                                                 <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:right;">Shipping & Handling</h3>
                                                                                             </td>
                                                                                             <td>
@@ -371,7 +379,7 @@
                                                                                                 <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:right;">Grand Total</h3>
                                                                                             </td>
                                                                                             <td>
-                                                                                                <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:right;">${{ number_format($sub_total+$transaction_details['shipping_price'],2) }}</h3>
+                                                                                                <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:right;">${{ number_format($sub_total+$transaction_details['shipping_price']+$transaction_details['tax_rate'],2) }}</h3>
                                                                                             </td>
                                                                                         </tr>
                                                                                     </table>

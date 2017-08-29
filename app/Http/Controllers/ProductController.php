@@ -13,6 +13,7 @@ use App\ShippingRate;
 use App\SubCategory;
 use App\CoupanCode;
 use App\CoupanUsage;
+use App\TaxRate;
 use App\ShippingAddress;
 use App\ProductSubCategory;
 use Session;
@@ -95,20 +96,20 @@ class ProductController extends Controller {
         } else {
             $cart_data = array();
         }
-        
+
         // this code is used to verify coupan code and allow discount 
         if ($offer_code != null) {
             $coupan_code = CoupanCode::Where(['code' => $offer_code, 'status' => 1])->first();
             // this is used to check if the request is ajax json
             if ($request->wantsJson()) {
                 if ($coupan_code) {
-                    $check_usage = CoupanUsage::Where([['coupan_id','=',$coupan_code->id],['user_id','=',Auth::id()],['usage','>=',$coupan_code->usage]])->first();
+                    $check_usage = CoupanUsage::Where([['coupan_id', '=', $coupan_code->id], ['user_id', '=', Auth::id()], ['usage', '>=', $coupan_code->usage]])->first();
                     $current_date = strtotime(Carbon::now());
                     if (strtotime($coupan_code->expiration_date) < $current_date) {
                         return response()->json(array('error' => 'Sorry,this coupan code has neen expired!'), 401);
                     } else if ($check_usage) {
                         return response()->json(array('error' => 'Sorry,You have exceed the coupan code usage limit!'), 401);
-                    }else if($discount ==''){
+                    } else if ($discount == '') {
                         return response()->json(array('error' => 'Sorry discount not available for these products!'), 401);
                     }
                     $discount_status = true;
@@ -144,8 +145,13 @@ class ProductController extends Controller {
                 $shipping_price = ShippingRate::where('country_id', $shipping_address->country_id)->max('price');
             }
         }
+
+        $regrex = '"([^"]*)' . $shipping_address->state_id . '([^"]*)"';
+        $tax_price = TaxRate::Where('country_id',$shipping_address->country_id)->whereRaw("state_id REGEXP '" . $regrex . "'")->first(array('price'));        
+        
         $other_cart_data = array(
             'shipping_price' => $shipping_price,
+            'tax_price' => $tax_price?$tax_price->price:0,
             'method_name' => $method_name,
             'discount_status' => $discount_status,
             'discount_code' => $offer_code

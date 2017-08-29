@@ -90,37 +90,37 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
                 });
             }
         }
-        
+
         $scope.submitZipRegion = function (isValid) {
             if (isValid) {
-                
-                $.getJSON('http://maps.googleapis.com/maps/api/geocode/json?address='+$scope.zipCode+'&sensor=true', function(data) {
-                        //console.log(data.results[0]);
-                        if(data.status != "ZERO_RESULTS"){
-                            for (var i = 0; i < data.results[0].address_components.length; i++) {
-                                var addr = data.results[0].address_components[i];
-                                if(addr.types[0] == ['administrative_area_level_1']){
-                                    $http({
-                                        method: 'POST',
-                                        url: BaseUrl + '/localZone',
-                                        data: 'address=' + addr.short_name,
-                                            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-                                        }).then(function (data, status, headers, config) {
-                                            localStorage.setItem("checkZipModal",true);
-                                            window.location.reload();
-                                        }, function errorCallback(data) {
 
-                                        });
-                                }
+                $.getJSON('http://maps.googleapis.com/maps/api/geocode/json?address=' + $scope.zipCode + '&sensor=true', function (data) {
+                    //console.log(data.results[0]);
+                    if (data.status != "ZERO_RESULTS") {
+                        for (var i = 0; i < data.results[0].address_components.length; i++) {
+                            var addr = data.results[0].address_components[i];
+                            if (addr.types[0] == ['administrative_area_level_1']) {
+                                $http({
+                                    method: 'POST',
+                                    url: BaseUrl + '/localZone',
+                                    data: 'address=' + addr.short_name,
+                                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                                }).then(function (data, status, headers, config) {
+                                    localStorage.setItem("checkZipModal", true);
+                                    window.location.reload();
+                                }, function errorCallback(data) {
+
+                                });
                             }
-                        }else{
-                            localStorage.setItem("checkZipModal",true);
-                            window.location.reload();
                         }
+                    } else {
+                        localStorage.setItem("checkZipModal", true);
+                        window.location.reload();
+                    }
                 });
             }
         }
-        
+
 
         $scope.submitRegister = function (isValid) {
             $scope.alert_loading = false;
@@ -140,6 +140,10 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
                     $scope.alert_messages = data.data.messages;
                     $scope.alertHide();
                     $(window).scrollTop(0);
+
+                    $timeout(function () {
+                        window.location = window.location = BaseUrl + "/";
+                    }, 200);
                     // $scope.push(data.data);
 //                $scope.loading = false;
 
@@ -334,9 +338,14 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
                     $scope.alertHide();
                     $(window).scrollTop(0);
                     $scope.loading = false;
-                    $timeout(function () {
-                        window.location = BaseUrl + "/" + data.data.intended;
-                    }, 200);
+                    if (data.data.intended == "cart") {
+                        $timeout(function () {
+                            window.location = BaseUrl + "/" + data.data.intended;
+                        }, 200);
+                    }else{
+                        $('a[href="#shipping-address"').removeClass('active');
+                        $('a[href="#billing-address"').tab('show').addClass('active');
+                    }
 
                 }, function errorCallback(data) {
                     $scope.loading = false;
@@ -350,9 +359,9 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
                 });
             }
         }
-        
+
         $scope.submitContact = function (isValid) {
-      
+
             var data = $scope.contact;
             // check to make sure the form is completely valid
             if (isValid) {
@@ -400,9 +409,9 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
                     $scope.alertHide();
                     $(window).scrollTop(0);
                     $scope.loading = false;
-                    $timeout(function () {
-                        window.location = BaseUrl + "/my-account";
-                    }, 200);
+//                    $timeout(function () {
+//                        window.location = BaseUrl + "/my-account";
+//                    }, 200);
 
                 }, function errorCallback(data) {
                     $scope.loading = false;
@@ -500,13 +509,13 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
             $("#account_cart_area").show();
         }
 
-        $scope.changeShippingMethod = function (ship_method,offer_code) {
+        $scope.changeShippingMethod = function (ship_method, offer_code) {
             if (ship_method != '') {
                 $scope.loading = true;
                 $http({
                     method: 'GET',
                     url: BaseUrl + '/cart',
-                    params: {shipping_method: ship_method,offer_code: offer_code},
+                    params: {shipping_method: ship_method, offer_code: offer_code},
                     headers: {'Content-Type': 'application/json'}
                 }).then(function (data, status, headers, config) {
                     $scope.loading = false;
@@ -516,14 +525,14 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
                 });
             }
         }
-        
-        $scope.submitDiscountCode = function (ship_method,offer_code) {
+
+        $scope.submitDiscountCode = function (ship_method, offer_code) {
             if (offer_code != '') {
                 $scope.loading = true;
                 $http({
                     method: 'GET',
                     url: BaseUrl + '/cart',
-                    params: {shipping_method: ship_method,offer_code: offer_code},
+                    params: {shipping_method: ship_method, offer_code: offer_code},
                     headers: {'Content-Type': 'application/json'}
                 }).then(function (data, status, headers, config) {
                     $scope.loading = false;
@@ -595,15 +604,15 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
                 element.closest(".ymm-select.open").find('.select-text').attr('data-id', id).text(element.text());
             } else {
                 $(".dropdown-menu .ng-scope").remove();
-                $("#vehicle_make").attr('data-id','').text('Select Vehicle Make');
-                $("#vehicle_model").attr('data-id','').text('Select Vehicle Model');
+                $("#vehicle_make").attr('data-id', '').text('Select Vehicle Make');
+                $("#vehicle_model").attr('data-id', '').text('Select Vehicle Model');
                 element.closest(".ymm-select.open").find('.select-text').attr('data-id', id).text(id);
             }
             if (method != 'vehicle_model') {
                 $http({
                     method: 'POST',
                     url: URL,
-                    data: {id: id,year:year},
+                    data: {id: id, year: year},
                 }).then(function (data, status, headers, config) {
                     if (method == 'vehicle_year') {
                         $scope.result_vehicle_company = data.data;

@@ -46,7 +46,7 @@ use AuthenticatesUsers;
         if (!empty($previous_url[3]) && $previous_url[3] == 'cart') {
             Session::set('backUrl', URL::previous());
         }else{
-            Session::set('backUrl', URL::to('/my-account'));
+            Session::set('backUrl', URL::to('/'));
         }
     }
 

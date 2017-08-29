@@ -234,11 +234,19 @@
                         @endif
                         <div class="row">
                             <div class="col-md-6 col-sm-6 col-xs-6">
+                                <label>Tax:</label>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                <span class="price">${{ number_format($other_cart_data['tax_price'],2) }}</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6 col-xs-6">
                                 <label>Total:</label>
                             </div>
                             <div class="col-md-6 col-sm-6 col-xs-6">
                                 <?php 
-                                $total_cart_price = $sub_total+$other_cart_data['shipping_price'];
+                                $total_cart_price = $sub_total+$other_cart_data['shipping_price']+$other_cart_data['tax_price'];
                                 ?>
                                 <span class="price">${{ number_format($total_cart_price,2) }}</span>
                             </div>

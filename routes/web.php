@@ -27,7 +27,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'IsAdmin'], function () {
     Route::resource('vehicle_model', 'Admin\VehicleModelController');
     Route::resource('brands', 'Admin\BrandController');
     Route::resource('products', 'Admin\ProductController');
-    Route::resource('zones', 'Admin\ProductZoneController');
+//    Route::resource('zones', 'Admin\ProductZoneController');
+    Route::resource('tax_rates', 'Admin\TaxRateController');
     Route::resource('shipping', 'Admin\ShippingController');
     Route::resource('shipping_rates', 'Admin\ShippingRateController');
     Route::resource('static_page', 'Admin\StaticPageController');

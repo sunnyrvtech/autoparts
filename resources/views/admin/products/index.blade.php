@@ -115,7 +115,7 @@
                                         <div class="col-sm-9 col-md-9">
                                             <select required="" name="export_product" id="export_product" class="form-control">
                                                 <?php 
-                                                $total_records = ($products->toArray()['total']/10000)+1;
+                                                $total_records = (@$products->toArray()['total']/10000)+1;
                                                 for ($i = 1; $i <= $total_records; $i++) { ?>
                                                     <option value="{{ $i }}">{{ $i }}</option>
                                                 <?php } ?>
@@ -178,8 +178,6 @@
                 url: "{{ route('import.csv') }}",
                 type: 'POST',
                 data: formData,
-                async: false,
-                cache: false,
                 contentType: false,
                 processData: false,
                 success: function (data) {

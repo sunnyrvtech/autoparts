@@ -25,7 +25,7 @@
     </head>
 
     <body>
-        <div id="loaderOverlay" style="display: none;">
+        <div id="loaderOverlay">
             <div class="loader">
                 <div class="side"></div>
                 <div class="side"></div>
@@ -98,8 +98,11 @@
                         <li class="@if(Request::segment(2) == 'products')active @endif">
                             <a href="{{ route('products.index')}}"><i class="fa fa-fw fa-tag"></i> Products</a>
                         </li>
-                        <li class="@if(Request::segment(2) == 'zones')active @endif">
-                            <a href="{{ route('zones.index')}}"><i class="fa fa-fw fa-globe"></i>Zones/Regions</a>
+<!--                        <li class="@if(Request::segment(2) == 'zones')active @endif">
+                            <a href=""><i class="fa fa-fw fa-globe"></i>Zones/Regions</a>
+                        </li>-->
+                        <li class="@if(Request::segment(2) == 'tax_rates')active @endif">
+                            <a href="{{ route('tax_rates.index')}}"><i class="fa fa-fw fa-dollar"></i> Tax Rates</a>
                         </li>
                         <li class="@if(Request::segment(2) == 'coupon_code')active @endif">
                             <a href="{{ route('coupon_code.index')}}"><i class="fa fa-fw fa-dollar"></i> Coupon Codes</a>
