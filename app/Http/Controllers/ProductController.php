@@ -55,6 +55,11 @@ class ProductController extends Controller {
         if (Auth::check()) {
             $carts = Cart::where('user_id', Auth::id())->get(array('id', 'product_id', 'quantity', 'total_price'));
             $shipping_address = ShippingAddress::where('user_id', Auth::id())->first();
+
+            //get tax price
+            $regrex = '"([^"]*)' . $shipping_address->state_id . '([^"]*)"';
+            $tax_price = TaxRate::Where('country_id', $shipping_address->country_id)->whereRaw("state_id REGEXP '" . $regrex . "'")->first(array('price'));
+
             if (empty($carts->toArray())) {
                 $carts = array();
             }
@@ -65,6 +70,7 @@ class ProductController extends Controller {
                 $carts = array();
             }
             $shipping_address = '';
+            $tax_price = '';
         }
 
         $total_price_cart = '';
@@ -146,17 +152,15 @@ class ProductController extends Controller {
             }
         }
 
-        $regrex = '"([^"]*)' . $shipping_address->state_id . '([^"]*)"';
-        $tax_price = TaxRate::Where('country_id',$shipping_address->country_id)->whereRaw("state_id REGEXP '" . $regrex . "'")->first(array('price'));        
-        
+
         $other_cart_data = array(
             'shipping_price' => $shipping_price,
-            'tax_price' => $tax_price?$tax_price->price:0,
+            'tax_price' => $tax_price ? $tax_price->price : 0,
             'method_name' => $method_name,
             'discount_status' => $discount_status,
             'discount_code' => $offer_code
         );
-        
+
         $view = View::make('carts.index', compact('cart_data', 'shipping_address', 'shipping_methods', 'other_cart_data'));
         if ($request->wantsJson()) {
             $sections = $view->renderSections();
