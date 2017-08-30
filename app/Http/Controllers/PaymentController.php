@@ -138,15 +138,16 @@ class PaymentController extends Controller {
                     // ->setTax(0.3)
                     ->setPrice($item_price / $value->quantity);
         }
-        
+
         $regrex = '"([^"]*)' . $shipping_address->state_id . '([^"]*)"';
-        $tax_price = TaxRate::Where('country_id',$shipping_address->country_id)->whereRaw("state_id REGEXP '" . $regrex . "'")->first(array('price'));        
-        if($tax_price){
-            $tax_price = $tax_price->price;
-        }else{
+        $tax_price = TaxRate::Where('country_id', $shipping_address->country_id)->whereRaw("state_id REGEXP '" . $regrex . "'")->first(array('price'));
+        if ($tax_price) {
+            // calculate tax price 
+            $tax_price = ($sub_total + ($sub_total * $tax_price->price / 100)) - $sub_total;
+        } else {
             $tax_price = 0.00;
         }
-        
+
         $total_cart_price = $sub_total + $shipping_price + $tax_price;
 
         $itemList = Paypalpayment::itemList();
@@ -240,7 +241,7 @@ class PaymentController extends Controller {
 
         $orders = Order::create($order_array);
         $transaction_details = array(
-            'discount_status'=> $discount_status,
+            'discount_status' => $discount_status,
             'transaction_id' => $orders->id,
             'shipping_price' => $payment->transactions[0]->amount->details->shipping,
             'tax_rate' => $payment->transactions[0]->amount->details->tax,

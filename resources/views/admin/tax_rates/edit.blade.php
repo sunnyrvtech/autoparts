@@ -84,6 +84,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $('#states').multiselect({
+            includeSelectAllOption: true,
             numberDisplayed: 6,
             maxHeight: 400
         });

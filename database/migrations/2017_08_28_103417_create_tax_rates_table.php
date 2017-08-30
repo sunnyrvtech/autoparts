@@ -16,7 +16,7 @@ class CreateTaxRatesTable extends Migration
         Schema::create('tax_rates', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('country_id');
-            $table->string('state_id')->nullable();
+            $table->text('state_id')->nullable();
             $table->decimal('price', 5, 2);
             $table->timestamps();
         });
