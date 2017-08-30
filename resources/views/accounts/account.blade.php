@@ -290,7 +290,7 @@
                                               <td>{{ $value->id }}</td>
                                               <td>{{ date('m-d-Y H:i:s',strtotime($value->created_at)) }}</td>
                                               <td>{{ Auth::user()->first_name.' '.Auth::user()->last_name }}</td>
-                                              <td>${{ $total_price+$value->ship_price }}</td>
+                                              <td>${{ number_format($total_price+$value->ship_price+$value->tax_rate,2) }}</td>
                                               <td>{{ $value->order_status }}</td>
                                               <td>
                                                   <span class="nobr"><a href="{{ URL('/my-account/order/view').'/'.$value->id }}">View Order</a></span>
