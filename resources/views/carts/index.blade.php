@@ -234,7 +234,7 @@
                         @endif
                         <div class="row">
                             <div class="col-md-6 col-sm-6 col-xs-6">
-                                <label>Tax({{ $other_cart_data['tax_price'] }}%):</label>
+                                <label>Tax({{ $other_cart_data['tax_price'] }}):</label>
                             </div>
                             <div class="col-md-6 col-sm-6 col-xs-6">
                                 <?php 
@@ -390,6 +390,7 @@
                 var scope = angular.element($("#loaderOverlay")).scope();
                 scope.loading = true;
                 angular.element($("#loaderOverlay")).scope().$apply();
+                document.getElementById("paymentForm").submit(); 
             }
        });
     });

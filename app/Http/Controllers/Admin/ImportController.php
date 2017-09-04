@@ -32,6 +32,8 @@ class ImportController extends Controller {
     public function uploadCsv(Request $request) {
         $path = $request->file('csvFile')->getRealPath();
         Excel::filter('chunk')->load($path)->chunk(1000, function($results) {
+            
+            die('hello');
             foreach ($results as $key => $row) {
 
                 if (!$category = Category::where('name', 'like', trim($row->category))->first(array('id'))) {

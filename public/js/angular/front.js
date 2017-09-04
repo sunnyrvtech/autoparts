@@ -298,9 +298,10 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
                     $scope.alertHide();
                     $(window).scrollTop(0);
                     $scope.loading = false;
-                    $timeout(function () {
-                        window.location = BaseUrl + "/my-account";
-                    }, 200);
+                    $('a[href="#shipping-address"').tab('show');
+//                    $timeout(function () {
+//                        window.location = BaseUrl + "/my-account";
+//                    }, 200);
 
                 }, function errorCallback(data) {
                     $scope.loading = false;
@@ -343,8 +344,7 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
                             window.location = BaseUrl + "/" + data.data.intended;
                         }, 200);
                     }else{
-                        $('a[href="#shipping-address"').removeClass('active');
-                        $('a[href="#billing-address"').tab('show').addClass('active');
+                        $('a[href="#billing-address"').tab('show');
                     }
 
                 }, function errorCallback(data) {

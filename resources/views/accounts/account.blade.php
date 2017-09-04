@@ -452,6 +452,12 @@
         $("#order_listing").show();
         $("#order_details").remove();
      });    
+     
+     $(document).on('show.bs.tab', 'a[data-toggle="tab"]', function (e) {
+          var href = $(e.target).attr('href');
+          $('a[data-toggle="tab"]').removeClass('active');
+          $('a[href="'+href+'"').addClass('active');
+     });
  });
 </script>
 @endpush
