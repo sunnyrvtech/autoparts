@@ -32,12 +32,25 @@ class ProductController extends Controller {
      */
     public function index(Request $request) {
         $title = 'Products';
+        
+        
+        
+        $sku = $request->get('sku');
+
+        
+        
+        
+        
        // if ($request->ajax()) {
            // $skip = $request->get('start') != null ? $request->get('start') : 0;
            // $take = $request->get('length') != null ? $request->get('length') : 10;
             //$products = Product::skip($skip)->take($take)->get();
            // $products = Product::all();
-            $products = Product::paginate(20);
+            $products = Product::Where(function($query) use ($sku){
+                       if($sku != null){
+                           $query->Where('sku', 'like', trim($sku));
+                       }
+            })->paginate(20);
 //            $count = Product::get()->count();
             //foreach ($products as $key => $value) {
               //  $products[$key]['action'] = '<a href="' . route('products.show', $value->id) . '" data-toggle="tooltip" title="update" class="glyphicon glyphicon-edit"></a>&nbsp;&nbsp;<a href="' . route('products.destroy', $value->id) . '" data-toggle="tooltip" title="delete" data-method="delete" class="glyphicon glyphicon-trash deleteRow"></a>';

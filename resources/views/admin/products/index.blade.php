@@ -9,17 +9,25 @@
 </style>
 <div class="container-fluid">
     <div class="row form-group">
-        <div class="col-md-12">
-            <div class="col-md-4">
+        <div class="row">
+            <div class="col-md-2">
                 <a href="{{ route('products.create') }}" class="btn btn-primary">Add New</a>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <div class="text-right">
                     <a class="btn btn-success" onclick="$('#deleteProductModal').modal('show');" href="javascript:void(0);" type="button"><i class="glyphicon glyphicon-remove"></i>Delete All Product</a>
                     <a class="btn btn-warning" onclick="$('#exportProductModal').modal('show');" href="javascript:void(0);" type="button"><i class="glyphicon glyphicon-export"></i>Export Product</a>
                     <a class="browse btn btn-primary" type="button"><i class="glyphicon glyphicon-import"></i>Import Product</a>
                     <input style="display: none;" id="file_type" name="csvFile" class="uploadCsv" type="file">
                 </div>
+            </div>
+            <div class="col-md-4">
+                <form method="get">
+                    <div class="form-group">
+                        <!--                        <label class="control-label">Search:</label>-->
+                        <input class="form-control" name="sku" placeholder="Enter SKU No to search">
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -42,7 +50,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($products as $key=>$value)
+                    @forelse($products as $key=>$value)
                     <tr class="odd" role="row">
                         <td>{{ $value->id }}</td>
                         <td>{{ $value->product_name }}</td>
@@ -55,7 +63,9 @@
                         <td>{{ $value->updated_at }}</td>
                         <td><a href="{{ route('products.show', $value->id) }}" data-toggle="tooltip" title="update" class="glyphicon glyphicon-edit"></a>&nbsp;&nbsp;<a href="{{ route('products.destroy', $value->id) }}" data-toggle="tooltip" title="delete" data-method="delete" class="glyphicon glyphicon-trash deleteRow"></a></td>
                     </tr>
-                    @endforeach
+                    @empty
+                    <tr class="odd"><td colspan="6" class="dataTables_empty" valign="top">No matching records found</td></tr>
+                    @endforelse
                 </tbody>
                 </tbody>
             </table>
@@ -114,9 +124,10 @@
                                         <label class="col-sm-3 col-md-3 control-label" for="start"></label>
                                         <div class="col-sm-9 col-md-9">
                                             <select required="" name="export_product" id="export_product" class="form-control">
-                                                <?php 
-                                                $total_records = (@$products->toArray()['total']/10000)+1;
-                                                for ($i = 1; $i <= $total_records; $i++) { ?>
+                                                <?php
+                                                $total_records = (@$products->toArray()['total'] / 10000) + 1;
+                                                for ($i = 1; $i <= $total_records; $i++) {
+                                                    ?>
                                                     <option value="{{ $i }}">{{ $i }}</option>
                                                 <?php } ?>
                                             </select>
@@ -211,7 +222,7 @@
                 },
                 error: function (response) {
                     $("#loaderOverlay").hide();
-                   alert(response.responseText);
+                    alert(response.responseText);
                 }
             });
         });
