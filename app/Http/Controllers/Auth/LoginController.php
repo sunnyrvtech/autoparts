@@ -72,9 +72,12 @@ use AuthenticatesUsers;
 
         if ($request->wantsJson()) {
             
-            if (Auth::check() && Auth::user()->status == 0) {
+            if (Auth::check() && Auth::user()->status == 0 && !empty(Auth::user()->verify_token)) {
                 Auth::logout();
                 return response()->json(['error' => "Your account is not activated yet! Please check activation email in your inbox and activate your account."], 401);
+            }else if(Auth::check() && Auth::user()->status == 0){
+                Auth::logout();
+                return response()->json(['error' => "Your account is deactivated by admin! Please contact with administrator."], 401);
             }
             
             if (Session::has('cartItem')) { // this is used to save guest user cart data
