@@ -72,9 +72,9 @@
                             <li><a href="{{ url('/faq')}}" title="Frequently Asked Questions">FAQ</a></li>
                             <li>
                             @if(Auth::check())
-                                <a href="{{ URL('/my-account/order')}}" title="Track your order">Order Tracking</a>
+                                <a href="{{ URL('/my-account/order')}}" title="Track your order">My Orders</a>
                             @else
-                                <a href="javascript:void(0);" ng-click="login()" title="Track your order">Order Tracking</a>
+                                <a href="javascript:void(0);" ng-click="login()" title="Track your order">My Orders</a>
                             @endif
                             </li>
                             
