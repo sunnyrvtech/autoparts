@@ -102,6 +102,7 @@
                     <h4 class="modal-title">Please choose number below to export product details.</h4>
                 </div>
                 <div class="modal-body">
+                    <form id="sampleForm" action="{{ route('export-sample-csv') }}" target="_blank" method="post">{{ csrf_field()}}<p>Here you can download sample file <a href="javascript:void(0);" id="sample_file">Sample File</a></p></form>
                     <div class="alert alert-warning" role="alert">
                         <strong>Note! </strong>It will export 10000 records.For example if you select 2 then it will skip first 10000 and export records from 10001 to 20000 and if you select 3 then it will skip first 20000 records and export record from 20001 to 30000 etc.
                         <ul>
@@ -193,7 +194,7 @@
                 processData: false,
                 success: function (data) {
                     $("#loaderOverlay").hide();
-                    window.location.reload();
+                    //window.location.reload();
                 },
                 error: function (error) {
                     $("#loaderOverlay").hide();
@@ -225,6 +226,10 @@
                     alert(response.responseText);
                 }
             });
+        });
+        
+        $(document).on('click', '#sample_file', function (e) {
+            document.getElementById("sampleForm").submit();
         });
 
         $(document).on('click', '#deleteProductData', function (e) {
