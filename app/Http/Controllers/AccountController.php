@@ -27,6 +27,8 @@ class AccountController extends Controller {
     public function index(Request $request, $id = null) {
         if (Auth::check()) {
             $users = User::where('id', Auth::id())->first();
+            echo $users->createToken('MyApp')->accessToken;
+            die;
             $shipping_address = ShippingAddress::where('user_id', Auth::id())->first();
             $billing_address = BillingAddress::where('user_id', Auth::id())->first();
             $orders = Order::Where('user_id', Auth::id())->get();
