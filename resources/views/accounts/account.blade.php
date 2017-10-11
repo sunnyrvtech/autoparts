@@ -282,7 +282,7 @@
                                     </thead>
                                     <tbody>
                                         @forelse($orders as $value)
-                                            <?php $total_price = ''; ?>
+                                            <?php $total_price = 0; ?>
                                             @foreach($value->getOrderDetailById as $val)
                                                 <?php $total_price += $val->total_price; ?>
                                             @endforeach
@@ -319,7 +319,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php $sub_total='' ?>
+                                    <?php $sub_total=0; ?>
                                     @foreach($order_details->getOrderDetailById as $val)
                                         <?php
                                         
