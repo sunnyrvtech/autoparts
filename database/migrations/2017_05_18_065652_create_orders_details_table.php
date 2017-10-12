@@ -16,6 +16,7 @@ class CreateOrdersDetailsTable extends Migration
          Schema::create('order_details', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('order_id');
+            $table->string('track_id')->nullable();
             $table->integer('product_id');
             $table->string('product_name');
             $table->string('sku_number');
