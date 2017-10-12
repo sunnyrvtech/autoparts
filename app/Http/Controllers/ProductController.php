@@ -73,9 +73,9 @@ class ProductController extends Controller {
             $tax_price = '';
         }
 
-        $total_price_cart = '';
-        $total_weight = '';
-        $discount = '';
+        $total_price_cart = 0;
+        $total_weight = 0;
+        $discount = 0;
         if (!empty($carts)) {
             $cart_data = array();
             foreach ($carts as $key => $value) {

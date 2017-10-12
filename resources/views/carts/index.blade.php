@@ -31,7 +31,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php $total_price = '';$sub_total=0;$total_discount = '' ?>
+                                <?php $total_price = '';$sub_total=0;$total_discount = 0; ?>
                                 @foreach($cart_data as $value)
                                 <?php 
                                     //calulate total price after coupan match and discount
