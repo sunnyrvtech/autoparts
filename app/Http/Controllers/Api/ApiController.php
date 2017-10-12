@@ -20,20 +20,22 @@ class ApiController extends Controller {
         foreach ($orders as $key => $value) {
             //print_r($value->getOrderDetailById->toArray());
             $order_array[$key]['order_id'] = $value->id;
-            $order_array[$key]['track_id'] = $value->track_id != null ? $value->track_id : null;
             $product_array = array();
             $product_name = '';
             $sku_number = '';
             $quantity = '';
             $price = '';
             $discount = '';
+            $track_id = '';
             foreach ($value->getOrderDetailById as $k => $val) {
+                $track_id .= $val->track_id . '|';
                 $product_name .= $val->product_name . '|';
                 $sku_number .= $val->sku_number . '|';
                 $quantity .= $val->quantity . '|';
                 $price .= $val->total_price / $val->quantity . '|';
                 $discount .= $val->discount . '|';
             }
+            $order_array[$key]['track_id'] = rtrim($track_id, '|');
             $order_array[$key]['product_name'] = rtrim($product_name, '|');
             $order_array[$key]['sku_number'] = rtrim($sku_number, '|');
             $order_array[$key]['quantity'] = rtrim($quantity, '|');
