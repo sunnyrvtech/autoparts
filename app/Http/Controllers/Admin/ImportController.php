@@ -374,7 +374,7 @@ class ImportController extends Controller {
      */
     public function exportCsv(Request $request) {
 
-        $take = 10;
+        $take = 10000;
         $limit = $request->get('export_product');
         $skip = ($limit == 1) ? 0 : ($limit - 1) * $take;
         $filename = 'product' . $limit;
