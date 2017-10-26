@@ -72,7 +72,7 @@
                         <li class="@if(Request::segment(2) == 'admin')active @endif">
                             <a href="{{ url('admin')}}"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
                         </li>
-                        <li class="@if(Request::segment(2) == 'admin')active @endif">
+                        <li class="@if(Request::segment(2) == 'static_page')active @endif">
                             <a href="{{ route('static_page.index')}}"><i class="fa fa-fw fa-files-o"></i>Pages</a>
                         </li>
                         <li class="@if(Request::segment(2) == 'customers')active @endif">

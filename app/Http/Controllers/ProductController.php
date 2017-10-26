@@ -149,6 +149,8 @@ class ProductController extends Controller {
                 $shipping_price = $shipping_rates->price;
             } else {
                 $shipping_price = ShippingRate::where('country_id', $shipping_address->country_id)->max('price');
+                if (!$shipping_price)
+                    $shipping_price = 0;
             }
         }
 

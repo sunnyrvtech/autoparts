@@ -190,7 +190,7 @@
                     <h4>Order Total: </h4>
                     <div class="delivery-wrp">
                         @if(!empty($shipping_methods->toArray()))
-                        <select id="changeShippingMethod" class="form-control">
+                        <select id="changeShippingMethod" name="shipping_method" class="form-control">
                                 <option value="">Select Shipping Method</option>
                                 @foreach($shipping_methods as $val)
                                 <option @if($val->name == $other_cart_data['method_name']) selected @endif value="{{ $val->name }}">{{ $val->name }}</option>

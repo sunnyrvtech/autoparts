@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Order;
+use App\OrderDetail;
 use App\Product;
+use Excel;
 
 class ApiController extends Controller {
 
@@ -17,13 +19,15 @@ class ApiController extends Controller {
     public function getOrderDetails(Request $request) {
         $start = $request->get('start');
         $end = $request->get('end');
-        $skip = $start-1;
-        $take = ($end-$start)+1;
-        $orders = Order::take($take)->skip($skip)->get();
+        $skip = $start - 1;
+        $take = ($end - $start) + 1;
+        $orders = Order::latest('created_at')->skip($skip)->take($take)->get();
         $order_array = array();
         foreach ($orders as $key => $value) {
-            //print_r($value->getOrderDetailById->toArray());
+//            echo $value->getCustomer->id;
+//            die;
             $order_array[$key]['order_id'] = $value->id;
+            $order_array[$key]['customer_name'] = $value->getCustomer->first_name . ' ' . $value->getCustomer->last_name;
             $product_array = array();
             $product_name = '';
             $sku_number = '';
@@ -48,6 +52,12 @@ class ApiController extends Controller {
             $order_array[$key]['ship_price'] = $value->ship_price;
             $order_array[$key]['tax'] = $value->tax_rate;
             $order_array[$key]['total_price'] = $value->total_price;
+            $order_array[$key]['shipping_method'] = $value->shipping_method;
+            $order_array[$key]['payment_method'] = $value->payment_method;
+
+            $order_array[$key]['billing_address'] = $value->getCustomer->getBillingDetails->address1 . ',' . $value->getCustomer->getBillingDetails->city . ',' . $value->getCustomer->getBillingDetails->get_state->name . ',' . $value->getCustomer->getBillingDetails->zip . ',' . $value->getCustomer->getBillingDetails->get_country->name;
+            $order_array[$key]['shipping_address'] = $value->getCustomer->getShippingDetails->address1 . ',' . $value->getCustomer->getShippingDetails->city . ',' . $value->getCustomer->getShippingDetails->get_state->name . ',' . $value->getCustomer->getShippingDetails->zip . ',' . $value->getCustomer->getShippingDetails->get_country->name;
+
             $order_array[$key]['status'] = $value->order_status;
         }
         return $order_array;
@@ -59,25 +69,40 @@ class ApiController extends Controller {
      * @return Response
      */
     public function postOrderDetails(Request $request) {
-        $orders = $request->all();
 
-        foreach ($orders as $value) {
-            $order = Order::find($value['order_id']);
-            if ($order) {
-                $order->fill(array('track_id' => $value['track_id'], 'order_status' => $value['status']))->save();
+
+        $path = $request->file('csvFile')->getRealPath();
+
+        Excel::filter('chunk')->load($path)->chunk(1000, function($results) {
+            foreach ($results as $key => $value) {
+                $order = Order::find($value->order_id);
+                if ($order) {
+                    $order->fill(array('order_status' => $value->status))->save();
+                    $order_detail_ids = OrderDetail::Where('order_id', $value->order_id)->get(array('id'));
+                    $track_ids = explode('|', $value->track_id);
+                    if (!empty($track_ids)) {
+                        foreach ($order_detail_ids as $key => $val) {
+                            $order_details = OrderDetail::find($val->id);
+                            if (isset($track_ids[$key])) {
+                                $track_id = $track_ids[$key];
+                            } else {
+                                $track_id = $track_ids[$key - 1];
+                            }
+                            $order_details->fill(array('track_id' => $track_id))->save();
+                        }
+                    }
+                }
             }
-        }
+        });
         return response()->json(['status' => "success"]);
-
-//             return response()->json(['error' => "Your account is deactivated by admin! Please contact with administrator."], 401);
     }
 
     public function getProductDetails(Request $request) {
 
         $start = $request->get('start');
         $end = $request->get('end');
-        $skip = $start-1;
-        $take = ($end-$start)+1;
+        $skip = $start - 1;
+        $take = ($end - $start) + 1;
         $products = Product::take($take)->skip($skip)->get();
         $product_array = array();
         if (!empty($products->toArray())) {

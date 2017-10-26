@@ -9,6 +9,7 @@ use App\ShippingAddress;
 use App\BillingAddress;
 use App\Order;
 use App\OrderDetail;
+use App\ShippingRate;
 use App\Product;
 use App\CoupanCode;
 use App\CoupanUsage;
@@ -57,10 +58,20 @@ class PaymentController extends Controller {
     public function store(Request $request) {
 
         $data = $request->all();
+        $shipping_method = $data['shipping_method'];
         $shipping_price = $data['shipping_price'];
         $offer_code = $request->get('discount_code');
 
         $shipping_address = ShippingAddress::where('user_id', Auth::id())->first();
+
+        if (!ShippingRate::where('country_id', $shipping_address->country_id)->first()) {
+            return Redirect::back()
+                            ->with('error-message', "No shipping available in your country !");
+        }
+
+
+
+
         $cart_ids = $data['cart_id'];
         $carts = Cart::find($cart_ids);
 
@@ -205,19 +216,21 @@ class PaymentController extends Controller {
                             ->with('error-message', "Something went wrong,Please try again later !");
         }
 
-        if ($transaction_id = $this->savePaymentDetails($payment, $carts, $shipping_address, $discount_status, $offer_code, $check_usage)) {
+        if ($transaction_id = $this->savePaymentDetails($payment, $carts, $shipping_address, $discount_status, $offer_code, $check_usage, $shipping_method)) {
             Cart::destroy($cart_ids); ///  empty cart table after payment successfull
             return View::make('carts.success', compact('transaction_id'));
         }
     }
 
-    public function savePaymentDetails($payment, $carts, $shipping_address, $discount_status, $offer_code, $check_usage) {
+    public function savePaymentDetails($payment, $carts, $shipping_address, $discount_status, $offer_code, $check_usage, $shipping_method) {
         $order_array = array(
             'user_id' => Auth::id(),
             'transaction_id' => $payment->id,
             'total_price' => $payment->transactions[0]->amount->total,
             'ship_price' => $payment->transactions[0]->amount->details->shipping,
             'tax_rate' => $payment->transactions[0]->amount->details->tax,
+            'shipping_method' => $shipping_method,
+            'payment_method' => 'Paypal',
             'order_status' => 'processing',
             'created_at' => date('Y-m-d H:i:s', strtotime($payment->create_time))
         );
@@ -243,6 +256,8 @@ class PaymentController extends Controller {
         $transaction_details = array(
             'discount_status' => $discount_status,
             'transaction_id' => $orders->id,
+            'shipping_method' => $shipping_method,
+            'payment_method' => 'Paypal',
             'shipping_price' => $payment->transactions[0]->amount->details->shipping,
             'tax_rate' => $payment->transactions[0]->amount->details->tax,
             'order_time' => date('M d,Y H:i:s A', strtotime($payment->create_time))

@@ -484,6 +484,32 @@
                                                                                     </table>
                                                                                 </td>
                                                                             </tr>
+                                                                            <tr>
+                                                                                <td align="left" valign="top" class="flexibleContainerBox">
+                                                                                    <table border="0" cellpadding="30" cellspacing="0" width="100%" style="max-width:100%;">
+                                                                                        <tr>
+                                                                                            <td align="left" class="textContent">
+                                                                                                <h3 style="line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:left;">Shipping Method</h3>
+                                                                                                <div style="text-align:left;font-family:Helvetica,Arial,sans-serif;font-size:15px;margin-bottom:0;line-height:135%;">
+                                                                                                    <span>{{ $transaction_details['shipping_method'] }}</span><br/>
+                                                                                                </div>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    </table>
+                                                                                </td>
+                                                                                 <td align="right" valign="top" class="flexibleContainerBox">
+                                                                                    <table class="flexibleContainerBoxNext" border="0" cellpadding="30" cellspacing="0" width="100%" style="max-width:100%;">
+                                                                                        <tr>
+                                                                                            <td align="left" class="textContent">
+                                                                                                <h3 style="line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:left;">Payment Method</h3>
+                                                                                                <div style="text-align:left;font-family:Helvetica,Arial,sans-serif;font-size:15px;margin-bottom:0;line-height:135%;">
+                                                                                                    <span>{{ $transaction_details['payment_method'] }}</span><br/>
+                                                                                                </div>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    </table>
+                                                                                </td>
+                                                                            </tr>
                                                                         </table>
                                                                         <!-- // CONTENT TABLE -->
 

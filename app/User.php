@@ -7,9 +7,10 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Notifications\ResetNotification;
 
-class User extends Authenticatable
-{
-    use HasApiTokens,Notifiable;
+class User extends Authenticatable {
+
+    use HasApiTokens,
+        Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -17,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'first_name','last_name', 'email','password','verify_token','user_image','status',
+        'first_name', 'last_name', 'email', 'password', 'verify_token', 'user_image', 'status',
     ];
 
     /**
@@ -28,9 +29,18 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
-    
+
     public function sendPasswordResetNotification($token) {
-       $username = $this->first_name.' '.$this->last_name;
-       $this->notify(new ResetNotification($token,$username));
-   }
+        $username = $this->first_name . ' ' . $this->last_name;
+        $this->notify(new ResetNotification($token, $username));
+    }
+
+    public function getShippingDetails() {
+        return $this->belongsTo('App\ShippingAddress', 'id', 'user_id');
+    }
+    public function getBillingDetails() {
+        return $this->belongsTo('App\BillingAddress', 'id', 'user_id');
+    }
+    
+
 }
