@@ -23,6 +23,9 @@ class CreateOrdersDetailsTable extends Migration
             $table->integer('quantity');
             $table->decimal('total_price', 5, 2);
             $table->decimal('discount', 5, 2)->nullable();
+            $table->string('ship_carrier')->nullable();
+            $table->timestamp('ship_date')->nullable();
+            $table->text('notes')->nullable();
             $table->timestamps();
         });
     }

@@ -30,44 +30,71 @@ class ApiController extends Controller {
         $end = $request->get('end');
         $skip = $start - 1;
         $take = ($end - $start) + 1;
-        $orders = Order::latest('created_at')->skip($skip)->take($take)->get();
+
+        $filter_array = array(
+            'date_from' => $request->get('date_from'),
+            'date_to' => date('Y-m-d', strtotime('+1 day', strtotime($request->get('date_to')))),
+            'order_from' => $request->get('order_from'),
+            'order_to' => $request->get('order_to'),
+            'order_id' => $request->get('order_id'),
+            'status' => $request->get('status'),
+        );
+
+        $orders = Order::Where(function($query) use ($filter_array) {
+                    if ($filter_array['date_from'] != null && $filter_array['date_to'] != null) {
+                        $query->whereBetween('created_at', [$filter_array['date_from'], $filter_array['date_to']]);
+                    }
+                    if ($filter_array['order_from'] != null && $filter_array['order_from'] != null) {
+                        $query->whereBetween('id', [$filter_array['order_from'], $filter_array['order_to']]);
+                    } elseif ($filter_array['order_id'] != null) {
+                        $query->Where('id', $filter_array['order_id']);
+                    }
+                    if ($filter_array['status'] != null) {
+                        $query->Where('order_status', $filter_array['status']);
+                    }
+                })->latest('created_at')->skip($skip)->take($take)->get();
+
         $order_array = array();
         foreach ($orders as $key => $value) {
-//            echo $value->getCustomer->id;
-//            die;
-            $order_array[$key]['order_id'] = $value->id;
-            $order_array[$key]['customer_name'] = $value->getCustomer->first_name . ' ' . $value->getCustomer->last_name;
-            $product_array = array();
-            $product_name = '';
-            $sku_number = '';
-            $quantity = '';
-            $price = '';
-            $discount = '';
-            $track_id = '';
+            $item_array = array();
             foreach ($value->getOrderDetailById as $k => $val) {
-                $track_id .= $val->track_id . '|';
-                $product_name .= $val->product_name . '|';
-                $sku_number .= $val->sku_number . '|';
-                $quantity .= $val->quantity . '|';
-                $price .= $val->total_price / $val->quantity . '|';
-                $discount .= $val->discount . '|';
+                $item_array[$k]['item_id'] = $val->id;
+                $item_array[$k]['track_number'] = $val->track_id;
+                $item_array[$k]['product_name'] = $val->product_name;
+                $item_array[$k]['sku_number'] = $val->sku_number;
+                $item_array[$k]['quantity'] = $val->quantity;
+                $item_array[$k]['price'] = $val->price;
+                $item_array[$k]['discount'] = $val->discount;
+                $item_array[$k]['ship_carrier'] = $val->ship_carrier;
+                $item_array[$k]['ship_date'] = $val->ship_date != null ? date('Y-m-d', strtotime($val->ship_date)) : null;
+                $item_array[$k]['notes'] = $val->notes;
             }
-            $order_array[$key]['track_id'] = rtrim($track_id, '|');
-            $order_array[$key]['product_name'] = rtrim($product_name, '|');
-            $order_array[$key]['sku_number'] = rtrim($sku_number, '|');
-            $order_array[$key]['quantity'] = rtrim($quantity, '|');
-            $order_array[$key]['price'] = rtrim($price, '|');
-            $order_array[$key]['discount'] = rtrim($discount, '|');
-            $order_array[$key]['ship_price'] = $value->ship_price;
-            $order_array[$key]['tax'] = $value->tax_rate;
-            $order_array[$key]['total_price'] = $value->total_price;
-            $order_array[$key]['shipping_method'] = $value->shipping_method;
-            $order_array[$key]['payment_method'] = $value->payment_method;
-
-            $order_array[$key]['billing_address'] = $value->getCustomer->getBillingDetails->address1 . ',' . $value->getCustomer->getBillingDetails->city . ',' . $value->getCustomer->getBillingDetails->get_state->name . ',' . $value->getCustomer->getBillingDetails->zip . ',' . $value->getCustomer->getBillingDetails->get_country->name;
-            $order_array[$key]['shipping_address'] = $value->getCustomer->getShippingDetails->address1 . ',' . $value->getCustomer->getShippingDetails->city . ',' . $value->getCustomer->getShippingDetails->get_state->name . ',' . $value->getCustomer->getShippingDetails->zip . ',' . $value->getCustomer->getShippingDetails->get_country->name;
-
-            $order_array[$key]['status'] = $value->order_status;
+            $order_array[$key]['total_orders'] = Order::count();
+            $order_array[$key]['total_pages'] = $orders->count();
+            $order_array[$key]['page' . ($key + 1)] = array(
+                'order_id' => $value->id,
+                'order_date' => date('Y-m-d', strtotime($value->created_at)),
+                'customer_name' => $value->getCustomer->first_name . ' ' . $value->getCustomer->last_name,
+                'ship_price' => $value->ship_price,
+                'tax' => $value->tax_rate,
+                'total_price' => $value->total_price,
+                'shipping_method' => $value->shipping_method,
+                'payment_method' => $value->payment_method,
+                'billing_address1' => $value->address1,
+                'billing_address2' => $value->address2,
+                'billing_city' => $value->getCustomer->getBillingDetails->city,
+                'billing_state' => $value->getCustomer->getBillingDetails->get_state->name,
+                'billing_zip' => $value->getCustomer->getBillingDetails->zip,
+                'billing_country' => $value->getCustomer->getBillingDetails->get_country->name,
+                'shipping_address1' => $value->address1,
+                'shipping_address2' => $value->address2,
+                'shipping_city' => $value->getCustomer->getShippingDetails->city,
+                'shipping_state' => $value->getCustomer->getShippingDetails->get_state->name,
+                'shipping_zip' => $value->getCustomer->getShippingDetails->zip,
+                'shipping_country' => $value->getCustomer->getShippingDetails->get_country->name,
+                'status' => $value->order_status,
+                'items' => $item_array,
+            );
         }
         return $order_array;
     }
@@ -79,37 +106,62 @@ class ApiController extends Controller {
      */
     public function postOrderDetails(Request $request) {
 
-
-        $path = $request->file('csvFile')->getRealPath();
-
-        Excel::filter('chunk')->load($path)->chunk(1000, function($results) {
-            foreach ($results as $key => $value) {
-                $order = Order::find($value->order_id);
-                if ($order) {
-                    $order->fill(array('order_status' => $value->status))->save();
-                    $order_detail_ids = OrderDetail::Where('order_id', $value->order_id)->get(array('id'));
-                    $track_ids = explode('|', $value->track_id);
-                    if (!empty($track_ids)) {
-                        foreach ($order_detail_ids as $key => $val) {
-                            $order_details = OrderDetail::find($val->id);
-                            if (isset($track_ids[$key])) {
-                                $track_id = $track_ids[$key];
-                            } else {
-                                $track_id = $track_ids[$key - 1];
-                            }
-                            $order_details->fill(array('track_id' => $track_id))->save();
-                        }
+        $data = $request->all();
+        foreach ($data as $key => $value) {
+            $page_data = $value['page' . ($key + 1)];
+            $order = Order::find($page_data['order_id']);
+            if ($order) {
+                $order->fill(array('order_status' => $page_data['status']))->save();
+                foreach ($page_data['items'] as $val) {
+                    $update_array = array(
+                        'track_id' => $val['track_number'],
+                        'ship_carrier' => $val['ship_carrier'],
+                        'ship_date' => $val['ship_date'],
+                        'notes' => $val['notes'],
+                    );
+                    if ($order_details = OrderDetail::find($val['item_id'])){
+                        $order_details->fill($update_array)->save();
                     }
                 }
             }
-        });
+        }
+
         return response()->json(['status' => "success"]);
+//        
+//        
+//        
+//
+//
+//        $path = $request->file('csvFile')->getRealPath();
+//
+//        Excel::filter('chunk')->load($path)->chunk(1000, function($results) {
+//            foreach ($results as $key => $value) {
+//                $order = Order::find($value->order_id);
+//                if ($order) {
+//                    $order->fill(array('order_status' => $value->status))->save();
+//                    $order_detail_ids = OrderDetail::Where('order_id', $value->order_id)->get(array('id'));
+//                    $track_ids = explode('|', $value->track_id);
+//                    if (!empty($track_ids)) {
+//                        foreach ($order_detail_ids as $key => $val) {
+//                            $order_details = OrderDetail::find($val->id);
+//                            if (isset($track_ids[$key])) {
+//                                $track_id = $track_ids[$key];
+//                            } else {
+//                                $track_id = $track_ids[$key - 1];
+//                            }
+//                            $order_details->fill(array('track_id' => $track_id))->save();
+//                        }
+//                    }
+//                }
+//            }
+//        });
+//        return response()->json(['status' => "success"]);
     }
 
     public function getProductDetails(Request $request) {
 
-        $start = $request->get('start')?$request->get('start'):1;
-        $end = $request->get('end')?$request->get('end'):10;
+        $start = $request->get('start') ? $request->get('start') : 1;
+        $end = $request->get('end') ? $request->get('end') : 10;
         $skip = $start - 1;
         $take = ($end - $start) + 1;
         $products = Product::take($take)->skip($skip)->get();
@@ -195,7 +247,7 @@ class ApiController extends Controller {
                 }
 
                 if (!$sub_category = SubCategory::where('category_id', $category->id)->where('name', 'like', trim($row->sub_category))->first(array('id', 'category_id'))) {
-                   die('dddddddd');
+                    die('dddddddd');
                     $slug = $this->createSlug(trim($row->sub_category), 'category');
                     $sub_category = SubCategory::create(array('category_id' => $category->id, 'name' => trim($row->sub_category), 'slug' => $slug, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
                 }
@@ -316,7 +368,7 @@ class ApiController extends Controller {
         });
         return response()->json(['status' => "success"]);
     }
-    
+
     /**
      * function to create unique slug
      *
@@ -342,7 +394,8 @@ class ApiController extends Controller {
         }
         throw new \Exception('Can not create a unique slug');
     }
-     protected function getRelatedSlugs($slug, $table) {
+
+    protected function getRelatedSlugs($slug, $table) {
         if ($table == 'category') {
             return SubCategory::select('slug')->where('slug', 'like', $slug . '%')
                             ->get();
