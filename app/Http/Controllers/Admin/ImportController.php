@@ -232,12 +232,17 @@ class ImportController extends Controller {
             foreach ($product_images as $key => $val) {
                 $url = $val;
                 $extention = pathinfo($url, PATHINFO_EXTENSION);
-                $filename = str_random(15) . $extention;
-                if (@getimagesize($url)) {
-                    $file = file_get_contents($url);
-                    $save = file_put_contents($path . $filename, $file);
-                    $imageArray[$key] = $filename;
-                }
+                $filename = str_random(15).'.' . $extention;
+
+                $arrContextOptions = array(
+                    "ssl" => array(
+                        "verify_peer" => false,
+                        "verify_peer_name" => false,
+                    ),
+                );
+                $file = file_get_contents($url, false, stream_context_create($arrContextOptions));
+                $save = file_put_contents($path . $filename, $file);
+                $imageArray[$key] = $filename;
             }
             return json_encode(array_values($imageArray));
         } else {
@@ -474,80 +479,127 @@ class ImportController extends Controller {
     public function exportSampleCsv(Request $request) {
 
         $filename = 'sample';
-        $sale_type="Example sale type";$vehicle_make="Example vehicle make";$vehicle_model="Example vehicle model";$vehicle_year="1997-1999";$product_name="Example Product name";
-        $product_long_description="Example long description";$product_short_description="Example short description";$vehicle_fit="Example vehicle fit";$m_code=2091637;
-        $class=19;$part_type="Example part type";$parse_link="GM2502165,GM2503165";$oem_number=16526200165261;$category="Example category";$sub_category="Example sub category";
-        $certification="Example certification";$price=143.7;$special_price=143.7;$discount=10;$quantity=1;$status=1;$weight=11.5;$length=2;$width=1;$height=1;$warranty="1 Year";
-        $brand="Example brand";$operation="Example operation";$wattage="Example wattage";$mirror_option="Example mirror option";$location="Example location";$size="Example size";
-        $material="Example material";$color="Example color";$front_location="Example front location";$side_location="Example side location";$includes="Example include";
-        $design="Example design";$product_line="Example product line";$meta_title="Example meta title";$meta_description="Example meta description";$meta_keyword="Example meta keyword";
-        $software="Example software";$licensed_by="Example licensed by";$car_cover="Example car cover";$kit_includes="Example ket include";$fender_flare_type="Example fender_flare_type";
-        $product_grade="Example product grade1";$lighting_bulb_configuration="Example lighting bulb configuration";$lighting_housing_shape="Example lighting housing shape";
-        $bracket_style="Example bracket style";$lighting_size="Example lighting size";$lighting_beam_pattern="Example lighting beam pattern";$lighting_lens_material="Example lighting lens material";
-        $lighting_mount_type="Example lighting mount type";$cooling_fan_type="Example cooling fan type";$radiator_row_count="Example radiator row count";$oil_plan_capacity="Example oil_plan_capacity";
+        $sale_type = "Example sale type";
+        $vehicle_make = "Example vehicle make";
+        $vehicle_model = "Example vehicle model";
+        $vehicle_year = "1997-1999";
+        $product_name = "Example Product name";
+        $product_long_description = "Example long description";
+        $product_short_description = "Example short description";
+        $vehicle_fit = "Example vehicle fit";
+        $m_code = 2091637;
+        $class = 19;
+        $part_type = "Example part type";
+        $parse_link = "GM2502165,GM2503165";
+        $oem_number = 16526200165261;
+        $category = "Example category";
+        $sub_category = "Example sub category";
+        $certification = "Example certification";
+        $price = 143.7;
+        $special_price = 143.7;
+        $discount = 10;
+        $quantity = 1;
+        $status = 1;
+        $weight = 11.5;
+        $length = 2;
+        $width = 1;
+        $height = 1;
+        $warranty = "1 Year";
+        $brand = "Example brand";
+        $operation = "Example operation";
+        $wattage = "Example wattage";
+        $mirror_option = "Example mirror option";
+        $location = "Example location";
+        $size = "Example size";
+        $material = "Example material";
+        $color = "Example color";
+        $front_location = "Example front location";
+        $side_location = "Example side location";
+        $includes = "Example include";
+        $design = "Example design";
+        $product_line = "Example product line";
+        $meta_title = "Example meta title";
+        $meta_description = "Example meta description";
+        $meta_keyword = "Example meta keyword";
+        $software = "Example software";
+        $licensed_by = "Example licensed by";
+        $car_cover = "Example car cover";
+        $kit_includes = "Example ket include";
+        $fender_flare_type = "Example fender_flare_type";
+        $product_grade = "Example product grade1";
+        $lighting_bulb_configuration = "Example lighting bulb configuration";
+        $lighting_housing_shape = "Example lighting housing shape";
+        $bracket_style = "Example bracket style";
+        $lighting_size = "Example lighting size";
+        $lighting_beam_pattern = "Example lighting beam pattern";
+        $lighting_lens_material = "Example lighting lens material";
+        $lighting_mount_type = "Example lighting mount type";
+        $cooling_fan_type = "Example cooling fan type";
+        $radiator_row_count = "Example radiator row count";
+        $oil_plan_capacity = "Example oil_plan_capacity";
         $export_array = array();
-        for($i=1;$i<=5;$i++) {
+        for ($i = 1; $i <= 5; $i++) {
             $export_array[$i] = array(
                 'sku' => $i,
                 'text' => $i,
-                'sale_type' => $sale_type.$i,
-                'vehicle_make' => $vehicle_make.$i,
-                'vehicle_model' =>$vehicle_model.$i,
+                'sale_type' => $sale_type . $i,
+                'vehicle_make' => $vehicle_make . $i,
+                'vehicle_model' => $vehicle_model . $i,
                 'vehicle_year' => $vehicle_year,
-                'product_name' => $product_name.$i,
-                'product_long_description' => $product_long_description.$i,
-                'product_short_description' => $product_long_description.$i,
-                'vehicle_fit' => $vehicle_fit.$i,
-                'm_code' => $m_code.$i,
+                'product_name' => $product_name . $i,
+                'product_long_description' => $product_long_description . $i,
+                'product_short_description' => $product_long_description . $i,
+                'vehicle_fit' => $vehicle_fit . $i,
+                'm_code' => $m_code . $i,
                 'class' => $class,
-                'part_type' => $part_type.$i,
+                'part_type' => $part_type . $i,
                 'parse_link' => $parse_link,
-                'oem_number' => $oem_number.$i,
-                'category' => $category.$i,
-                'sub_category' => $sub_category.$i,
-                'certification' => $certification.$i,
-                'price' => $price.$i,
-                'special_price' => $special_price.$i,
+                'oem_number' => $oem_number . $i,
+                'category' => $category . $i,
+                'sub_category' => $sub_category . $i,
+                'certification' => $certification . $i,
+                'price' => $price . $i,
+                'special_price' => $special_price . $i,
                 'discount' => $discount,
-                'quantity' => $quantity.$i,
-                'status' => $status.$i,
-                'weight' => $weight.$i,
-                'length' => $length.$i,
-                'width' => $width.$i,
-                'height' => $height.$i,
+                'quantity' => $quantity . $i,
+                'status' => $status . $i,
+                'weight' => $weight . $i,
+                'length' => $length . $i,
+                'width' => $width . $i,
+                'height' => $height . $i,
                 'warranty' => $warranty,
-                'brand' => $brand.$i,
-                'operation' => $operation.$i,
-                'wattage' => $wattage.$i,
-                'mirror_option' => $mirror_option.$i,
-                'location' => $location.$i,
-                'size' => $size.$i,
-                'material' => $material.$i,
-                'color' => $color.$i,
-                'front_location' => $front_location.$i,
-                'side_location' => $side_location.$i,
-                'includes' => $includes.$i,
-                'design' => $design.$i,
-                'product_line' => $product_line.$i,
-                'meta_title' => $meta_title.$i,
-                'meta_description' => $meta_description.$i,
-                'meta_keyword' => $meta_keyword.$i,
-                'software' => $software.$i,
-                'licensed_by' => $licensed_by.$i,
-                'car_cover' => $car_cover.$i,
-                'kit_includes' => $kit_includes.$i,
-                'fender_flare_type' => $fender_flare_type.$i,
-                'product_grade' => $product_grade.$i,
-                'lighting_bulb_configuration' => $lighting_bulb_configuration.$i,
-                'lighting_housing_shape' => $lighting_housing_shape.$i,
-                'bracket_style' => $bracket_style.$i,
-                'lighting_size' => $lighting_size.$i,
-                'lighting_beam_pattern' => $lighting_beam_pattern.$i,
-                'lighting_lens_material' => $lighting_lens_material.$i,
-                'lighting_mount_type' => $lighting_mount_type.$i,
-                'cooling_fan_type' => $cooling_fan_type.$i,
-                'radiator_row_count' => $radiator_row_count.$i,
-                'oil_plan_capacity' => $oil_plan_capacity.$i);
+                'brand' => $brand . $i,
+                'operation' => $operation . $i,
+                'wattage' => $wattage . $i,
+                'mirror_option' => $mirror_option . $i,
+                'location' => $location . $i,
+                'size' => $size . $i,
+                'material' => $material . $i,
+                'color' => $color . $i,
+                'front_location' => $front_location . $i,
+                'side_location' => $side_location . $i,
+                'includes' => $includes . $i,
+                'design' => $design . $i,
+                'product_line' => $product_line . $i,
+                'meta_title' => $meta_title . $i,
+                'meta_description' => $meta_description . $i,
+                'meta_keyword' => $meta_keyword . $i,
+                'software' => $software . $i,
+                'licensed_by' => $licensed_by . $i,
+                'car_cover' => $car_cover . $i,
+                'kit_includes' => $kit_includes . $i,
+                'fender_flare_type' => $fender_flare_type . $i,
+                'product_grade' => $product_grade . $i,
+                'lighting_bulb_configuration' => $lighting_bulb_configuration . $i,
+                'lighting_housing_shape' => $lighting_housing_shape . $i,
+                'bracket_style' => $bracket_style . $i,
+                'lighting_size' => $lighting_size . $i,
+                'lighting_beam_pattern' => $lighting_beam_pattern . $i,
+                'lighting_lens_material' => $lighting_lens_material . $i,
+                'lighting_mount_type' => $lighting_mount_type . $i,
+                'cooling_fan_type' => $cooling_fan_type . $i,
+                'radiator_row_count' => $radiator_row_count . $i,
+                'oil_plan_capacity' => $oil_plan_capacity . $i);
         }
 
 
