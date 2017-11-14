@@ -114,10 +114,10 @@ class ApiController extends Controller {
                 $order->fill(array('order_status' => $page_data['status']))->save();
                 foreach ($page_data['items'] as $val) {
                     $update_array = array(
-                        'track_id' => $val['track_number'] != '' ? $val['track_number'] : null,
-                        'ship_carrier' => $val['ship_carrier'] != '' ? $val['ship_carrier'] : null,
-                        'ship_date' => $val['ship_date'] != '' ? $val['ship_date'] : null,
-                        'notes' => $val['notes'] != '' ? $val['notes'] : null,
+                        'track_id' => $val['track_number'] != null ? $val['track_number'] : null,
+                        'ship_carrier' => $val['ship_carrier'] != null ? $val['ship_carrier'] : null,
+                        'ship_date' => $val['ship_date'] != null ? $val['ship_date'] : null,
+                        'notes' => $val['notes'] != null ? $val['notes'] : null,
                     );
                     if ($order_details = OrderDetail::find($val['item_id'])) {
                         $order_details->fill($update_array)->save();
