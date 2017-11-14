@@ -75,8 +75,8 @@ class ApiController extends Controller {
                 'order_id' => $value->id,
                 'order_date' => date('Y-m-d', strtotime($value->created_at)),
                 'customer_name' => $value->getCustomer->first_name . ' ' . $value->getCustomer->last_name,
-                'ship_price' => $value->ship_price,
-                'tax' => $value->tax_rate,
+                'ship_price' => $value->ship_price != null ? $value->ship_price : '',
+                'tax' => $value->tax_rate != null ? $value->tax_rate : '',
                 'total_price' => $value->total_price,
                 'shipping_method' => $value->shipping_method,
                 'payment_method' => $value->payment_method,
@@ -114,10 +114,10 @@ class ApiController extends Controller {
                 $order->fill(array('order_status' => $page_data['status']))->save();
                 foreach ($page_data['items'] as $val) {
                     $update_array = array(
-                        'track_id' => $val['track_number'],
-                        'ship_carrier' => $val['ship_carrier'],
-                        'ship_date' => $val['ship_date'],
-                        'notes' => $val['notes'],
+                        'track_id' => $val['track_number'] != '' ? $val['track_number'] : null,
+                        'ship_carrier' => $val['ship_carrier'] != '' ? $val['ship_carrier'] : null,
+                        'ship_date' => $val['ship_date'] != '' ? $val['ship_date'] : null,
+                        'notes' => $val['notes'] != '' ? $val['notes'] : null,
                     );
                     if ($order_details = OrderDetail::find($val['item_id'])) {
                         $order_details->fill($update_array)->save();
