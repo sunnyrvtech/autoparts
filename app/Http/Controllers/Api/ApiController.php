@@ -63,10 +63,10 @@ class ApiController extends Controller {
                 $item_array[$k]['product_name'] = $val->product_name;
                 $item_array[$k]['sku_number'] = $val->sku_number;
                 $item_array[$k]['quantity'] = $val->quantity;
-                $item_array[$k]['price'] = $val->price;
-                $item_array[$k]['discount'] = $val->discount;
-                $item_array[$k]['ship_carrier'] = $val->ship_carrier;
-                $item_array[$k]['ship_date'] = $val->ship_date != null ? date('Y-m-d', strtotime($val->ship_date)) : null;
+                $item_array[$k]['price'] = $val->total_price-($val->total_price*$val->discount/100);
+                $item_array[$k]['discount'] = $val->discount != null ? $val->discount : '';
+                $item_array[$k]['ship_carrier'] = $val->ship_carrier != null ? $val->ship_carrier : '';
+                $item_array[$k]['ship_date'] = $val->ship_date != null ? date('Y-m-d', strtotime($val->ship_date)) : '';
                 $item_array[$k]['notes'] = $val->notes;
             }
             $order_array[$key]['total_orders'] = Order::count();
@@ -80,14 +80,14 @@ class ApiController extends Controller {
                 'total_price' => $value->total_price,
                 'shipping_method' => $value->shipping_method,
                 'payment_method' => $value->payment_method,
-                'billing_address1' => $value->address1,
-                'billing_address2' => $value->address2,
+                'billing_address1' => $value->getCustomer->getBillingDetails->address1,
+                'billing_address2' => $value->getCustomer->getBillingDetails->address2,
                 'billing_city' => $value->getCustomer->getBillingDetails->city,
                 'billing_state' => $value->getCustomer->getBillingDetails->get_state->name,
                 'billing_zip' => $value->getCustomer->getBillingDetails->zip,
                 'billing_country' => $value->getCustomer->getBillingDetails->get_country->name,
-                'shipping_address1' => $value->address1,
-                'shipping_address2' => $value->address2,
+                'shipping_address1' => $value->getCustomer->getShippingDetails->address1,
+                'shipping_address2' => $value->getCustomer->getShippingDetails->address2,
                 'shipping_city' => $value->getCustomer->getShippingDetails->city,
                 'shipping_state' => $value->getCustomer->getShippingDetails->get_state->name,
                 'shipping_zip' => $value->getCustomer->getShippingDetails->zip,
@@ -119,7 +119,7 @@ class ApiController extends Controller {
                         'ship_date' => $val['ship_date'],
                         'notes' => $val['notes'],
                     );
-                    if ($order_details = OrderDetail::find($val['item_id'])){
+                    if ($order_details = OrderDetail::find($val['item_id'])) {
                         $order_details->fill($update_array)->save();
                     }
                 }
