@@ -59,15 +59,15 @@ class ApiController extends Controller {
             $item_array = array();
             foreach ($value->getOrderDetailById as $k => $val) {
                 $item_array[$k]['item_id'] = $val->id;
-                $item_array[$k]['track_number'] = $val->track_id;
+                $item_array[$k]['track_number'] = $val->track_id != null ? $val->track_id : '';
                 $item_array[$k]['product_name'] = $val->product_name;
                 $item_array[$k]['sku_number'] = $val->sku_number;
                 $item_array[$k]['quantity'] = $val->quantity;
-                $item_array[$k]['price'] = $val->total_price-($val->total_price*$val->discount/100);
+                $item_array[$k]['price'] = $val->total_price - ($val->total_price * $val->discount / 100);
                 $item_array[$k]['discount'] = $val->discount != null ? $val->discount : '';
                 $item_array[$k]['ship_carrier'] = $val->ship_carrier != null ? $val->ship_carrier : '';
                 $item_array[$k]['ship_date'] = $val->ship_date != null ? date('Y-m-d', strtotime($val->ship_date)) : '';
-                $item_array[$k]['notes'] = $val->notes;
+                $item_array[$k]['notes'] = $val->notes != null ? $val->notes : '';
             }
             $order_array[$key]['total_orders'] = Order::count();
             $order_array[$key]['total_pages'] = $orders->count();
