@@ -205,7 +205,9 @@ class ApiController extends Controller {
         $product_array = array();
         if (!empty($products->toArray())) {
             foreach ($products as $key => $value) {
-                $product_array[$key] = array(
+                $product_array[$key]['total_products'] = Product::count();
+                $product_array[$key]['total_pages'] = $products->count();
+                $product_array[$key]['page' . ($key + 1)] = array(
                     'id' => $value->id,
                     'sku' => $value->sku,
                     'text' => @$value->product_details->text,
@@ -278,7 +280,8 @@ class ApiController extends Controller {
     public function postProductDetails(Request $request) {
 
         $data = $request->all();
-        foreach ($data as $key => $row) {
+        foreach ($data as $key => $value) {
+            $row = $value['page' . ($key + 1)];
             if (!$category = Category::where('name', 'like', trim($row['category']))->first(array('id'))) {
                 $category = Category::create(array('name' => trim($rowp['category']), 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
             }
