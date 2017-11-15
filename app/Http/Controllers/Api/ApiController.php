@@ -26,33 +26,41 @@ class ApiController extends Controller {
      * @return Response
      */
     public function getOrderDetails(Request $request) {
-        $start = $request->get('start');
-        $end = $request->get('end');
-        $skip = $start - 1;
-        $take = ($end - $start) + 1;
+        $limit = $request->get('limit') ? $request->get('limit') : 10;
+//        $start = $request->get('start') ? $request->get('start') : 1;
+//        $end = $request->get('end') ? $request->get('end') : 10;
+//        $skip = $start - 1;
+//        $take = ($end - $start) + 1;
 
         $filter_array = array(
-            'date_from' => $request->get('date_from'),
-            'date_to' => date('Y-m-d', strtotime('+1 day', strtotime($request->get('date_to')))),
-            'order_from' => $request->get('order_from'),
-            'order_to' => $request->get('order_to'),
-            'order_id' => $request->get('order_id'),
+            'date' => $request->get('date'),
+            'ids' => $request->get('ids'),
             'status' => $request->get('status'),
         );
 
         $orders = Order::Where(function($query) use ($filter_array) {
-                    if ($filter_array['date_from'] != null && $filter_array['date_to'] != null) {
-                        $query->whereBetween('created_at', [$filter_array['date_from'], $filter_array['date_to']]);
+                    if ($filter_array['ids'] != null && $filter_array['ids'] != null) {
+                        $ids = explode(',', $filter_array['ids']);
+                        if (count($ids) == 2) {
+                            $query->whereBetween('id', $ids);
+                        } else {
+                            $query->where('id', $ids[0]);
+                        }
                     }
-                    if ($filter_array['order_from'] != null && $filter_array['order_from'] != null) {
-                        $query->whereBetween('id', [$filter_array['order_from'], $filter_array['order_to']]);
-                    } elseif ($filter_array['order_id'] != null) {
-                        $query->Where('id', $filter_array['order_id']);
+                    if ($filter_array['date'] != null && $filter_array['date'] != null) {
+                        $dates = explode(',', $filter_array['date']);
+                        if (count($dates) == 2) {
+                            $dates[1] = date('Y-m-d', strtotime('+1 day', strtotime($dates[1])));
+                            $query->whereBetween('created_at', $dates);
+                        } else {
+                            $query->where('created_at', 'like', $dates[0] . '%');
+                        }
                     }
                     if ($filter_array['status'] != null) {
                         $query->Where('order_status', $filter_array['status']);
                     }
-                })->latest('created_at')->skip($skip)->take($take)->get();
+                })->latest('created_at')->take($limit)->get();
+//                })->latest('created_at')->skip($skip)->take($take)->get();
 
         $order_array = array();
         foreach ($orders as $key => $value) {
@@ -127,11 +135,6 @@ class ApiController extends Controller {
         }
 
         return response()->json(['status' => "success"]);
-//        
-//        
-//        
-//
-//
 //        $path = $request->file('csvFile')->getRealPath();
 //
 //        Excel::filter('chunk')->load($path)->chunk(1000, function($results) {
@@ -159,12 +162,42 @@ class ApiController extends Controller {
     }
 
     public function getProductDetails(Request $request) {
+        $limit = $request->get('limit') ? $request->get('limit') : 10;
+//        $start = $request->get('start') ? $request->get('start') : 1;
+//        $end = $request->get('end') ? $request->get('end') : 10;
+//        $skip = $start - 1;
+//        $take = ($end - $start) + 1;
 
-        $start = $request->get('start') ? $request->get('start') : 1;
-        $end = $request->get('end') ? $request->get('end') : 10;
-        $skip = $start - 1;
-        $take = ($end - $start) + 1;
-        $products = Product::take($take)->skip($skip)->get();
+
+        $filter_array = array(
+            'ids' => $request->get('ids'),
+            'date' => $request->get('date'),
+            'sku' => $request->get('sku'),
+        );
+
+        $products = Product::Where(function($query) use ($filter_array) {
+                    if ($filter_array['ids'] != null && $filter_array['ids'] != null) {
+                        $ids = explode(',', $filter_array['ids']);
+                        if (count($ids) == 2)
+                            $query->whereBetween('id', $ids);
+                        else
+                            $query->where('id', $ids[0]);
+                    }
+                    if ($filter_array['sku'] != null && $filter_array['sku'] != null) {
+                        $sku = explode(',', $filter_array['sku']);
+                        $query->whereIn('sku', $sku);
+                    }
+                    if ($filter_array['date'] != null && $filter_array['date'] != null) {
+                        $dates = explode(',', $filter_array['date']);
+                        if (count($dates) == 2) {
+                            $dates[1] = date('Y-m-d', strtotime('+1 day', strtotime($dates[1])));
+                            $query->whereBetween('created_at', $dates);
+                        } else {
+                            $query->where('created_at', 'like', $dates[0] . '%');
+                        }
+                    }
+                })->take($limit)->get();
+
         $product_array = array();
         if (!empty($products->toArray())) {
             foreach ($products as $key => $value) {
@@ -189,14 +222,14 @@ class ApiController extends Controller {
                     'sub_category' => @$value->product_sub_category->get_sub_categories->name,
                     'certification' => @$value->product_details->certification,
                     'price' => $value->price,
-                    'special_price' => $value->special_price,
-                    'discount' => $value->discount,
+                    'special_price' => !empty(@$value->special_price) ? @$value->special_price : '',
+                    'discount' => !empty(@$value->discount) ? @$value->discount : '',
                     'quantity' => $value->quantity,
                     'status' => $value->status,
-                    'weight' => $value->weight,
-                    'length' => $value->length,
-                    'width' => $value->width,
-                    'height' => $value->height,
+                    'weight' => !empty(@$value->weight) ? @$value->weight : '',
+                    'length' => !empty(@$value->length) ? @$value->length : '',
+                    'width' => !empty(@$value->width) ? @$value->width : '',
+                    'height' => !empty(@$value->height) ? @$value->height : '',
                     'warranty' => !empty(@$value->product_details->warranty) ? @$value->product_details->warranty : '',
                     'brand' => !empty(@$value->get_brands->name) ? @$value->get_brands->name : '',
                     'operation' => !empty($value->operation) ? @$value->operation : '',
@@ -229,7 +262,8 @@ class ApiController extends Controller {
                     'lighting_mount_type' => !empty(@$value->product_details->lighting_mount_type) ? @$value->product_details->lighting_mount_type : '',
                     'cooling_fan_type' => !empty(@$value->product_details->cooling_fan_type) ? @$value->product_details->cooling_fan_type : '',
                     'radiator_row_count' => !empty(@$value->product_details->radiator_row_count) ? @$value->product_details->radiator_row_count : '',
-                    'oil_plan_capacity' => !empty(@$value->product_details->oil_plan_capacity) ? @$value->product_details->oil_plan_capacity : '');
+                    'oil_plan_capacity' => !empty(@$value->product_details->oil_plan_capacity) ? @$value->product_details->oil_plan_capacity : '',
+                    'created_at' => date('Y-m-d H:i:s', strtotime($value->created_at)));
             }
             return $product_array;
         } else {
@@ -238,133 +272,121 @@ class ApiController extends Controller {
     }
 
     public function postProductDetails(Request $request) {
-        $path = $request->file('csvFile')->getRealPath();
-        Excel::filter('chunk')->load($path)->chunk(1000, function($results) {
-            foreach ($results as $key => $row) {
 
-                if (!$category = Category::where('name', 'like', trim($row->category))->first(array('id'))) {
-                    $category = Category::create(array('name' => trim($row->category), 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
-                }
-
-                if (!$sub_category = SubCategory::where('category_id', $category->id)->where('name', 'like', trim($row->sub_category))->first(array('id', 'category_id'))) {
-                    $slug = $this->createSlug(trim($row->sub_category), 'category');
-                    $sub_category = SubCategory::create(array('category_id' => $category->id, 'name' => trim($row->sub_category), 'slug' => $slug, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
-                }
-                if (!$vehicle_company = VehicleCompany::where('name', 'like', trim(ucfirst(strtolower($row->vehicle_make))))->first(array('id'))) {
-                    $vehicle_company = VehicleCompany::create(array('name' => trim(ucfirst(strtolower($row->vehicle_make))), 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
-                }
-                if (!$vehicle_model = VehicleModel::where('name', 'like', trim(ucfirst(strtolower($row->vehicle_model))))->first(array('id'))) {
-                    $vehicle_model = VehicleModel::create(array('name' => trim(ucfirst(strtolower($row->vehicle_model))), 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
-                }
-
-                $product_slug = $this->createSlug(trim($row->product_name), 'product');
-                $vehicle_year = explode('-', $row->vehicle_year);
-                $product_array = array(
-                    'product_name' => trim($row->product_name),
-                    'product_slug' => $product_slug,
-                    'product_long_description' => trim($row->product_long_description),
-                    'product_short_description' => trim($row->product_short_description),
-                    'vehicle_fit' => empty($row->vehicle_fit) ? null : trim($row->vehicle_fit),
-                    'sku' => trim($row->sku),
-                    'price' => $row->price,
-                    'quantity' => $row->quantity,
-                    'discount' => $row->discount,
-                    'special_price' => $row->special_price,
-                    'vehicle_year_from' => $vehicle_year[0],
-                    'vehicle_year_to' => $vehicle_year[1],
-                    'vehicle_make_id' => $vehicle_company->id,
-                    'vehicle_model_id' => $vehicle_model->id,
-                    'length' => empty($row->length) ? null : trim($row->length),
-                    'weight' => empty($row->weight) ? null : trim($row->weight),
-                    'width' => empty($row->width) ? null : trim($row->width),
-                    'height' => empty($row->height) ? null : trim($row->height),
-                    'part_type' => empty($row->part_type) ? null : trim($row->part_type),
-                    'operation' => empty($row->operation) ? null : trim($row->operation),
-                    'wattage' => empty($row->wattage) ? null : trim($row->wattage),
-                    'mirror_option' => empty($row->mirror_option) ? null : trim($row->mirror_option),
-                    'location' => empty($row->location) ? null : trim($row->location),
-                    'size' => empty($row->size) ? null : trim($row->size),
-                    'material' => empty($row->material) ? null : trim($row->material),
-                    'color' => empty($row->color) ? null : trim($row->color),
-                    'front_location' => empty($row->front_location) ? null : trim($row->front_location),
-                    'side_location' => empty($row->side_location) ? null : trim($row->side_location),
-                    'includes' => empty($row->includes) ? null : trim($row->includes),
-                    'design' => empty($row->design) ? null : trim($row->design),
-                    'product_line' => empty($row->product_line) ? null : trim($row->product_line),
-                    'status' => empty($row->status) ? 1 : trim($row->status),
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now()
-                );
-
-                $product_detail_array = array(
-                    'meta_title' => empty($row->meta_title) ? null : trim($row->meta_title),
-                    'meta_description' => empty($row->meta_description) ? null : trim($row->meta_description),
-                    'meta_keyword' => empty($row->meta_keyword) ? null : trim($row->meta_keyword),
-                    'text' => empty($row->text) ? null : trim($row->text),
-                    'sale_type' => empty($row->sale_type) ? null : trim($row->sale_type),
-                    'm_code' => empty($row->m_code) ? null : trim($row->m_code),
-                    'class' => empty($row->class) ? null : trim($row->class),
-                    'parse_link' => empty($row->parse_link) ? null : trim($row->parse_link),
-                    'oem_number' => empty($row->oem_number) ? null : trim($row->oem_number),
-                    'certification' => empty($row->certification) ? null : trim($row->certification),
-                    'warranty' => empty($row->warranty) ? null : trim($row->warranty),
-                    'software' => empty($row->software) ? null : trim($row->software),
-                    'licensed_by' => empty($row->licensed_by) ? null : trim($row->licensed_by),
-                    'car_cover' => empty($row->car_cover) ? null : trim($row->car_cover),
-                    'kit_includes' => empty($row->kit_includes) ? null : trim($row->kit_includes),
-                    'fender_flare_type' => empty($row->fender_flare_type) ? null : trim($row->fender_flare_type),
-                    'product_grade' => empty($row->product_grade) ? null : trim($row->product_grade),
-                    'lighting_bulb_configuration' => empty($row->lighting_bulb_configuration) ? null : trim($row->lighting_bulb_configuration),
-                    'lighting_housing_shape' => empty($row->lighting_housing_shape) ? null : trim($row->lighting_housing_shape),
-                    'bracket_style' => empty($row->bracket_style) ? null : trim($row->bracket_style),
-                    'lighting_size' => empty($row->lighting_size) ? null : trim($row->lighting_size),
-                    'lighting_beam_pattern' => empty($row->lighting_beam_pattern) ? null : trim($row->lighting_beam_pattern),
-                    'lighting_lens_material' => empty($row->lighting_lens_material) ? null : trim($row->lighting_lens_material),
-                    'lighting_mount_type' => empty($row->lighting_mount_type) ? null : trim($row->lighting_mount_type),
-                    'cooling_fan_type' => empty($row->cooling_fan_type) ? null : trim($row->cooling_fan_type),
-                    'radiator_row_count' => empty($row->radiator_row_count) ? null : trim($row->radiator_row_count),
-                    'oil_plan_capacity' => empty($row->oil_plan_capacity) ? null : trim($row->oil_plan_capacity),
-                );
-
-
-                $products = Product::where('sku', 'like', $row->sku)->first();
-
-                if (!$products) {
-                    if ($product = Product::create($product_array)) {
-                        $product_detail_array['product_id'] = $product->id;
-                        ProductDetail::create($product_detail_array);
-                        ProductCategory::create(array('product_id' => $product->id, 'category_id' => $sub_category->category_id));
-                        ProductSubCategory::create(array('product_id' => $product->id, 'sub_category_id' => $sub_category->id));
-//                        if (!empty($row->product_region)) {
-//                            $zone_ids = array_unique(json_decode($row->product_region));
-//                            $product_prices = json_decode($row->product_price);
-//                            $this->addZonePrice($products->id, $zone_ids, $product_prices);
-//                        }
-                    }
-                } else {
-                    $products->fill($product_array)->save();
-                    $product_details = ProductDetail::where('product_id', $products->id);
-                    $product_detail_array['product_id'] = $products->id;
-                    if ($product_details->count()) {
-                        $product_details = $product_details->first();
-                        $product_details->fill($product_detail_array)->save();
-                    } else {
-                        ProductDetail::create($product_detail_array);
-                    }
-                    // delete all products category while update product data
-                    ProductCategory::where('product_id', $products->id)->delete();
-                    ProductSubCategory::where('product_id', $products->id)->delete();
-
-                    ProductCategory::create(array('product_id' => $products->id, 'category_id' => $sub_category->category_id));
-                    ProductSubCategory::create(array('product_id' => $products->id, 'sub_category_id' => $sub_category->id));
-//                    if (!empty($row->product_region)) {
-//                        $zone_ids = array_unique(json_decode($row->product_region));
-//                        $product_prices = json_decode($row->product_price);
-//                        $this->addZonePrice($products->id, $zone_ids, $product_prices);
-//                    }
-                }
+        $data = $request->all();
+        foreach ($data as $key => $row) {
+            if (!$category = Category::where('name', 'like', trim($row['category']))->first(array('id'))) {
+                $category = Category::create(array('name' => trim($rowp['category']), 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
             }
-        });
+
+            if (!$sub_category = SubCategory::where('category_id', $category->id)->where('name', 'like', trim($row['sub_category']))->first(array('id', 'category_id'))) {
+                $slug = $this->createSlug(trim($row->sub_category), 'category');
+                $sub_category = SubCategory::create(array('category_id' => $category->id, 'name' => trim($row['sub_category']), 'slug' => $slug, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
+            }
+            if (!$vehicle_company = VehicleCompany::where('name', 'like', trim(ucfirst(strtolower($row['vehicle_make']))))->first(array('id'))) {
+                $vehicle_company = VehicleCompany::create(array('name' => trim(ucfirst(strtolower($row['vehicle_make']))), 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
+            }
+            if (!$vehicle_model = VehicleModel::where('name', 'like', trim(ucfirst(strtolower($row['vehicle_model']))))->first(array('id'))) {
+                $vehicle_model = VehicleModel::create(array('name' => trim(ucfirst(strtolower($row['vehicle_model']))), 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
+            }
+
+            $product_slug = $this->createSlug(trim($row['product_name']), 'product');
+            $vehicle_year = explode('-', $row['vehicle_year']);
+            $product_array = array(
+                'product_name' => trim($row['product_name']),
+                'product_slug' => $product_slug,
+                'product_long_description' => trim($row['product_long_description']),
+                'product_short_description' => trim($row['product_short_description']),
+                'vehicle_fit' => empty($row['vehicle_fit']) ? null : trim($row['vehicle_fit']),
+                'sku' => trim($row['sku']),
+                'price' => $row['price'],
+                'quantity' => $row['quantity'],
+                'discount' => empty($row['discount']) ? null : trim($row['discount']),
+                'special_price' => empty($row['special_price']) ? null : trim($row['special_price']),
+                'vehicle_year_from' => $vehicle_year[0],
+                'vehicle_year_to' => $vehicle_year[1],
+                'vehicle_make_id' => $vehicle_company->id,
+                'vehicle_model_id' => $vehicle_model->id,
+                'length' => empty($row['length']) ? null : trim($row['length']),
+                'weight' => empty($row['weight']) ? null : trim($row['weight']),
+                'width' => empty($row['width']) ? null : trim($row['width']),
+                'height' => empty($row['height']) ? null : trim($row['height']),
+                'part_type' => empty($row['part_type']) ? null : trim($row['part_type']),
+                'operation' => empty($row['operation']) ? null : trim($row['operation']),
+                'wattage' => empty($row['wattage']) ? null : trim($row['wattage']),
+                'mirror_option' => empty($row['mirror_option']) ? null : trim($row['mirror_option']),
+                'location' => empty($row['location']) ? null : trim($row['location']),
+                'size' => empty($row['size']) ? null : trim($row['size']),
+                'material' => empty($row['material']) ? null : trim($row['material']),
+                'color' => empty($row['color']) ? null : trim($row['color']),
+                'front_location' => empty($row['front_location']) ? null : trim($row['front_location']),
+                'side_location' => empty($row['side_location']) ? null : trim($row['side_location']),
+                'includes' => empty($row['includes']) ? null : trim($row['includes']),
+                'design' => empty($row['design']) ? null : trim($row['design']),
+                'product_line' => empty($row['product_line']) ? null : trim($row['product_line']),
+                'status' => empty($row['status']) ? 1 : trim($row['status']),
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            );
+
+            $product_detail_array = array(
+                'meta_title' => empty($row['meta_title']) ? null : trim($row['meta_title']),
+                'meta_description' => empty($row['meta_description']) ? null : trim($row['meta_description']),
+                'meta_keyword' => empty($row['meta_keyword']) ? null : trim($row['meta_keyword']),
+                'text' => empty($row['text']) ? null : trim($row['text']),
+                'sale_type' => empty($row['sale_type']) ? null : trim($row['sale_type']),
+                'm_code' => empty($row['m_code']) ? null : trim($row['m_code']),
+                'class' => empty($row['class']) ? null : trim($row['class']),
+                'parse_link' => empty($row['parse_link']) ? null : trim($row['parse_link']),
+                'oem_number' => empty($row['oem_number']) ? null : trim($row['oem_number']),
+                'certification' => empty($row['certification']) ? null : trim($row['certification']),
+                'warranty' => empty($row['warranty']) ? null : trim($row['warranty']),
+                'software' => empty($row['software']) ? null : trim($row['software']),
+                'licensed_by' => empty($row['licensed_by']) ? null : trim($row['licensed_by']),
+                'car_cover' => empty($row['car_cover']) ? null : trim($row['car_cover']),
+                'kit_includes' => empty($row['kit_includes']) ? null : trim($row['kit_includes']),
+                'fender_flare_type' => empty($row['fender_flare_type']) ? null : trim($row['fender_flare_type']),
+                'product_grade' => empty($row['product_grade']) ? null : trim($row['product_grade']),
+                'lighting_bulb_configuration' => empty($row['lighting_bulb_configuration']) ? null : trim($row['lighting_bulb_configuration']),
+                'lighting_housing_shape' => empty($row['lighting_housing_shape']) ? null : trim($row['lighting_housing_shape']),
+                'bracket_style' => empty($row['bracket_style']) ? null : trim($row['bracket_style']),
+                'lighting_size' => empty($row['lighting_size']) ? null : trim($row['lighting_size']),
+                'lighting_beam_pattern' => empty($row['lighting_beam_pattern']) ? null : trim($row['lighting_beam_pattern']),
+                'lighting_lens_material' => empty($row['lighting_lens_material']) ? null : trim($row['lighting_lens_material']),
+                'lighting_mount_type' => empty($row['lighting_mount_type']) ? null : trim($row['lighting_mount_type']),
+                'cooling_fan_type' => empty($row['cooling_fan_type']) ? null : trim($row['cooling_fan_type']),
+                'radiator_row_count' => empty($row['radiator_row_count']) ? null : trim($row['radiator_row_count']),
+                'oil_plan_capacity' => empty($row['oil_plan_capacity']) ? null : trim($row['oil_plan_capacity']),
+            );
+
+
+            $products = Product::where('sku', 'like', $row['sku'])->first();
+
+            if (!$products) {
+                if ($product = Product::create($product_array)) {
+                    $product_detail_array['product_id'] = $product->id;
+                    ProductDetail::create($product_detail_array);
+                    ProductCategory::create(array('product_id' => $product->id, 'category_id' => $sub_category->category_id));
+                    ProductSubCategory::create(array('product_id' => $product->id, 'sub_category_id' => $sub_category->id));
+                }
+            } else {
+                $products->fill($product_array)->save();
+                $product_details = ProductDetail::where('product_id', $products->id);
+                $product_detail_array['product_id'] = $products->id;
+                if ($product_details->count()) {
+                    $product_details = $product_details->first();
+                    $product_details->fill($product_detail_array)->save();
+                } else {
+                    ProductDetail::create($product_detail_array);
+                }
+                // delete all products category while update product data
+                ProductCategory::where('product_id', $products->id)->delete();
+                ProductSubCategory::where('product_id', $products->id)->delete();
+
+                ProductCategory::create(array('product_id' => $products->id, 'category_id' => $sub_category->category_id));
+                ProductSubCategory::create(array('product_id' => $products->id, 'sub_category_id' => $sub_category->id));
+            }
+        }
         return response()->json(['status' => "success"]);
     }
 
