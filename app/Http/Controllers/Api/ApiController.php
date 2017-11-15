@@ -63,46 +63,50 @@ class ApiController extends Controller {
 //                })->latest('created_at')->skip($skip)->take($take)->get();
 
         $order_array = array();
-        foreach ($orders as $key => $value) {
-            $item_array = array();
-            foreach ($value->getOrderDetailById as $k => $val) {
-                $item_array[$k]['item_id'] = $val->id;
-                $item_array[$k]['track_number'] = $val->track_id != null ? $val->track_id : '';
-                $item_array[$k]['product_name'] = $val->product_name;
-                $item_array[$k]['sku_number'] = $val->sku_number;
-                $item_array[$k]['quantity'] = $val->quantity;
-                $item_array[$k]['price'] = $val->total_price - ($val->total_price * $val->discount / 100);
-                $item_array[$k]['discount'] = $val->discount != null ? $val->discount : '';
-                $item_array[$k]['ship_carrier'] = $val->ship_carrier != null ? $val->ship_carrier : '';
-                $item_array[$k]['ship_date'] = $val->ship_date != null ? date('Y-m-d', strtotime($val->ship_date)) : '';
-                $item_array[$k]['notes'] = $val->notes != null ? $val->notes : '';
+        if ($orders) {
+            foreach ($orders as $key => $value) {
+                $item_array = array();
+                foreach ($value->getOrderDetailById as $k => $val) {
+                    $item_array[$k]['item_id'] = $val->id;
+                    $item_array[$k]['track_number'] = $val->track_id != null ? $val->track_id : '';
+                    $item_array[$k]['product_name'] = $val->product_name;
+                    $item_array[$k]['sku_number'] = $val->sku_number;
+                    $item_array[$k]['quantity'] = $val->quantity;
+                    $item_array[$k]['price'] = $val->total_price - ($val->total_price * $val->discount / 100);
+                    $item_array[$k]['discount'] = $val->discount != null ? $val->discount : '';
+                    $item_array[$k]['ship_carrier'] = $val->ship_carrier != null ? $val->ship_carrier : '';
+                    $item_array[$k]['ship_date'] = $val->ship_date != null ? date('Y-m-d', strtotime($val->ship_date)) : '';
+                    $item_array[$k]['notes'] = $val->notes != null ? $val->notes : '';
+                }
+                $order_array[$key]['total_orders'] = Order::count();
+                $order_array[$key]['total_pages'] = $orders->count();
+                $order_array[$key]['page' . ($key + 1)] = array(
+                    'order_id' => $value->id,
+                    'order_date' => date('Y-m-d', strtotime($value->created_at)),
+                    'customer_name' => $value->getCustomer->first_name . ' ' . $value->getCustomer->last_name,
+                    'ship_price' => $value->ship_price != null ? $value->ship_price : '',
+                    'tax' => $value->tax_rate != null ? $value->tax_rate : '',
+                    'total_price' => $value->total_price,
+                    'shipping_method' => $value->shipping_method,
+                    'payment_method' => $value->payment_method,
+                    'billing_address1' => $value->getCustomer->getBillingDetails->address1,
+                    'billing_address2' => $value->getCustomer->getBillingDetails->address2,
+                    'billing_city' => $value->getCustomer->getBillingDetails->city,
+                    'billing_state' => $value->getCustomer->getBillingDetails->get_state->name,
+                    'billing_zip' => $value->getCustomer->getBillingDetails->zip,
+                    'billing_country' => $value->getCustomer->getBillingDetails->get_country->name,
+                    'shipping_address1' => $value->getCustomer->getShippingDetails->address1,
+                    'shipping_address2' => $value->getCustomer->getShippingDetails->address2,
+                    'shipping_city' => $value->getCustomer->getShippingDetails->city,
+                    'shipping_state' => $value->getCustomer->getShippingDetails->get_state->name,
+                    'shipping_zip' => $value->getCustomer->getShippingDetails->zip,
+                    'shipping_country' => $value->getCustomer->getShippingDetails->get_country->name,
+                    'status' => $value->order_status,
+                    'items' => $item_array,
+                );
             }
-            $order_array[$key]['total_orders'] = Order::count();
-            $order_array[$key]['total_pages'] = $orders->count();
-            $order_array[$key]['page' . ($key + 1)] = array(
-                'order_id' => $value->id,
-                'order_date' => date('Y-m-d', strtotime($value->created_at)),
-                'customer_name' => $value->getCustomer->first_name . ' ' . $value->getCustomer->last_name,
-                'ship_price' => $value->ship_price != null ? $value->ship_price : '',
-                'tax' => $value->tax_rate != null ? $value->tax_rate : '',
-                'total_price' => $value->total_price,
-                'shipping_method' => $value->shipping_method,
-                'payment_method' => $value->payment_method,
-                'billing_address1' => $value->getCustomer->getBillingDetails->address1,
-                'billing_address2' => $value->getCustomer->getBillingDetails->address2,
-                'billing_city' => $value->getCustomer->getBillingDetails->city,
-                'billing_state' => $value->getCustomer->getBillingDetails->get_state->name,
-                'billing_zip' => $value->getCustomer->getBillingDetails->zip,
-                'billing_country' => $value->getCustomer->getBillingDetails->get_country->name,
-                'shipping_address1' => $value->getCustomer->getShippingDetails->address1,
-                'shipping_address2' => $value->getCustomer->getShippingDetails->address2,
-                'shipping_city' => $value->getCustomer->getShippingDetails->city,
-                'shipping_state' => $value->getCustomer->getShippingDetails->get_state->name,
-                'shipping_zip' => $value->getCustomer->getShippingDetails->zip,
-                'shipping_country' => $value->getCustomer->getShippingDetails->get_country->name,
-                'status' => $value->order_status,
-                'items' => $item_array,
-            );
+        }else{
+            return array();
         }
         return $order_array;
     }
