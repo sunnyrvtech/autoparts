@@ -63,7 +63,7 @@ class ApiController extends Controller {
 //                })->latest('created_at')->skip($skip)->take($take)->get();
 
         $order_array = array();
-        if ($orders) {
+        if (!empty($orders->toArray())) {
             foreach ($orders as $key => $value) {
                 $item_array = array();
                 foreach ($value->getOrderDetailById as $k => $val) {
@@ -105,7 +105,7 @@ class ApiController extends Controller {
                     'items' => $item_array,
                 );
             }
-        }else{
+        } else {
             return array();
         }
         return $order_array;
@@ -271,7 +271,7 @@ class ApiController extends Controller {
             }
             return $product_array;
         } else {
-            return redirect()->route('products.index')->with('error-message', 'No Product found to export !');
+            return array();
         }
     }
 
