@@ -205,9 +205,7 @@ class ApiController extends Controller {
         $product_array = array();
         if (!empty($products->toArray())) {
             foreach ($products as $key => $value) {
-                $product_array[$key]['total_products'] = Product::count();
-                $product_array[$key]['total_pages'] = $products->count();
-                $product_array[$key]['page' . ($key + 1)] = array(
+                $product_array[$key] = array(
                     'id' => $value->id,
                     'sku' => $value->sku,
                     'text' => @$value->product_details->text,
