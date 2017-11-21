@@ -178,9 +178,10 @@ class ApiController extends Controller {
 
     public function getProductDetails(Request $request) {
         $page_size = $request->get('page_size') ? $request->get('page_size') : 10;
+        $current_page = $request->get('current_page') ? $request->get('current_page') : 1;
 //        $start = $request->get('start') ? $request->get('start') : 1;
 //        $end = $request->get('end') ? $request->get('end') : 10;
-//        $skip = $start - 1;
+        $skip = ($current_page - 1) * $page_size;
 //        $take = ($end - $start) + 1;
 
 
@@ -211,14 +212,16 @@ class ApiController extends Controller {
                             $query->where('created_at', 'like', $dates[0] . '%');
                         }
                     }
-                })->take($page_size)->get();
-
+                })->skip($skip)->take($page_size)->get();
+        $total_product = Product::count();
         $product_array = array();
         if (!empty($products->toArray())) {
             foreach ($products as $key => $value) {
-                $product_array[$key]['total_products'] = Product::count();
-                $product_array[$key]['total_pages'] = $products->count();
-                $product_array[$key]['page' . ($key + 1)] = array(
+                $product_array['total_products'] = $total_product;
+                $product_array['page_size'] = $page_size;
+                $product_array['total_pages'] = ceil($total_product / $page_size);
+                $product_array['current_page'] = $current_page;
+                $product_array['products'][$key] = array(
                     'id' => $value->id,
                     'sku' => $value->sku,
                     'text' => @$value->product_details->text,
@@ -291,8 +294,8 @@ class ApiController extends Controller {
     public function postProductDetails(Request $request) {
 
         $data = $request->all();
-        foreach ($data as $key => $value) {
-            $row = $value['page' . ($key + 1)];
+        foreach ($data['products'] as $key => $value) {
+            $row = $value;
             if (!$category = Category::where('name', 'like', trim($row['category']))->first(array('id'))) {
                 $category = Category::create(array('name' => trim($rowp['category']), 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
             }
