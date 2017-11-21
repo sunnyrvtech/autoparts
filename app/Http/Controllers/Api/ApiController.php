@@ -26,10 +26,11 @@ class ApiController extends Controller {
      * @return Response
      */
     public function getOrderDetails(Request $request) {
-        $limit = $request->get('limit') ? $request->get('limit') : 10;
+        $page_size = $request->get('page_size') ? $request->get('page_size') : 10;
+        $current_page = $request->get('current_page') ? $request->get('current_page') : 1;
 //        $start = $request->get('start') ? $request->get('start') : 1;
 //        $end = $request->get('end') ? $request->get('end') : 10;
-//        $skip = $start - 1;
+        $skip = ($current_page - 1) * $page_size;
 //        $take = ($end - $start) + 1;
 
         $filter_array = array(
@@ -59,9 +60,8 @@ class ApiController extends Controller {
                     if ($filter_array['status'] != null) {
                         $query->Where('order_status', $filter_array['status']);
                     }
-                })->latest('created_at')->take($limit)->get();
-//                })->latest('created_at')->skip($skip)->take($take)->get();
-
+                })->latest('created_at')->skip($skip)->take($page_size)->get();
+        $total_order = Order::count();
         $order_array = array();
         if (!empty($orders->toArray())) {
             foreach ($orders as $key => $value) {
@@ -78,9 +78,11 @@ class ApiController extends Controller {
                     $item_array[$k]['ship_date'] = $val->ship_date != null ? date('Y-m-d', strtotime($val->ship_date)) : '';
                     $item_array[$k]['notes'] = $val->notes != null ? $val->notes : '';
                 }
-                $order_array[$key]['total_orders'] = Order::count();
-                $order_array[$key]['total_pages'] = $orders->count();
-                $order_array[$key]['page' . ($key + 1)] = array(
+                $order_array['total_orders'] = $total_order;
+                $order_array['page_size'] = $page_size;
+                $order_array['total_pages'] = ceil($total_order / $page_size);
+                $order_array['current_page'] = $current_page;
+                $order_array['orders'][$key] = array(
                     'order_id' => $value->id,
                     'order_date' => date('Y-m-d', strtotime($value->created_at)),
                     'customer_name' => $value->getCustomer->first_name . ' ' . $value->getCustomer->last_name,
@@ -119,8 +121,9 @@ class ApiController extends Controller {
     public function postOrderDetails(Request $request) {
 
         $data = $request->all();
-        foreach ($data as $key => $value) {
-            $page_data = $value['page' . ($key + 1)];
+        $failed_ids = array();
+        foreach ($data['orders'] as $key => $value) {
+            $page_data = $value;
             $order = Order::find($page_data['order_id']);
             if ($order) {
                 $order->fill(array('order_status' => $page_data['status']))->save();
@@ -132,13 +135,21 @@ class ApiController extends Controller {
                         'notes' => $val['notes'] != null ? $val['notes'] : null,
                     );
                     if ($order_details = OrderDetail::find($val['item_id'])) {
-                        $order_details->fill($update_array)->save();
+                        if (!$order_details->fill($update_array)->save()) {
+                            $failed_ids[$key] = $page_data['order_id'];
+                        }
                     }
                 }
             }
         }
 
-        return response()->json(['status' => "success"]);
+        if (empty($failed_ids)) {
+            return response()->json(['status' => "success"]);
+        } else {
+            return response()->json(['status' => "error", 'failed_order_ids' => json_encode($failed_ids)]);
+        }
+
+
 //        $path = $request->file('csvFile')->getRealPath();
 //
 //        Excel::filter('chunk')->load($path)->chunk(1000, function($results) {
@@ -166,7 +177,7 @@ class ApiController extends Controller {
     }
 
     public function getProductDetails(Request $request) {
-        $limit = $request->get('limit') ? $request->get('limit') : 10;
+        $page_size = $request->get('page_size') ? $request->get('page_size') : 10;
 //        $start = $request->get('start') ? $request->get('start') : 1;
 //        $end = $request->get('end') ? $request->get('end') : 10;
 //        $skip = $start - 1;
@@ -200,7 +211,7 @@ class ApiController extends Controller {
                             $query->where('created_at', 'like', $dates[0] . '%');
                         }
                     }
-                })->take($limit)->get();
+                })->take($page_size)->get();
 
         $product_array = array();
         if (!empty($products->toArray())) {
