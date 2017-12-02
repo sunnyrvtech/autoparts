@@ -20,5 +20,6 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/orders', 'Api\ApiController@getOrderDetails');
     Route::post('/orders', 'Api\ApiController@postOrderDetails');
     Route::get('/products', 'Api\ApiController@getProductDetails');
-    Route::post('/products', 'Api\ApiController@postProductDetails');
+    Route::post('/products/add', 'Api\ApiController@addProductDetails');
+    Route::post('/products/update', 'Api\ApiController@updateProductDetails');
 });

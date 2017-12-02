@@ -237,7 +237,6 @@ class ProductController extends Controller {
         if ($request->file('product_images')) {
             if ($request->hasFile('product_images')) {
                 $image = $request->file('product_images');
-                $imageArray = array();
                 $path = base_path('public/product_images/');
                 foreach ($image as $key => $image_val) {
                     $count_key = $key + count($old_image_data);
