@@ -72,8 +72,8 @@ class ProductController extends Controller {
         $brands = Brand::pluck('name', 'id')->prepend('---Please Select---', '');
         $vehicle_model = VehicleModel::pluck('name', 'id')->prepend('---Please Select---', '');
         $vehicle_company = VehicleCompany::pluck('name', 'id')->prepend('---Please Select---', '');
-        $product_zones = ProductZone::pluck('zone_name', 'id')->prepend('---Please Select---', '');
-        return View::make('admin.products.add', compact('title', 'brands', 'vehicle_model', 'vehicle_company', 'product_zones'));
+//        $product_zones = ProductZone::pluck('zone_name', 'id')->prepend('---Please Select---', '');
+        return View::make('admin.products.add', compact('title', 'brands', 'vehicle_model', 'vehicle_company'));
     }
 
     /**
@@ -123,28 +123,30 @@ class ProductController extends Controller {
             ProductDetail::create($data);
 
             //insert price based on zones
-            if ($request->get('zone_id')[0] != null) {
-                $zone_ids = array_unique($data['zone_id']);
-                foreach ($zone_ids as $ky => $val) {
-                    $region_array = array('product_id' => $products->id, 'zone_id' => $val, 'product_price' => $data['product_price'][$ky]);
-                    ProductPriceZone::create($region_array);
-                }
-            }
+//            if ($request->get('zone_id')[0] != null) {
+//                $zone_ids = array_unique($data['zone_id']);
+//                foreach ($zone_ids as $ky => $val) {
+//                    $region_array = array('product_id' => $products->id, 'zone_id' => $val, 'product_price' => $data['product_price'][$ky]);
+//                    ProductPriceZone::create($region_array);
+//                }
+//            }
 
             //insert category details in product category table
             if ($request->get('parent_category') != '') {
-                $parent_category_array = array();
-                foreach ($request->get('parent_category') as $cat_key => $cat_val) {
-                    $parent_category_array[$cat_key] = array('product_id' => $products->id, 'category_id' => $cat_val);
-                }
+//                $parent_category_array = array();
+//                foreach ($request->get('parent_category') as $cat_key => $cat_val) {
+//                    $parent_category_array[$cat_key] = array('product_id' => $products->id, 'category_id' => $cat_val);
+//                }
+                $parent_category_array = array('product_id' => $products->id, 'category_id' => $request->get('parent_category'));
                 ProductCategory::insert($parent_category_array);
             }
             //insert sub category details in product category table
             if ($request->get('sub_category') != '') {
-                $sub_category_array = array();
-                foreach ($request->get('sub_category') as $sub_cat_key => $sub_cat_val) {
-                    $sub_category_array[$sub_cat_key] = array('product_id' => $products->id, 'sub_category_id' => $sub_cat_val);
-                }
+//                $sub_category_array = array();
+//                foreach ($request->get('sub_category') as $sub_cat_key => $sub_cat_val) {
+//                    $sub_category_array[$sub_cat_key] = array('product_id' => $products->id, 'sub_category_id' => $sub_cat_val);
+//                }
+                $sub_category_array = array('product_id' => $products->id, 'sub_category_id' => $request->get('sub_category'));
                 ProductSubCategory::insert($sub_category_array);
             }
             //insert sub sub category details in product category table
@@ -183,8 +185,8 @@ class ProductController extends Controller {
         $brands = Brand::pluck('name', 'id')->prepend('---Please Select---', '');
         $vehicle_model = VehicleModel::pluck('name', 'id')->prepend('---Please Select---', '');
         $vehicle_company = VehicleCompany::pluck('name', 'id')->prepend('---Please Select---', '');
-        $product_zones = ProductZone::pluck('zone_name', 'id')->prepend('---Please Select---', '');
-        return View::make('admin.products.edit', compact('title', 'products', 'brands', 'vehicle_model', 'vehicle_company', 'product_categories', 'product_sub_categories', 'product_zones'));
+//        $product_zones = ProductZone::pluck('zone_name', 'id')->prepend('---Please Select---', '');
+        return View::make('admin.products.edit', compact('title', 'products', 'brands', 'vehicle_model', 'vehicle_company', 'product_categories', 'product_sub_categories'));
     }
 
 //    /**
@@ -266,42 +268,44 @@ class ProductController extends Controller {
 
 
         //update price based on zones
-        if ($request->get('zone_id')[0] != null) {
-            
-            $old_price_data = ProductPriceZone::where('product_id', $products->id)->pluck('zone_id')->toArray();
-
-            // this is used to check if old region is deleted while update
-            $check_del_zone_price = array_diff($old_price_data, $request->get('zone_id'));
-            if ($check_del_zone_price) {
-                ProductPriceZone::whereIn('zone_id', $check_del_zone_price)->delete();
-            }
-            foreach ($data['zone_id'] as $ky => $val) {
-                $product_price_zone = ProductPriceZone::where([['product_id', '=', $products->id], ['zone_id', '=', $val]]);
-                if ($product_price_zone->count()) {
-                    $product_price_zone = $product_price_zone->first();
-                    $product_price_zone->fill(array('product_price' => $data['product_price'][$ky]))->save();
-                } else {
-                    $region_array = array('product_id' => $products->id, 'zone_id' => $val, 'product_price' => $data['product_price'][$ky]);
-                    ProductPriceZone::create($region_array);
-                }
-            }
-        }
+//        if ($request->get('zone_id')[0] != null) {
+//            
+//            $old_price_data = ProductPriceZone::where('product_id', $products->id)->pluck('zone_id')->toArray();
+//
+//            // this is used to check if old region is deleted while update
+//            $check_del_zone_price = array_diff($old_price_data, $request->get('zone_id'));
+//            if ($check_del_zone_price) {
+//                ProductPriceZone::whereIn('zone_id', $check_del_zone_price)->delete();
+//            }
+//            foreach ($data['zone_id'] as $ky => $val) {
+//                $product_price_zone = ProductPriceZone::where([['product_id', '=', $products->id], ['zone_id', '=', $val]]);
+//                if ($product_price_zone->count()) {
+//                    $product_price_zone = $product_price_zone->first();
+//                    $product_price_zone->fill(array('product_price' => $data['product_price'][$ky]))->save();
+//                } else {
+//                    $region_array = array('product_id' => $products->id, 'zone_id' => $val, 'product_price' => $data['product_price'][$ky]);
+//                    ProductPriceZone::create($region_array);
+//                }
+//            }
+//        }
 
 //        ProductSubSubCategory::where('product_id', $products->id)->delete();
         //update category details in product category table
         if ($request->get('parent_category') != '') {
-            $parent_category_array = array();
-            foreach ($request->get('parent_category') as $cat_key => $cat_val) {
-                $parent_category_array[$cat_key] = array('product_id' => $products->id, 'category_id' => $cat_val);
-            }
+//            $parent_category_array = array();
+//            foreach ($request->get('parent_category') as $cat_key => $cat_val) {
+//                $parent_category_array[$cat_key] = array('product_id' => $products->id, 'category_id' => $cat_val);
+//            }
+            $parent_category_array = array('product_id' => $products->id, 'category_id' => $request->get('parent_category'));
             ProductCategory::insert($parent_category_array);
         }
         //update sub category details in product category table
         if ($request->get('sub_category') != '') {
-            $sub_category_array = array();
-            foreach ($request->get('sub_category') as $sub_cat_key => $sub_cat_val) {
-                $sub_category_array[$sub_cat_key] = array('product_id' => $products->id, 'sub_category_id' => $sub_cat_val);
-            }
+//            $sub_category_array = array();
+//            foreach ($request->get('sub_category') as $sub_cat_key => $sub_cat_val) {
+//                $sub_category_array[$sub_cat_key] = array('product_id' => $products->id, 'sub_category_id' => $sub_cat_val);
+//            }
+            $sub_category_array = array('product_id' => $products->id, 'sub_category_id' => $request->get('sub_category'));
             ProductSubCategory::insert($sub_category_array);
         }
         //insert sub sub category details in product category table

@@ -24,7 +24,6 @@
                 <li class=""><a href="#auto_parts1" data-toggle="tab">Auto parts form1</a></li>
                 <li class=""><a href="#auto_parts2" data-toggle="tab">Auto parts form2</a></li>
                 <li class=""><a href="#auto_parts3" data-toggle="tab">Auto parts form3</a></li>
-                <li class=""><a href="#zones" data-toggle="tab">Product Price Based on zones/Region</a></li>
                 <li class=""><a href="#meta_information" data-toggle="tab">Meta Information</a></li>
                 <li class=""><a href="#images" data-toggle="tab">Images</a></li>
                 <li class=""><a href="#categories" data-toggle="tab">Categories</a></li>
@@ -654,27 +653,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane" id="zones">
-                    <div class="row">
-                        <div class="price_region_content">
-                            <div class="col-lg-5">
-                                <div class="form-group">
-                                    <label class="control-label">Zones/Regions</label>
-                                    {{ Form::select('zone_id[]', $product_zones,null, ['class' => 'form-control']) }}
-                                </div>
-                            </div>
-                            <div class="col-lg-5">
-                                <div class="form-group">
-                                    <label class="control-label">Product Price<span class="comps">*</span></label>
-                                    {{ Form::text('product_price[0]',null,array('class'=>'form-control')) }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-2">
-                            <a class="glyphicon glyphicon-plus add_more_region"></a>
-                        </div>
-                    </div>
-                </div>
                 <div class="tab-pane" id="meta_information">
                     <div class="row">
                         <div class="form-group {{ $errors->has('meta_title') ? ' has-error' : '' }}">
@@ -732,18 +710,18 @@
                     <h3>Categories:-</h3>
                     <ul class="parent_category" style="list-style: none;">
                         @foreach ($categories as $cat)
-                        <li><input type="checkbox" name="parent_category[]" value="{{ $cat->id }}">{{ $cat->name }}
+                        <li><input type="radio" name="parent_category" value="{{ $cat->id }}">{{ $cat->name }}
                             @if(!empty($cat->sub_categories->toArray()))
                             <a href="javascript:void(0);" class="toggleCategory"><span style="font-size: 20px;color: #000;font-weight: bold;" class="fa fa-angle-down"></span></a>
                             <ul class="sub_category" style="list-style: none;display: none;">
                                 @foreach ($cat->sub_categories as $sub_cat)
-                                <li><input type="checkbox" name="sub_category[]" value="{{ $sub_cat->id }}">{{ $sub_cat->name }}
+                                <li><input type="radio" name="sub_category" value="{{ $sub_cat->id }}">{{ $sub_cat->name }}
                                     {{--
                                     @if(!empty($sub_cat->sub_sub_categories->toArray()))
                                     <a href="javascript:void(0);" class="toggleCategory"><span style="font-size: 20px;color: #000;font-weight: bold;" class="fa fa-angle-down"></span></a>
                                     <ul class="sub_sub_category" style="list-style: none;display: none;">
                                         @foreach ($sub_cat->sub_sub_categories as $sub_sub_cat)
-                                        <li><input type="checkbox" name="sub_sub_category[]" value="{{ $sub_sub_cat->id }}">{{ $sub_cat->name.' '.$sub_sub_cat->get_vehicle_company_name->name }}</li>
+                                        <li><input type="radio" name="sub_sub_category" value="{{ $sub_sub_cat->id }}">{{ $sub_cat->name.' '.$sub_sub_cat->get_vehicle_company_name->name }}</li>
                                             @endforeach
                                         </ul>
                                         @endif
@@ -762,35 +740,17 @@
     </div>
     <!-- /.row -->
     {!! Form::close() !!}
-    <div class="clone_html" style="display:none;">
-        <div class="col-lg-5">
-            <div class="form-group">
-                <label class="control-label">Zones/Regions</label>
-                {{ Form::select('zone_id[]', $product_zones,null, ['class' => 'form-control']) }}
-            </div>
-        </div>
-        <div class="col-lg-5">
-            <div class="form-group">
-                <label class="control-label">Product Price<span class="comps">*</span></label>
-                {{ Form::text('product_price[]',null,array('class'=>'form-control')) }}
-            </div>
-        </div>
-        <div class="col-lg-2">
-            <a class="glyphicon glyphicon-minus remove_region"></a>
-        </div>
-    </div>
 </div>
 <!-- /.container-fluid -->
 @endsection
 @push('scripts')
 <script type="text/javascript">
     $(document).ready(function () {
-        $(document).on("click", ".add_more_region", function () {
-            var HTML = $(".clone_html").html();
-            $("#zones").append('<div class="row">' + HTML + '</div>');
-        });
-        $(document).on("click", ".remove_region", function () {
-            $(this).parent().parent().remove();
+        $("input[name='parent_category']").click(function(){
+            $("input[name='sub_category']").each(function(){
+               $(this).attr('checked', false);
+            });
+        $(this).parent().find(".sub_category li:first input").attr('checked', true);
         });
     });
 </script>
