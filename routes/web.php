@@ -60,6 +60,7 @@ Route::post('cart/add', 'ProductController@addCart')->middleware('web');
 Route::post('cart/update', 'ProductController@updateCart')->middleware('web');
 Route::post('cart/delete', 'ProductController@deleteCart');
 Route::get('cart', 'ProductController@Cart');
+Route::get('track_order', 'OrderController@index');
 Route::get('my-account', 'AccountController@index');
 Route::get('my-account/order', 'AccountController@index');
 Route::get('my-account/order/view/{id}', 'AccountController@index');

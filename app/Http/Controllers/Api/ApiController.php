@@ -68,6 +68,7 @@ class ApiController extends Controller {
                 $item_array = array();
                 foreach ($value->getOrderDetailById as $k => $val) {
                     $item_array[$k]['item_id'] = $val->id;
+                    $item_array[$k]['item_url'] = url('/products/'. $val->getProduct->product_slug);
                     $item_array[$k]['track_number'] = $val->track_id != null ? $val->track_id : '';
                     $item_array[$k]['product_name'] = $val->product_name;
                     $item_array[$k]['sku_number'] = $val->sku_number;
@@ -86,6 +87,7 @@ class ApiController extends Controller {
                     'order_id' => $value->id,
                     'order_date' => date('Y-m-d', strtotime($value->created_at)),
                     'customer_name' => $value->getCustomer->first_name . ' ' . $value->getCustomer->last_name,
+                    'customer_email' => $value->getCustomer->email,
                     'ship_price' => $value->ship_price != null ? $value->ship_price : '',
                     'tax' => $value->tax_rate != null ? $value->tax_rate : '',
                     'total_price' => $value->total_price,
