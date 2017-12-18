@@ -1614,7 +1614,7 @@ footer.footer .container { padding-bottom: 15px; }
 .table-wrp .table > thead > tr > th,.table-wrp .table > tbody > tr > td { padding-left: 8px;padding-right: 8px; }
 
 /* order track css start here */
-.order_progress { text-align: center;width: 100%;padding-top: 50px;padding-bottom: 50px; }
+.order_progress { text-align: center;width: 100%;padding-bottom: 50px; }
 .order_progress .bar_tyo_order.order_done, .order_progress .circle_tyo_order.order_done { background: #8bc435; }
 .order_progress .circle_tyo_order, .order_progress .bar_tyo_order { border: 1px solid #d5d5da;border-radius: 40px;display: inline-block;height: 65px;width: 66px; }
 .order_progress .circle_tyo_order.order_done span { margin-top: 17px !important; }
@@ -1628,9 +1628,13 @@ footer.footer .container { padding-bottom: 15px; }
 .order_progress .bar_tyo_order.active_tyo_order { background: linear-gradient(to right, #EEE 40%, #FFF 60%); }
 .order_progress .circle_tyo_order.active_tyo_order .label { background: #0c95be none repeat scroll 0 0;box-shadow: 0 0 2px rgba(0, 0, 0, 0.2) inset;color: #fff; }
 .order_progress .circle_tyo_order.active_tyo_order .title { color: #0c95be; }
-.order_track_info { text-align: center;padding-top: 40px;border: 1px soli aliceblue; }
-.order_track_info span { background: #000;color: #d5d5da;padding: 20px 60px; }
+.order_track_info { text-align: center;padding-top: 40px; }
+.order_track_info .track_info_child { background: #000;color: #d5d5da;padding: 20px 60px;margin: 0 auto;width:30%; }
+.order_track_info .track_info_child .title { margin: 0;font-size: 20px; }
+.order_track_info .track_info_child .note { margin: 0;font-size: 13px; }
+.order_track_info .track_info_child .date { font-size: 17px; }
 /* order track css end here */
+.track-content { padding: 30px; }
 
 @media(min-width: 992px) and (max-width: 1200px){
     .list-group-item .img-wrp {

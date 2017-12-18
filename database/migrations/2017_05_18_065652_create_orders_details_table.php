@@ -26,6 +26,7 @@ class CreateOrdersDetailsTable extends Migration
             $table->string('ship_carrier')->nullable();
             $table->timestamp('ship_date')->nullable();
             $table->text('notes')->nullable();
+            $table->string('item_status')->default('processing'); 	
             $table->timestamps();
         });
     }

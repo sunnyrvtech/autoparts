@@ -61,6 +61,7 @@ Route::post('cart/update', 'ProductController@updateCart')->middleware('web');
 Route::post('cart/delete', 'ProductController@deleteCart');
 Route::get('cart', 'ProductController@Cart');
 Route::get('track_order', 'OrderController@index');
+Route::post('track_order', 'OrderController@postTrackOrder')->name('track_order');
 Route::get('my-account', 'AccountController@index');
 Route::get('my-account/order', 'AccountController@index');
 Route::get('my-account/order/view/{id}', 'AccountController@index');

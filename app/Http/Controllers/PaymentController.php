@@ -292,31 +292,31 @@ class PaymentController extends Controller {
     public function sendInvoice($transaction_details, $carts, $shipping_address) {
         $billing_address = BillingAddress::where('user_id', Auth::id())->first();
 
-        $all_store = WarehouseStore::get();
-        $distance_array = array();
-        $store_email = '';
+//        $all_store = WarehouseStore::get();
+//        $distance_array = array();
+//        $store_email = '';
 
         // this is used to get the nearest store
-        foreach ($all_store as $key => $value) {
-            $distance = $this->getDistanceBetweenPointsNew($shipping_address->latitude, $shipping_address->longitude, $value->latitude, $value->longitude);
-            $distance_array[] = $distance;
-            if (min($distance_array) >= $distance) {
-                $store_email = $value->email;
-            }
-        }
+//        foreach ($all_store as $key => $value) {
+//            $distance = $this->getDistanceBetweenPointsNew($shipping_address->latitude, $shipping_address->longitude, $value->latitude, $value->longitude);
+//            $distance_array[] = $distance;
+//            if (min($distance_array) >= $distance) {
+//                $store_email = $value->email;
+//            }
+//        }
 
         $data = array(
-            'transaction_id' => $transaction_details['transaction_id'],
-            'email' => $store_email
+            'transaction_id' => $transaction_details['transaction_id']
+//            'email' => $store_email
         );
 
-        if (!empty($store_email)) {
-            $transaction_details['store_email'] = true;
-            Mail::send('auth.emails.order_invoice', array('transaction_details' => $transaction_details, 'carts' => $carts, 'shipping_address' => $shipping_address, 'billing_address' => $billing_address), function($message) use ($data) {
-                $message->from('jerhica.pe@gmail.com', " Welcome To Autolighthouse");
-                $message->to($data['email'])->subject('Autolighthouse Store:New Order #' . $data['transaction_id']);
-            });
-        }
+//        if (!empty($store_email)) {
+//            $transaction_details['store_email'] = true;
+//            Mail::send('auth.emails.order_invoice', array('transaction_details' => $transaction_details, 'carts' => $carts, 'shipping_address' => $shipping_address, 'billing_address' => $billing_address), function($message) use ($data) {
+//                $message->from('jerhica.pe@gmail.com', " Welcome To Autolighthouse");
+//                $message->to($data['email'])->subject('Autolighthouse Store:New Order #' . $data['transaction_id']);
+//            });
+//        }
 
         $data['email'] = Auth::user()->email;
         $transaction_details['store_email'] = false;

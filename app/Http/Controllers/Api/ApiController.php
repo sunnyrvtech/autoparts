@@ -17,6 +17,8 @@ use App\ProductCategory;
 use App\ProductSubCategory;
 use Carbon\Carbon;
 use Excel;
+use DB;
+use Mail;
 
 class ApiController extends Controller {
 
@@ -68,7 +70,7 @@ class ApiController extends Controller {
                 $item_array = array();
                 foreach ($value->getOrderDetailById as $k => $val) {
                     $item_array[$k]['item_id'] = $val->id;
-                    $item_array[$k]['item_url'] = url('/products/'. $val->getProduct->product_slug);
+                    $item_array[$k]['item_url'] = url('/products/' . $val->getProduct->product_slug);
                     $item_array[$k]['track_number'] = $val->track_id != null ? $val->track_id : '';
                     $item_array[$k]['product_name'] = $val->product_name;
                     $item_array[$k]['sku_number'] = $val->sku_number;
@@ -127,7 +129,9 @@ class ApiController extends Controller {
         foreach ($data['orders'] as $key => $value) {
             $page_data = $value;
             $order = Order::find($page_data['order_id']);
+
             if ($order) {
+                $old_order_status = $order->order_status;
                 $order->fill(array('order_status' => $page_data['status']))->save();
                 foreach ($page_data['items'] as $val) {
                     $update_array = array(
@@ -137,6 +141,11 @@ class ApiController extends Controller {
                         'notes' => $val['notes'] != null ? $val['notes'] : null,
                     );
                     if ($order_details = OrderDetail::find($val['item_id'])) {
+                        if ($old_order_status != $page_data['status'] && ($page_data['status'] == 'shipped' || $page_data['status'] == 'completed')) {
+                           $this->saveOrderInvoice($order, $order_details);
+                        }
+
+
                         if (!$order_details->fill($update_array)->save()) {
                             $failed_ids[$key] = $page_data['order_id'];
                         }
@@ -150,6 +159,26 @@ class ApiController extends Controller {
         } else {
             return response()->json(['status' => "error", 'failed_order_ids' => json_encode($failed_ids)]);
         }
+    }
+
+    public function saveOrderInvoice($order, $item_data) {
+        if ($order['order_status'] == 'completed') {
+            $order['order_time'] = date('M d,Y H:i:s A', strtotime($order->updated_at));
+        } else {
+            $order['order_time'] = date('M d,Y H:i:s A', strtotime($item_data->ship_date));
+        }
+
+        $data = array(
+            'user_name' => $order->getCustomer->first_name . ' ' . $order->getCustomer->last_name,
+            'email' => $order->getCustomer->email,
+            'order' => $order,
+            'item_data' => $item_data,
+            'shipping_address' => $order->getCustomer->getShippingDetails,
+            'billing_address' => $order->getCustomer->getBillingDetails
+        );
+        
+        DB::table('order_emails')->insert(['order_data'=>json_encode($data)]);
+        return true;
     }
 
     public function getProductDetails(Request $request) {

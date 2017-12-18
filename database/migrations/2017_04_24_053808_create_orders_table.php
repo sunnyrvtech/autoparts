@@ -22,7 +22,7 @@ class CreateOrdersTable extends Migration
             $table->decimal('tax_rate', 5, 2);
             $table->string('shipping_method')->nullable();
             $table->string('payment_method')->nullable();
-            $table->enum('order_status', ['pending', 'cancelled','processing','shipped','completed']); 	
+            $table->string('order_status'); 	
             $table->timestamps();
         });
     }
