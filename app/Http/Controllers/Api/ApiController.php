@@ -123,7 +123,7 @@ class ApiController extends Controller {
      * @return Response
      */
     public function postOrderDetails(Request $request) {
-
+        
         $data = $request->all();
         $failed_ids = array();
         foreach ($data['orders'] as $key => $value) {
@@ -163,18 +163,38 @@ class ApiController extends Controller {
 
     public function saveOrderInvoice($order, $item_data) {
         if ($order['order_status'] == 'completed') {
-            $order['order_time'] = date('M d,Y H:i:s A', strtotime($order->updated_at));
+            $order_time = date('M d,Y H:i:s A', strtotime($order->updated_at));
         } else {
-            $order['order_time'] = date('M d,Y H:i:s A', strtotime($item_data->ship_date));
+            $order_time = date('M d,Y H:i:s A', strtotime($item_data->ship_date));
         }
 
         $data = array(
             'user_name' => $order->getCustomer->first_name . ' ' . $order->getCustomer->last_name,
             'email' => $order->getCustomer->email,
-            'order' => $order,
+            'order' => array(
+                'id' => $order->id,
+                'order_time' => $order_time,
+                'order_status' => $order->order_status,
+                'shipping_method' => $order->shipping_method,
+                'payment_method' => $order->payment_method
+            ),
             'item_data' => $item_data,
-            'shipping_address' => $order->getCustomer->getShippingDetails,
-            'billing_address' => $order->getCustomer->getBillingDetails
+            'shipping_address' => array(
+                'address1'=> $order->getCustomer->getShippingDetails->address1,
+                'address2'=> $order->getCustomer->getShippingDetails->address2,
+                'city'=> $order->getCustomer->getShippingDetails->city,
+                'state'=> $order->getCustomer->getShippingDetails->get_state->name,
+                'country'=> $order->getCustomer->getShippingDetails->get_country->name,
+                'zip'=> $order->getCustomer->getShippingDetails->zip
+            ),
+            'billing_address' => array(
+                'address1'=> $order->getCustomer->getBillingDetails->address1,
+                'address2'=> $order->getCustomer->getBillingDetails->address2,
+                'city'=> $order->getCustomer->getBillingDetails->city,
+                'state'=> $order->getCustomer->getBillingDetails->get_state->name,
+                'country'=> $order->getCustomer->getBillingDetails->get_country->name,
+                'zip'=> $order->getCustomer->getBillingDetails->zip
+            )
         );
         
         DB::table('order_emails')->insert(['order_data'=>json_encode($data)]);

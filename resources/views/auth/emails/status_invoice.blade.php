@@ -306,7 +306,7 @@
                                                     }
                                                     ?>
                                                     <tr style="border-bottom: 1px solid #C8C8C8;">
-                                                        <td align="left" width="60%" style="padding: 15px;"><span style="font-weight: bold;">{{ $item_data->product_name }}</span><br><span>SKU: {{ $item_data->sku }}</span></td>
+                                                        <td align="left" width="60%" style="padding: 15px;"><span style="font-weight: bold;">{{ $item_data->product_name }}</span><br><span>SKU: {{ $item_data->sku_number }}</span></td>
                                                         <td width="10%" style="padding: 15px;">{{ $item_data->quantity }}</td>
                                                         <td width="10%" style="padding: 15px;">${{ number_format($item_data->total_price/$item_data->quantity,2) }}</td>
                                                         <td width="10%" style="padding: 15px;">
@@ -388,7 +388,7 @@
                                                                                                     <span>{{ $user_name }}</span><br/>
                                                                                                     <span>{{ $billing_address->address1 }}</span><br/>
                                                                                                     <span>{{ $billing_address->address2 }}</span><br/>
-                                                                                                    <span>{{ $billing_address->city.','.$billing_address->get_state->name.','.$billing_address->zip.' '.$billing_address->get_country->name }}</span>
+                                                                                                    <span>{{ $billing_address->city.','.$billing_address->state.','.$billing_address->zip.' '.$billing_address->country }}</span>
                                                                                                 </div>
                                                                                             </td>
                                                                                         </tr>
@@ -403,7 +403,7 @@
                                                                                                     <span>{{ $user_name }}</span><br/>
                                                                                                     <span>{{ $shipping_address->address1 }}</span><br/>
                                                                                                     <span>{{ $shipping_address->address2 }}</span><br/>
-                                                                                                    <span>{{ $shipping_address->city.','.$shipping_address->get_state->name.','.$shipping_address->zip.' '.$shipping_address->get_country->name }}</span>
+                                                                                                    <span>{{ $shipping_address->city.','.$shipping_address->state.','.$shipping_address->zip.' '.$shipping_address->country }}</span>
                                                                                                 </div>
                                                                                             </td>
                                                                                         </tr>

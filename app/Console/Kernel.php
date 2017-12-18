@@ -31,10 +31,10 @@ class Kernel extends ConsoleKernel {
             $order_data = DB::table('order_emails')->get();
             if ($order_data->toArray()) {
                 foreach ($order_data as $value) {
-                    $data = json_decode($value->order_data);
+                    $data = (array) json_decode($value->order_data);
                     Mail::send('auth.emails.status_invoice', $data, function($message) use ($data) {
                         $message->from('jerhica.pe@gmail.com', " Welcome To Autolighthouse");
-                        $message->to($data->email)->subject('Autolighthouse Store:New Order #' . $data->item_data->id);
+                        $message->to($data['email'])->subject('Autolighthouse Store:New Order #' . $data['order']->id);
                     });
                 }
                 DB::table('order_emails')->delete();
