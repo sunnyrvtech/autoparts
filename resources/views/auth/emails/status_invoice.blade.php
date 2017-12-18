@@ -187,7 +187,7 @@
                                                                         <table border="0" cellpadding="30" cellspacing="0" width="100%">
                                                                             <tr>
                                                                                 <td align="center" valign="top" class="textContent">
-                                                                                    <h1 style="color:#FFFFFF;line-height:100%;font-family:Helvetica,Arial,sans-serif;font-size:30px;font-weight:normal;margin-bottom:5px;text-align:center;">Order {{ ucfirst($order['order_status']) }}.</h1>
+                                                                                    <h1 style="color:#FFFFFF;line-height:100%;font-family:Helvetica,Arial,sans-serif;font-size:30px;font-weight:normal;margin-bottom:5px;text-align:center;">Order {{ ucfirst($order->order_status) }}.</h1>
                                                                                     <div style="text-align:center;font-family:Helvetica,Arial,sans-serif;font-size:15px;margin-bottom:0;color:#FFFFFF;line-height:135%;">Your order summary is below. Thank you again for your business.</div>
                                                                                 </td>
                                                                             </tr>
@@ -224,8 +224,8 @@
                                                                                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
                                                                                         <tr>
                                                                                             <td valign="top" class="textContent">
-                                                                                                <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:center;">Your Order #{{ $order['id'] }}</h3>
-                                                                                                <div mc:edit="body" style="text-align:center;font-family:Helvetica,Arial,sans-serif;font-size:15px;margin-bottom:0;color:#5F5F5F;line-height:135%;">Your order is {{ ucfirst($order['order_status']) }} on {{ $order['order_time'] }}</div>
+                                                                                                <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:center;">Your Order #{{ $order->id }}</h3>
+                                                                                                <div mc:edit="body" style="text-align:center;font-family:Helvetica,Arial,sans-serif;font-size:15px;margin-bottom:0;color:#5F5F5F;line-height:135%;">Your order is {{ ucfirst($order->order_status) }} on {{ $order->order_time }}</div>
                                                                                             </td>
                                                                                         </tr>
                                                                                     </table>
@@ -299,10 +299,10 @@
                                                     <?php $item_price = 0;$sub_total = 0; ?>
                                                     
                                                     <?php
-                                                    if ($item_data['discount'] != null) {
-                                                        $item_price = $item_data['total_price'] - ($item_data['total_price'] * $item_data['discount'] / 100);
+                                                    if ($item_data->discount != null) {
+                                                        $item_price = $item_data->total_price - ($item_data->total_price * $item_data->discount / 100);
                                                     } else {
-                                                        $item_price = $item_data['total_price'];
+                                                        $item_price = $item_data->total_price;
                                                     }
                                                     ?>
                                                     <tr style="border-bottom: 1px solid #C8C8C8;">
@@ -310,8 +310,8 @@
                                                         <td width="10%" style="padding: 15px;">{{ $item_data->quantity }}</td>
                                                         <td width="10%" style="padding: 15px;">${{ number_format($item_data->total_price/$item_data->quantity,2) }}</td>
                                                         <td width="10%" style="padding: 15px;">
-                                                             @if ($item_data['discount'] != null) {
-                                                                {{ $item_data['discount'].'%' }}
+                                                             @if ($item_data->discount != null) {
+                                                                {{ $item_data->discount.'%' }}
                                                              @else
                                                                 {{"..."}}
                                                              @endif
@@ -417,7 +417,7 @@
                                                                                             <td align="left" class="textContent">
                                                                                                 <h3 style="line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:left;">Shipping Method</h3>
                                                                                                 <div style="text-align:left;font-family:Helvetica,Arial,sans-serif;font-size:15px;margin-bottom:0;line-height:135%;">
-                                                                                                    <span>{{ $order['shipping_method'] }}</span><br/>
+                                                                                                    <span>{{ $order->shipping_method }}</span><br/>
                                                                                                 </div>
                                                                                             </td>
                                                                                         </tr>
@@ -429,7 +429,7 @@
                                                                                             <td align="left" class="textContent">
                                                                                                 <h3 style="line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:left;">Payment Method</h3>
                                                                                                 <div style="text-align:left;font-family:Helvetica,Arial,sans-serif;font-size:15px;margin-bottom:0;line-height:135%;">
-                                                                                                    <span>{{ $order['payment_method'] }}</span><br/>
+                                                                                                    <span>{{ $order->payment_method }}</span><br/>
                                                                                                 </div>
                                                                                             </td>
                                                                                         </tr>

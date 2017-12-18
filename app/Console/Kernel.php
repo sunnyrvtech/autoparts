@@ -32,10 +32,9 @@ class Kernel extends ConsoleKernel {
             if ($order_data->toArray()) {
                 foreach ($order_data as $value) {
                     $data = json_decode($value->order_data);
-                    Log::error("Cron running " . $value->order_data);
                     Mail::send('auth.emails.status_invoice', $data, function($message) use ($data) {
                         $message->from('jerhica.pe@gmail.com', " Welcome To Autolighthouse");
-                        $message->to($data['email'])->subject('Autolighthouse Store:New Order #' . $data['item_data']['id']);
+                        $message->to($data->email)->subject('Autolighthouse Store:New Order #' . $data->item_data->id);
                     });
                 }
                 DB::table('order_emails')->delete();
