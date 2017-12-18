@@ -5,6 +5,7 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use DB;
+use Log;
 use Mail;
 
 class Kernel extends ConsoleKernel {
@@ -26,6 +27,7 @@ class Kernel extends ConsoleKernel {
      */
     protected function schedule(Schedule $schedule) {
         $schedule->call(function () {
+            Log::error("Cron runing " . date('H:i:s'));
             $order_data = DB::table('order_emails')->get();
             if ($order_data->toArray()) {
                 foreach ($order_data as $value) {
