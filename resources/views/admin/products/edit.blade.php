@@ -70,7 +70,7 @@
                         <div class="col-lg-12">
                             <div class="form-group {{ $errors->has('product_long_description') ? ' has-error' : '' }}">
                                 <label class="control-label">Product Long Description<span class="comps">*</span></label>
-                                {{ Form::textarea('product_long_description', $products->product_long_description,array('required', 'class'=>'form-control')) }}
+                                {{ Form::textarea('product_long_description', $products->product_long_description,array('class'=>'form-control')) }}
                                 @if ($errors->has('product_long_description'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('product_long_description') }}</strong>

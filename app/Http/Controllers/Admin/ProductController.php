@@ -86,7 +86,7 @@ class ProductController extends Controller {
         $this->validate($request, [
             'product_name' => 'required|max:200',
             'price' => 'required|numeric',
-            'product_long_description' => 'required',
+//            'product_long_description' => 'required',
             'sku' => 'required|max:50|unique:products',
             'quantity' => 'required|numeric',
             'status' => 'required',
@@ -203,7 +203,7 @@ class ProductController extends Controller {
         $this->validate($request, [
             'product_name' => 'required|max:200',
             'price' => 'required|numeric',
-            'product_long_description' => 'required',
+//            'product_long_description' => 'required',
             'sku' => 'required|max:50|unique:products,sku,'.$id,
             'quantity' => 'required|numeric',
             'status' => 'required',
