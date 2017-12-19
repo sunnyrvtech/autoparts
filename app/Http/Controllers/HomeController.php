@@ -32,7 +32,7 @@ class HomeController extends Controller {
         $vehicles = VehicleCompany::get(array('name', 'id'));
         $brands = Brand::take(40)->get(array('name', 'id'));
 
-        $latest_product = Product::Where('quantity', '>', 0)->orderBy('updated_at', 'DESC')->take('20')->get();
+        $latest_product = Product::Where([['quantity', '>', 0],['status','=',1]])->orderBy('updated_at', 'DESC')->take('20')->get();
 //        echo "<pre>";
 //        print_r($latest_product->toArray());
 //        die;

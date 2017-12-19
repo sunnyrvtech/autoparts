@@ -38,7 +38,7 @@ class ProductController extends Controller {
      */
     public function singleProduct(Request $request, $slug) {
         $title = 'Products';
-        $products = Product::where('product_slug', $slug)->first();
+        $products = Product::where([['product_slug', '=', $slug], ['status', '=', 1]])->first();
         if ($products) {
             return View::make('products.single', compact('title', 'products'));
         }
@@ -80,6 +80,11 @@ class ProductController extends Controller {
             $cart_data = array();
             foreach ($carts as $key => $value) {
                 $products = Product::where('id', $value->product_id)->first();
+                if ($products->status == 0) {
+                    Cart::Where('product_id', $value->product_id)->delete();
+                    unset($value);
+                    continue;
+                }
                 $product_image = json_decode($products->product_details->product_images);
                 $total_weight += $value->quantity * $products->weight;
                 $discount += $products->discount;
@@ -369,7 +374,7 @@ class ProductController extends Controller {
         if ($keyword != null && !$year) {
             $product_sub_category_ids = Product::whereHas('product_sub_categories.get_sub_categories', function($query) use ($cat_name) {
                         $query->Where('sub_categories.name', 'LIKE', '%' . $cat_name . '%');
-                    })->Where('products.quantity', '>', 0)->pluck('id')->toArray();
+                    })->Where([['products.quantity', '>', 0], ['status', '=', 1]])->pluck('id')->toArray();
 
             $products = Product::with(['product_details', 'get_brands', 'get_vehicle_company', 'get_vehicle_model'])->whereHas('product_category.category', function($query) use($keyword) {
                                 $query->where('categories.name', 'LIKE', '%' . $keyword . '%');
@@ -386,7 +391,7 @@ class ProductController extends Controller {
                                     $query->whereIn('products.id', $product_sub_category_ids);
                             })->paginate(20);
         } else {
-            $whereCond = [['products.vehicle_year_from', '<=', $year], ['products.vehicle_year_to', '>=', $year], 'products.vehicle_make_id' => $make_id, 'products.vehicle_model_id' => $model_id];
+            $whereCond = [['products.vehicle_year_from', '<=', $year], ['products.vehicle_year_to', '>=', $year], ['products.quantity', '>', 0], ['status', '=', 1], 'products.vehicle_make_id' => $make_id, 'products.vehicle_model_id' => $model_id];
             $products = Product::with(['product_details', 'get_brands', 'get_vehicle_company', 'get_vehicle_model'])->Where($whereCond)->paginate(20);
         }
 

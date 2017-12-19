@@ -20,7 +20,7 @@ class SubCategoryController extends Controller {
         $sub_categories = SubCategory::where('slug', $slug)->first();
         if ($sub_categories) {
             $products = ProductSubCategory::with(['getProducts', 'getProducts.product_details', 'getProducts.get_brands', 'getProducts.get_vehicle_company', 'getProducts.get_vehicle_model'])->whereHas('getProducts', function($query) {
-                        $query->where('products.quantity', '>', 0);
+                        $query->where([['products.quantity', '>', 0],['status','=',1]]);
                     })->where('sub_category_id', $sub_categories->id)->paginate(20);
             $all_categories = SubCategory::groupBy('name')->get();
             $view = View::make('products.index', compact('title', 'products', 'all_categories'));
