@@ -51,7 +51,7 @@
                         </div>
                         <div class="col-md-6 col-xs-6">
                             <div class="form-group">
-                                <label for="vehicle_make">Make:</label><span> {{ $products->get_vehicle_company->name }}</span>
+                                <label for="vehicle_make">Make:</label><span> {{ @$products->get_vehicle_company->name }}</span>
                             </div>
                         </div>
                     </div>
@@ -75,7 +75,7 @@
                         </div>
                         <div class="col-md-6 col-xs-6">
                             <div class="form-group">
-                                <label for="model">Model:</label><span> {{ $products->get_vehicle_model->name }}</span>
+                                <label for="model">Model:</label><span> {{ @$products->get_vehicle_model->name }}</span>
                             </div>
                         </div>
                     </div>
