@@ -22,4 +22,5 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/products', 'Api\ApiController@getProductDetails');
     Route::post('/products/add', 'Api\ApiController@addProductDetails');
     Route::post('/products/update', 'Api\ApiController@updateProductDetails');
+    Route::get('/products/delete', 'Api\ApiController@deleteproducts');
 });

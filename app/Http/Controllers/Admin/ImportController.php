@@ -88,6 +88,17 @@ class ImportController extends Controller {
                     'updated_at' => Carbon::now()
                 );
 
+                if (isset($row->brand) && !empty($row->brand)) {
+                    if (!$brand = Brand::where('name', 'like', trim(ucfirst(strtolower($row->brand))))->first(array('id'))) {
+                        $brand = Brand::create(array('name' => trim(ucfirst(strtolower($row->brand))), 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
+                        $product_array['brand_id'] = $brand->id;
+                    } else {
+                        $product_array['brand_id'] = $brand->id;
+                    }
+                }
+
+
+
                 $product_detail_array = array(
                     'meta_title' => empty($row->meta_title) ? null : trim($row->meta_title),
                     'meta_description' => empty($row->meta_description) ? null : trim($row->meta_description),
@@ -232,7 +243,7 @@ class ImportController extends Controller {
             foreach ($product_images as $key => $val) {
                 $url = $val;
                 $extention = pathinfo($url, PATHINFO_EXTENSION);
-                $filename = str_random(15).'.' . $extention;
+                $filename = str_random(15) . '.' . $extention;
 
                 $arrContextOptions = array(
                     "ssl" => array(

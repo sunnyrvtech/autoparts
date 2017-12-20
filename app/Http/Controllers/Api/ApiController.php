@@ -123,7 +123,7 @@ class ApiController extends Controller {
      * @return Response
      */
     public function postOrderDetails(Request $request) {
-        
+
         $data = $request->all();
         $failed_ids = array();
         foreach ($data['orders'] as $key => $value) {
@@ -142,7 +142,7 @@ class ApiController extends Controller {
                     );
                     if ($order_details = OrderDetail::find($val['item_id'])) {
                         if ($old_order_status != $page_data['status'] && ($page_data['status'] == 'shipped' || $page_data['status'] == 'completed')) {
-                           $this->saveOrderInvoice($order, $order_details);
+                            $this->saveOrderInvoice($order, $order_details);
                         }
 
 
@@ -180,24 +180,24 @@ class ApiController extends Controller {
             ),
             'item_data' => $item_data,
             'shipping_address' => array(
-                'address1'=> $order->getCustomer->getShippingDetails->address1,
-                'address2'=> $order->getCustomer->getShippingDetails->address2,
-                'city'=> $order->getCustomer->getShippingDetails->city,
-                'state'=> $order->getCustomer->getShippingDetails->get_state->name,
-                'country'=> $order->getCustomer->getShippingDetails->get_country->name,
-                'zip'=> $order->getCustomer->getShippingDetails->zip
+                'address1' => $order->getCustomer->getShippingDetails->address1,
+                'address2' => $order->getCustomer->getShippingDetails->address2,
+                'city' => $order->getCustomer->getShippingDetails->city,
+                'state' => $order->getCustomer->getShippingDetails->get_state->name,
+                'country' => $order->getCustomer->getShippingDetails->get_country->name,
+                'zip' => $order->getCustomer->getShippingDetails->zip
             ),
             'billing_address' => array(
-                'address1'=> $order->getCustomer->getBillingDetails->address1,
-                'address2'=> $order->getCustomer->getBillingDetails->address2,
-                'city'=> $order->getCustomer->getBillingDetails->city,
-                'state'=> $order->getCustomer->getBillingDetails->get_state->name,
-                'country'=> $order->getCustomer->getBillingDetails->get_country->name,
-                'zip'=> $order->getCustomer->getBillingDetails->zip
+                'address1' => $order->getCustomer->getBillingDetails->address1,
+                'address2' => $order->getCustomer->getBillingDetails->address2,
+                'city' => $order->getCustomer->getBillingDetails->city,
+                'state' => $order->getCustomer->getBillingDetails->get_state->name,
+                'country' => $order->getCustomer->getBillingDetails->get_country->name,
+                'zip' => $order->getCustomer->getBillingDetails->zip
             )
         );
-        
-        DB::table('order_emails')->insert(['order_data'=>json_encode($data)]);
+
+        DB::table('order_emails')->insert(['order_data' => json_encode($data)]);
         return true;
     }
 
@@ -242,6 +242,14 @@ class ApiController extends Controller {
         $product_array = array();
         if (!empty($products->toArray())) {
             foreach ($products as $key => $value) {
+                if (!empty($value->product_details->product_images)) {
+                    $product_images = array_map(function($pro_val) {
+                        return asset('/product_images/' . $pro_val);
+                    }, json_decode($value->product_details->product_images));
+                } else {
+                    $product_images = array();
+                }
+
                 $product_array['total_products'] = $total_product;
                 $product_array['page_size'] = $page_size;
                 $product_array['total_pages'] = ceil($total_product / $page_size);
@@ -308,7 +316,7 @@ class ApiController extends Controller {
                     'cooling_fan_type' => !empty(@$value->product_details->cooling_fan_type) ? @$value->product_details->cooling_fan_type : '',
                     'radiator_row_count' => !empty(@$value->product_details->radiator_row_count) ? @$value->product_details->radiator_row_count : '',
                     'oil_plan_capacity' => !empty(@$value->product_details->oil_plan_capacity) ? @$value->product_details->oil_plan_capacity : '',
-                    'product_images' => !empty($value->product_details->product_images) ? json_decode($value->product_details->product_images) : [],
+                    'product_images' => $product_images,
                     'created_at' => date('Y-m-d H:i:s', strtotime($value->created_at)));
             }
             return $product_array;
@@ -320,6 +328,7 @@ class ApiController extends Controller {
     public function addProductDetails(Request $request) {
 
         $data = $request->all();
+        $ids_array = array();
         foreach ($data['products'] as $key => $value) {
             $row = $value;
 
@@ -351,6 +360,12 @@ class ApiController extends Controller {
                 }
                 $product_array['vehicle_model_id'] = $vehicle_model->id;
             }
+            if (isset($row['brand']) && !empty($row['brand'])) {
+                if (!$brand = Brand::where('name', 'like', trim(ucfirst(strtolower($row['brand']))))->first(array('id'))) {
+                    $brand = Brand::create(array('name' => trim(ucfirst(strtolower($row['brand']))), 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
+                }
+                $product_array['brand_id'] = $brand->id;
+            }
 
 
             $product_array = $this->productArray($row, $product_array);
@@ -365,8 +380,16 @@ class ApiController extends Controller {
 
             if (!$products) {
                 if ($product = Product::create($product_array)) {
-                    if (isset($row['product_images']) && !empty($row['product_images']))
-                        $product_detail_array['product_images'] = json_encode($row['product_images']);
+                    $ids_array[$key]['product_id'] = $product->id;
+                    $ids_array[$key]['sku'] = $product->sku;
+                    if (isset($row['product_images']) && !empty($row['product_images'])) {
+                        $product_images_array = $row['product_images'];
+                        $product_images = array_map(function($pro_val) {
+                            return basename($pro_val);
+                        }, $product_images_array);
+
+                        $product_detail_array['product_images'] = json_encode(array_values(array_unique($product_images)));
+                    }
                     $product_detail_array['product_id'] = $product->id;
                     ProductDetail::create($product_detail_array);
                     ProductCategory::create(array('product_id' => $product->id, 'category_id' => $category->id));
@@ -376,12 +399,13 @@ class ApiController extends Controller {
                 return response()->json(['status' => "error", "message" => "Product already exist related to this sku " . $row['sku']]);
             }
         }
-        return response()->json(['status' => "success"]);
+        return response()->json(['status' => "success", "ids" => $ids_array]);
     }
 
     public function updateProductDetails(Request $request) {
 
         $data = $request->all();
+        $ids_array = array();
         foreach ($data['products'] as $key => $value) {
             $row = $value;
             $products = Product::where('sku', 'like', $row['sku'])->first();
@@ -427,18 +451,33 @@ class ApiController extends Controller {
                     $product_array['vehicle_model_id'] = $vehicle_model->id;
                 }
 
+                if (isset($row['brand'])) {
+                    if (!$brand = Brand::where('name', 'like', trim(ucfirst(strtolower($row['brand']))))->first(array('id'))) {
+                        $brand = Brand::create(array('name' => trim(ucfirst(strtolower($row['brand']))), 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
+                    }
+                    $product_array['brand_id'] = $brand->id;
+                }
+
                 $product_array = $this->productArray($row, $product_array);
                 $product_detail_array = $this->productDetailArray($row, $product_detail_array);
 
                 $products->fill($product_array)->save();
+                $ids_array[$key]['product_id'] = $products->id;
+                $ids_array[$key]['sku'] = $products->sku;
                 $product_details = ProductDetail::where('product_id', $products->id);
                 if ($product_details->count()) {
                     $product_details = $product_details->first();
                     if (isset($row['product_images']) && !empty($row['product_images'])) {
-                        if (json_decode($product_details->product_images) != null)
-                            $product_detail_array['product_images'] = json_encode(array_merge(json_decode($product_details->product_images), $row['product_images']));
-                        else
-                            $product_detail_array['product_images'] = json_encode($row['product_images']);
+                        $product_images_array = $row['product_images'];
+                        $product_images = array_map(function($pro_val) {
+                            return basename($pro_val);
+                        }, $product_images_array);
+
+                        if (json_decode($product_details->product_images) != null) {
+                            $product_detail_array['product_images'] = json_encode(array_values(array_unique(array_merge(json_decode($product_details->product_images), $product_images))));
+                        } else {
+                            $product_detail_array['product_images'] = json_encode(array_values(array_unique($product_images)));
+                        }
                     }
                     $product_details->fill($product_detail_array)->save();
                 }
@@ -446,7 +485,7 @@ class ApiController extends Controller {
                 return response()->json(['status' => "error", "message" => "Product not exist related to this sku" . $row['sku']]);
             }
         }
-        return response()->json(['status' => "success"]);
+        return response()->json(['status' => "success", "ids" => $ids_array]);
     }
 
     public function productArray($row, $product_array) {
@@ -570,6 +609,35 @@ class ApiController extends Controller {
         if (isset($row['oil_plan_capacity']))
             $product_detail_array['oil_plan_capacity'] = empty($row['oil_plan_capacity']) ? null : trim($row['oil_plan_capacity']);
         return $product_detail_array;
+    }
+
+    /**
+     * function to delete product data
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function deleteproducts(Request $request) {
+
+        if ($request->get('ids') != null) {
+            $ids = explode(',', $request->get('ids'));
+            foreach ($ids as $id) {
+                $products = Product::find($id);
+                if ($products) {
+                    $existing_product_image_array = json_decode(@$products->product_details->product_images, true);
+                    if ($existing_product_image_array != '') {
+                        foreach ($existing_product_image_array as $exist_val) {
+                            @unlink(base_path('public/product_images/') . $exist_val);
+                        }
+                    }
+                    $products->delete();
+                } else {
+                    return response()->json(['status' => "success", 'message' => "No product found related to id" . $id]);
+                }
+            }
+            return response()->json(['status' => "success"]);
+        }
+        return response()->json(['status' => "success", 'message' => "Product id not added in the api !"]);
     }
 
     /**
