@@ -17,6 +17,7 @@ class CreateOrdersDetailsTable extends Migration
             $table->increments('id');
             $table->integer('order_id');
             $table->string('track_id')->nullable();
+            $table->string('track_url')->nullable();
             $table->integer('product_id');
             $table->string('product_name');
             $table->string('sku_number');

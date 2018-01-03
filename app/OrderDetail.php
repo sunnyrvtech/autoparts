@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class OrderDetail extends Model {
 
-    protected $fillable = ['order_id','track_id', 'product_id','product_name','sku_number', 'quantity', 'total_price', 'discount','ship_carrier','ship_date','notes','item_status'];
+    protected $fillable = ['order_id','track_id','track_url', 'product_id','product_name','sku_number', 'quantity', 'total_price', 'discount','ship_carrier','ship_date','notes','item_status'];
 
     
     

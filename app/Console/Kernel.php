@@ -36,8 +36,8 @@ class Kernel extends ConsoleKernel {
                         $message->from('jerhica.pe@gmail.com', " Welcome To Autolighthouse");
                         $message->to($data['email'])->subject('Autolighthouse Store:New Order #' . $data['order']->id);
                     });
+                    DB::table('order_emails')->where('id', '=', $value->id)->delete();
                 }
-                DB::table('order_emails')->delete();
             }
         })->everyFiveMinutes();
     }

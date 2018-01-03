@@ -131,7 +131,6 @@ class ApiController extends Controller {
             $order = Order::find($page_data['order_id']);
 
             if ($order) {
-                $old_order_status = $order->order_status;
                 $order->fill(array('order_status' => $page_data['status']))->save();
                 foreach ($page_data['items'] as $val) {
                     $update_array = array(
@@ -141,8 +140,14 @@ class ApiController extends Controller {
                         'notes' => $val['notes'] != null ? $val['notes'] : null,
                     );
                     if ($order_details = OrderDetail::find($val['item_id'])) {
-                        if ($old_order_status != $page_data['status'] && ($page_data['status'] == 'shipped' || $page_data['status'] == 'completed')) {
-                            $this->saveOrderInvoice($order, $order_details);
+                        if ($order_details->track_id != $val['track_number'] && $val['ship_carrier'] != null)
+                            $update_array['item_status'] = 'shipped';
+                        if($page_data['status'] == 'completed')
+                            $update_array['item_status'] = 'completed';
+
+
+                        if (($order_details['item_status'] != 'shipped' && $update_array['item_status'] == 'shipped') || ($order_details['item_status'] != 'completed' && $page_data['status'] == 'completed')) {
+                            $this->saveOrderInvoice($order, $order_details, $update_array['item_status']);
                         }
 
 
@@ -161,8 +166,8 @@ class ApiController extends Controller {
         }
     }
 
-    public function saveOrderInvoice($order, $item_data) {
-        if ($order['order_status'] == 'completed') {
+    public function saveOrderInvoice($order, $item_data,$item_status) {
+        if ($item_status == 'completed') {
             $order_time = date('M d,Y H:i:s A', strtotime($order->updated_at));
         } else {
             $order_time = date('M d,Y H:i:s A', strtotime($item_data->ship_date));
@@ -174,7 +179,7 @@ class ApiController extends Controller {
             'order' => array(
                 'id' => $order->id,
                 'order_time' => $order_time,
-                'order_status' => $order->order_status,
+                'order_status' => $item_status,
                 'shipping_method' => $order->shipping_method,
                 'payment_method' => $order->payment_method
             ),
