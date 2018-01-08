@@ -4,7 +4,7 @@
 @section('content')
 <div class="container">
     <section>
-        <div id="breadcrumb" itemprop="breadcrumb" itemscope="itemscope" itemtype="http://www.schema.org/BreadcrumbList">
+        <div id="breadcrumb" itemprop="breadcrumb" itemscope="itemscope" itemtype="">
             <a href="{{ url('/') }}">Home</a>
             <span class="divider"> &gt; </span><span>{{ Request::segment(1) }}</span>
             <span class="divider"> &gt; </span><span>{{ Request::segment(2) }}</span>

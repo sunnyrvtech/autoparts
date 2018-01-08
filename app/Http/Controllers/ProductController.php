@@ -372,24 +372,31 @@ class ProductController extends Controller {
 
 
         if ($keyword != null && !$year) {
-            $product_sub_category_ids = Product::whereHas('product_sub_categories.get_sub_categories', function($query) use ($cat_name) {
-                        $query->Where('sub_categories.name', 'LIKE', '%' . $cat_name . '%');
-                    })->Where([['products.quantity', '>', 0], ['status', '=', 1]])->pluck('id')->toArray();
+//            $product_sub_category_ids = Product::whereHas('product_sub_categories.get_sub_categories', function($query) use ($cat_name) {
+//                        $query->Where('sub_categories.name', 'LIKE', '%' . $cat_name . '%');
+//                    })->Where([['products.quantity', '>', 0], ['status', '=', 1]])->pluck('id')->toArray();
+//                    
+//                    
+//            dd($product_sub_category_ids);        
 
-            $products = Product::with(['product_details', 'get_brands', 'get_vehicle_company', 'get_vehicle_model'])->whereHas('product_category.category', function($query) use($keyword) {
-                                $query->where('categories.name', 'LIKE', '%' . $keyword . '%');
-                            })->orWhereHas('get_brands', function ($query) use($keyword) {
-                                $query->where('brands.name', 'LIKE', '%' . $keyword . '%');
-                            })->orWhereHas('get_vehicle_company', function ($query) use($keyword) {
-                                $query->where('vehicle_companies.name', 'LIKE', '%' . $keyword . '%');
-                            })->orWhereHas('get_vehicle_model', function ($query) use($keyword) {
-                                $query->where('vehicle_models.name', 'LIKE', '%' . $keyword . '%');
-                            })->orWhere('products.product_name', 'LIKE', '%' . $keyword . '%')
-                            ->Where('products.quantity', '>', 0)
-                            ->where(function($query) use ($product_sub_category_ids) {
-                                if ($product_sub_category_ids != null)
-                                    $query->whereIn('products.id', $product_sub_category_ids);
-                            })->paginate(20);
+            $products = Product::with(['product_details', 'get_brands', 'get_vehicle_company', 'get_vehicle_model'])
+                    ->Where([['products.quantity', '>', 0], ['status', '=', 1]])
+                    ->Where('products.product_name', 'LIKE', '%' . $keyword . '%')
+                    ->orWhereHas('product_category.category', function($query) use($keyword) {
+                        $query->where('categories.name', 'LIKE', '%' . $keyword . '%');
+                    })->orWhereHas('get_brands', function ($query) use($keyword) {
+                        $query->where('brands.name', 'LIKE', '%' . $keyword . '%');
+                    })->orWhereHas('get_vehicle_company', function ($query) use($keyword) {
+                        $query->where('vehicle_companies.name', 'LIKE', '%' . $keyword . '%');
+                    })->orWhereHas('get_vehicle_model', function ($query) use($keyword) {
+                        $query->where('vehicle_models.name', 'LIKE', '%' . $keyword . '%');
+                    })->orWhere(function($query) use ($cat_name) {
+                        if ($cat_name != null) {
+                            $query->orWhereHas('product_sub_categories.get_sub_categories', function($q) use ($cat_name) {
+                                $q->Where('sub_categories.name', 'LIKE', '%' . $cat_name . '%');
+                            });
+                        }
+                    })->paginate(20);
         } else {
             $whereCond = [['products.vehicle_year_from', '<=', $year], ['products.vehicle_year_to', '>=', $year], ['products.quantity', '>', 0], ['status', '=', 1], 'products.vehicle_make_id' => $make_id, 'products.vehicle_model_id' => $model_id];
             $products = Product::with(['product_details', 'get_brands', 'get_vehicle_company', 'get_vehicle_model'])->Where($whereCond)->paginate(20);
