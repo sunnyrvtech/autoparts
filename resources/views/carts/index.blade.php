@@ -58,7 +58,7 @@
                                     </td>
                                     <td>
                                         <input class="order-quantity-dropdown form-control" value="{{ $value['quantity']}}" data-product-id="{{ $value['product_id']}}">
-                                        <a class="btn btn-default" title="refresh"><i class="glyphicon glyphicon-refresh"></i></a>
+                                        <a class="btn btn-default qty_refresh" title="refresh"><i class="glyphicon glyphicon-refresh"></i></a>
                                         <input type="hidden" name="cart_id[]" value="{{ $value['cart_id'] }}">
                                         <input type="hidden" name="shipping_price" value="{{ $other_cart_data['shipping_price'] }}">
                                     </td>
@@ -345,20 +345,29 @@
 @push('scripts')
 <script type="text/javascript">
     $(document).ready(function () {
+        
+         $(document).on("click",".qty_refresh",function(){
+            $($(this).closest("tbody").find(".order-quantity-dropdown")).trigger("change");
+         });
+        
         $(document).on('change', '.order-quantity-dropdown', function (e) {
             e.preventDefault();
+            changeQuantity($(this));
+        });
+        
+        function changeQuantity($this){
             var cart_count = 0;
-            $(this).closest("tbody").find(".order-quantity-dropdown").each(function () {
-                if (isNaN(parseInt($(this).val()))) {
+            $this.closest("tbody").find(".order-quantity-dropdown").each(function () {
+                if (isNaN(parseInt($this.val()))) {
                     cart_count += 1;
                 } else {
-                    cart_count += parseInt($(this).val());
+                    cart_count += parseInt($this.val());
                 }
             });
-            var quantity = $(this).val();
-            var productId = $(this).attr('data-product-id');
-            angular.element(this).scope().submitUpdateCart(quantity, productId, cart_count);
-        });
+            var quantity = $this.val();
+            var productId = $this.attr('data-product-id');
+            angular.element($this).scope().submitUpdateCart(quantity, productId, cart_count);
+        }
         
         $(document).on('change', '#changeShippingMethod', function (e) {
               e.preventDefault();
