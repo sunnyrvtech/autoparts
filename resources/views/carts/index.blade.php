@@ -58,6 +58,7 @@
                                     </td>
                                     <td>
                                         <input class="order-quantity-dropdown form-control" value="{{ $value['quantity']}}" data-product-id="{{ $value['product_id']}}">
+                                        <a class="btn btn-default" title="refresh"><i class="glyphicon glyphicon-refresh"></i></a>
                                         <input type="hidden" name="cart_id[]" value="{{ $value['cart_id'] }}">
                                         <input type="hidden" name="shipping_price" value="{{ $other_cart_data['shipping_price'] }}">
                                     </td>
@@ -117,7 +118,8 @@
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <input class="order-quantity-dropdown form-control" value="{{ $value['quantity']}}" data-product-id="{{ $value['product_id']}}">
+                                           <input class="order-quantity-dropdown form-control" value="{{ $value['quantity']}}" data-product-id="{{ $value['product_id']}}">
+                                           <a class="btn btn-default" title="refresh"><i class="glyphicon glyphicon-refresh"></i></a>
                                         </td>
                                         <td>
                                             <div>${{ number_format($value['price'],2) }}</div>
