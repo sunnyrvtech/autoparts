@@ -206,7 +206,7 @@
                 processData: false,
                 success: function (data) {
                     $("#loaderOverlay").hide();
-                    //window.location.reload();
+                    window.location.reload();
                 },
                 error: function (error) {
                     $("#loaderOverlay").hide();
