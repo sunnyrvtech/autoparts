@@ -36,6 +36,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'IsAdmin'], function () {
     Route::resource('orders', 'Admin\OrderController');
     Route::post('orders/status', 'Admin\OrderController@orderStatus')->name('orders-status');
     Route::post('import/csv', 'Admin\ImportController@uploadCsv')->name('import.csv');
+    Route::post('import/images', 'Admin\ImportController@uploadProductImages')->name('import.images');
     Route::post('export/sample/csv', 'Admin\ImportController@exportSampleCsv')->name('export-sample-csv');
     Route::post('export/csv', 'Admin\ImportController@exportCsv')->name('export.csv');
     Route::post('import/category', 'Admin\ImportController@createCategoryByCsv')->name('import.category');

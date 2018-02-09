@@ -214,13 +214,14 @@ class ProductController extends Controller {
             );
 
             if (Session::has('cartItem')) {
+   
                 $cart_array = Session::get('cartItem');
                 $cart_array[] = $data_array;
-
                 $merged = array();
                 foreach ($cart_array as $key => $val) {   // this is used to check if same item is already exist in the session array
                     if (isset($merged[$val['product_id']])) {
                         $merged[$val['product_id']]['quantity'] += $val['quantity'];
+                        $merged[$val['product_id']]['total_price'] = $products->price*$merged[$val['product_id']]['quantity'];
                         if ($merged[$val['product_id']]['quantity'] > $products->quantity) {  // this is used to check if product quantity less than the available quantity
                             return response()->json(array('error' => 'Quantity should be less than available quantity'), 401);
                         }

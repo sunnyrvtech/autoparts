@@ -30,7 +30,7 @@ class ImportController extends Controller {
      * @return Response
      */
     public function uploadCsv(Request $request) {
-        $path = $request->file('csvFile')->getRealPath();
+        $path = $request->file('productCsv')->getRealPath();
         Excel::filter('chunk')->load($path)->chunk(1000, function($results) {
             foreach ($results as $key => $row) {
 
@@ -131,12 +131,21 @@ class ImportController extends Controller {
 
 
                 $products = Product::where('sku', 'like', $row->sku)->first();
+                
+                if (isset($row['product_image']) && !empty($row['product_image'])) {
+                        $product_images_array = explode("|", $row['product_image']);
+                        $product_images = array_map(function($pro_val) {
+                            return basename($pro_val);
+                        }, $product_images_array);
 
+                        $product_detail_array['product_images'] = json_encode(array_values(array_unique($product_images)));
+                }
+                
                 if (!$products) {
                     if ($product = Product::create($product_array)) {
-                        $product_images = $this->product_image_upload($row->product_image);
+                        //$product_images = $this->product_image_upload($row->product_image);
                         $product_detail_array['product_id'] = $product->id;
-                        $product_detail_array['product_images'] = $product_images;
+                        //$product_detail_array['product_images'] = $product_images;
                         ProductDetail::create($product_detail_array);
                         ProductCategory::create(array('product_id' => $product->id, 'category_id' => $sub_category->category_id));
                         ProductSubCategory::create(array('product_id' => $product->id, 'sub_category_id' => $sub_category->id));
@@ -149,20 +158,20 @@ class ImportController extends Controller {
                 } else {
                     $products->fill($product_array)->save();
                     $product_details = ProductDetail::where('product_id', $products->id);
-                    $product_images = $this->product_image_upload($row->product_image);
+                    //$product_images = $this->product_image_upload($row->product_image);
                     $product_detail_array['product_id'] = $products->id;
-                    $product_detail_array['product_images'] = $product_images;
+                    //$product_detail_array['product_images'] = $product_images;
                     if ($product_details->count()) {
                         $product_details = $product_details->first();
-                        if ($product_details->product_images != null) {
-                            $existing_product_image_array = json_decode($product_details->product_images);
-
-                            if ($existing_product_image_array != '') {
-                                foreach ($existing_product_image_array as $exist_val) {
-                                    @unlink(base_path('public/product_images/') . $exist_val);
-                                }
-                            }
-                        }
+//                        if ($product_details->product_images != null) {
+//                            $existing_product_image_array = json_decode($product_details->product_images);
+//
+//                            if ($existing_product_image_array != '') {
+//                                foreach ($existing_product_image_array as $exist_val) {
+//                                    @unlink(base_path('public/product_images/') . $exist_val);
+//                                }
+//                            }
+//                        }
                         $product_details->fill($product_detail_array)->save();
                     } else {
                         ProductDetail::create($product_detail_array);
@@ -213,7 +222,7 @@ class ImportController extends Controller {
      * @return Response
      */
     public function createCategoryByCsv(Request $request) {
-        $path = $request->file('csvFile')->getRealPath();
+        $path = $request->file('productCsv')->getRealPath();
         Excel::filter('chunk')->load($path)->chunk(1000, function($results) {
             foreach ($results as $key => $row) {
                 $category = Category::where('name', 'like', trim($row->category))->first();
@@ -243,7 +252,7 @@ class ImportController extends Controller {
             foreach ($product_images as $key => $val) {
                 $url = $val;
                 $extention = pathinfo($url, PATHINFO_EXTENSION);
-                $filename = str_random(15) . '.' . $extention;
+                $filename = basename($url);
 
                 $arrContextOptions = array(
                     "ssl" => array(
@@ -260,6 +269,27 @@ class ImportController extends Controller {
             return null;
         }
     }
+    
+    /**
+     * function to upload product images.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function uploadProductImages(Request $request) {
+        $path = $request->file('imageCsv')->getRealPath();
+        Excel::filter('chunk')->load($path)->chunk(1000, function($results) {
+            foreach ($results as $key => $row) {
+                $products = Product::where('sku', 'like', $row->sku)->first();
+                if($products){
+                    $product_images = $this->product_image_upload($row->product_images);
+                    $product_details = ProductDetail::where('product_id', $products->id)->first();
+                    $product_details->fill($product_images)->save();
+                }
+            }
+        });
+        Session::flash('success-message', 'Product images import successfully !');
+    }
 
     /**
      * function to import sub category data using csv file.
@@ -268,7 +298,7 @@ class ImportController extends Controller {
      * @return Response
      */
     public function createSubCategoryByCsv(Request $request) {
-        $path = $request->file('csvFile')->getRealPath();
+        $path = $request->file('productCsv')->getRealPath();
         Excel::filter('chunk')->load($path)->chunk(1000, function($results) {
             foreach ($results as $key => $row) {
                 $category = Category::where('name', 'like', trim($row->category))->first();
@@ -290,7 +320,7 @@ class ImportController extends Controller {
      * @return Response
      */
     public function createCompanyByCsv(Request $request) {
-        $path = $request->file('csvFile')->getRealPath();
+        $path = $request->file('productCsv')->getRealPath();
         Excel::filter('chunk')->load($path)->chunk(1000, function($results) {
 
             foreach ($results as $key => $row) {
@@ -309,7 +339,7 @@ class ImportController extends Controller {
      * @return Response
      */
     public function createModelByCsv(Request $request) {
-        $path = $request->file('csvFile')->getRealPath();
+        $path = $request->file('productCsv')->getRealPath();
         Excel::filter('chunk')->load($path)->chunk(1000, function($results) {
 
             foreach ($results as $key => $row) {

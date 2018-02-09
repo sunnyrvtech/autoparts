@@ -219,7 +219,7 @@
                                 //initialize datepicker
                                 $('.datepicker1').datetimepicker({autoclose: true});
                                 $(document).on('click', '.browse', function () {
-                                    var file = $("#file_type");
+                                    var file = $(this).next();
                                     file.trigger('click');
                                 });
                                 $(document).on('change', '.file', function (e) {

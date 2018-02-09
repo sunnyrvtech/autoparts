@@ -10,18 +10,30 @@
 <div class="container-fluid">
     <div class="row form-group">
         <div class="row">
-            <div class="col-md-2">
+            <div class="col-md-1">
                 <a href="{{ route('products.create') }}" class="btn btn-primary">Add New</a>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-8">
+<!--                <div class="dropdown">
+                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Product Setting
+                        <span class="caret"></span></button>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-header"><a class="btn btn-success" onclick="$('#deleteProductModal').modal('show');" href="javascript:void(0);" type="button"><i class="glyphicon glyphicon-remove"></i>Delete All Product</a></li>
+                        <li class="dropdown-header"><a class="btn btn-warning" onclick="$('#exportProductModal').modal('show');" href="javascript:void(0);" type="button"><i class="glyphicon glyphicon-export"></i>Export Product</a></li>
+                        <li class="dropdown-header"><a class="browse btn btn-primary" type="button"><i class="glyphicon glyphicon-import"></i>Import Product</a><input style="display: none;" id="file_type" name="csvFile" class="uploadCsv" type="file"></li>
+                        <li class="dropdown-header"><a class="browse btn btn-primary" type="button"><i class="glyphicon glyphicon-import"></i>Import Images</a></li>
+                    </ul>
+                </div>-->
                 <div class="text-right">
                     <a class="btn btn-success" onclick="$('#deleteProductModal').modal('show');" href="javascript:void(0);" type="button"><i class="glyphicon glyphicon-remove"></i>Delete All Product</a>
                     <a class="btn btn-warning" onclick="$('#exportProductModal').modal('show');" href="javascript:void(0);" type="button"><i class="glyphicon glyphicon-export"></i>Export Product</a>
                     <a class="browse btn btn-primary" type="button"><i class="glyphicon glyphicon-import"></i>Import Product</a>
-                    <input style="display: none;" id="file_type" name="csvFile" class="uploadCsv" type="file">
+                    <input style="display: none;" name="productCsv" type="file">
+                    <!--<a class="browse btn btn-primary" type="button"><i class="glyphicon glyphicon-import"></i>Import Images</a>-->
+                    <!--<input style="display: none;" name="imageCsv" type="file">-->
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <form method="get">
                     <div class="form-group">
                         <!--                        <label class="control-label">Search:</label>-->
@@ -182,10 +194,10 @@
 //                }
 //            ]
 //        });
-        $(document).on('change', '.uploadCsv', function (e) {
+        $(document).on('change', 'input[name=productCsv]', function (e) {
             $("#loaderOverlay").show();
             var formData = new FormData();
-            formData.append('csvFile', $('input[type=file]')[0].files[0]);
+            formData.append('productCsv', $(this)[0].files[0]);
             $.ajax({
                 url: "{{ route('import.csv') }}",
                 type: 'POST',
@@ -194,7 +206,7 @@
                 processData: false,
                 success: function (data) {
                     $("#loaderOverlay").hide();
-                    window.location.reload();
+                    //window.location.reload();
                 },
                 error: function (error) {
                     $("#loaderOverlay").hide();
@@ -204,7 +216,29 @@
             });
             return false;
         });
+        $(document).on('change', 'input[name=imageCsv]', function (e) {
+            $("#loaderOverlay").show();
+            var formData = new FormData();
+            formData.append('imageCsv', $(this)[0].files[0]);
+            $.ajax({
+                url: "{{ route('import.images') }}",
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    $("#loaderOverlay").hide();
+                   // window.location.reload();
+                },
+                error: function (error) {
+                    $("#loaderOverlay").hide();
+                    alert('Something went wrong,please try again later!');
+                }
 
+            });
+            return false;
+        });
+        
         $(document).on('click', '#export_product_data', function (e) {
             $("#loaderOverlay").show();
             $.ajax({
