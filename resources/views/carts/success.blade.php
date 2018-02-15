@@ -7,14 +7,11 @@
 .checkout-onepage-success .col-main {
   padding: 0;
   text-align: center;
-}
-.checkout-onepage-success .col-main {
   float: none;
   padding: 0;
   width: auto;
 }
-
-.checkout-onepage-success .page-title h1, .checkout-onepage-success .page-title h2, .checkout-onepage-success .product-name h1, .checkout-onepage-success .product-name .h1 {
+.checkout-onepage-success .page-title h1, .checkout-onepage-success .page-title h2 {
   border-bottom: 1px solid #ededed;
   color: #636363;
   font-size: 24px;
@@ -27,7 +24,7 @@
 .checkout-onepage-success .buttons-set {
   margin: 10px 0;
   text-align: center;
-    border-top: 1px solid #ededed;
+  border-top: 1px solid #ededed;
   clear: both;
   padding-top: 10px;
 }

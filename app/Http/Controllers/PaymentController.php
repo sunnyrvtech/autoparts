@@ -84,7 +84,7 @@ class PaymentController extends Controller {
         $addr->setCity($shipping_address->city);
         $addr->setState($shipping_address->get_state->name);
         $addr->setPostalCode($shipping_address->zip);
-        $addr->setCountryCode($shipping_address->get_country->name);
+        $addr->setCountryCode($shipping_address->get_country->sortname);
         // $addr->setPhone("716-298-1822");
         // ### CreditCard
         $card = Paypalpayment::creditCard();
