@@ -139,6 +139,11 @@ class ApiController extends Controller {
                         'ship_date' => $val['ship_date'] != null ? $val['ship_date'] : null,
                         'notes' => $val['notes'] != null ? $val['notes'] : null,
                     );
+                    
+                    if($val['track_url'] != null){
+                        $update_array['track_url'] = $val['track_url'];
+                    }
+                    
                     if ($order_details = OrderDetail::find($val['item_id'])) {
                         if ($order_details->track_id != $val['track_number'] && $val['ship_carrier'] != null)
                             $update_array['item_status'] = 'shipped';

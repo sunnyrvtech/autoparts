@@ -372,7 +372,7 @@ class ProductController extends Controller {
         $model_id = $request->input('model_id');
 
 
-        if ($keyword != null && !$year) {
+        if (($keyword != null || $cat_name == null) && !$year) {
 //            $product_sub_category_ids = Product::whereHas('product_sub_categories.get_sub_categories', function($query) use ($cat_name) {
 //                        $query->Where('sub_categories.name', 'LIKE', '%' . $cat_name . '%');
 //                    })->Where([['products.quantity', '>', 0], ['status', '=', 1]])->pluck('id')->toArray();
@@ -402,6 +402,7 @@ class ProductController extends Controller {
             $whereCond = [['products.vehicle_year_from', '<=', $year], ['products.vehicle_year_to', '>=', $year], ['products.quantity', '>', 0], ['status', '=', 1], 'products.vehicle_make_id' => $make_id, 'products.vehicle_model_id' => $model_id];
             $products = Product::with(['product_details', 'get_brands', 'get_vehicle_company', 'get_vehicle_model'])->Where($whereCond)->paginate(20);
         } else {
+            die('saas');
             $products = Product::with(['product_details', 'get_brands', 'get_vehicle_company', 'get_vehicle_model'])->Where([['products.quantity', '>', 0], ['status', '=', 1]])->paginate(20);
         }
 
