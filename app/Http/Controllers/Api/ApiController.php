@@ -379,7 +379,7 @@ class ApiController extends Controller {
             $product_array['created_at'] = Carbon::now();
             $product_array['updated_at'] = Carbon::now();
 
-            $product_array['product_slug'] = $product_slug = $this->createSlug(trim($row['product_name']), 'product');
+            $product_array['product_slug'] = $this->createSlug(trim($row['product_name']), 'product');
 
             $products = Product::where('sku', 'like', $row['sku'])->first();
 
@@ -462,7 +462,10 @@ class ApiController extends Controller {
                     }
                     $product_array['brand_id'] = $brand->id;
                 }
-
+                
+                if (isset($row['product_name'])) {
+                    $product_array['product_slug'] = $this->createSlug(trim($row['product_name']), 'product');
+                }
                 $product_array = $this->productArray($row, $product_array);
                 $product_detail_array = $this->productDetailArray($row, $product_detail_array);
 
