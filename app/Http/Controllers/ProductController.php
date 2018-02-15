@@ -214,14 +214,14 @@ class ProductController extends Controller {
             );
 
             if (Session::has('cartItem')) {
-   
+
                 $cart_array = Session::get('cartItem');
                 $cart_array[] = $data_array;
                 $merged = array();
                 foreach ($cart_array as $key => $val) {   // this is used to check if same item is already exist in the session array
                     if (isset($merged[$val['product_id']])) {
                         $merged[$val['product_id']]['quantity'] += $val['quantity'];
-                        $merged[$val['product_id']]['total_price'] = $products->price*$merged[$val['product_id']]['quantity'];
+                        $merged[$val['product_id']]['total_price'] = $products->price * $merged[$val['product_id']]['quantity'];
                         if ($merged[$val['product_id']]['quantity'] > $products->quantity) {  // this is used to check if product quantity less than the available quantity
                             return response()->json(array('error' => 'Quantity should be less than available quantity'), 401);
                         }
@@ -365,7 +365,7 @@ class ProductController extends Controller {
         $title = 'Products | Search';
 
 
-        $keyword = $request->input('q') ? $request->input('q') : 'null';
+        $keyword = $request->input('q');
         $cat_name = $request->input('cat');
         $year = $request->input('year');
         $make_id = $request->input('make_id');
@@ -381,11 +381,11 @@ class ProductController extends Controller {
 //            dd($product_sub_category_ids);        
 
             $products = Product::with(['product_details', 'get_brands', 'get_vehicle_company', 'get_vehicle_model'])
-                    ->Where([['products.quantity', '>', 0], ['status', '=', 1]])
-                    ->Where('products.product_name', 'LIKE', '%' . $keyword . '%')
-                    ->orWhereHas('product_category.category', function($query) use($keyword) {
-                        $query->where('categories.name', 'LIKE', '%' . $keyword . '%');
-                    })->orWhereHas('get_brands', function ($query) use($keyword) {
+                            ->Where([['products.quantity', '>', 0], ['status', '=', 1]])
+                            ->Where('products.product_name', 'LIKE', '%' . $keyword . '%')
+                            ->orWhereHas('product_category.category', function($query) use($keyword) {
+                                $query->where('categories.name', 'LIKE', '%' . $keyword . '%');
+                            })->orWhereHas('get_brands', function ($query) use($keyword) {
                         $query->where('brands.name', 'LIKE', '%' . $keyword . '%');
                     })->orWhereHas('get_vehicle_company', function ($query) use($keyword) {
                         $query->where('vehicle_companies.name', 'LIKE', '%' . $keyword . '%');
@@ -398,10 +398,13 @@ class ProductController extends Controller {
                             });
                         }
                     })->paginate(20);
-        } else {
+        } else if ($year != null && $make_id != null && $model_id != null) {
             $whereCond = [['products.vehicle_year_from', '<=', $year], ['products.vehicle_year_to', '>=', $year], ['products.quantity', '>', 0], ['status', '=', 1], 'products.vehicle_make_id' => $make_id, 'products.vehicle_model_id' => $model_id];
             $products = Product::with(['product_details', 'get_brands', 'get_vehicle_company', 'get_vehicle_model'])->Where($whereCond)->paginate(20);
+        } else {
+            $products = Product::with(['product_details', 'get_brands', 'get_vehicle_company', 'get_vehicle_model'])->Where([['products.quantity', '>', 0], ['status', '=', 1]])->paginate(20);
         }
+
 
         $all_categories = SubCategory::groupBy('name')->get();
 
