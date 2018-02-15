@@ -72,6 +72,7 @@ class ApiController extends Controller {
                     $item_array[$k]['item_id'] = $val->id;
                     $item_array[$k]['item_url'] = url('/products/' . $val->getProduct->product_slug);
                     $item_array[$k]['track_number'] = $val->track_id != null ? $val->track_id : '';
+                    $item_array[$k]['track_url'] = $val->track_url != null ? $val->track_url : '';
                     $item_array[$k]['product_name'] = $val->product_name;
                     $item_array[$k]['sku_number'] = $val->sku_number;
                     $item_array[$k]['quantity'] = $val->quantity;
