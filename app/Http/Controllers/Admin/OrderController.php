@@ -23,47 +23,23 @@ class OrderController extends Controller {
         $title = 'Orders';
         if ($request->ajax()) {
             $orders = Order::with(['getCustomer'])->get();
-            $status_array = array('completed', 'failed', 'processing', 'shipped');
-            $check_array = array('completed', 'failed');
             foreach ($orders as $key => $value) {
-                if (!in_array($value->order_status, $check_array)) {
-                    $html = '<select name="order_status" data-id="' . $value->id . '" id="order_status">';
-                    foreach ($status_array as $val) {
-                        if ($value->order_status == $val) {
-                            $selected = 'selected';
-                        } else {
-                            $selected = '';
-                        }
-                        $html .= '<option ' . $selected . ' value="' . $val . '">' . ucfirst($val) . '</option>';
-                    }
-                    $html .= '</select>';
-                } else {
-                    $html = $value->order_status;
-                }
-                $orders[$key]['status'] = $html;
-                $orders[$key]['action'] = '<a href="'.route('orders.show', $value->id).'" data-toggle="tooltip" title="View Order Details" class="glyphicon glyphicon-eye-open"></a>';
-           
+                $orders[$key]['action'] = '<a href="' . route('orders.show', $value->id) . '" data-toggle="tooltip" title="View Order Details" class="glyphicon glyphicon-eye-open"></a>';
             }
             return Datatables::of($orders)->make(true);
         }
         return View::make('admin.orders.index', compact('title'));
     }
-    
+
     /**
      * show function.
      *
      * @return Response
      */
     public function show(Request $request, $orderId) {
-        $title = 'Orders | details';
-    
-        if ($request->ajax()) {
-            $order_details = OrderDetail::Where('order_id',$orderId)->get();
-            
-            return Datatables::of($order_details)->make(true);
-        }
-        $ajaxURL = route('orders.show',$orderId);
-        return View::make('admin.orders.order_details', compact('title','ajaxURL'));
+        $data['title'] = 'Orders | details';
+        $data['orders'] = Order::Where('id', $orderId)->first();
+        return view('admin.orders.order_details', $data);
     }
 
     /**
@@ -85,7 +61,7 @@ class OrderController extends Controller {
             if ($status == 'failed') {
                 foreach ($orders->getOrderDetailById as $val) {
                     if (isset($val->getProduct->id)) {
-                        Product::Where('id',$val->getProduct->id)->increment('quantity', $val->quantity);   ///   quantity increment if order cancelled
+                        Product::Where('id', $val->getProduct->id)->increment('quantity', $val->quantity);   ///   quantity increment if order cancelled
                     } else {
                         Session::flash('error-message', 'Product id not found!');
 //                        return response()->json(['messages' => "Product id not found!"], 401);

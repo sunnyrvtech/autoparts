@@ -49,10 +49,7 @@
                         return row.total_price;
                     }
                 },
-                {data: 'order_status',render: function (data, type, row) {
-                        return row.status;
-                    }
-                },
+                {data: 'order_status',name: 'order_status'},
                 {data: 'created_at', name: 'created_at'},
                 {data: 'Action', orderable: false, searchable: false, render: function (data, type, row) {
                         //console.log(row.id);
@@ -61,32 +58,6 @@
 
                 }
             ]
-        });
-        
-        $(document).on('change', '#order_status', function (e) {
-            e.preventDefault(); // does not go through with the link.
-            $(".alert-danger").remove();
-            $(".alert-success").remove();
-            var $this = $(this);
-
-            $.post({
-                data: {'id': $this.data('id'), 'status': $this.val()},
-                url: "{{ route('orders-status') }}"
-            }).done(function (data) {
-                window.location.reload();
-//                var HTML = '<div class="alert alert-success fade in">';
-//                HTML += '<a href="javascript:void(0);" onclick="$(this).parent().remove();" class="close" title="close">×</a>';
-//                HTML += '<strong>Success! </strong>' + data.messages + '</div>';
-//                $("#page-wrapper .container-fluid").before(HTML);
-//                $(window).scrollTop(0);
-            }).fail(function (data) {
-                window.location.reload();
-//                var HTML = '<div class="alert alert-danger fade in">';
-//                HTML += '<a href="javascript:void(0);" onclick="$(this).parent().remove();" class="close" title="close">×</a>';
-//                HTML += '<strong>Error! </strong>' + data.responseJSON.messages + '</div>';
-//                $("#page-wrapper .container-fluid").before(HTML);
-//                $(window).scrollTop(0);
-            });
         });
     });
 </script>

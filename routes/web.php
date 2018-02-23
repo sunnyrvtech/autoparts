@@ -16,7 +16,7 @@ Route::post('/localZone','HomeController@getlocalRegion');
 Route::group(['prefix' => 'admin', 'middleware' => 'IsAdmin'], function () {
     Route::get('/', 'Admin\IndexController@index');
     Route::resource('customers', 'Admin\CustomerController');
-    Route::resource('warehouses', 'Admin\WareHouseController');
+//    Route::resource('warehouses', 'Admin\WareHouseController');
     Route::resource('categories', 'Admin\CategoryController');
     Route::post('categories/status', 'Admin\CategoryController@categoryStatus')->name('categories-status');
     Route::resource('subcategories', 'Admin\SubCategoryController');

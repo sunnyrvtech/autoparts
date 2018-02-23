@@ -1601,7 +1601,7 @@ footer.footer .container { padding-bottom: 15px; }
 }
 .my-account .btn-nav .glyphicon { padding-top: 16px;font-size: 40px; }
 .my-account .tab-pane .colsm { background-color: #fff;border-left: medium none;border-radius:0px;min-height: 650px; }
-.my-account .tab-pane .colsm-row { padding: 20px; }
+/*.my-account .tab-pane .colsm-row { padding: 20px; }*/
 .col-centered { display:inline-block;float:none;text-align:left;margin-right:-4px; }
 .divcontainer { background-color: #fff;border-radius: 20px;padding: 20px;margin-bottom: 20px; }
 #dropdown-navbar-target { text-align: center; }
@@ -1635,6 +1635,7 @@ footer.footer .container { padding-bottom: 15px; }
 .order_track_info .track_info_child .date { font-size: 17px; }
 /* order track css end here */
 .track-content { padding: 30px; }
+#order_details .panel-default.height { min-height: 200px; }
 
 @media(min-width: 992px) and (max-width: 1200px){
     .list-group-item .img-wrp {
