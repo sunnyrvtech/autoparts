@@ -200,12 +200,12 @@
                                     <td class="highrow text-right">${{ number_format($sub_total,2) }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="highrow"></td>
-                                    <td class="highrow"></td>
-                                    <td class="highrow"></td>
-                                    <td class="highrow"></td>
-                                    <td class="highrow text-center"><strong>Tax</strong></td>
-                                    <td class="highrow text-right">${{ number_format($orders->tax_rate,2) }}</td>
+                                    <td class="emptyrow"></td>
+                                    <td class="emptyrow"></td>
+                                    <td class="emptyrow"></td>
+                                    <td class="emptyrow"></td>
+                                    <td class="emptyrow text-center"><strong>Tax</strong></td>
+                                    <td class="emptyrow text-right">${{ number_format($orders->tax_rate,2) }}</td>
                                 </tr>
                                 <tr>
                                     <td class="emptyrow"></td>
