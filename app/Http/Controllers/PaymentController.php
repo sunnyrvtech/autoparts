@@ -132,6 +132,11 @@ class PaymentController extends Controller {
         $item_price = 0;
         $sub_total = 0;
         foreach ($carts as $key => $value) {
+
+            if ($value->get_products->quantity == 0) {
+                return Redirect::back()->with('error-message', 'This product "' . $value->get_products->product_name . '" is out of stock,please remove this item in your cart to proceed further !');
+            }
+
             //calulate total price after coupan match and discount
             if ($discount_status && $value->get_products->discount != null) {
                 $item_price = $value->total_price - ($value->total_price * $value->get_products->discount / 100);
@@ -295,7 +300,6 @@ class PaymentController extends Controller {
 //        $all_store = WarehouseStore::get();
 //        $distance_array = array();
 //        $store_email = '';
-
         // this is used to get the nearest store
 //        foreach ($all_store as $key => $value) {
 //            $distance = $this->getDistanceBetweenPointsNew($shipping_address->latitude, $shipping_address->longitude, $value->latitude, $value->longitude);
