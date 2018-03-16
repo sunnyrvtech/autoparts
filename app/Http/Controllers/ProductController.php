@@ -123,7 +123,7 @@ class ProductController extends Controller {
                     $check_usage = CoupanUsage::Where([['coupan_id', '=', $coupan_code->id], ['user_id', '=', Auth::id()], ['usage', '>=', $coupan_code->usage]])->first();
                     $current_date = strtotime(Carbon::now());
                     if (strtotime($coupan_code->expiration_date) < $current_date) {
-                        return response()->json(array('error' => 'Sorry,this coupan code has neen expired!'), 401);
+                        return response()->json(array('error' => 'Sorry,this coupan code has been expired!'), 401);
                     } else if ($check_usage) {
                         return response()->json(array('error' => 'Sorry,You have exceed the coupan code usage limit!'), 401);
                     }else if ($coupan_code->coupon_type == 'per_product' && ($coupan_code->product_sku == null || empty(array_intersect($sku_array,json_decode($coupan_code->product_sku))))) {
