@@ -373,7 +373,7 @@
                                                                                                 <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:right;">Discount</h3>
                                                                                             </td>
                                                                                             <td>
-                                                                                                <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:right;">${{ number_format($carts['other_cart_data']['coupon_discount'],2) }}</h3>
+                                                                                                <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:right;">{{ number_format($carts['other_cart_data']['coupon_discount'],2) }}%</h3>
                                                                                             </td>
                                                                                         </tr>
                                                                                         <tr>
