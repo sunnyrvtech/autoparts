@@ -272,7 +272,7 @@
                                 <table class="table">
                                     <thead class="thead-inverse">
                                         <tr>
-                                            <th><label>Order#</label></th>
+                                            <th><label>No#</label></th>
                                             <th><label>Date</label></th>
                                             <th><label>Ship To</label></th>
                                             <th><label>Order Total</label></th>
@@ -281,16 +281,12 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @forelse($orders as $value)
-                                            <?php $total_price = 0; ?>
-                                            @foreach($value->getOrderDetailById as $val)
-                                                <?php $total_price += $val->total_price; ?>
-                                            @endforeach
+                                        @forelse($orders as $key=>$value)
                                             <tr>
-                                              <td>{{ $value->id }}</td>
+                                              <td>{{ $key+1 }}</td>
                                               <td>{{ date('m-d-Y H:i:s',strtotime($value->created_at)) }}</td>
                                               <td>{{ Auth::user()->first_name.' '.Auth::user()->last_name }}</td>
-                                              <td>${{ number_format($total_price+$value->ship_price+$value->tax_rate,2) }}</td>
+                                              <td>${{ number_format($value->total_price,2) }}</td>
                                               <td>{{ $value->order_status }}</td>
                                               <td>
                                                   <span class="nobr"><a href="{{ URL('/my-account/order/view').'/'.$value->id }}">View Order</a></span>
@@ -417,7 +413,9 @@
                                                         <th><label>Item Details</label></th>
                                                         <th><label>Quantity</label></th>
                                                         <th><label>Price</label></th>
+                                                        @if($order_details->coupon_type == 'per_product')
                                                         <th><label>Discount</label></th>
+                                                        @endif
                                                         <th><label>Total</label></th>
                                                     </tr>
                                                 </thead>
@@ -425,8 +423,13 @@
                                                     <?php $sub_total = 0; ?>
                                                     @foreach($order_details->getOrderDetailById as $val)
                                                     <?php
-                                                    $total_price = $val->total_price - ($val->total_price * $val->discount / 100);
-                                                    $sub_total += $total_price;
+                                                    if ($order_details->coupon_type == 'per_product' && $val->discount !=null) {
+                                                        $total_price = $val->total_price - ($val->total_price * $val->discount / 100);
+                                                        $sub_total += $total_price;
+                                                    } else {
+                                                        $total_price = $val->total_price;
+                                                        $sub_total += $total_price;
+                                                    }
                                                     ?>
                                                     <tr>
                                                         <td>
@@ -443,17 +446,20 @@
                                                         <td>
                                                             <div>${{ number_format($val->total_price/$val->quantity,2) }}</div>
                                                         </td>
-                                                        <td>
+                                                        @if($order_details->coupon_type == 'per_product')
+                                                         <td>
                                                             <div>
-                                                                @if($val->discount != null)
-                                                                {{ $val->discount.'%' }}
+                                                                @if($val->discount !=null)
+                                                                {{ number_format($val->discount,2) }}%
                                                                 @else
-                                                                {{"........"}}
+                                                                ---
                                                                 @endif
                                                             </div>
                                                         </td>
+                                                        @endif
+                                                        
                                                         <td>
-                                                            <div class="">${{ $total_price }}</div>
+                                                            <div class="">${{ number_format($total_price,2) }}</div>
                                                         </td>
                                                     </tr>
                                                     @endforeach
@@ -471,6 +477,19 @@
                                                         <span>${{ number_format($sub_total,2) }}</span>
                                                     </div>
                                                 </div>
+                                                @if($order_details->discount != null && $order_details->coupon_type == 'all_products')
+                                                <?php
+                                                $sub_total = number_format($sub_total-($sub_total*$order_details->discount/100),2);
+                                                ?>
+                                                <div class="row">
+                                                    <div class="col-md-6 col-sm-6 col-xs-6">
+                                                        <label>Subtotal after discount:</label>
+                                                    </div>
+                                                    <div class="col-md-6 col-sm-6 col-xs-6 text-right">
+                                                        <span>${{ number_format($sub_total,2) }}</span>
+                                                    </div>
+                                                </div>
+                                                @endif
                                                 <div class="row">
                                                     <div class="col-md-6 col-sm-6 col-xs-6">
                                                         <label>Tax:</label>

@@ -47,14 +47,19 @@ class CoupanCodeController extends Controller {
     public function store(Request $request) {
         $data = $request->all();
         $this->validate($request, [
-            'coupan_type' => 'required',
+            'coupon_name' => 'required',
+            'coupon_type' => 'required',
             'code' => 'required',
             'usage' => 'required',
             'expiration_date' => 'required',
             'status' => 'required',
         ]);
 
-
+        if ($request->get('product_sku') != null && $data['product_sku'] != 'all_products')
+            $data['product_sku'] = json_encode(explode(',', $data['product_sku']));
+        else
+            $data['product_sku'] = null;
+        
         CoupanCode::create($data);
         return redirect()->route('coupon_code.index')
                         ->with('success-message', 'Coupan Code created successfully!');
@@ -80,12 +85,19 @@ class CoupanCodeController extends Controller {
     public function update(Request $request, $id) {
         $data = $request->all();
         $this->validate($request, [
-            'coupan_type' => 'required',
+            'coupon_name' => 'required',
+            'coupon_type' => 'required',
             'code' => 'required',
             'usage' => 'required',
             'expiration_date' => 'required',
             'status' => 'required',
         ]);
+
+        if ($request->get('product_sku') != null && $data['coupon_type'] != 'all_products')
+            $data['product_sku'] = json_encode(explode(',', $data['product_sku']));
+        else
+            $data['product_sku'] = null;
+        
         $coupan_codes = CoupanCode::findOrFail($id);
         //CoupanCode::Where('id','>',1)->update(['status' => 0]);
         $coupan_codes->fill($data)->save();

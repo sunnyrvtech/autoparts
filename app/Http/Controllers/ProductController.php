@@ -75,23 +75,26 @@ class ProductController extends Controller {
 
         $total_price_cart = 0;
         $total_weight = 0;
-        $discount = 0;
+       // $discount = 0;
         if (!empty($carts)) {
             $cart_data = array();
+            $sku_array = array();
             foreach ($carts as $key => $value) {
                 $products = Product::where('id', $value->product_id)->first();
-                if ($products->status == 0) {
+                $sku_array[$key] = $products->sku;
+                if ($products->status == 0 || $products->quantity == 0) {
                     Cart::Where('product_id', $value->product_id)->delete();
                     unset($value);
                     continue;
                 }
                 $product_image = json_decode($products->product_details->product_images);
                 $total_weight += $value->quantity * $products->weight;
-                $discount += $products->discount;
+                //$discount += $products->discount;
                 $cart_data[$key] = array(
                     'product_id' => $products->id,
                     'cart_id' => Auth::check() ? $value->id : $products->id, //   if user not logged in then we have removed item in the session array based on product id otherwise from database
                     'product_name' => $products->product_name,
+                    'product_long_description' => $products->product_long_description,
                     'product_image' => isset($product_image[0]) ? $product_image[0] : 'default.jpg',
                     'product_slug' => $products->product_slug,
                     'sku' => $products->sku,
@@ -100,14 +103,17 @@ class ProductController extends Controller {
                     'vehicle_year' => $products->vehicle_year_from . '-' . $products->vehicle_year_to,
                     'quantity' => $value->quantity,
                     'price' => $products->price,
-                    'discount' => $products->discount,
-                    'total_price' => $value->total_price,
+//                    'discount' => $products->discount,
+//                    'total_price' => $value->total_price,
                 );
             }
         } else {
             $cart_data = array();
         }
-
+        
+        
+         $coupon_discount = null;
+         $discount_status = false;
         // this code is used to verify coupan code and allow discount 
         if ($offer_code != null) {
             $coupan_code = CoupanCode::Where(['code' => $offer_code, 'status' => 1])->first();
@@ -120,19 +126,16 @@ class ProductController extends Controller {
                         return response()->json(array('error' => 'Sorry,this coupan code has neen expired!'), 401);
                     } else if ($check_usage) {
                         return response()->json(array('error' => 'Sorry,You have exceed the coupan code usage limit!'), 401);
-                    } else if ($discount == '') {
+                    }else if ($coupan_code->coupon_type == 'per_product' && ($coupan_code->product_sku == null || empty(array_intersect($sku_array,json_decode($coupan_code->product_sku))))) {
                         return response()->json(array('error' => 'Sorry discount not available for these products!'), 401);
                     }
                     $discount_status = true;
+                    $coupon_discount = $coupan_code->discount;
                 } else {
                     return response()->json(array('error' => 'Sorry,please check your coupan code or try again later!'), 401);
                 }
-            } else {
-                $discount_status = false;
-            }
-        } else {
-            $discount_status = false;
-        }
+            } 
+        } 
 
         if ($request->get('shipping_method') == '') {
             $method_name = "Free shipping";
@@ -163,12 +166,32 @@ class ProductController extends Controller {
         $other_cart_data = array(
             'shipping_price' => $shipping_price,
             'tax_price' => $tax_price ? $tax_price->price : 0,
-            'method_name' => $method_name,
+            'shipping_method' => $method_name,
             'discount_status' => $discount_status,
-            'discount_code' => $offer_code
+            'discount_code' => $offer_code,
+            'coupon_discount' => $coupon_discount
         );
-
-        $view = View::make('carts.index', compact('cart_data', 'shipping_address', 'shipping_methods', 'other_cart_data'));
+        
+        if($discount_status){
+            if($coupan_code->coupon_type == 'per_product'){
+                  $check_discount_array = array_intersect($sku_array,json_decode($coupan_code->product_sku));
+                  foreach($check_discount_array as $k=>$val){
+                      $cart_data[$k]['coupon_discount'] = $coupon_discount;
+                  }
+            }
+            $other_cart_data['coupon_type'] = $coupan_code->coupon_type;
+        }
+        
+        
+        $data['cart_data'] = $cart_data;
+        $data['other_cart_data'] = $other_cart_data;
+        
+        Session::put('cart_data',$data);
+        $data['shipping_address'] = $shipping_address;
+        $data['shipping_methods'] = $shipping_methods;
+        
+      
+        $view = View::make('carts.index', $data);
         if ($request->wantsJson()) {
             $sections = $view->renderSections();
             return $sections['content'];

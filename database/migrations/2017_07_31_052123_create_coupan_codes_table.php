@@ -15,9 +15,12 @@ class CreateCoupanCodesTable extends Migration
     {
         Schema::create('coupan_codes', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('coupan_type');
+            $table->string('coupon_name');
             $table->string('code');
             $table->integer('usage');
+            $table->string('coupon_type')->nullable();
+            $table->text('product_sku')->nullable();
+            $table->decimal('discount', 5, 2)->nullable();
             $table->dateTime('expiration_date');
             $table->tinyInteger('status')->default(1);
             $table->timestamps();

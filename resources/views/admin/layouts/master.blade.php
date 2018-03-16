@@ -21,7 +21,7 @@
         <link href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.6/semantic.min.css" rel="stylesheet">   
         <link href="//cdn.datatables.net/1.10.13/css/dataTables.semanticui.min.css" rel="stylesheet">   
         <link href="{{ URL::asset('/css/bootstrap-multiselect.css') }}" rel="stylesheet">   
-    
+         @stack('stylesheet')
     </head>
 
     <body>

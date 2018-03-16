@@ -13,9 +13,11 @@
                 <thead>
                     <tr>
                         <th>Id</th>
+                        <th>Coupon Name</th>
                         <th>Coupon Type</th>
                         <th>Code</th>
                         <th>Usage</th>
+                        <th>Discount</th>
                         <th>Expiration Date</th>
                         <th>Status</th>
                         <th>Action</th>
@@ -32,13 +34,15 @@
         $('#coupan-table').DataTable({
             processing: true,
             serverSide: true,
-            order: [[5, "desc"]],
+            order: [[0, "asc"]],
             ajax: "{{ route('coupon_code.index') }}",
             columns: [
                 {data: 'id', name: 'id'},
-                {data: 'coupan_type', name: 'coupan_type'},
+                {data: 'coupon_name', name: 'coupon_name'},
+                {data: 'coupon_type', name: 'coupon_type'},
                 {data: 'code', name: 'code'},
                 {data: 'usage', name: 'usage'},
+                {data: 'discount', name: 'discount'},
                 {data: 'expiration_date', name: 'expiration_date'},
                 {data: 'status', render: function (data, type, row) {
                         if (data == 1) {

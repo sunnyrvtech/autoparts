@@ -187,7 +187,7 @@
                                                                         <table border="0" cellpadding="30" cellspacing="0" width="100%">
                                                                             <tr>
                                                                                 <td align="center" valign="top" class="textContent">
-                                                                                    @if($transaction_details['store_email'])
+                                                                                    @if(isset($carts['store_email']))
                                                                                     <h1 style="color:#FFFFFF;line-height:100%;font-family:Helvetica,Arial,sans-serif;font-size:30px;font-weight:normal;margin-bottom:5px;text-align:center;">New order has been placed from Auto Light House.</h1>
                                                                                     <div style="text-align:center;font-family:Helvetica,Arial,sans-serif;font-size:15px;margin-bottom:0;color:#FFFFFF;line-height:135%;">Order summary is below.Thank you again for your business.</div>
                                                                                     @else
@@ -229,8 +229,8 @@
                                                                                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
                                                                                         <tr>
                                                                                             <td valign="top" class="textContent">
-                                                                                                <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:center;">Your Order #{{ $transaction_details['transaction_id'] }}</h3>
-                                                                                                <div mc:edit="body" style="text-align:center;font-family:Helvetica,Arial,sans-serif;font-size:15px;margin-bottom:0;color:#5F5F5F;line-height:135%;">Placed on {{ $transaction_details['order_time'] }}</div>
+                                                                                                <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:center;">Your Order #{{ $carts['other_cart_data']['transaction_id'] }}</h3>
+                                                                                                <div mc:edit="body" style="text-align:center;font-family:Helvetica,Arial,sans-serif;font-size:15px;margin-bottom:0;color:#5F5F5F;line-height:135%;">Placed on {{ $carts['other_cart_data']['order_time'] }}</div>
                                                                                             </td>
                                                                                         </tr>
                                                                                     </table>
@@ -298,32 +298,38 @@
                                                         <th align="left" width="60%" style="padding: 10px;"><span style="color:#7a7a7a;font-weight: bold;">Item In Your Order</span></th>
                                                         <th width="10%" style="padding: 10px;"><span style="color:#7a7a7a;font-weight: bold;">Qty</span></th>
                                                         <th width="10%" style="padding: 10px;"><span style="color:#7a7a7a;font-weight: bold;">Price</span></th>
+                                                        @if($carts['other_cart_data']['discount_status'] && $carts['other_cart_data']['coupon_type'] == 'per_product')
                                                         <th width="10%" style="padding: 10px;"><span style="color:#7a7a7a;font-weight: bold;">Discount</span></th>
+                                                        @endif
                                                         <th width="10%" style="padding: 10px;"><span style="color:#7a7a7a;font-weight: bold;">Total</span></th>
                                                     </tr>
                                                     <?php $item_price = 0;$sub_total = 0; ?>
-                                                    @foreach($carts as $key => $value)
+                                                    @foreach($carts['cart_data'] as $key => $value)
                                                     <?php
-                                                    if ($transaction_details['discount_status'] && $value->get_products->discount != null) {
-                                                        $item_price = $value->total_price - ($value->total_price * $value->get_products->discount / 100);
-                                                        $sub_total += number_format($item_price, 2);
-                                                    } else {
-                                                        $item_price = $value->total_price;
-                                                        $sub_total += number_format($item_price, 2);
-                                                    }
+                                                        //calulate total price after coupan match and discount
+                                                        if(isset($value['coupon_discount']) && $carts['other_cart_data']['discount_status'] && $carts['other_cart_data']['coupon_type'] == 'per_product'){
+                                                            $item_price = $value['price']*$value['quantity'];
+                                                            $item_price = $item_price-($item_price*$carts['other_cart_data']['coupon_discount']/100);
+                                                            $sub_total += $item_price; 
+                                                        }else{
+                                                            $item_price = $value['price']*$value['quantity'];
+                                                            $sub_total += $value['price']*$value['quantity'];
+                                                        }
                                                     ?>
                                                     <tr style="border-bottom: 1px solid #C8C8C8;">
-                                                        <td align="left" width="60%" style="padding: 15px;"><span style="font-weight: bold;">{{ $value->get_products->product_name }}</span><br><span>SKU: {{ $value->get_products->sku }}</span></td>
-                                                        <td width="10%" style="padding: 15px;">{{ $value->quantity }}</td>
-                                                        <td width="10%" style="padding: 15px;">${{ number_format($value->total_price/$value->quantity,2) }}</td>
+                                                        <td align="left" width="60%" style="padding: 15px;"><span style="font-weight: bold;">{{ $value['product_name'] }}</span><br><span>SKU: {{ $value['sku'] }}</span></td>
+                                                        <td width="10%" style="padding: 15px;">{{ $value['quantity'] }}</td>
+                                                        <td width="10%" style="padding: 15px;">${{ number_format($value['price'],2) }}</td>
+                                                        @if($carts['other_cart_data']['discount_status'] && $carts['other_cart_data']['coupon_type'] == 'per_product')
                                                         <td width="10%" style="padding: 15px;">
-                                                             @if($value->get_products->discount != null)
-                                                                {{ $value->get_products->discount.'%' }}
+                                                             @if(isset($value['coupon_discount']))
+                                                             {{ number_format($value['coupon_discount'],2) }}%
                                                              @else
-                                                                {{"..."}}
+                                                             ---
                                                              @endif
                                                         </td>
-                                                        <td width="10%" style="padding: 15px;">${{ $item_price }}</td>
+                                                         @endif
+                                                        <td width="10%" style="padding: 15px;">${{ number_format($item_price,2) }}</td>
                                                     </tr>
                                                     @endforeach
 
@@ -358,20 +364,35 @@
                                                                                                 <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:right;">${{ number_format($sub_total,2) }}</h3>
                                                                                             </td>
                                                                                         </tr>
+                                                                                        @if($carts['other_cart_data']['discount_status'] && $carts['other_cart_data']['coupon_type'] == 'all_products')
+                                                                                            <?php
+                                                                                            $sub_total = number_format($sub_total-($sub_total*$carts['other_cart_data']['coupon_discount']/100),2);
+                                                                                            ?>
+                                                                                        <tr>
+                                                                                            <td>
+                                                                                                <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:right;">Sub Total After Discount</h3>
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:right;">${{ number_format($sub_total,2) }}</h3>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                        @endif
+                                                                                        @if($carts['other_cart_data']['tax_rate'] != null)
                                                                                         <tr>
                                                                                             <td>
                                                                                                 <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:right;">Tax</h3>
                                                                                             </td>
                                                                                             <td>
-                                                                                                <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:right;">${{ !empty($transaction_details['tax_rate'])?$transaction_details['tax_rate']:'0.00' }}</h3>
+                                                                                                <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:right;">${{ $carts['other_cart_data']['tax_rate'] }}</h3>
                                                                                             </td>
                                                                                         </tr>
+                                                                                        @endif
                                                                                         <tr>
                                                                                             <td>
                                                                                                 <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:right;">Shipping & Handling</h3>
                                                                                             </td>
                                                                                             <td>
-                                                                                                <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:right;">${{ !empty($transaction_details['shipping_price'])?$transaction_details['shipping_price']:'0.00' }}</h3>
+                                                                                                <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:right;">${{ number_format($carts['other_cart_data']['shipping_price'],2) }}</h3>
                                                                                             </td>
                                                                                         </tr>
                                                                                         <tr>
@@ -379,7 +400,7 @@
                                                                                                 <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:right;">Grand Total</h3>
                                                                                             </td>
                                                                                             <td>
-                                                                                                <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:right;">${{ number_format($sub_total+$transaction_details['shipping_price']+$transaction_details['tax_rate'],2) }}</h3>
+                                                                                                <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:right;">${{ number_format($sub_total+$carts['other_cart_data']['shipping_price']+$carts['other_cart_data']['tax_rate'],2) }}</h3>
                                                                                             </td>
                                                                                         </tr>
                                                                                     </table>
@@ -491,7 +512,7 @@
                                                                                             <td align="left" class="textContent">
                                                                                                 <h3 style="line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:left;">Shipping Method</h3>
                                                                                                 <div style="text-align:left;font-family:Helvetica,Arial,sans-serif;font-size:15px;margin-bottom:0;line-height:135%;">
-                                                                                                    <span>{{ $transaction_details['shipping_method'] }}</span><br/>
+                                                                                                    <span>{{ $carts['other_cart_data']['shipping_method'] }}</span><br/>
                                                                                                 </div>
                                                                                             </td>
                                                                                         </tr>
@@ -503,7 +524,7 @@
                                                                                             <td align="left" class="textContent">
                                                                                                 <h3 style="line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:left;">Payment Method</h3>
                                                                                                 <div style="text-align:left;font-family:Helvetica,Arial,sans-serif;font-size:15px;margin-bottom:0;line-height:135%;">
-                                                                                                    <span>{{ $transaction_details['payment_method'] }}</span><br/>
+                                                                                                    <span>{{ $carts['other_cart_data']['payment_method'] }}</span><br/>
                                                                                                 </div>
                                                                                             </td>
                                                                                         </tr>

@@ -25,7 +25,9 @@
                                     <th><label>Item Details</label></th>
                                     <th><label>Quantity</label></th>
                                     <th><label>Price</label></th>
+                                    @if($other_cart_data['discount_status'] && $other_cart_data['coupon_type'] == 'per_product')
                                     <th><label>Discount</label></th>
+                                    @endif
                                     <th><label>Total</label></th>
                                     <th></th>
                                 </tr>
@@ -35,16 +37,17 @@
                                 @foreach($cart_data as $value)
                                 <?php 
                                     //calulate total price after coupan match and discount
-                                    if($other_cart_data['discount_status'] && $value['discount'] != null){
-                                        $total_price = $value['total_price']-($value['total_price']*$value['discount']/100);
+                                    if(isset($value['coupon_discount']) && $other_cart_data['discount_status'] && $other_cart_data['coupon_type'] == 'per_product'){
+                                        $item_price = $value['price']*$value['quantity'];
+                                        $total_price = $item_price-($item_price*$other_cart_data['coupon_discount']/100);
                                         $sub_total += $total_price; 
                                     }else{
-                                        $total_price = $value['total_price'];
-                                        $sub_total += $total_price;
+                                        $total_price = $value['price']*$value['quantity'];
+                                        $sub_total += $value['price']*$value['quantity'];
                                     }
                                     
                                     // just used to hide discount text field if no discount available 
-                                    $total_discount += $value['discount'];
+//                                    $total_discount += $value['discount'];
                                 ?>
                                 <tr>
                                     <td>
@@ -65,15 +68,15 @@
                                     <td>
                                         <div>${{ number_format($value['price'],2) }}</div>
                                     </td>
+                                    @if($other_cart_data['discount_status'] && $other_cart_data['coupon_type'] == 'per_product')
                                     <td>
-                                        <div>
-                                            @if($other_cart_data['discount_status'] && $value['discount'] != null)
-                                                {{ $value['discount'].'%' }}
-                                            @else
-                                               {{"........"}}
-                                            @endif
-                                        </div>
+                                        @if(isset($value['coupon_discount']))
+                                        <div>{{ number_format($value['coupon_discount'],2) }}%</div>
+                                        @else
+                                        <div>---</div>
+                                        @endif
                                     </td>
+                                    @endif
                                     <td>
                                         <div class="">${{ number_format($total_price,2) }}</div>
                                     </td>
@@ -110,7 +113,9 @@
                                     <tr>
                                         <th>Qty</th>
                                         <th>Price</th>
-                                        <th>Discount</th>
+                                        @if($other_cart_data['discount_status'] && $other_cart_data['coupon_type'] == 'per_product')
+                                          <th>Discount</th>
+                                        @endif
                                         <th>Total</th>
                                         <th></th>
                                     </tr>
@@ -124,17 +129,17 @@
                                         <td>
                                             <div>${{ number_format($value['price'],2) }}</div>
                                         </td>
-                                         <td>
-                                            <div>
-                                                @if($other_cart_data['discount_status'] && $value['discount'] != null)
-                                                    {{ $value['discount'].'%' }}
+                                        @if($other_cart_data['discount_status'] && $other_cart_data['coupon_type'] == 'per_product')
+                                            <td>
+                                                @if(isset($value['coupon_discount']))
+                                                <div>{{ number_format($value['coupon_discount'],2) }}%</div>
                                                 @else
-                                                   {{"..."}}
+                                                <div>---</div>
                                                 @endif
-                                            </div>
-                                        </td>
+                                            </td>
+                                        @endif
                                         <td>
-                                            <div class="">${{ number_format($value['total_price'],2) }}</div>
+                                            <div class="">${{ number_format($total_price,2) }}</div>
                                         </td>
                                         <td>
                                             <a class="btn btn-danger btn-sm" ng-click="submitDeleteCart({{ $value['cart_id'] }})"><i class="fa fa-trash-o"></i></a>
@@ -148,7 +153,7 @@
                 </div>
             </div>
             <div class="shipping-section material" elevation="1">
-               @if($total_discount != null && Auth::check())
+               @if(Auth::check())
                     <div class="row">
                         <div class="col-md-4 col-sm-4 col-xs-12">
                             <div class="discount-text-1">Discount/Gift Certificate</div>
@@ -195,7 +200,7 @@
                         <select id="changeShippingMethod" name="shipping_method" class="form-control">
                                 <option value="">Select Shipping Method</option>
                                 @foreach($shipping_methods as $val)
-                                <option @if($val->name == $other_cart_data['method_name']) selected @endif value="{{ $val->name }}">{{ $val->name }}</option>
+                                <option @if($val->name == $other_cart_data['shipping_method']) selected @endif value="{{ $val->name }}">{{ $val->name }}</option>
                                 @endforeach
                         </select>
                         <span id="shipping_method_error" class="help-block" style="display:none;">
@@ -224,6 +229,19 @@
                                 <span>${{ number_format($sub_total,2) }}</span>
                             </div>
                         </div>
+                        @if($other_cart_data['discount_status'] && $other_cart_data['coupon_type'] == 'all_products')
+                        <?php
+                        $sub_total = number_format($sub_total-($sub_total*$other_cart_data['coupon_discount']/100),2);
+                        ?>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                <label>Subtotal after discount:</label>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                <span>${{ $sub_total }}</span>
+                            </div>
+                        </div>
+                        @endif
                         @if($other_cart_data['shipping_price'] > 0)
                         <div class="row">
                             <div class="col-md-6 col-sm-6 col-xs-6">

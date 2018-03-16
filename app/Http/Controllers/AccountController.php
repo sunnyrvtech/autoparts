@@ -29,7 +29,7 @@ class AccountController extends Controller {
             $users = User::where('id', Auth::id())->first();
             $shipping_address = ShippingAddress::where('user_id', Auth::id())->first();
             $billing_address = BillingAddress::where('user_id', Auth::id())->first();
-            $orders = Order::Where('user_id', Auth::id())->get();
+            $orders = Order::Where('user_id', Auth::id())->orderBy('created_at','desc')->get();
             if ($id != null) {
                 $order_details = Order::where('user_id', Auth::id())->where('id', $id)->first();
             } else {

@@ -173,22 +173,27 @@
                                 <?php $sub_total = 0.00; ?>
                                 @foreach($orders->getOrderDetailById as $value)
                                 <?php
-                                $total_price = $value->total_price - ($value->total_price * $value->discount / 100);
-                                $sub_total += $total_price;
+                                if ($orders->coupon_type == 'per_product' && $value->discount !=null) {
+                                    $total_price = $value->total_price - ($value->total_price * $value->discount / 100);
+                                    $sub_total += $total_price;
+                                } else {
+                                    $total_price = $value->total_price;
+                                    $sub_total += $total_price;
+                                }
                                 ?>
                                 <tr>
                                     <td>{{ $value->product_name }}</td>
                                     <td class="text-center">{{ $value->sku_number }}</td>
-                                    <td class="text-center">${{ $value->price }}</td>
+                                    <td class="text-center">${{ number_format($value->total_price/$value->quantity,2) }}</td>
                                     <td class="text-center">{{ $value->quantity }}</td>
                                     <td class="text-center">
                                         @if($value->discount != null)
-                                        {{ $value->discount.'%' }}
+                                        {{ number_format($value->discount,2) }}%
                                         @else
                                         {{"........"}}
                                         @endif
                                     </td>
-                                    <td class="text-right">${{ number_format($value->total_price/$value->quantity,2) }}</td>
+                                    <td class="text-right">${{ number_format($total_price,2) }}</td>
                                 </tr>
                                 @endforeach
                                 <tr>
@@ -199,6 +204,19 @@
                                     <td class="highrow text-center"><strong>Subtotal</strong></td>
                                     <td class="highrow text-right">${{ number_format($sub_total,2) }}</td>
                                 </tr>
+                                @if($orders->discount != null)
+                                <?php
+                                $sub_total = number_format($sub_total-($sub_total*$orders->discount/100),2);
+                                ?>
+                                <tr>
+                                    <td class="emptyrow"></td>
+                                    <td class="emptyrow"></td>
+                                    <td class="emptyrow"></td>
+                                    <td class="emptyrow"></td>
+                                    <td class="emptyrow text-center"><strong>Subtotal after discount</strong></td>
+                                    <td class="emptyrow text-right">${{ number_format($sub_total,2) }}</td>
+                                </tr>
+                                @endif
                                 <tr>
                                     <td class="emptyrow"></td>
                                     <td class="emptyrow"></td>

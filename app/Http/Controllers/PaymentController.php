@@ -19,6 +19,7 @@ use App\WarehouseStore;
 use Mail;
 use Redirect;
 use View;
+use Session;
 use Carbon\Carbon;
 
 class PaymentController extends Controller {
@@ -57,11 +58,12 @@ class PaymentController extends Controller {
 
     public function store(Request $request) {
 
-        $data = $request->all();
-        $shipping_method = $data['shipping_method'];
-        $shipping_price = $data['shipping_price'];
-        $offer_code = $request->get('discount_code');
+        $data = Session::get('cart_data');
 
+        $shipping_method = $data['other_cart_data']['shipping_method'];
+        $shipping_price = $data['other_cart_data']['shipping_price'];
+
+        $discount_status = $data['other_cart_data']['discount_status'];
         $shipping_address = ShippingAddress::where('user_id', Auth::id())->first();
 
         if (!ShippingRate::where('country_id', $shipping_address->country_id)->first()) {
@@ -69,11 +71,8 @@ class PaymentController extends Controller {
                             ->with('error-message', "No shipping available in your country !");
         }
 
-
-
-
-        $cart_ids = $data['cart_id'];
-        $carts = Cart::find($cart_ids);
+        $cart_ids = $request->get('cart_id');
+        $carts = $data['cart_data'];
 
         // ### Address
         // Base Address object used as shipping or billing
@@ -89,10 +88,10 @@ class PaymentController extends Controller {
         // ### CreditCard
         $card = Paypalpayment::creditCard();
         $card->setType("visa")
-                ->setNumber($data['cardNumber'])
-                ->setExpireMonth($data['expiry_month'])
-                ->setExpireYear($data['expiry_year'])
-                ->setCvv2($data['cardCvv'])
+                ->setNumber($request->get('cardNumber'))
+                ->setExpireMonth($request->get('expiry_month'))
+                ->setExpireYear($request->get('expiry_year'))
+                ->setCvv2($request->get('cardCvv'))
                 ->setFirstName(Auth::user()->first_name)
                 ->setLastName(Auth::user()->last_name);
 
@@ -113,56 +112,50 @@ class PaymentController extends Controller {
         $payer->setPaymentMethod("credit_card")
                 ->setFundingInstruments(array($fi));
 
-
-        $discount_status = false;
-        $check_usage = false;
-        // this code is used to verify coupan code and allow discount 
-        if ($offer_code != null) {
-            $current_date = Carbon::now();
-            $coupan_codes = CoupanCode::Where(['code' => $offer_code, 'status' => 1], ['expiration_date', '>', $current_date])->first();
-            if ($coupan_codes) {
-                $check_usage = CoupanUsage::Where([['coupan_id', '=', $coupan_codes->id], ['user_id', '=', Auth::id()], ['usage', '<', $coupan_codes->usage]])->first();
-                if ($check_usage) {
-                    $discount_status = true;
-                }
-            }
-        }
-
         $item = array();
         $item_price = 0;
         $sub_total = 0;
+        $i = 0;
         foreach ($carts as $key => $value) {
 
-            if ($value->get_products->quantity == 0) {
-                return Redirect::back()->with('error-message', 'This product "' . $value->get_products->product_name . '" is out of stock,please remove this item in your cart to proceed further !');
-            }
-
-            //calulate total price after coupan match and discount
-            if ($discount_status && $value->get_products->discount != null) {
-                $item_price = $value->total_price - ($value->total_price * $value->get_products->discount / 100);
-                $sub_total += number_format($item_price, 2);
-            } else {
-                $item_price = $value->total_price;
-                $sub_total += number_format($item_price, 2);
-            }
-
-            $item[$key] = Paypalpayment::item();
-            $item[$key]->setName($value->get_products->product_name)
-                    ->setDescription($value->get_products->product_long_description)
+            $item[$i] = Paypalpayment::item();
+            $item[$i]->setName($value['product_name'])
+                    ->setDescription($value['product_long_description'])
                     ->setCurrency('USD')
-                    ->setQuantity($value->quantity)
+                    ->setQuantity($value['quantity'])
                     // ->setTax(0.3)
-                    ->setPrice($item_price / $value->quantity);
+                    ->setPrice($value['price']);
+
+            $item_price = $value['price'] * $value['quantity'];
+            if (isset($value['coupon_discount']) && $discount_status && $data['other_cart_data']['coupon_type'] == 'per_product') {
+                $total_price = $item_price - ($item_price * $value['coupon_discount'] / 100);
+                $sub_total += $total_price;
+                $i++;
+                $item[$i] = Paypalpayment::item();
+                $item[$i]->setName('Discount')
+                        ->setCurrency('USD')
+                        ->setQuantity(1)
+                        ->setPrice($total_price - $item_price);
+            } else {
+                $sub_total += $item_price;
+            }
+            $i++;
+        }
+        
+        if ($discount_status && $data['other_cart_data']['coupon_type'] == 'all_products') {
+            $discount = $sub_total;
+            $sub_total = number_format($sub_total - ($sub_total * $data['other_cart_data']['coupon_discount'] / 100), 2);
+            $discount_price = $sub_total - $discount;
+            $item[count($carts)] = Paypalpayment::item();
+            $item[count($carts)]->setName('Discount')
+                    ->setCurrency('USD')
+                    ->setQuantity(1)
+                    ->setPrice($discount_price);
         }
 
-        $regrex = '"([^"]*)' . $shipping_address->state_id . '([^"]*)"';
-        $tax_price = TaxRate::Where('country_id', $shipping_address->country_id)->whereRaw("state_id REGEXP '" . $regrex . "'")->first(array('price'));
-        if ($tax_price) {
-            // calculate tax price 
-            $tax_price = ($sub_total + ($sub_total * $tax_price->price / 100)) - $sub_total;
-        } else {
-            $tax_price = 0.00;
-        }
+        $tax_price = ($sub_total + ($sub_total * $data['other_cart_data']['tax_price'] / 100)) - $sub_total;
+
+
 
         $total_cart_price = $sub_total + $shipping_price + $tax_price;
 
@@ -174,6 +167,7 @@ class PaymentController extends Controller {
                 ->setTax($tax_price)
                 //total of items prices
                 ->setSubtotal($sub_total);
+        
 
         //Payment Amount
         $amount = Paypalpayment::amount();
@@ -215,86 +209,88 @@ class PaymentController extends Controller {
             if ($ex->getCode() != 503) {
                 $error = json_decode($ex->getData());
                 return Redirect::back()
-                                ->with('error-message', $error->details[0]->issue);
+                                ->with('error-message', $error->message);
             }
             return Redirect::back()
                             ->with('error-message', "Something went wrong,Please try again later !");
         }
 
-        if ($transaction_id = $this->savePaymentDetails($payment, $carts, $shipping_address, $discount_status, $offer_code, $check_usage, $shipping_method)) {
+        if ($transaction_id = $this->savePaymentDetails($payment, $data, $shipping_address)) {
             Cart::destroy($cart_ids); ///  empty cart table after payment successfull
             return View::make('carts.success', compact('transaction_id'));
         }
     }
 
-    public function savePaymentDetails($payment, $carts, $shipping_address, $discount_status, $offer_code, $check_usage, $shipping_method) {
+    public function savePaymentDetails($payment, $carts, $shipping_address) {
         $order_array = array(
             'user_id' => Auth::id(),
             'transaction_id' => $payment->id,
             'total_price' => $payment->transactions[0]->amount->total,
             'ship_price' => $payment->transactions[0]->amount->details->shipping,
             'tax_rate' => $payment->transactions[0]->amount->details->tax,
-            'shipping_method' => $shipping_method,
+            'shipping_method' => $carts['other_cart_data']['shipping_method'],
             'payment_method' => 'Paypal',
             'order_status' => 'processing',
             'created_at' => date('Y-m-d H:i:s', strtotime($payment->create_time))
         );
 
-        if ($discount_status) {
-            $coupan_codes = CoupanCode::Where(['code' => $offer_code, 'status' => 1])->first();
-            $discount_array = array(
-                'user_id' => Auth::id(),
-                'coupan_id' => $coupan_codes->id,
-                'usage' => 1,
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now()
-            );
-
+        
+        if ($carts['other_cart_data']['discount_status']) {
+            $coupan_codes = CoupanCode::Where(['code' => $carts['other_cart_data']['discount_code']])->first();
+            if ($carts['other_cart_data']['coupon_type'] == 'all_products') {
+                $order_array['discount'] = $carts['other_cart_data']['coupon_discount'];
+            }
+            $order_array['coupon_type'] = $carts['other_cart_data']['coupon_type'];
+            $check_usage = CoupanUsage::Where([['coupan_id', '=', $coupan_codes->id], ['user_id', '=', Auth::id()]])->first();
             if ($check_usage) {
                 CoupanUsage::Where('id', $check_usage->id)->increment('usage');   ///   usage increment
             } else {
+                $discount_array = array(
+                    'user_id' => Auth::id(),
+                    'coupan_id' => $coupan_codes->id,
+                    'usage' => 1,
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now()
+                );
                 CoupanUsage::create($discount_array);
             }
         }
 
         $orders = Order::create($order_array);
-        $transaction_details = array(
-            'discount_status' => $discount_status,
-            'transaction_id' => $orders->id,
-            'shipping_method' => $shipping_method,
-            'payment_method' => 'Paypal',
-            'shipping_price' => $payment->transactions[0]->amount->details->shipping,
-            'tax_rate' => $payment->transactions[0]->amount->details->tax,
-            'order_time' => date('M d,Y H:i:s A', strtotime($payment->create_time))
-        );
+
         if ($orders) {
-            foreach ($carts as $value) {
-                if ($discount_status) {
-                    $discount = $value->get_products->discount;
-                } else {
-                    $discount = null;
-                }
+
+            $carts['other_cart_data']['transaction_id'] = $orders->id;
+            $carts['other_cart_data']['payment_method'] = 'Paypal';
+            $carts['other_cart_data']['tax_rate'] = $payment->transactions[0]->amount->details->tax;
+            $carts['other_cart_data']['order_time'] = date('M d,Y H:i:s A', strtotime($payment->create_time));
+
+            foreach ($carts['cart_data'] as $value) {
+
                 $detail_array = array(
                     'order_id' => $orders->id,
-                    'product_id' => $value->product_id,
-                    'product_name' => $value->get_products->product_name,
-                    'sku_number' => $value->get_products->sku,
-                    'quantity' => $value->quantity,
-                    'total_price' => $value->total_price,
-                    'discount' => $discount
+                    'product_id' => $value['product_id'],
+                    'product_name' => $value['product_name'],
+                    'sku_number' => $value['sku'],
+                    'quantity' => $value['quantity'],
+                    'total_price' => $value['price'] * $value['quantity']
                 );
+                if (isset($value['coupon_discount']) && $carts['other_cart_data']['discount_status'] && $carts['other_cart_data']['coupon_type'] == 'per_product') {
+                    $detail_array['discount'] = $carts['other_cart_data']['coupon_discount'];
+                }
+               
                 OrderDetail::create($detail_array);
-                Product::Where('id', $value->product_id)->decrement('quantity', $value->quantity);   ///   quantity decrement after successfull purchase
+                Product::Where('id', $value['product_id'])->decrement('quantity', $value['quantity']);   ///   quantity decrement after successfull purchase
             }
 
-            if ($this->sendInvoice($transaction_details, $carts, $shipping_address)) {
-                return $transaction_details['transaction_id'];
+            if ($this->sendInvoice($carts, $shipping_address)) {
+                return $orders->id;
             }
         }
         return true;
     }
 
-    public function sendInvoice($transaction_details, $carts, $shipping_address) {
+    public function sendInvoice($carts, $shipping_address) {
         $billing_address = BillingAddress::where('user_id', Auth::id())->first();
 
 //        $all_store = WarehouseStore::get();
@@ -310,7 +306,8 @@ class PaymentController extends Controller {
 //        }
 
         $data = array(
-            'transaction_id' => $transaction_details['transaction_id']
+            'transaction_id' => $carts['other_cart_data']['transaction_id'],
+            'email' => Auth::user()->email
 //            'email' => $store_email
         );
 
@@ -322,7 +319,6 @@ class PaymentController extends Controller {
 //            });
 //        }
 
-        $data['email'] = Auth::user()->email;
         $transaction_details['store_email'] = false;
         Mail::send('auth.emails.order_invoice', array('transaction_details' => $transaction_details, 'carts' => $carts, 'shipping_address' => $shipping_address, 'billing_address' => $billing_address), function($message) use ($data) {
             $message->from('jerhica.pe@gmail.com', " Welcome To Autolighthouse");

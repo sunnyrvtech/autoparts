@@ -22,6 +22,8 @@ class CreateOrdersTable extends Migration
             $table->decimal('tax_rate', 5, 2);
             $table->string('shipping_method')->nullable();
             $table->string('payment_method')->nullable();
+            $table->string('coupon_type')->nullable();
+            $table->decimal('discount', 5, 2)->nullable();
             $table->string('order_status'); 	
             $table->timestamps();
         });
