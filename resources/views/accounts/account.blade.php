@@ -479,8 +479,16 @@
                                                 </div>
                                                 @if($order_details->discount != null && $order_details->coupon_type == 'all_products')
                                                 <?php
-                                                $sub_total = number_format($sub_total-($sub_total*$order_details->discount/100),2);
+                                                $sub_total = $sub_total-($sub_total*$order_details->discount/100);
                                                 ?>
+                                                <div class="row">
+                                                    <div class="col-md-6 col-sm-6 col-xs-6">
+                                                        <label>Discount:</label>
+                                                    </div>
+                                                    <div class="col-md-6 col-sm-6 col-xs-6 text-right">
+                                                        <span>{{ number_format($order_details->discount,2) }}%</span>
+                                                    </div>
+                                                </div>
                                                 <div class="row">
                                                     <div class="col-md-6 col-sm-6 col-xs-6">
                                                         <label>Subtotal after discount:</label>

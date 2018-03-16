@@ -201,19 +201,27 @@
                                 </tr>
                                 @endforeach
                                 <tr>
+                                    @if($orders->coupon_type == 'per_product')
                                     <td class="highrow"></td>
+                                    @endif
                                     <td class="highrow"></td>
                                     <td class="highrow"></td>
                                     <td class="highrow"></td>
                                     <td class="highrow text-center"><strong>Subtotal</strong></td>
                                     <td class="highrow text-right">${{ number_format($sub_total,2) }}</td>
                                 </tr>
-                                @if($orders->discount != null)
+                                @if($orders->discount != null && $orders->coupon_type == 'all_products')
                                 <?php
                                 $sub_total = number_format($sub_total-($sub_total*$orders->discount/100),2);
                                 ?>
                                 <tr>
                                     <td class="emptyrow"></td>
+                                    <td class="emptyrow"></td>
+                                    <td class="emptyrow"></td>
+                                    <td class="emptyrow text-center"><strong>Discount</strong></td>
+                                    <td class="emptyrow text-right">{{ number_format($orders->discount,2) }}%</td>
+                                </tr>
+                                <tr>
                                     <td class="emptyrow"></td>
                                     <td class="emptyrow"></td>
                                     <td class="emptyrow"></td>
@@ -222,7 +230,9 @@
                                 </tr>
                                 @endif
                                 <tr>
+                                    @if($orders->coupon_type == 'per_product')
                                     <td class="emptyrow"></td>
+                                    @endif
                                     <td class="emptyrow"></td>
                                     <td class="emptyrow"></td>
                                     <td class="emptyrow"></td>
@@ -230,7 +240,9 @@
                                     <td class="emptyrow text-right">${{ number_format($orders->tax_rate,2) }}</td>
                                 </tr>
                                 <tr>
+                                    @if($orders->coupon_type == 'per_product')
                                     <td class="emptyrow"></td>
+                                    @endif
                                     <td class="emptyrow"></td>
                                     <td class="emptyrow"></td>
                                     <td class="emptyrow"></td>
@@ -238,7 +250,9 @@
                                     <td class="emptyrow text-right">${{ $orders->ship_price  or '0.00' }}</td>
                                 </tr>
                                 <tr>
+                                    @if($orders->coupon_type == 'per_product')
                                     <td class="emptyrow"></td>
+                                    @endif
                                     <td class="emptyrow"></td>
                                     <td class="emptyrow"></td>
                                     <td class="emptyrow"></td>

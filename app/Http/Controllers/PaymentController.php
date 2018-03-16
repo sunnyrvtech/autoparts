@@ -151,11 +151,11 @@ class PaymentController extends Controller {
                     ->setCurrency('USD')
                     ->setQuantity(1)
                     ->setPrice($discount_price);
+        }else{
+            $sub_total = number_format($sub_total,2);
         }
 
         $tax_price = ($sub_total + ($sub_total * $data['other_cart_data']['tax_price'] / 100)) - $sub_total;
-
-
 
         $total_cart_price = $sub_total + $shipping_price + $tax_price;
 

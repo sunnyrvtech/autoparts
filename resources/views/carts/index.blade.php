@@ -235,6 +235,14 @@
                         ?>
                         <div class="row">
                             <div class="col-md-6 col-sm-6 col-xs-6">
+                                <label>Discount:</label>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                <span>{{ number_format($other_cart_data['coupon_discount'],2) }}%</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6 col-xs-6">
                                 <label>Subtotal after discount:</label>
                             </div>
                             <div class="col-md-6 col-sm-6 col-xs-6">
