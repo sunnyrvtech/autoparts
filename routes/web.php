@@ -77,6 +77,8 @@ Route::get('account/activate/{code}', array(
     'uses' => 'AccountController@getActivate'
 ));
 Route::get('/about-us', 'HomeController@getAboutUs');
+Route::get('/shipping', 'HomeController@getShippingPolicy');
+Route::get('/return', 'HomeController@getReturnPolicy');
 Route::get('/faq', 'HomeController@getFaq');
 Route::get('/contact-us', 'HomeController@getContactUs');
 Route::post('/contact-us', 'HomeController@postContactUs');

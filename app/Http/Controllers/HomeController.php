@@ -73,13 +73,21 @@ class HomeController extends Controller {
 //        
 //    }
     public function getAboutUs() {
-        $about_content = StaticPage::where('slug', 'about-us')->first();
-        return View::make('about-us', compact('about_content'));
+        $data['content']  = StaticPage::where('slug', 'about-us')->first();
+        return View::make('about-us', $data);
     }
 
     public function getFaq() {
-        $faq_content = StaticPage::where('slug', 'faq')->first();
-        return View::make('faq', compact('faq_content'));
+        $data['content']  = StaticPage::where('slug', 'faq')->first();
+        return View::make('faq', $data);
+    }
+    public function getShippingPolicy() {
+        $data['content'] = StaticPage::where('slug', 'shipping')->first();
+        return View::make('shipping', $data);
+    }
+    public function getReturnPolicy() {
+        $data['content'] = StaticPage::where('slug', 'return')->first();
+        return View::make('return', $data);
     }
 
     public function getContactUs() {

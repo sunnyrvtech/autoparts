@@ -245,6 +245,8 @@
                             </li>
                             <!--<li><a href="javascript:void(0);" title="Return a Part">Return a Part</a></li>-->
                             <li><a href="{{ URL('/contact-us') }}" title="Contact Us">Contact Us</a></li>
+                            <li><a href="{{ URL('/shipping') }}" title="Shipping Policy">Shipping Policy</a></li>
+                            <li><a href="{{ URL('/return') }}" title="Return Policy">Return Policy</a></li>
                         </ul>
                     </div>
                      <div class="col-lg-4 col-md-4 col-sm-4">
