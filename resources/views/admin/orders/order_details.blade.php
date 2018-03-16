@@ -165,7 +165,9 @@
                                     <td class="text-center"><strong>Sku</strong></td>
                                     <td class="text-center"><strong>Item Price</strong></td>
                                     <td class="text-center"><strong>Quantity</strong></td>
+                                    @if($orders->coupon_type == 'per_product')
                                     <td class="text-center"><strong>Discount</strong></td>
+                                    @endif
                                     <td class="text-right"><strong>Total</strong></td>
                                 </tr>
                             </thead>
@@ -186,6 +188,7 @@
                                     <td class="text-center">{{ $value->sku_number }}</td>
                                     <td class="text-center">${{ number_format($value->total_price/$value->quantity,2) }}</td>
                                     <td class="text-center">{{ $value->quantity }}</td>
+                                    @if($orders->coupon_type == 'per_product')
                                     <td class="text-center">
                                         @if($value->discount != null)
                                         {{ number_format($value->discount,2) }}%
@@ -193,6 +196,7 @@
                                         {{"........"}}
                                         @endif
                                     </td>
+                                    @endif
                                     <td class="text-right">${{ number_format($total_price,2) }}</td>
                                 </tr>
                                 @endforeach
