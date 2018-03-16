@@ -249,6 +249,8 @@
                                 <span>${{ $sub_total }}</span>
                             </div>
                         </div>
+                        @else
+                        <?php $sub_total = number_format($sub_total,2); ?>
                         @endif
                         @if($other_cart_data['shipping_price'] > 0)
                         <div class="row">

@@ -212,7 +212,7 @@
                                 </tr>
                                 @if($orders->discount != null && $orders->coupon_type == 'all_products')
                                 <?php
-                                $sub_total = number_format($sub_total-($sub_total*$orders->discount/100),2);
+                                $sub_total = $sub_total-($sub_total*$orders->discount/100);
                                 ?>
                                 <tr>
                                     <td class="emptyrow"></td>
