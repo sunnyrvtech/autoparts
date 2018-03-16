@@ -152,7 +152,7 @@ class ApiController extends Controller {
                             $update_array['item_status'] = 'completed';
 
 
-                        if (($order_details->item_status != 'shipped' && $update_array['item_status'] == 'shipped') || ($order_details->item_status != 'completed' && $page_data['status'] == 'completed')) {
+                        if (($order_details->item_status != 'shipped' && (isset($update_array['item_status']) && $update_array['item_status']== 'shipped')) || ($order_details->item_status != 'completed' && $page_data['status'] == 'completed')) {
                             $this->saveOrderInvoice($order, $order_details, $update_array['item_status']);
                         }
 
