@@ -205,7 +205,7 @@
             @yield('content')
             <!--</div>-->
         </div><!-- /#content -->
-        <div class="modal" id="zipModal" role="dialog">
+<!--        <div class="modal" id="zipModal" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -221,13 +221,13 @@
                                         <input type="text" name="zipCode" ng-model="zipCode" required="" class="form-control input-lg" placeholder="Enter Your Zip Code">
                                     </div>
                                 </div>
-                                <!--<div class="col-md-2"><button type="submit" class="btn am-orange btn-block btn-lg">Sign In</button></div>-->
+                                <div class="col-md-2"><button type="submit" class="btn am-orange btn-block btn-lg">Sign In</button></div>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
         <footer class="footer">
             <div class="container">
                 <div class="row">
@@ -301,9 +301,9 @@
                                             }, 8000);
                                            
                                            $(document).ready(function () {
-                                                $('#zipModal').on('hidden.bs.modal', function (e) {
-                                                   localStorage.setItem("checkZipModal",true); 
-                                                });
+//                                                $('#zipModal').on('hidden.bs.modal', function (e) {
+//                                                   localStorage.setItem("checkZipModal",true); 
+//                                                });
                                                 $(document).on('click', '#am-ymm-home-form li a', function (e) {
                                                     e.preventDefault();
                                                     angular.element(this).scope().getProductVehicleData($(this));
@@ -311,12 +311,12 @@
                                                 $(document).on("click","#search-glass",function(){
                                                     $( "#search-form" ).submit();
                                                 });
-                                                if(localStorage.getItem("checkZipModal") == null){
-                                                    setTimeout(function(){
-                                                        $("#zipModal").modal({ backdrop: 'static',keyboard: false });
-                                                        $('section').removeClass('scrollActive');
-                                                    },5000);
-                                                }
+//                                                if(localStorage.getItem("checkZipModal") == null){
+//                                                    setTimeout(function(){
+//                                                        $("#zipModal").modal({ backdrop: 'static',keyboard: false });
+//                                                        $('section').removeClass('scrollActive');
+//                                                    },5000);
+//                                                }
                                                 
                                             });
 
