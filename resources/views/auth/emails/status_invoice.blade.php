@@ -310,13 +310,13 @@
                                                         <td width="10%" style="padding: 15px;">{{ $item_data->quantity }}</td>
                                                         <td width="10%" style="padding: 15px;">${{ number_format($item_data->total_price/$item_data->quantity,2) }}</td>
                                                         <td width="10%" style="padding: 15px;">
-                                                             @if ($item_data->discount != null) {
-                                                                {{ $item_data->discount.'%' }}
+                                                             @if ($item_data->discount != null)
+                                                                {{ number_format($item_data->discount,2) }}%
                                                              @else
                                                                 {{"..."}}
                                                              @endif
                                                         </td>
-                                                        <td width="10%" style="padding: 15px;">${{ $item_price }}</td>
+                                                        <td width="10%" style="padding: 15px;">${{ number_format($item_price,2) }}</td>
                                                     </tr>
 
                                                 </table>
