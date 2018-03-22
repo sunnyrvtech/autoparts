@@ -309,10 +309,10 @@
                                                         //calulate total price after coupan match and discount
                                                         if(isset($value['coupon_discount']) && $carts['other_cart_data']['discount_status'] && $carts['other_cart_data']['coupon_type'] == 'per_product'){
                                                             $item_price = $value['price']*$value['quantity'];
-                                                            $item_price = $item_price-($item_price*$carts['other_cart_data']['coupon_discount']/100);
-                                                            $sub_total += $item_price; 
+                                                            $total_price = $item_price-($item_price*$carts['other_cart_data']['coupon_discount']/100);
+                                                            $sub_total += $total_price; 
                                                         }else{
-                                                            $item_price = $value['price']*$value['quantity'];
+                                                            $total_price = $value['price']*$value['quantity'];
                                                             $sub_total += $value['price']*$value['quantity'];
                                                         }
                                                     ?>
@@ -321,15 +321,16 @@
                                                         <td width="10%" style="padding: 15px;">{{ $value['quantity'] }}</td>
                                                         <td width="10%" style="padding: 15px;">${{ number_format($value['price'],2) }}</td>
                                                         @if($carts['other_cart_data']['discount_status'] && $carts['other_cart_data']['coupon_type'] == 'per_product')
+                                                        <?php $item_discount = $item_price-$total_price; ?>
                                                         <td width="10%" style="padding: 15px;">
                                                              @if(isset($value['coupon_discount']))
-                                                             {{ number_format($value['coupon_discount'],2) }}%
+                                                             ${{ number_format($item_discount,2) }}
                                                              @else
                                                              ---
                                                              @endif
                                                         </td>
                                                          @endif
-                                                        <td width="10%" style="padding: 15px;">${{ number_format($item_price,2) }}</td>
+                                                        <td width="10%" style="padding: 15px;">${{ number_format($total_price,2) }}</td>
                                                     </tr>
                                                     @endforeach
 
@@ -366,14 +367,16 @@
                                                                                         </tr>
                                                                                         @if($carts['other_cart_data']['discount_status'] && $carts['other_cart_data']['coupon_type'] == 'all_products')
                                                                                             <?php
+                                                                                            $sub_discount = $sub_total;
                                                                                             $sub_total = $sub_total-($sub_total*$carts['other_cart_data']['coupon_discount']/100);
+                                                                                            $sub_discount = $sub_discount-$sub_total;
                                                                                             ?>
                                                                                         <tr>
                                                                                             <td>
                                                                                                 <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:right;">Discount</h3>
                                                                                             </td>
                                                                                             <td>
-                                                                                                <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:right;">{{ number_format($carts['other_cart_data']['coupon_discount'],2) }}%</h3>
+                                                                                                <h3 mc:edit="header" style="color:#5F5F5F;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:right;">${{ number_format($sub_discount,2) }}</h3>
                                                                                             </td>
                                                                                         </tr>
                                                                                         <tr>

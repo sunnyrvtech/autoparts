@@ -293,12 +293,11 @@
                                                         <th align="left" width="60%" style="padding: 10px;"><span style="color:#7a7a7a;font-weight: bold;">Item In Your Order</span></th>
                                                         <th width="10%" style="padding: 10px;"><span style="color:#7a7a7a;font-weight: bold;">Qty</span></th>
                                                         <th width="10%" style="padding: 10px;"><span style="color:#7a7a7a;font-weight: bold;">Price</span></th>
-                                                        <th width="10%" style="padding: 10px;"><span style="color:#7a7a7a;font-weight: bold;">Discount</span></th>
+                                                        <!--<th width="10%" style="padding: 10px;"><span style="color:#7a7a7a;font-weight: bold;">Discount</span></th>-->
                                                         <th width="10%" style="padding: 10px;"><span style="color:#7a7a7a;font-weight: bold;">Total</span></th>
                                                     </tr>
-                                                    <?php $item_price = 0;$sub_total = 0; ?>
-                                                    
                                                     <?php
+                                                    $item_price = 0;$sub_total = 0;
                                                     if ($item_data->discount != null) {
                                                         $item_price = $item_data->total_price - ($item_data->total_price * $item_data->discount / 100);
                                                     } else {
@@ -309,13 +308,6 @@
                                                         <td align="left" width="60%" style="padding: 15px;"><span style="font-weight: bold;">{{ $item_data->product_name }}</span><br><span>SKU: {{ $item_data->sku_number }}</span></td>
                                                         <td width="10%" style="padding: 15px;">{{ $item_data->quantity }}</td>
                                                         <td width="10%" style="padding: 15px;">${{ number_format($item_data->total_price/$item_data->quantity,2) }}</td>
-                                                        <td width="10%" style="padding: 15px;">
-                                                             @if ($item_data->discount != null)
-                                                                {{ number_format($item_data->discount,2) }}%
-                                                             @else
-                                                                {{"..."}}
-                                                             @endif
-                                                        </td>
                                                         <td width="10%" style="padding: 15px;">${{ number_format($item_price,2) }}</td>
                                                     </tr>
 

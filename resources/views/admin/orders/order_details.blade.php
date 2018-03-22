@@ -189,9 +189,10 @@
                                     <td class="text-center">${{ number_format($value->total_price/$value->quantity,2) }}</td>
                                     <td class="text-center">{{ $value->quantity }}</td>
                                     @if($orders->coupon_type == 'per_product')
+                                    <?php $item_discount = $value->total_price-$total_price; ?>
                                     <td class="text-center">
                                         @if($value->discount != null)
-                                        {{ number_format($value->discount,2) }}%
+                                        ${{ number_format($item_discount,2) }}
                                         @else
                                         {{"........"}}
                                         @endif

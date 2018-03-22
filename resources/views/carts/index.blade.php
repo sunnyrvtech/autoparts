@@ -69,9 +69,10 @@
                                         <div>${{ number_format($value['price'],2) }}</div>
                                     </td>
                                     @if($other_cart_data['discount_status'] && $other_cart_data['coupon_type'] == 'per_product')
+                                    <?php $item_discount = $item_price-$total_price; ?>
                                     <td>
                                         @if(isset($value['coupon_discount']))
-                                        <div>{{ number_format($value['coupon_discount'],2) }}%</div>
+                                        <div>${{ number_format($item_discount,2) }}</div>
                                         @else
                                         <div>---</div>
                                         @endif
@@ -132,7 +133,7 @@
                                         @if($other_cart_data['discount_status'] && $other_cart_data['coupon_type'] == 'per_product')
                                             <td>
                                                 @if(isset($value['coupon_discount']))
-                                                <div>{{ number_format($value['coupon_discount'],2) }}%</div>
+                                                <div>${{ number_format($item_discount,2) }}</div>
                                                 @else
                                                 <div>---</div>
                                                 @endif
@@ -231,14 +232,16 @@
                         </div>
                         @if($other_cart_data['discount_status'] && $other_cart_data['coupon_type'] == 'all_products')
                         <?php
+                        $sub_discount = $sub_total;
                         $sub_total = number_format($sub_total-($sub_total*$other_cart_data['coupon_discount']/100),2);
+                        $sub_discount = $sub_discount-$sub_total;
                         ?>
                         <div class="row">
                             <div class="col-md-6 col-sm-6 col-xs-6">
                                 <label>Discount:</label>
                             </div>
                             <div class="col-md-6 col-sm-6 col-xs-6">
-                                <span>{{ number_format($other_cart_data['coupon_discount'],2) }}%</span>
+                                <span>${{ number_format($sub_discount,2) }}</span>
                             </div>
                         </div>
                         <div class="row">
