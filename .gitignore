@@ -3,6 +3,7 @@
 /public/product_images
 /storage/*.key
 /storage
+/config/paypal_payment.php
 /vendor
 /nbproject
 /.idea
