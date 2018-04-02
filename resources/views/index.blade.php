@@ -228,7 +228,7 @@
                                 <img class="img-circle" src="{{ URL::asset('/images/default-avatar.png') }}" style="width: 100px;height:100px;">
                             </div>
                             <div class="col-sm-9">
-                                <p>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit!</p>
+                                <p>Got earlier than I thought I would, GREAT SELLER !!</p>
                                 <small>Someone famous</small>
                             </div>
                         </div>
@@ -237,7 +237,7 @@
                                 <img class="img-circle" src="{{ URL::asset('/images/default-avatar.png') }}" style="width: 100px;height:100px;">
                             </div>
                             <div class="col-sm-9">
-                                <p>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit!</p>
+                                <p>Fast shipping. Nice service. Perfect item thank you *****</p>
                                 <small>Someone famous</small>
                             </div>
                         </div>
@@ -246,7 +246,34 @@
                                 <img class="img-circle" src="{{ URL::asset('/images/default-avatar.png') }}" style="width: 100px;height:100px;">
                             </div>
                             <div class="col-sm-9">
-                                <p>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit!</p>
+                                <p>item as described, fast shipping, would buy from again.</p>
+                                <small>Someone famous</small>
+                            </div>
+                        </div>
+                        <div class="thumbnail-wrapper">
+                            <div class="col-sm-3 text-center">
+                                <img class="img-circle" src="{{ URL::asset('/images/default-avatar.png') }}" style="width: 100px;height:100px;">
+                            </div>
+                            <div class="col-sm-9">
+                                <p>Excellent item Fast ship Fits well Great price Good communication 5STAR dealer.</p>
+                                <small>Someone famous</small>
+                            </div>
+                        </div>
+                        <div class="thumbnail-wrapper">
+                            <div class="col-sm-3 text-center">
+                                <img class="img-circle" src="{{ URL::asset('/images/default-avatar.png') }}" style="width: 100px;height:100px;">
+                            </div>
+                            <div class="col-sm-9">
+                                <p>fast shipping and great item thx.</p>
+                                <small>Someone famous</small>
+                            </div>
+                        </div>
+                        <div class="thumbnail-wrapper">
+                            <div class="col-sm-3 text-center">
+                                <img class="img-circle" src="{{ URL::asset('/images/default-avatar.png') }}" style="width: 100px;height:100px;">
+                            </div>
+                            <div class="col-sm-9">
+                                <p>Good product. Great seller.</p>
                                 <small>Someone famous</small>
                             </div>
                         </div>
