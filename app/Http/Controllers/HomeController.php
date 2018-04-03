@@ -29,14 +29,15 @@ class HomeController extends Controller {
         // get sub category data and make it featured category
 //        $featured_category = SubCategory::take(40)->get(array('name', 'id', 'slug'));
         // get vehicle companies data
-        $vehicles = VehicleCompany::get(array('name', 'id'));
-        $brands = Brand::take(40)->get(array('name', 'id'));
+        $data['vehicles'] = VehicleCompany::get(array('name', 'id'));
+        $data['brands'] = Brand::take(40)->get(array('name', 'id'));
 
-        $latest_product = Product::Where([['quantity', '>', 0],['status','=',1]])->orderBy('updated_at', 'DESC')->take('20')->get();
+        $data['latest_product'] = Product::Where([['quantity', '>', 0],['status','=',1]])->orderBy('updated_at', 'DESC')->take('20')->get();
 //        echo "<pre>";
 //        print_r($latest_product->toArray());
 //        die;
-        $view = View::make('index', compact('categories', 'featured_category', 'brands', 'vehicles', 'latest_product'));
+        $data['about_us']  = StaticPage::where('slug', 'about-us')->first();
+        $view = View::make('index', $data);
         if ($request->wantsJson()) {
             $sections = $view->renderSections();
             return $sections['content'];
