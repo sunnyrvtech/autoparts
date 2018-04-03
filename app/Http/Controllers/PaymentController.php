@@ -210,6 +210,7 @@ class PaymentController extends Controller {
                 $error = json_decode($ex->getData());
                 echo "<pre>";
                 print_r($error);
+                echo $ex->getMessage();
                 die;
              
             }
