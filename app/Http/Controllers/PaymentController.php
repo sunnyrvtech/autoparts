@@ -46,14 +46,20 @@ class PaymentController extends Controller {
         // a request id if you do not pass one explicitly. 
 
         $this->_apiContext = Paypalpayment::ApiContext(config('paypal_payment.Account.ClientId'), config('paypal_payment.Account.ClientSecret'));
-//        $this->_apiContext->setConfig(array(
-//            'mode' => 'live',
-//            'service.EndPoint' => config('paypal_payment.Service.EndPoint'),
-//            'http.ConnectionTimeOut' => config('paypal_payment.Http.ConnectionTimeOut'),
-//            'log.LogEnabled' => true,
-//            'log.FileName' => __DIR__ . '/../PayPal.log',
-//            'log.LogLevel' => 'FINE'
-//        ));
+        $this->_apiContext->setConfig(array(
+            'mode' => 'live',
+            'service.EndPoint' => config('paypal_payment.Service.EndPoint'),
+            'http.ConnectionTimeOut' => config('paypal_payment.Http.ConnectionTimeOut'),
+            'log.LogEnabled' => true,
+            'log.FileName' => __DIR__ . '/../PayPal.log',
+            'log.LogLevel' => 'FINE'
+        ));
+        
+        
+        
+        echo "<pre>";
+        print_r($this->_apiContext);
+        die;
     }
 
     public function index() {
