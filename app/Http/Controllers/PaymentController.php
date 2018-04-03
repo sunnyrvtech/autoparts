@@ -208,8 +208,10 @@ class PaymentController extends Controller {
             // echo $ex->getCode(); 
             if ($ex->getCode() != 503) {
                 $error = json_decode($ex->getData());
-                return Redirect::back()
-                                ->with('error-message', $error->message);
+                echo "<pre>";
+                print_r($error);
+                die;
+             
             }
             return Redirect::back()
                             ->with('error-message', "Something went wrong,Please try again later !");
