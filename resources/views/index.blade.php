@@ -228,8 +228,8 @@
                                 <img class="img-circle" src="{{ URL::asset('/images/default-avatar.png') }}" style="width: 100px;height:100px;">
                             </div>
                             <div class="col-sm-9">
-                                <p>Got earlier than I thought I would, GREAT SELLER !!</p>
-                                <small>Someone famous</small>
+                                <p>Fast shipping great product A+</p>
+                                <small>laborgmotocross</small>
                             </div>
                         </div>
                         <div class="thumbnail-wrapper">
@@ -237,8 +237,8 @@
                                 <img class="img-circle" src="{{ URL::asset('/images/default-avatar.png') }}" style="width: 100px;height:100px;">
                             </div>
                             <div class="col-sm-9">
-                                <p>Fast shipping. Nice service. Perfect item thank you *****</p>
-                                <small>Someone famous</small>
+                                <p>Great item fast shipper</p>
+                                <small>ecstasy714</small>
                             </div>
                         </div>
                         <div class="thumbnail-wrapper">
@@ -246,8 +246,8 @@
                                 <img class="img-circle" src="{{ URL::asset('/images/default-avatar.png') }}" style="width: 100px;height:100px;">
                             </div>
                             <div class="col-sm-9">
-                                <p>item as described, fast shipping, would buy from again.</p>
-                                <small>Someone famous</small>
+                                <p>Just the part I needed! Fit perfectly.</p>
+                                <small>klintkrebs</small>
                             </div>
                         </div>
                         <div class="thumbnail-wrapper">
@@ -255,8 +255,8 @@
                                 <img class="img-circle" src="{{ URL::asset('/images/default-avatar.png') }}" style="width: 100px;height:100px;">
                             </div>
                             <div class="col-sm-9">
-                                <p>Excellent item Fast ship Fits well Great price Good communication 5STAR dealer.</p>
-                                <small>Someone famous</small>
+                                <p>High quality seller and fantastic customer service..</p>
+                                <small>chemdevi</small>
                             </div>
                         </div>
                         <div class="thumbnail-wrapper">
@@ -264,8 +264,8 @@
                                 <img class="img-circle" src="{{ URL::asset('/images/default-avatar.png') }}" style="width: 100px;height:100px;">
                             </div>
                             <div class="col-sm-9">
-                                <p>fast shipping and great item thx.</p>
-                                <small>Someone famous</small>
+                                <p>GREAT ITEL FAST SHIPPING WILL DO BUSINESS AGAIN THANKS</p>
+                                <small>jea-osti</small>
                             </div>
                         </div>
                         <div class="thumbnail-wrapper">
@@ -273,8 +273,8 @@
                                 <img class="img-circle" src="{{ URL::asset('/images/default-avatar.png') }}" style="width: 100px;height:100px;">
                             </div>
                             <div class="col-sm-9">
-                                <p>Good product. Great seller.</p>
-                                <small>Someone famous</small>
+                                <p>GREAT DESCRIPTION, SPEEDY DELIVERY</p>
+                                <small>mckarkuztomz</small>
                             </div>
                         </div>
                     </div>
