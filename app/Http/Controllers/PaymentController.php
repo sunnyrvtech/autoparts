@@ -206,6 +206,10 @@ class PaymentController extends Controller {
         $payment->setIntent("sale")
                 ->setPayer($payer)
                 ->setTransactions(array($transaction));
+        
+        
+        
+        dd($payment);
 
         try {
             // ### Create Payment
