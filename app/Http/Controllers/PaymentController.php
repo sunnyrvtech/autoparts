@@ -206,10 +206,7 @@ class PaymentController extends Controller {
         $payment->setIntent("sale")
                 ->setPayer($payer)
                 ->setTransactions(array($transaction));
-        
-        
-        
-        dd($payment);
+       
 
         try {
             // ### Create Payment
@@ -218,6 +215,8 @@ class PaymentController extends Controller {
             // The return object contains the status;
             $payment->create($this->_apiContext);
         } catch (\PayPal\Exception\PayPalConnectionException $ex) {
+            
+            die('sasadadad');
             // echo $ex->getCode(); 
             if ($ex->getCode() != 503) {
                 $error = json_decode($ex->getData());
