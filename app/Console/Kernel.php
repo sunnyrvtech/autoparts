@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel {
      */
     protected function schedule(Schedule $schedule) {
         $schedule->call(function () {
-            Log::error("Cron running " . date('H:i:s'));
+           // Log::error("Cron running " . date('H:i:s'));
             $order_data = DB::table('order_emails')->get();
             if ($order_data->toArray()) {
                 foreach ($order_data as $value) {
