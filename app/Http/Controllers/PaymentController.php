@@ -46,6 +46,14 @@ class PaymentController extends Controller {
         // a request id if you do not pass one explicitly. 
 
         $this->_apiContext = Paypalpayment::ApiContext(config('paypal_payment.Account.ClientId'), config('paypal_payment.Account.ClientSecret'));
+        $this->_apiContext->setConfig(array(
+            'mode' => 'live',
+            'service.EndPoint' => config('paypal_payment.Service.EndPoint'),
+            'http.ConnectionTimeOut' => config('paypal_payment.Http.ConnectionTimeOut'),
+            'log.LogEnabled' => true,
+            'log.FileName' => __DIR__ . '/../PayPal.log',
+            'log.LogLevel' => 'FINE'
+        ));
     }
 
     public function index() {
@@ -57,6 +65,7 @@ class PaymentController extends Controller {
      */
 
     public function store(Request $request) {
+
 
         $data = Session::get('cart_data');
 
@@ -141,7 +150,7 @@ class PaymentController extends Controller {
             }
             $i++;
         }
-        
+
         if ($discount_status && $data['other_cart_data']['coupon_type'] == 'all_products') {
             $discount = $sub_total;
             $sub_total = number_format($sub_total - ($sub_total * $data['other_cart_data']['coupon_discount'] / 100), 2);
@@ -151,8 +160,8 @@ class PaymentController extends Controller {
                     ->setCurrency('USD')
                     ->setQuantity(1)
                     ->setPrice($discount_price);
-        }else{
-            $sub_total = number_format($sub_total,2);
+        } else {
+            $sub_total = number_format($sub_total, 2);
         }
 
         $tax_price = ($sub_total + ($sub_total * $data['other_cart_data']['tax_price'] / 100)) - $sub_total;
@@ -167,7 +176,7 @@ class PaymentController extends Controller {
                 ->setTax($tax_price)
                 //total of items prices
                 ->setSubtotal($sub_total);
-        
+
 
         //Payment Amount
         $amount = Paypalpayment::amount();
@@ -212,7 +221,6 @@ class PaymentController extends Controller {
                 print_r($error);
                 echo $ex->getMessage();
                 die;
-             
             }
             return Redirect::back()
                             ->with('error-message', "Something went wrong,Please try again later !");
@@ -237,7 +245,7 @@ class PaymentController extends Controller {
             'created_at' => date('Y-m-d H:i:s', strtotime($payment->create_time))
         );
 
-        
+
         if ($carts['other_cart_data']['discount_status']) {
             $coupan_codes = CoupanCode::Where(['code' => $carts['other_cart_data']['discount_code']])->first();
             if ($carts['other_cart_data']['coupon_type'] == 'all_products') {
@@ -281,7 +289,7 @@ class PaymentController extends Controller {
                 if (isset($value['coupon_discount']) && $carts['other_cart_data']['discount_status'] && $carts['other_cart_data']['coupon_type'] == 'per_product') {
                     $detail_array['discount'] = $carts['other_cart_data']['coupon_discount'];
                 }
-               
+
                 OrderDetail::create($detail_array);
                 Product::Where('id', $value['product_id'])->decrement('quantity', $value['quantity']);   ///   quantity decrement after successfull purchase
             }
