@@ -65,7 +65,7 @@ class PaymentController extends Controller {
      */
 
     public function store(Request $request) {
-
+dd($this->_apiContext);
 
         $data = Session::get('cart_data');
 

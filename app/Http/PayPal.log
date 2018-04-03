@@ -1,0 +1,3 @@
+[03-04-2018 08:53:05] PayPal\Core\PayPalHttpConnection : INFO: POST https://api.paypal.com/v1/oauth2/token
+[03-04-2018 08:53:07] PayPal\Core\PayPalHttpConnection : INFO: Response Status 	: 401
+[03-04-2018 08:53:07] PayPal\Core\PayPalHttpConnection : ERROR: Got Http response code 401 when accessing https://api.paypal.com/v1/oauth2/token. {"error":"invalid_client","error_description":"Client Authentication failed"}

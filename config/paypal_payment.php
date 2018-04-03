@@ -18,7 +18,7 @@ return array(
 	'Service' => array(
 		# For integrating with the live endpoint,
 		# change the URL to https://api.paypal.com!
-		'EndPoint' => 'https://api.sandbox.paypal.com',
+		'EndPoint' => 'https://api.paypal.com',
 	),
 
 
