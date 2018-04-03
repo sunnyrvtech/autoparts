@@ -197,11 +197,6 @@ class PaymentController extends Controller {
         $payment->setIntent("sale")
                 ->setPayer($payer)
                 ->setTransactions(array($transaction));
-        
-        
-        echo "<pre>";
-        print_r($this->_apiContext);
-        die;
 
         try {
             // ### Create Payment
