@@ -10,15 +10,16 @@ return array(
 	# Connection Information
 	'Http' => array(
 	    'ConnectionTimeOut' => 30,
-		'Retry' => 1,
-		//'Proxy' => 'http://[username:password]@hostname[:port][/path]',
+	    'Retry' => 1,
+	    //'Proxy' => 'http://[username:password]@hostname[:port][/path]',
 	),
 
 	# Service Configuration
 	'Service' => array(
 		# For integrating with the live endpoint,
 		# change the URL to https://api.paypal.com!
-		'EndPoint' => 'https://api.paypal.com',
+                'Mode' => 'sandbox',
+		'EndPoint' => 'https://api.sandbox.paypal.com',
 	),
 
 

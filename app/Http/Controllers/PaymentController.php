@@ -47,7 +47,7 @@ class PaymentController extends Controller {
 
         $this->_apiContext = Paypalpayment::ApiContext(config('paypal_payment.Account.ClientId'), config('paypal_payment.Account.ClientSecret'));
         $this->_apiContext->setConfig(array(
-            'mode' => 'live',
+            'mode' => config('paypal_payment.Service.Mode'),
             'service.EndPoint' => config('paypal_payment.Service.EndPoint'),
             'http.ConnectionTimeOut' => config('paypal_payment.Http.ConnectionTimeOut'),
             'log.LogEnabled' => true,
@@ -207,6 +207,7 @@ class PaymentController extends Controller {
                 ->setPayer($payer)
                 ->setTransactions(array($transaction));
 
+
         try {
             // ### Create Payment
             // Create a payment by posting to the APIService
@@ -214,13 +215,13 @@ class PaymentController extends Controller {
             // The return object contains the status;
             $payment->create($this->_apiContext);
         } catch (\PayPal\Exception\PayPalConnectionException $ex) {
+
             // echo $ex->getCode(); 
             if ($ex->getCode() != 503) {
                 $error = json_decode($ex->getData());
-                echo "<pre>";
-                print_r($error);
-                echo $ex->getMessage();
-                die;
+                if (isset($error->message))
+                    return Redirect::back()
+                                    ->with('error-message', $error->message);
             }
             return Redirect::back()
                             ->with('error-message', "Something went wrong,Please try again later !");
