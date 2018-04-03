@@ -54,12 +54,6 @@ class PaymentController extends Controller {
             'log.FileName' => __DIR__ . '/../PayPal.log',
             'log.LogLevel' => 'FINE'
         ));
-        
-        
-        
-        echo "<pre>";
-        print_r($this->_apiContext);
-        die;
     }
 
     public function index() {
