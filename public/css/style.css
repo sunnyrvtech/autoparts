@@ -1601,6 +1601,7 @@ footer.footer .container { padding-bottom: 15px; }
 }
 .my-account .btn-nav .glyphicon { padding-top: 16px;font-size: 40px; }
 .my-account .tab-panel .colsm { background-color: #fff;border-left: medium none;border-radius:0px;min-height: 650px; }
+.my-account .tab-panel .colsm .colsm-row { padding: 20px; }
 /*.my-account .tab-panel .colsm-row { padding: 20px; }*/
 .col-centered { display:inline-block;float:none;text-align:left;margin-right:-4px; }
 .divcontainer { background-color: #fff;border-radius: 20px;padding: 20px;margin-bottom: 20px; }

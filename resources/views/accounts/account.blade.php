@@ -7,7 +7,7 @@
         @include('accounts.sidebar') 
             <!-- Tab panes -->
             <div class="tab-content">
-                <div class="tab-panel" id="profile">
+                <div class="tab-panel">
                     <div class="col-xs-12 col-sm-9 col-md-6 col-lg-6 colsm">
                         <div class="row colsm-row">
                             <h3>Update Account Details:</h3>
