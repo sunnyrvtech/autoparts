@@ -16,7 +16,6 @@
                             <table class="table">
                                 <thead class="thead-inverse">
                                     <tr>
-                                        <th><label>No#</label></th>
                                         <th><label>Date</label></th>
                                         <th><label>Ship To</label></th>
                                         <th><label>Order Total</label></th>
@@ -27,7 +26,6 @@
                                 <tbody>
                                     @forelse($orders as $key=>$value)
                                     <tr>
-                                        <td>{{ $key+1 }}</td>
                                         <td>{{ date('m-d-Y H:i:s',strtotime($value->created_at)) }}</td>
                                         <td>{{ Auth::user()->first_name.' '.Auth::user()->last_name }}</td>
                                         <td>${{ number_format($value->total_price,2) }}</td>
