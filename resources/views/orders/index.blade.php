@@ -43,6 +43,7 @@
                                     @endforelse
                                 </tbody>
                             </table>
+                            <div class="pagination_main_wrapper text-center">{{ $orders->links() }}</div>
                         </div>
                     </div>
                 </div>

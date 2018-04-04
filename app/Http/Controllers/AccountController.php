@@ -318,7 +318,7 @@ class AccountController extends Controller {
      */
     public function getOrderList() {
         if (Auth::check()) {
-            $data['orders'] = Order::Where('user_id', Auth::id())->orderBy('created_at', 'desc')->get();
+            $data['orders'] = Order::Where('user_id', Auth::id())->orderBy('created_at', 'desc')->paginate(10);
             return View::make('orders.index', $data);
         }
         return redirect('/login');
