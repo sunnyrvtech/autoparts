@@ -173,7 +173,27 @@
                     </div>
                 @endif    
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
+                    @if(!empty($billing_address) && Auth::check())
+                    <div class="row">
+                        
+                        <div class="col-md-6">
+                        <h4>Billing Address: </h4>
+                            <span>{{ Auth::user()->first_name }}</span><span> {{ Auth::user()->last_name }}</span>,
+                            <span>{{ Auth::user()->email }}</span>
+                            <span>
+                                <span>{{ $billing_address->address1 }}</span><span> {{ $billing_address->address2 }}</span>
+                            </span><br>
+                            <span>{{ $billing_address->city }}</span>,<span>{{ $billing_address->get_state->name }}<br>
+                            </span><span> {{ $billing_address->get_country->name }}</span><span> {{ $billing_address->zip }}</span>
+
+                        </div>
+                    </div>
+                    <div class="btn-wrp">
+                    <a href="{{ route('billing') }}" class="btn btn-success" type="submit">Edit Billing Address</a></div>
+                    @endif
+                </div>
+                    <div class="col-md-4">
                     @if(!empty($shipping_address) && Auth::check())
                     <div class="row">
                         
@@ -190,14 +210,14 @@
                         </div>
                     </div>
                     <div class="btn-wrp">
-                    <a href="{{ URL('/my-account') }}" class="btn btn-success" type="submit">Edit Shipping Address</a></div>
+                    <a href="{{ route('shipping') }}" class="btn btn-success" type="submit">Edit Shipping Address</a></div>
                     @endif
                 </div>
               
                     <div class="col-md-4 col-xs-12 pull-right">
                     <h4>Order Total: </h4>
                     <div class="delivery-wrp">
-                        @if(!empty($shipping_methods->toArray()))
+                        @if(Auth::check() && !empty($shipping_methods->toArray()))
                         <select id="changeShippingMethod" name="shipping_method" class="form-control">
                                 <option value="">Select Shipping Method</option>
                                 @foreach($shipping_methods as $val)

@@ -18,7 +18,7 @@ class OrderController extends Controller {
     public function index(Request $request) {
         $track_id = $request->get('track_id');
         $data['order_details'] = array();
-        return View::make('orders.index', $data);
+        return View::make('orders.track', $data);
     }
 
     public function postTrackOrder(Request $request) {
@@ -33,7 +33,7 @@ class OrderController extends Controller {
         if ($order_details) {
             if ($order_details->getOrder->getCustomer->email == $request->get('email')) {
                 $data['order_details'] = $order_details;
-                return View::make('orders.index', $data);
+                return View::make('orders.track', $data);
             } else {
                 return redirect()->back()
                                 ->with('error-message', 'No order found to this email address !');

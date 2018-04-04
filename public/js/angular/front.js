@@ -343,8 +343,6 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
                         $timeout(function () {
                             window.location = BaseUrl + "/" + data.data.intended;
                         }, 200);
-                    }else{
-                        $('a[href="#billing-address"').tab('show');
                     }
 
                 }, function errorCallback(data) {
@@ -409,9 +407,11 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
                     $scope.alertHide();
                     $(window).scrollTop(0);
                     $scope.loading = false;
-//                    $timeout(function () {
-//                        window.location = BaseUrl + "/my-account";
-//                    }, 200);
+                   if (data.data.intended == "cart") {
+                        $timeout(function () {
+                            window.location = BaseUrl + "/" + data.data.intended;
+                        }, 200);
+                    }
 
                 }, function errorCallback(data) {
                     $scope.loading = false;

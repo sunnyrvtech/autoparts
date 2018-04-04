@@ -15,6 +15,7 @@ use App\CoupanCode;
 use App\CoupanUsage;
 use App\TaxRate;
 use App\ShippingAddress;
+use App\BillingAddress;
 use App\ProductSubCategory;
 use Session;
 use Auth;
@@ -55,6 +56,7 @@ class ProductController extends Controller {
         if (Auth::check()) {
             $carts = Cart::where('user_id', Auth::id())->get(array('id', 'product_id', 'quantity', 'total_price'));
             $shipping_address = ShippingAddress::where('user_id', Auth::id())->first();
+            $billing_address = BillingAddress::where('user_id', Auth::id())->first();
 
             //get tax price
             $regrex = '"([^"]*)' . $shipping_address->state_id . '([^"]*)"';
@@ -70,6 +72,7 @@ class ProductController extends Controller {
                 $carts = array();
             }
             $shipping_address = '';
+            $billing_address = '';
             $tax_price = '';
         }
 
@@ -189,6 +192,7 @@ class ProductController extends Controller {
         Session::put('cart_data',$data);
         $data['shipping_address'] = $shipping_address;
         $data['shipping_methods'] = $shipping_methods;
+        $data['billing_address'] = $billing_address;
         
       
         $view = View::make('carts.index', $data);

@@ -24,20 +24,10 @@ class AccountController extends Controller {
      *
      * @return Response
      */
-    public function index(Request $request, $id = null) {
+    public function index(Request $request) {
         if (Auth::check()) {
-            $users = User::where('id', Auth::id())->first();
-            $shipping_address = ShippingAddress::where('user_id', Auth::id())->first();
-            $billing_address = BillingAddress::where('user_id', Auth::id())->first();
-            $orders = Order::Where('user_id', Auth::id())->orderBy('created_at','desc')->get();
-            if ($id != null) {
-                $order_details = Order::where('user_id', Auth::id())->where('id', $id)->first();
-            } else {
-                $order_details = '';
-            }
-
-            $countries = Country::get(array('name', 'id'));
-            return View::make('accounts.account', compact('users', 'shipping_address', 'billing_address', 'countries', 'orders', 'order_details'));
+            $data['users'] = User::where('id', Auth::id())->first();
+            return View::make('accounts.account', $data);
         }
         return redirect('/login');
     }
@@ -77,6 +67,20 @@ class AccountController extends Controller {
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    public function getShipping() {
+        if (Auth::check()) {
+            $data['shipping_address'] = ShippingAddress::where('user_id', Auth::id())->first();
+            $data['countries'] = Country::get(array('name', 'id'));
+            return View::make('accounts.shipping', $data);
+        }
+        return redirect('/login');
+    }
+
+    /**
      * Update shipping function.
      *
      * @return Response
@@ -88,9 +92,9 @@ class AccountController extends Controller {
             if ($request->get('redirect_url') == 'cart')
                 $intented = $request->get('redirect_url');
             else
-                $intented = 'my-account';
-        } else {
-            $intented = 'my-account';
+                $intented = '';
+        }else {
+            $intented = '';
         }
 
         $validator = Validator::make($data, [
@@ -127,6 +131,20 @@ class AccountController extends Controller {
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    public function getBilling() {
+        if (Auth::check()) {
+            $data['billing_address'] = BillingAddress::where('user_id', Auth::id())->first();
+            $data['countries'] = Country::get(array('name', 'id'));
+            return View::make('accounts.billing', $data);
+        }
+        return redirect('/login');
+    }
+
+    /**
      * Update billing function.
      *
      * @return Response
@@ -134,6 +152,14 @@ class AccountController extends Controller {
     public function updateBilling(Request $request) {
 
         $data = $request->all();
+        if ($request->get('redirect_url') != null) {
+            if ($request->get('redirect_url') == 'cart')
+                $intented = $request->get('redirect_url');
+            else
+                $intented = '';
+        }else {
+            $intented = '';
+        }
         $validator = Validator::make($data, [
                     'address1' => 'required|max:150',
                     'country_id' => 'required',
@@ -159,8 +185,11 @@ class AccountController extends Controller {
             BillingAddress::create($data);
             ShippingAddress::create($data); // billing address same as shipping address when user enter first time
         }
+        if ($intented == 'cart') {
+            Session::flash('success-message', 'Billing address updated successfully.');
+        }
         //Session::flash('success-message', 'Billing address updated successfully.');
-        return response()->json(['success' => true, 'messages' => "Billing address updated successfully."]);
+        return response()->json(['success' => true, 'intended' => $intented, 'messages' => "Billing address updated successfully."]);
     }
 
     /**
@@ -190,6 +219,18 @@ class AccountController extends Controller {
             $result['longitude'] = null;
         }
         return $result;
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    public function getPassword() {
+        if (Auth::check()) {
+            return View::make('accounts.password');
+        }
+        return redirect('/login');
     }
 
     /**
@@ -271,12 +312,32 @@ class AccountController extends Controller {
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    public function getOrderList() {
+        if (Auth::check()) {
+            $data['orders'] = Order::Where('user_id', Auth::id())->orderBy('created_at', 'desc')->get();
+            return View::make('orders.index', $data);
+        }
+        return redirect('/login');
+    }
+
+    /**
      * view order detail by order id.
      *
      * @return Response
      */
-    public function viewOrderDetail() {
-        return View::make('accounts.view_order');
+    public function getOrderDetails(Request $request, $id) {
+        if (Auth::check()) {
+            $data['order_details'] = Order::where('user_id', Auth::id())->where('id', $id)->first();
+            $data['shipping_address'] = ShippingAddress::where('user_id', Auth::id())->first();
+            $data['billing_address'] = BillingAddress::where('user_id', Auth::id())->first();
+
+            return View::make('orders.detail', $data);
+        }
+        return redirect('/login');
     }
 
 }

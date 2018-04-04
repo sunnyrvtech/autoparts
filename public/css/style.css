@@ -1600,8 +1600,8 @@ footer.footer .container { padding-bottom: 15px; }
     left: 50%;
 }
 .my-account .btn-nav .glyphicon { padding-top: 16px;font-size: 40px; }
-.my-account .tab-pane .colsm { background-color: #fff;border-left: medium none;border-radius:0px;min-height: 650px; }
-/*.my-account .tab-pane .colsm-row { padding: 20px; }*/
+.my-account .tab-panel .colsm { background-color: #fff;border-left: medium none;border-radius:0px;min-height: 650px; }
+/*.my-account .tab-panel .colsm-row { padding: 20px; }*/
 .col-centered { display:inline-block;float:none;text-align:left;margin-right:-4px; }
 .divcontainer { background-color: #fff;border-radius: 20px;padding: 20px;margin-bottom: 20px; }
 #dropdown-navbar-target { text-align: center; }
@@ -1866,7 +1866,7 @@ h1.welcome-msg { color: rgb(75, 168, 173); }
     }
 }
 @media(max-width:768px) {
-    .my-account .tab-pane h3 {
+    .my-account .tab-panel h3 {
         font-size: 20px;
     }
     .my-account .btn-nav .glyphicon {

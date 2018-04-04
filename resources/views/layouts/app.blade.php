@@ -36,7 +36,7 @@
                 <div class="side"></div>
             </div>
         </div>
-        <section class="top-header-section fadeInDown animated">
+        <section class="top-header-section">
             <div id="top-header-con">
                 <div class="row">
                     <div class="col-md-12">
