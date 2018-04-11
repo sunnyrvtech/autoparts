@@ -239,7 +239,7 @@
     </div>
     @endif
     </div>
-    <div class="pagination_main_wrapper">{{ $products->links() }}</div>
+    <div class="pagination_main_wrapper">{{ $products->appends($_GET)->links() }}</div>
 </div>
 @endsection
 @push('scripts')

@@ -20,44 +20,44 @@ $(document).ready(function () {
 //        $(this).find(".product-card__overlay").removeClass("fadeInDown");
 //    });
     
-    $(document).on('click', '.pagination a', function (e) {
-        e.preventDefault();
-
-        var qs = getQueryStrings();
-        var URL = $(this).attr('href');
-        if (qs['year'] != undefined) {
-            URL =URL+'&year='+qs['year'];
-        }
-        if (qs['make_id'] != undefined) {
-            URL =URL+'&make_id='+qs['make_id'];
-        }
-        if (qs['make_id'] != undefined) {
-            URL =URL+'&model_id='+qs['model_id'];
-        }
-        if (qs['q'] != undefined) {
-            URL =URL+'&q='+qs['q'];
-        }
-        
-        angular.element(this).scope().getProductByPage(URL);
-    });
-
-    function getQueryStrings() {
-        var assoc = {};
-        var decode = function (s) {
-            return decodeURIComponent(s.replace(/\+/g, " "));
-        };
-        var queryString = location.search.substring(1);
-        var keyValues = queryString.split('&');
-
-        for (var i in keyValues) {
-            var key = keyValues[i].split('=');
-            if (key.length > 1) {
-                assoc[decode(key[0])] = decode(key[1]);
-            }
-        }
-
-        return assoc;
-    }
+//    $(document).on('click', '.pagination a', function (e) {
+//        e.preventDefault();
+//
+//        var qs = getQueryStrings();
+//        var URL = $(this).attr('href');
+//        if (qs['year'] != undefined) {
+//            URL =URL+'&year='+qs['year'];
+//        }
+//        if (qs['make_id'] != undefined) {
+//            URL =URL+'&make_id='+qs['make_id'];
+//        }
+//        if (qs['make_id'] != undefined) {
+//            URL =URL+'&model_id='+qs['model_id'];
+//        }
+//        if (qs['q'] != undefined) {
+//            URL =URL+'&q='+qs['q'];
+//        }
+//        
+//        angular.element(this).scope().getProductByPage(URL);
+//    });
+//
+//    function getQueryStrings() {
+//        var assoc = {};
+//        var decode = function (s) {
+//            return decodeURIComponent(s.replace(/\+/g, " "));
+//        };
+//        var queryString = location.search.substring(1);
+//        var keyValues = queryString.split('&');
+//
+//        for (var i in keyValues) {
+//            var key = keyValues[i].split('=');
+//            if (key.length > 1) {
+//                assoc[decode(key[0])] = decode(key[1]);
+//            }
+//        }
+//
+//        return assoc;
+//    }
 
     $(document).on('click', '.checkbox-inline a', function (e) {
         $(this).parent().find('input:checkbox').click();
