@@ -145,7 +145,6 @@ return [
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Anouar\Paypalpayment\PaypalpaymentServiceProvider::class,
         Laravel\Passport\PassportServiceProvider::class,
-        Maatwebsite\Excel\ExcelServiceProvider::class,
         /*
          * Package Service Providers...
          */
@@ -208,6 +207,5 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'Paypalpayment'   => Anouar\Paypalpayment\Facades\PaypalPayment::class,
-        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ],
 ];
