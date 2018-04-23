@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use View;
 use App\User;
+use App\Product;
+use App\Order;
 use Yajra\Datatables\Facades\Datatables;
 
 class IndexController extends Controller {
@@ -16,8 +18,11 @@ class IndexController extends Controller {
      * @return Response
      */
     public function index() {
-        $title = 'AutoLightHouse | Dashboard';
-        return View::make('admin.index',compact('title'));
+        $data['title'] = 'AutoLightHouse | Dashboard';
+        $data['users'] = User::whereNull('role_id')->count();
+        $data['orders'] = Order::count();
+        $data['products'] = Product::count();
+        return View::make('admin.index',$data);
     }
 
     /**
