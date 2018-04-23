@@ -143,7 +143,7 @@
                                             <div class="">${{ number_format($total_price,2) }}</div>
                                         </td>
                                         <td>
-                                            <a class="btn btn-danger btn-sm" ng-click="submitDeleteCart({{ $value['cart_id'] }})"><i class="fa fa-trash-o"></i></a>
+                                            <a class="btn btn-danger btn-sm" ng-click="submitDeleteCart({{ $value['cart_id'] }},{{ $value['quantity'] }})"><i class="fa fa-trash-o"></i></a>
                                         </td>
                                     </tr>   
                                 </tbody>

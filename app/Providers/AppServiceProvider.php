@@ -19,7 +19,7 @@ class AppServiceProvider extends ServiceProvider {
      */
     public function boot() {
         if ($this->app->environment('production')) {
-            url()->forceSchema('https');
+            \URL::forceSchema('https');
         }
 
         $categories = Category::where('status', 1)->orderBy('name')->limit(8)->get(array('name', 'id'));
