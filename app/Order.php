@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model {
 
-    protected $fillable = ['user_id', 'transaction_id','total_price','ship_price','tax_rate','shipping_method','payment_method','coupon_type','discount', 'order_status'];
+    protected $fillable = ['user_id', 'transaction_id','email','billing_address','shipping_address','total_price','ship_price','tax_rate','shipping_method','payment_method','coupon_type','discount', 'order_status'];
 
     /**
      * function to get customer detail from order table.

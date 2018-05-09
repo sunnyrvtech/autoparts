@@ -6,11 +6,14 @@
     <section>
         <div id="breadcrumb" itemprop="breadcrumb" itemscope="itemscope" itemtype="http://www.schema.org/BreadcrumbList">
             <a href="{{ url('/') }}">Home</a>
-            <span class="divider"> &gt; </span><span>{{ Request::segment(1) }}</span>
+            {!! $bredcrum !!}
         </div>
     </section>
      @if(!empty($products->toArray()['data']))
             <div class="well well-sm cate">
+                <div class="row">
+                    <h1 class="onea-page-header">{{ $filter_title }}</h1>
+                </div>
                 <div class="row">
                     <div class="col-md-4 col-sm-6">
                         <strong>Category Title:-</strong>
@@ -41,9 +44,9 @@
     <div class="col-md-9">
         <div id="products-content-area" class="row list-group">
             <?php
-            $brand_array = [];
-            $vehicle_company_array = [];
-            $vehicle_model_array = [];
+//            $brand_array = [];
+//            $vehicle_company_array = [];
+            //$vehicle_model_array = [];
 
             $minYear = date('Y', strtotime('-50 year'));
             $maxYear = date('Y', strtotime('+1 year'));
@@ -51,9 +54,9 @@
             $yearArray = range($maxYear, $minYear);
               function my_sort($a, $b) {
                     if (Request::get('sort_by') == 'high') {
-                        return ($a['get_products']['price'] > $b['get_products']['price']) ? -1 : 1;
+                        return ($a['price'] > $b['price']) ? -1 : 1;
                     } else {
-                        return ($a['get_products']['price'] < $b['get_products']['price']) ? -1 : 1;
+                        return ($a['price'] < $b['price']) ? -1 : 1;
                     }
                 }
 
@@ -71,19 +74,19 @@
             <?php
             
             //this is used to create brand filter 
-            if (!empty($value['get_products']['brand_id'])) {
-                $brand_array[$key]['id'] = $value['get_products']['brand_id'];
-                $brand_array[$key]['name'] = isset($value['get_products']['get_brands']['name']) ? $value['get_products']['get_brands']['name'] : '';
-            }
-            if (!empty($value['get_products']['vehicle_make_id'])) {
-                $vehicle_company_array[$key]['id'] = $value['get_products']['vehicle_make_id'];
-                $vehicle_company_array[$key]['name'] = isset($value['get_products']['get_vehicle_company']['name']) ? $value['get_products']['get_vehicle_company']['name'] : '';
-            }
-            if (!empty($value->get_products->vehicle_model_id)) {
-                $vehicle_model_array[$key]['id'] = $value['get_products']['vehicle_model_id'];
-                $vehicle_model_array[$key]['name'] = isset($value['get_products']['get_vehicle_model']['name']) ? $value['get_products']['get_vehicle_model']['name'] : '';
-            }
-            $product_images = json_decode($value['get_products']['product_details']['product_images']);
+//            if (!empty($value['brand_id'])) {
+//                $brand_array[$key]['id'] = $value['brand_id'];
+//                $brand_array[$key]['name'] = isset($value['get_brands']['name']) ? $value['get_brands']['name'] : '';
+//            }
+//            if (!empty($value['vehicle_make_id'])) {
+//                $vehicle_company_array[$key]['id'] = $value['vehicle_make_id'];
+//                $vehicle_company_array[$key]['name'] = isset($value['get_vehicle_company']['name']) ? $value['get_vehicle_company']['name'] : '';
+//            }
+//            if (!empty($value->get_products->vehicle_model_id)) {
+//                $vehicle_model_array[$key]['id'] = $value['vehicle_model_id'];
+//                $vehicle_model_array[$key]['name'] = isset($value['get_vehicle_model']['name']) ? $value['get_vehicle_model']['name'] : '';
+//            }
+            $product_images = json_decode($value['product_details']['product_images']);
             ?>
             <div class="item col-xs-4 col-lg-4 list-group-item">
                <div class="list-wrp grid-wrp">
@@ -92,22 +95,22 @@
                         <img width="250" height="250" class="group list-group-image" src="{{ URL::asset('/product_images').'/' }}{{ isset($product_images[0])?$product_images[0]:'default.jpg' }}" alt="" />
                     </div>
                     <div class="caption">
-                        <h4 class="group inner list-group-item-heading">{{ $value['get_products']['product_name'] }}</h4>
-                        <h4 class="group inner grid-group-item-heading">{{ str_limit($value['get_products']['product_name'], $limit = 43, $end = '...') }}</h4>
+                        <h4 class="group inner list-group-item-heading">{{ $value['product_name'] }}</h4>
+                        <h4 class="group inner grid-group-item-heading">{{ str_limit($value['product_name'], $limit = 43, $end = '...') }}</h4>
                         <div class="group inner grid-group-item-text">
-                            {!! str_limit(strip_tags($value['get_products']['product_long_description']), $limit = 50, $end = '...') !!}
+                            {!! str_limit(strip_tags($value['product_long_description']), $limit = 50, $end = '...') !!}
                         </div>
                         <div class="group inner list-group-item-text">
-                            {!! $value['get_products']['product_long_description'] !!}
+                            {!! $value['product_long_description'] !!}
                         </div>
                         <div class="row">
-                            <p class="lead">${{ $value['get_products']['price'] }}</p>
+                            <p class="lead">${{ $value['price'] }}</p>
                         </div>
                     </div>
                 </div>
                 <div class="product-card__overlay">
-                    <a class="btn am-black product-card__overlay-btn" href="{{ URL('products').'/'.$value['get_products']['product_slug'] }}">View <span class="glyphicon glyphicon-eye-open"></span></a>
-                    <a class="btn am-orange product-card__overlay-btn" href="javascript:void(0);" ng-click="submitCart(true,{{ $value['get_products']['id'] }})">Add to cart <span class="glyphicon glyphicon-shopping-cart"></span></a>
+                    <a class="btn am-black product-card__overlay-btn" href="{{ URL('products').'/'.$value['product_slug'] }}">View <span class="glyphicon glyphicon-eye-open"></span></a>
+                    <a class="btn am-orange product-card__overlay-btn" href="javascript:void(0);" ng-click="submitCart(true,{{ $value['id'] }})">Add to cart <span class="glyphicon glyphicon-shopping-cart"></span></a>
                 </div>
                 </div>
             </div>
@@ -157,7 +160,7 @@
                                         </button>
                                         <ul class="dropdown-menu scrollable-menu">
                                             <li><a role="button">Select Vehicle Make</a></li>
-                                            <li ng-repeat="x in result_vehicle_company"><a data-id="<%x.get_vehicle_company.id%>" data-method="vehicle_company" data-url="{{ url('products/vehicle_model') }}" role="button"><%x.get_vehicle_company.name%></a></li>
+                                            <li ng-repeat="x in result_vehicle_company"><a data-id="<%x.get_vehicle_company.id%>" data-slug="<%x.get_vehicle_company.slug%>" data-method="vehicle_company" data-url="{{ url('products/vehicle_model') }}" role="button"><%x.get_vehicle_company.name%></a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -168,7 +171,7 @@
                                         </button>
                                         <ul class="dropdown-menu scrollable-menu">
                                             <li><a role="button">Select Vehicle Model</a></li>
-                                            <li ng-repeat="x in result_vehicle_model"><a data-id="<%x.get_vehicle_model.id%>" data-method="vehicle_model"  role="button"><%x.get_vehicle_model.name%></a></li>
+                                            <li ng-repeat="x in result_vehicle_model"><a data-id="<%x.get_vehicle_model.id%>" data-slug="<%x.get_vehicle_model.slug%>" data-method="vehicle_model"  role="button"><%x.get_vehicle_model.name%></a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -184,20 +187,20 @@
                     0 => [
                         "title" => "Product Category",
                         "data" => $all_categories
-                    ],
-                    1 => [
-                        "title" => "Brand",
-                        "data" => $brand_array
-                    ],
-                    2 => [
-                        "title" => "Vehicle Make",
-                        "data" => array_values(array_map("unserialize", array_unique(array_map("serialize", $vehicle_company_array))))
-                    ],
-                    3 => [
-                        "title" => "Vehicle Model",
-                        "data" => array_values(array_map("unserialize", array_unique(array_map("serialize", $vehicle_model_array))))
                     ]
                 );
+//                1 => [
+//                        "title" => "Vehicle Model",
+//                        "data" => array_values(array_map("unserialize", array_unique(array_map("serialize", $vehicle_model_array))))
+//                    ]
+//                1 => [
+//                        "title" => "Brand",
+//                        "data" => $brand_array
+//                    ],
+                    //                2 => [
+//                        "title" => "Vehicle Make",
+//                        "data" => array_values(array_map("unserialize", array_unique(array_map("serialize", $vehicle_company_array))))
+//                    ],
                 ?>
                 @foreach($filter_array as $key=>$value)
                 @if(!empty($value['data']))
@@ -216,16 +219,8 @@
                             <ul>
                                 @foreach($value['data'] as $k=>$val)
                                 <li>
-                                    @if($key !=0)
-                                    <label class="checkbox-inline">
-                                        <!--<input type="checkbox" checked  value="{{ $val['id'] }}"><a class="filter-applied" href="javascript:void(0);">{{ $val['name'] }}</a>-->
-                                        <span class="glyphicon glyphicon-chevron-right"></span>
-                                        <a class="@if(Request::input('q') == $val['name'])filter-applied @endif" href="{{ URL('/products/search').'?q='.urlencode($val['name']) }}">{{ $val['name'] }}</a>
-                                    </label>
-                                    @else
                                     <span class="glyphicon glyphicon-chevron-right"></span>
                                     <a class="@if(Request::segment(1) == $val['slug'])filter-applied @endif" href="{{ url('/'.$val['slug']) }}">{{ $val['name'] }}</a>
-                                    @endif
                                 </li>
                                 @endforeach
                             </ul>

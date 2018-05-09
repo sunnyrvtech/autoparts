@@ -12,9 +12,9 @@ use App\VehicleModel;
 use App\VehicleCompany;
 use App\Category;
 use App\SubCategory;
-use App\ProductCategory;
-use App\ProductSubCategory;
-use App\ProductPriceZone;
+//use App\ProductCategory;
+//use App\ProductSubCategory;
+//use App\ProductPriceZone;
 use Redirect;
 use Session;
 use Excel;
@@ -43,10 +43,12 @@ class ImportController extends Controller {
                     $sub_category = SubCategory::create(array('category_id' => $category->id, 'name' => trim($row->sub_category), 'slug' => $slug, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
                 }
                 if (!$vehicle_company = VehicleCompany::where('name', 'like', trim(ucfirst(strtolower($row->vehicle_make))))->first(array('id'))) {
-                    $vehicle_company = VehicleCompany::create(array('name' => trim(ucfirst(strtolower($row->vehicle_make))), 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
+                    $make_slug = $this->createSlug(trim($row->vehicle_make), 'vehicle_make');
+                    $vehicle_company = VehicleCompany::create(array('name' => trim(ucfirst(strtolower($row->vehicle_make))),'slug'=>$make_slug, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
                 }
                 if (!$vehicle_model = VehicleModel::where('name', 'like', trim(ucfirst(strtolower($row->vehicle_model))))->first(array('id'))) {
-                    $vehicle_model = VehicleModel::create(array('name' => trim(ucfirst(strtolower($row->vehicle_model))), 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
+                    $model_slug = $this->createSlug(trim($row->vehicle_model), 'vehicle_model');
+                    $vehicle_model = VehicleModel::create(array('name' => trim(ucfirst(strtolower($row->vehicle_model))),'slug'=>$model_slug, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
                 }
 
                 $product_slug = $this->createSlug(trim($row->product_name), 'product');
@@ -66,6 +68,8 @@ class ImportController extends Controller {
                     'vehicle_year_to' => $vehicle_year[1],
                     'vehicle_make_id' => $vehicle_company->id,
                     'vehicle_model_id' => $vehicle_model->id,
+                    'category_id' => $category->id,
+                    'sub_category_id' => $sub_category->id,
                     'length' => empty($row->length) ? null : trim($row->length),
                     'weight' => empty($row->weight) ? null : trim($row->weight),
                     'width' => empty($row->width) ? null : trim($row->width),
@@ -131,24 +135,24 @@ class ImportController extends Controller {
 
 
                 $products = Product::where('sku', 'like', $row->sku)->first();
-                
-                if (isset($row['product_image']) && !empty($row['product_image'])) {
-                        $product_images_array = explode("|", $row['product_image']);
-                        $product_images = array_map(function($pro_val) {
-                            return basename($pro_val);
-                        }, $product_images_array);
 
-                        $product_detail_array['product_images'] = json_encode(array_values(array_unique($product_images)));
+                if (isset($row['product_image']) && !empty($row['product_image'])) {
+                    $product_images_array = explode("|", $row['product_image']);
+                    $product_images = array_map(function($pro_val) {
+                        return basename($pro_val);
+                    }, $product_images_array);
+
+                    $product_detail_array['product_images'] = json_encode(array_values(array_unique($product_images)));
                 }
-                
+
                 if (!$products) {
                     if ($product = Product::create($product_array)) {
                         //$product_images = $this->product_image_upload($row->product_image);
                         $product_detail_array['product_id'] = $product->id;
                         //$product_detail_array['product_images'] = $product_images;
                         ProductDetail::create($product_detail_array);
-                        ProductCategory::create(array('product_id' => $product->id, 'category_id' => $sub_category->category_id));
-                        ProductSubCategory::create(array('product_id' => $product->id, 'sub_category_id' => $sub_category->id));
+//                        ProductCategory::create(array('product_id' => $product->id, 'category_id' => $sub_category->category_id));
+//                        ProductSubCategory::create(array('product_id' => $product->id, 'sub_category_id' => $sub_category->id));
 //                        if (!empty($row->product_region)) {
 //                            $zone_ids = array_unique(json_decode($row->product_region));
 //                            $product_prices = json_decode($row->product_price);
@@ -177,12 +181,12 @@ class ImportController extends Controller {
                         ProductDetail::create($product_detail_array);
                     }
                     // delete all products category while update product data
-                    ProductCategory::where('product_id', $products->id)->delete();
-                    ProductSubCategory::where('product_id', $products->id)->delete();
-
-                    ProductCategory::create(array('product_id' => $products->id, 'category_id' => $sub_category->category_id));
-                    ProductSubCategory::create(array('product_id' => $products->id, 'sub_category_id' => $sub_category->id));
-//                    if (!empty($row->product_region)) {
+//                    ProductCategory::where('product_id', $products->id)->delete();
+//                    ProductSubCategory::where('product_id', $products->id)->delete();
+//
+//                    ProductCategory::create(array('product_id' => $products->id, 'category_id' => $sub_category->category_id));
+//                    ProductSubCategory::create(array('product_id' => $products->id, 'sub_category_id' => $sub_category->id));
+////                    if (!empty($row->product_region)) {
 //                        $zone_ids = array_unique(json_decode($row->product_region));
 //                        $product_prices = json_decode($row->product_price);
 //                        $this->addZonePrice($products->id, $zone_ids, $product_prices);
@@ -269,7 +273,7 @@ class ImportController extends Controller {
             return null;
         }
     }
-    
+
     /**
      * function to upload product images.
      *
@@ -281,7 +285,7 @@ class ImportController extends Controller {
         Excel::filter('chunk')->load($path)->chunk(1000, function($results) {
             foreach ($results as $key => $row) {
                 $products = Product::where('sku', 'like', $row->sku)->first();
-                if($products){
+                if ($products) {
                     $product_images = $this->product_image_upload($row->product_images);
                     $product_details = ProductDetail::where('product_id', $products->id)->first();
                     $product_details->fill($product_images)->save();
@@ -393,8 +397,8 @@ class ImportController extends Controller {
             }
             DB::statement('DELETE FROM products');
             DB::statement('DELETE FROM product_details');
-            DB::statement('DELETE FROM product_categories');
-            DB::statement('DELETE FROM product_sub_categories');
+//            DB::statement('DELETE FROM product_categories');
+//            DB::statement('DELETE FROM product_sub_categories');
             DB::statement('DELETE FROM categories');
             DB::statement('DELETE FROM sub_categories');
             DB::statement('DELETE FROM vehicle_models');
@@ -404,8 +408,8 @@ class ImportController extends Controller {
             DB::statement('ALTER TABLE categories AUTO_INCREMENT=1');
             DB::statement('ALTER TABLE sub_categories AUTO_INCREMENT=1');
             DB::statement('ALTER TABLE product_details AUTO_INCREMENT=1');
-            DB::statement('ALTER TABLE product_categories AUTO_INCREMENT=1');
-            DB::statement('ALTER TABLE product_sub_categories AUTO_INCREMENT=1');
+//            DB::statement('ALTER TABLE product_categories AUTO_INCREMENT=1');
+//            DB::statement('ALTER TABLE product_sub_categories AUTO_INCREMENT=1');
             DB::statement('ALTER TABLE vehicle_models AUTO_INCREMENT=1');
             DB::statement('ALTER TABLE vehicle_companies AUTO_INCREMENT=1');
             Session::flash('success-message', 'All products data deleted successfully !');
@@ -445,8 +449,8 @@ class ImportController extends Controller {
                     'part_type' => $value->part_type,
                     'parse_link' => @$value->product_details->parse_link,
                     'oem_number' => @$value->product_details->oem_number,
-                    'category' => @$value->product_category->category->name,
-                    'sub_category' => @$value->product_sub_category->get_sub_categories->name,
+                    'category' => @$value->get_category->name,
+                    'sub_category' => @$value->get_sub_category->name,
                     'certification' => @$value->product_details->certification,
                     'price' => $value->price,
                     'special_price' => $value->special_price,
@@ -656,6 +660,12 @@ class ImportController extends Controller {
     protected function getRelatedSlugs($slug, $table) {
         if ($table == 'category') {
             return SubCategory::select('slug')->where('slug', 'like', $slug . '%')
+                            ->get();
+        } elseif ($table == 'vehicle_make') {
+            return VehicleCompany::select('slug')->where('slug', 'like', $slug . '%')
+                            ->get();
+        } elseif ($table == 'vehicle_model') {
+            return VehicleModel::select('slug')->where('slug', 'like', $slug . '%')
                             ->get();
         } else {
             return Product::select('product_slug')->where('product_slug', 'like', $slug . '%')

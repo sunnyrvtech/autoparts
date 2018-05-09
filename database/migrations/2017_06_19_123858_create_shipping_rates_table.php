@@ -16,8 +16,10 @@ class CreateShippingRatesTable extends Migration
         Schema::create('shipping_rates', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('country_id');
-            $table->integer('low_weight');
-            $table->integer('high_weight');
+            $table->string('ship_type')->nullable();
+            $table->integer('low_weight')->nullable();
+            $table->integer('high_weight')->nullable();
+            $table->text('zip_code')->nullable();
             $table->decimal('price', 5, 2);
             $table->timestamps();
         });

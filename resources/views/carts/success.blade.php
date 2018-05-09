@@ -36,8 +36,11 @@
                 <h1>Your order has been received.</h1>
             </div>
             <h2 class="sub-title">Thank you for your purchase!</h2>
-
+            @if(Auth::check())
             <p>Your order # is: <a href="{{ URL('/my-account/order/view').'/'.$transaction_id }}">{{ $transaction_id }}</a>.</p>
+            @else
+            <p>Your order # is: {{ $transaction_id }}.</p>
+            @endif
             <p>You will receive an order confirmation email with details of your order.</p>
             <div class="buttons-set">
                 <button type="button" class="btn btn-success" title="Continue Shopping" onclick="window.location = '{{ url('/') }}'"><span><span>Continue Shopping</span></span></button>

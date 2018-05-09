@@ -70,7 +70,7 @@
                         <div class="col-lg-12">
                             <div class="form-group {{ $errors->has('product_long_description') ? ' has-error' : '' }}">
                                 <label class="control-label">Product Long Description<span class="comps">*</span></label>
-                                {{ Form::textarea('product_long_description', null,array('class'=>'form-control')) }}
+                                {{ Form::textarea('product_long_description', null,array('class'=>'form-control textarea')) }}
                                 @if ($errors->has('product_long_description'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('product_long_description') }}</strong>
@@ -81,7 +81,7 @@
                         <div class="col-lg-12">
                             <div class="form-group {{ $errors->has('product_short_description') ? ' has-error' : '' }}">
                                 <label class="control-label">Product Short Description</label>
-                                {{ Form::textarea('product_short_description', null,array('class'=>'form-control')) }}
+                                {{ Form::textarea('product_short_description', null,array('class'=>'form-control textarea')) }}
                                 @if ($errors->has('product_short_description'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('product_short_description') }}</strong>
@@ -92,7 +92,7 @@
                         <div class="col-lg-12">
                             <div class="form-group {{ $errors->has('vehicle_fit') ? ' has-error' : '' }}">
                                 <label class="control-label">Vehicle Fit</label>
-                                {{ Form::textarea('vehicle_fit', null,array('class'=>'form-control')) }}
+                                {{ Form::textarea('vehicle_fit', null,array('class'=>'form-control textarea')) }}
                                 @if ($errors->has('vehicle_fit'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('vehicle_fit') }}</strong>
@@ -715,18 +715,7 @@
                             <a href="javascript:void(0);" class="toggleCategory"><span style="font-size: 20px;color: #000;font-weight: bold;" class="fa fa-angle-down"></span></a>
                             <ul class="sub_category" style="list-style: none;display: none;">
                                 @foreach ($cat->sub_categories as $sub_cat)
-                                <li><input type="radio" name="sub_category" value="{{ $sub_cat->id }}">{{ $sub_cat->name }}
-                                    {{--
-                                    @if(!empty($sub_cat->sub_sub_categories->toArray()))
-                                    <a href="javascript:void(0);" class="toggleCategory"><span style="font-size: 20px;color: #000;font-weight: bold;" class="fa fa-angle-down"></span></a>
-                                    <ul class="sub_sub_category" style="list-style: none;display: none;">
-                                        @foreach ($sub_cat->sub_sub_categories as $sub_sub_cat)
-                                        <li><input type="radio" name="sub_sub_category" value="{{ $sub_sub_cat->id }}">{{ $sub_cat->name.' '.$sub_sub_cat->get_vehicle_company_name->name }}</li>
-                                            @endforeach
-                                        </ul>
-                                        @endif
-                                        --}}
-                                </li>
+                                <li><input type="radio" name="sub_category" value="{{ $sub_cat->id }}">{{ $sub_cat->name }}</li>
                                 @endforeach
                             </ul>
                             @endif
@@ -746,11 +735,13 @@
 @push('scripts')
 <script type="text/javascript">
     $(document).ready(function () {
-        $("input[name='parent_category']").click(function(){
-            $("input[name='sub_category']").each(function(){
-               $(this).attr('checked', false);
-            });
-        $(this).parent().find(".sub_category li:first input").attr('checked', true);
+        $("input[name='parent_category']").click(function () {
+            $("input[name='sub_category']").prop('checked', false);
+            $(this).parent().find(".sub_category li:first input").prop('checked', true);
+        });
+        $("input[name='sub_category']").click(function () {
+            $("input[name='parent_category']").prop('checked', false);
+            $(this).parent().parent().parent().find("input[name='parent_category']").prop('checked', true);
         });
     });
 </script>

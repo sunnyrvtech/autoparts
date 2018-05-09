@@ -16,7 +16,7 @@ class Product extends Model {
 //    ];
     
     protected $fillable = [
-        'product_name','product_slug', 'product_long_description', 'product_short_description', 'sku', 'quantity', 'price','special_price', 'discount', 'vehicle_fit', 'vehicle_year_from','vehicle_year_to', 'vehicle_make_id', 'vehicle_model_id','weight','length','width','height', 'part_type', 'brand_id', 'operation', 'wattage', 'mirror_option', 'location', 'size', 'material', 'color', 'front_location', 'side_location', 'includes', 'design', 'product_line', 'status',
+        'product_name','product_slug', 'product_long_description', 'product_short_description', 'sku', 'quantity', 'price','special_price', 'discount', 'vehicle_fit', 'vehicle_year_from','vehicle_year_to', 'vehicle_make_id', 'vehicle_model_id','category_id','sub_category_id','weight','length','width','height', 'part_type', 'brand_id', 'operation', 'wattage', 'mirror_option', 'location', 'size', 'material', 'color', 'front_location', 'side_location', 'includes', 'design', 'product_line', 'status',
     ];
     
 
@@ -24,21 +24,21 @@ class Product extends Model {
         return $this->hasOne('App\ProductDetail');
     }
 
-    public function product_categories() {
-        return $this->hasMany('App\ProductCategory');
-    }
+//    public function product_categories() {
+//        return $this->hasMany('App\ProductCategory');
+//    }
     
-    public function product_price_zones(){
-        return $this->hasMany('App\ProductPriceZone','product_id','id');
-    }
+//    public function product_price_zones(){
+//        return $this->hasMany('App\ProductPriceZone','product_id','id');
+//    }
 
-    public function product_sub_categories() {
-        return $this->hasMany('App\ProductSubCategory');
-    }
+//    public function product_sub_categories() {
+//        return $this->hasMany('App\ProductSubCategory');
+//    }
 
-    public function product_sub_sub_categories() {
-        return $this->hasMany('App\ProductSubSubCategory');
-    }
+//    public function product_sub_sub_categories() {
+//        return $this->hasMany('App\ProductSubSubCategory');
+//    }
 
     public function get_brands() {
         return $this->hasOne('App\Brand', 'id', 'brand_id');
@@ -51,9 +51,9 @@ class Product extends Model {
      * @return Response
      */
 
-    public function product_category() {
-        return $this->belongsTo('App\ProductCategory', 'id','product_id');
-    }
+//    public function product_category() {
+//        return $this->belongsTo('App\ProductCategory', 'id','product_id');
+//    }
     
     /**
      * function to get single subcategory
@@ -61,9 +61,9 @@ class Product extends Model {
      * @return Response
      */
 
-    public function product_sub_category() {
-        return $this->belongsTo('App\ProductSubCategory', 'id','product_id');
-    }
+//    public function product_sub_category() {
+//        return $this->belongsTo('App\ProductSubCategory', 'id','product_id');
+//    }
 
     /**
      * function to get vehicle company 
@@ -81,6 +81,26 @@ class Product extends Model {
      */
     public function get_vehicle_model() {
         return $this->hasOne('App\VehicleModel', 'id', 'vehicle_model_id');
+    }
+    
+    /**
+     * function to get category 
+     *
+     * @return Response
+     */
+
+    public function get_category() {
+        return $this->hasOne('App\Category', 'id','category_id');
+    }
+    
+    
+    /**
+     * function to get vehicle model 
+     *
+     * @return Response
+     */
+    public function get_sub_category() {
+        return $this->hasOne('App\SubCategory', 'id', 'sub_category_id');
     }
 
 }

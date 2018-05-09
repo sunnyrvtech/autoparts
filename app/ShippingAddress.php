@@ -12,7 +12,7 @@ class ShippingAddress extends Model {
      * @var array
      */
     protected $fillable = [
-        'address1', 'user_id', 'address2', 'country_id', 'state_id', 'city', 'zip', 'latitude', 'longitude'
+        'first_name','last_name','address1', 'user_id', 'address2', 'country_id', 'state_id', 'city', 'zip', 'latitude', 'longitude'
     ];
 
     public function get_country() {

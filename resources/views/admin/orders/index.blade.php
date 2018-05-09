@@ -13,7 +13,6 @@
                 <thead>
                     <tr>
                         <th>Order Id</th>
-                        <th>Customer Name</th>
                         <th>Customer Email</th>
                         <th>Shipping Price</th>
                         <th>Total Price</th>
@@ -36,14 +35,7 @@
             order: [[ 6, "desc" ]],
             columns: [
                 {data: 'id', name: 'id'},
-                {data: 'name',orderable: false, searchable: false,  render: function (data, type, row) {
-                        return row.get_customer.first_name+' '+row.get_customer.last_name;
-                    }
-                },
-                {data: 'email',orderable: false, searchable: false, render: function (data, type, row) {
-                        return row.get_customer.email;
-                    }
-                },
+                {data: 'email',name: 'email'},
                 {data: 'ship_price', name: 'ship_price'},
                 {data: 'total_price',  render: function (data, type, row) {
                         return row.total_price;

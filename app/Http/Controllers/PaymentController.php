@@ -73,9 +73,17 @@ class PaymentController extends Controller {
         $shipping_price = $data['other_cart_data']['shipping_price'];
 
         $discount_status = $data['other_cart_data']['discount_status'];
-        $shipping_address = ShippingAddress::where('user_id', Auth::id())->first();
 
-        if (!ShippingRate::where('country_id', $shipping_address->country_id)->first()) {
+
+        if (Auth::check()) {
+            $shipping_address = ShippingAddress::where('user_id', Auth::id())->first();
+            $shipping_address->state_name = $shipping_address->get_state->name;
+            $shipping_address->country_code = $shipping_address->get_country->sortname;
+        } else {
+            $shipping_address = Session::get('shipping_address');
+        }
+
+        if (!ShippingRate::where('country_id', $shipping_address->country_id)->first() || $shipping_price == 0) {
             return Redirect::back()
                             ->with('error-message', "No shipping available in your country !");
         }
@@ -90,9 +98,9 @@ class PaymentController extends Controller {
         $addr->setLine1($shipping_address->address1);
         $addr->setLine2($shipping_address->address2);
         $addr->setCity($shipping_address->city);
-        $addr->setState($shipping_address->get_state->name);
+        $addr->setState($shipping_address->state_name);
         $addr->setPostalCode($shipping_address->zip);
-        $addr->setCountryCode($shipping_address->get_country->sortname);
+        $addr->setCountryCode($shipping_address->country_code);
         // $addr->setPhone("716-298-1822");
         // ### CreditCard
         $card = Paypalpayment::creditCard();
@@ -101,8 +109,8 @@ class PaymentController extends Controller {
                 ->setExpireMonth($request->get('expiry_month'))
                 ->setExpireYear($request->get('expiry_year'))
                 ->setCvv2($request->get('cardCvv'))
-                ->setFirstName(Auth::user()->first_name)
-                ->setLastName(Auth::user()->last_name);
+                ->setFirstName($shipping_address->first_name)
+                ->setLastName($shipping_address->last_name);
 
         // ### FundingInstrument
         // A resource representing a Payer's funding instrument.
@@ -227,15 +235,17 @@ class PaymentController extends Controller {
                             ->with('error-message', "Something went wrong,Please try again later !");
         }
 
-        if ($transaction_id = $this->savePaymentDetails($payment, $data, $shipping_address)) {
+        if ($transaction_id = $this->savePaymentDetails($payment, $data)) {
             Cart::destroy($cart_ids); ///  empty cart table after payment successfull
             return View::make('carts.success', compact('transaction_id'));
         }
     }
 
-    public function savePaymentDetails($payment, $carts, $shipping_address) {
+    public function savePaymentDetails($payment, $carts) {
+        Session::forget('cartItem');
+        Session::forget('cart_data');
         $order_array = array(
-            'user_id' => Auth::id(),
+            'user_id' => Auth::check() ? Auth::id() : null,
             'transaction_id' => $payment->id,
             'total_price' => $payment->transactions[0]->amount->total,
             'ship_price' => $payment->transactions[0]->amount->details->shipping,
@@ -246,6 +256,32 @@ class PaymentController extends Controller {
             'created_at' => date('Y-m-d H:i:s', strtotime($payment->create_time))
         );
 
+        if (Auth::check()) {
+            $address_field_array = array('first_name', 'last_name', 'address1', 'address2', 'country_id', 'state_id', 'city', 'zip');
+            $shipping_address = ShippingAddress::where('user_id', Auth::id())->first($address_field_array);
+            $shipping_address->state_name = $shipping_address->get_state->name;
+            $shipping_address->country_name = $shipping_address->get_country->name;
+            $shipping_address->country_code = $shipping_address->get_country->sortname;
+            $shipping_address = (object) $shipping_address->toArray();
+            unset($shipping_address->get_state);
+            unset($shipping_address->get_country);
+            $billing_address = BillingAddress::where('user_id', Auth::id())->first($address_field_array);
+            $billing_address->state_name = $billing_address->get_state->name;
+            $billing_address->country_name = $billing_address->get_country->name;
+            $billing_address->country_code = $billing_address->get_country->sortname;
+            $billing_address = (object) $billing_address->toArray();
+            unset($billing_address->get_state);
+            unset($billing_address->get_country);
+            $order_array['email'] = Auth::user()->email;
+        } else {
+            $shipping_address = Session::get('shipping_address');
+            $billing_address = Session::get('billing_address');
+            $order_array['email'] = Session::get('customer_email');
+            Session::forget('shipping_address');
+            Session::forget('billing_address');
+        }
+        $order_array['shipping_address'] = json_encode($shipping_address);
+        $order_array['billing_address'] = json_encode($billing_address);
 
         if ($carts['other_cart_data']['discount_status']) {
             $coupan_codes = CoupanCode::Where(['code' => $carts['other_cart_data']['discount_code']])->first();
@@ -253,12 +289,12 @@ class PaymentController extends Controller {
                 $order_array['discount'] = $carts['other_cart_data']['coupon_discount'];
             }
             $order_array['coupon_type'] = $carts['other_cart_data']['coupon_type'];
-            $check_usage = CoupanUsage::Where([['coupan_id', '=', $coupan_codes->id], ['user_id', '=', Auth::id()]])->first();
+            $check_usage = CoupanUsage::Where([['coupan_id', '=', $coupan_codes->id], ['email', '=', $order_array['email']]])->first();
             if ($check_usage) {
                 CoupanUsage::Where('id', $check_usage->id)->increment('usage');   ///   usage increment
             } else {
                 $discount_array = array(
-                    'user_id' => Auth::id(),
+                    'email' => $order_array['email'],
                     'coupan_id' => $coupan_codes->id,
                     'usage' => 1,
                     'created_at' => Carbon::now(),
@@ -295,15 +331,14 @@ class PaymentController extends Controller {
                 Product::Where('id', $value['product_id'])->decrement('quantity', $value['quantity']);   ///   quantity decrement after successfull purchase
             }
 
-            if ($this->sendInvoice($carts, $shipping_address)) {
+            if ($this->sendInvoice($carts, $shipping_address, $billing_address)) {
                 return $orders->id;
             }
         }
         return true;
     }
 
-    public function sendInvoice($carts, $shipping_address) {
-        $billing_address = BillingAddress::where('user_id', Auth::id())->first();
+    public function sendInvoice($carts, $shipping_address, $billing_address) {
 
 //        $all_store = WarehouseStore::get();
 //        $distance_array = array();
@@ -318,10 +353,14 @@ class PaymentController extends Controller {
 //        }
 
         $data = array(
-            'transaction_id' => $carts['other_cart_data']['transaction_id'],
-            'email' => Auth::user()->email
-//            'email' => $store_email
+            'transaction_id' => $carts['other_cart_data']['transaction_id']
         );
+
+        if (Auth::check()) {
+            $data['email'] = Auth::user()->email;
+        } else {
+            $data['email'] = Session::get('customer_email');
+        }
 
 //        if (!empty($store_email)) {
 //            $transaction_details['store_email'] = true;

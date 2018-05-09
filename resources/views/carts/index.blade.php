@@ -154,7 +154,7 @@
                 </div>
             </div>
             <div class="shipping-section material" elevation="1">
-               @if(Auth::check())
+               @if(!empty($shipping_address))
                     <div class="row">
                         <div class="col-md-4 col-sm-4 col-xs-12">
                             <div class="discount-text-1">Discount/Gift Certificate</div>
@@ -174,50 +174,49 @@
                 @endif    
                 <div class="row">
                     <div class="col-md-4">
-                    @if(!empty($billing_address) && Auth::check())
+                    @if(!empty($billing_address))
                     <div class="row">
                         
                         <div class="col-md-6">
                         <h4>Billing Address: </h4>
-                            <span>{{ Auth::user()->first_name }}</span><span> {{ Auth::user()->last_name }}</span>,
-                            <span>{{ Auth::user()->email }}</span>
+                        <span>{{ ucfirst($billing_address->first_name) }}</span><span> {{ ucfirst($billing_address->last_name) }}</span>,<br>
+                            <!--<span>email</span>-->
                             <span>
-                                <span>{{ $billing_address->address1 }}</span><span> {{ $billing_address->address2 }}</span>
+                                <span>{{ ucfirst($billing_address->address1) }}</span><span> {{ ucfirst($billing_address->address2) }}</span>
                             </span><br>
-                            <span>{{ $billing_address->city }}</span>,<span>{{ $billing_address->get_state->name }}<br>
-                            </span><span> {{ $billing_address->get_country->name }}</span><span> {{ $billing_address->zip }}</span>
+                            <span>{{ ucfirst($billing_address->city) }}</span>,<span>{{ ucfirst($billing_address->state_name) }}<br>
+                            </span><span> {{ ucfirst($billing_address->country_name) }}</span><span> {{ $billing_address->zip }}</span>
 
                         </div>
                     </div>
                     <div class="btn-wrp">
-                    <a href="{{ route('billing') }}" class="btn btn-success" type="submit">Edit Billing Address</a></div>
+                    <a href="{{ route('cart.addresses') }}" class="btn btn-success" type="submit">Edit Billing Address</a></div>
                     @endif
                 </div>
                     <div class="col-md-4">
-                    @if(!empty($shipping_address) && Auth::check())
+                    @if(!empty($shipping_address))
                     <div class="row">
                         
                         <div class="col-md-6">
                         <h4>Shipping To: </h4>
-                            <span>{{ Auth::user()->first_name }}</span><span> {{ Auth::user()->last_name }}</span>,
-                            <span>{{ Auth::user()->email }}</span>
+                            <span>{{ ucfirst($shipping_address->first_name) }}</span><span> {{ ucfirst($shipping_address->last_name) }}</span>,<br>
                             <span>
-                                <span>{{ $shipping_address->address1 }}</span><span> {{ $shipping_address->address2 }}</span>
+                                <span>{{ ucfirst($shipping_address->address1) }}</span><span> {{ ucfirst($shipping_address->address2) }}</span>
                             </span><br>
-                            <span>{{ $shipping_address->city }}</span>,<span>{{ $shipping_address->get_state->name }}<br>
-                            </span><span> {{ $shipping_address->get_country->name }}</span><span> {{ $shipping_address->zip }}</span>
+                            <span>{{ ucfirst($shipping_address->city) }}</span>,<span>{{ ucfirst($shipping_address->state_name) }}<br>
+                            </span><span> {{ ucfirst($shipping_address->country_name) }}</span><span> {{ $shipping_address->zip }}</span>
 
                         </div>
                     </div>
                     <div class="btn-wrp">
-                    <a href="{{ route('shipping') }}" class="btn btn-success" type="submit">Edit Shipping Address</a></div>
+                    <a href="{{ route('cart.addresses') }}" class="btn btn-success" type="submit">Edit Shipping Address</a></div>
                     @endif
                 </div>
               
                     <div class="col-md-4 col-xs-12 pull-right">
                     <h4>Order Total: </h4>
                     <div class="delivery-wrp">
-                        @if(Auth::check() && !empty($shipping_methods->toArray()))
+                        @if(!empty($shipping_address) && !empty($shipping_methods->toArray()))
                         <select id="changeShippingMethod" name="shipping_method" class="form-control">
                                 <option value="">Select Shipping Method</option>
                                 @foreach($shipping_methods as $val)
@@ -310,17 +309,17 @@
                         </div>
                     </div>
                     <div class="btn-deliver">
-                        @if(Auth::check() && !empty($shipping_address))
+                        @if(!empty($shipping_address))
                         <a class="btn btn-success btn-block" id="checkout_btn">Checkout</a>
-                        @elseif(Auth::check() && empty($shipping_address))
-                        <a class="btn btn-success btn-block" href="{{ URL('/my-account')}}" type="button">Checkout</a>
+                        @elseif(!Auth::check())
+                        <a class="btn btn-success btn-block" ng-click="login()">Checkout</a>
+                        <a class="btn btn-success btn-block" href="{{ route('cart.addresses')}}">Guest Checkout</a>
                         @else
-                        <button class="btn btn-success btn-block" ng-click="login()" type="button">Checkout</button>
+                        <a class="btn btn-success btn-block" href="{{ route('cart.addresses')}}">Checkout</a>
                         @endif
                     </div>
                 </div>
                 </div>
-                @if(Auth::check())
                 <div class="row" id="account_cart_area" style="display:none;">
                      <div class="col-md-6"></div>
                      <div class="col-md-6">
@@ -328,13 +327,16 @@
                             <div class="form-group form-group-sm">
                                 <label class="col-sm-4 control-label" for="cardholderName">Name Of Card Holder: *</label>
                                 <div class="col-sm-8">
-                                    <input class="form-control" id="cardholderName" name="cardholderName" required="" value="{{ Auth::user()->first_name.' '.Auth::user()->last_name }}" type="text">
+                                    <input class="form-control" id="cardholderName" name="cardholderName" required="" value="" type="text">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-4 control-label" for="card-number">Card Number: *</label>
                                 <div class="col-sm-8">
-                                     <input class="form-control" id="card-number" maxlength="16" name="cardNumber" required="" type="tel">
+                                    <input class="form-control" id="card-number" maxlength="16" name="cardNumber" required="" type="tel">
+                                    <span id="card_error" class="help-block" style="display:none;">
+                                        <strong style="color:#a94442;">Invalid card number,Please enter valid card number.</strong>
+                                    </span>
                                 </div>
                             </div>
                             <div class="form-group form-group-sm">
@@ -384,7 +386,6 @@
                             </button>
                      </div>
                 </div>
-                @endif
             </div>
         </form>
         @else
@@ -445,9 +446,15 @@
               angular.element(this).scope().get_payment_form(ship_method);
        });
        
-       $("#paymentSubmit").click(function(){
+       $(document).on('click', '#paymentSubmit', function (e) {
         var $myForm = $('#paymentForm');
            if($myForm[0].checkValidity()) {
+                $("#card_error").hide();
+                var luhn_check = valid_credit_card($("#card-number").val());
+                if(!luhn_check){
+                    $("#card_error").show();
+                    return false;
+                }
                 $(this).prop('disabled', true);
                 var scope = angular.element($("#loaderOverlay")).scope();
                 scope.loading = true;
@@ -455,6 +462,25 @@
                 document.getElementById("paymentForm").submit(); 
             }
        });
+       // takes the form field value and returns true on valid number
+        function valid_credit_card(value) {
+           // accept only digits, dashes or spaces
+           if (/[^0-9-\s]+/.test(value)) return false;
+           // The Luhn Algorithm. It's so pretty.
+           var nCheck = 0, nDigit = 0, bEven = false;
+            value = value.replace(/\D/g, "");
+           for (var n = value.length - 1; n >= 0; n--) {
+                var cDigit = value.charAt(n),
+                nDigit = parseInt(cDigit, 10);
+                if (bEven) {
+                    if ((nDigit *= 2) > 9) nDigit -= 9;
+                }
+                nCheck += nDigit;
+                bEven = !bEven;
+            }
+            return (nCheck % 10) == 0;
+        }
+       
     });
 </script>
 @endpush

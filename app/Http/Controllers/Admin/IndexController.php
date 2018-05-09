@@ -22,7 +22,17 @@ class IndexController extends Controller {
         $data['users'] = User::whereNull('role_id')->count();
         $data['orders'] = Order::count();
         $data['products'] = Product::count();
-        return View::make('admin.index',$data);
+        return View::make('admin.index', $data);
+    }
+
+    public function createApiToken() {
+        $user = auth()->user();
+        $data['token'] = $user->createToken('client_token')->accessToken;
+        $data['title'] = 'AutoLightHouse | Dashboard';
+        $data['users'] = User::whereNull('role_id')->count();
+        $data['orders'] = Order::count();
+        $data['products'] = Product::count();
+        return View::make('admin.index', $data);
     }
 
     /**

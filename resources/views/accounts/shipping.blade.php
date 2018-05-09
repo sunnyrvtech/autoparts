@@ -19,13 +19,13 @@
                                 <div class="form-group">
                                     <label class="col-sm-3 col-md-3 control-label" for="first_name">First Name:</label>
                                     <div class="col-sm-9 col-md-9">
-                                        <input type="text" class="form-control" readonly="" value="{{ Auth::user()->first_name }}" placeholder="First Name">
+                                        <input type="text" class="form-control" ng-required="true" ng-model="shipping.first_name" ng-init="shipping.first_name='{{ @$shipping_address->first_name }}'" placeholder="First Name">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-3 col-md-3 control-label" for="last_name">Last Name:</label>
                                     <div class="col-sm-9 col-md-9">
-                                        <input type="text" class="form-control" readonly="" value="{{ Auth::user()->last_name }}" placeholder="Last Name">
+                                        <input type="text" class="form-control" ng-required="true" ng-model="shipping.last_name" ng-init="shipping.last_name='{{ @$shipping_address->last_name }}'" placeholder="Last Name">
                                     </div>
                                 </div>
                                 <div class="form-group" ng-class="{ 'has-error' : shippingForm.address1.$invalid && !shippingForm.address1.$pristine }">

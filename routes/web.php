@@ -12,6 +12,7 @@
  */
 
 Route::get('/', 'HomeController@index');
+Route::get('/home', 'HomeController@index');
 Route::post('/localZone','HomeController@getlocalRegion');
 Route::group(['prefix' => 'admin', 'middleware' => 'IsAdmin'], function () {
     Route::get('/', 'Admin\IndexController@index');
@@ -41,6 +42,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'IsAdmin'], function () {
     Route::post('export/csv', 'Admin\ImportController@exportCsv')->name('export.csv');
     Route::post('import/category', 'Admin\ImportController@createCategoryByCsv')->name('import.category');
     Route::post('import/delete_product', 'Admin\ImportController@deleteProductData')->name('import.delete_product');
+    Route::get('api/token', 'Admin\IndexController@createApiToken')->name('api.token');
 });
 Route::get('login', 'Auth\LoginController@index');
 Route::get('password/email', 'Auth\ForgotPasswordController@index');
@@ -60,7 +62,7 @@ Route::resource('checkout','PaymentController');
 Route::post('cart/add', 'ProductController@addCart')->middleware('web');
 Route::post('cart/update', 'ProductController@updateCart')->middleware('web');
 Route::post('cart/delete', 'ProductController@deleteCart');
-Route::get('cart', 'ProductController@Cart');
+Route::get('cart', 'ProductController@Cart')->name('cart');
 Route::get('track_order', 'OrderController@index');
 Route::post('track_order', 'OrderController@postTrackOrder')->name('track_order');
 Route::get('my-account', 'AccountController@index')->name('my-account');
@@ -73,7 +75,7 @@ Route::get('my-account/billing', 'AccountController@getBilling')->name('billing'
 Route::post('my-account/billing', 'AccountController@updateBilling');
 Route::get('my-account/change-password', 'AccountController@getPassword')->name('change-password');
 Route::post('my-account/change-password', 'AccountController@changePassword');
-Route::post('my-account/getState', 'AccountController@getStateByCountryId');
+Route::post('my-account/getState', 'AccountController@getStateByCountryId')->name('get_state');
 Route::post('my-account/getCity', 'AccountController@getCityByStateId');
 Route::get('account/activate/{code}', array(
     'as' => 'account.activate',
@@ -85,7 +87,13 @@ Route::get('/return', 'HomeController@getReturnPolicy');
 Route::get('/faq', 'HomeController@getFaq');
 Route::get('/contact-us', 'HomeController@getContactUs');
 Route::post('/contact-us', 'HomeController@postContactUs');
-Route::get('/{slug}', 'SubCategoryController@getProductByCategorySlug');
+Route::get('/{slug}', 'SubCategoryController@getListByCategorySlug');
+Route::get('/{category}/{vehicle}', 'SubCategoryController@getListByCategoryVehicleSlug');
+Route::get('/{vehicle}/{model}/{category}', 'SubCategoryController@getProductByCategoryVehicleModelSlug');
+Route::get('/{year}/{vehicle}/{model}/{category}', 'SubCategoryController@getProductByYearCategoryVehicleModelSlug');
+Route::get('cart/addresses', 'ProductController@getAddresses')->name('cart.addresses');
+Route::post('cart/addresses', 'ProductController@postCartAddresses')->name('cart.addresses');
+
 //Route::get('/{company}/{slug}', 'SubSubCategoryController@getSubSubSubcategory');
 
 // Auth::routes();

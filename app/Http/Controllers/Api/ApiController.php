@@ -13,8 +13,8 @@ use App\VehicleModel;
 use App\VehicleCompany;
 use App\Category;
 use App\SubCategory;
-use App\ProductCategory;
-use App\ProductSubCategory;
+//use App\ProductCategory;
+//use App\ProductSubCategory;
 use Carbon\Carbon;
 use Excel;
 use DB;
@@ -67,6 +67,10 @@ class ApiController extends Controller {
         $order_array = array();
         if (!empty($orders->toArray())) {
             foreach ($orders as $key => $value) {
+                $shipping_address = json_decode($value->shipping_address);
+                $billing_address = json_decode($value->billing_address);
+
+
                 $item_array = array();
                 foreach ($value->getOrderDetailById as $k => $val) {
                     $item_array[$k]['item_id'] = $val->id;
@@ -89,25 +93,25 @@ class ApiController extends Controller {
                 $order_array['orders'][$key] = array(
                     'order_id' => $value->id,
                     'order_date' => date('Y-m-d', strtotime($value->created_at)),
-                    'customer_name' => $value->getCustomer->first_name . ' ' . $value->getCustomer->last_name,
-                    'customer_email' => $value->getCustomer->email,
+                    'customer_name' => $shipping_address->first_name . ' ' . $shipping_address->last_name,
+                    'customer_email' => $value->email,
                     'ship_price' => $value->ship_price != null ? $value->ship_price : '',
                     'tax' => $value->tax_rate != null ? $value->tax_rate : '',
                     'total_price' => $value->total_price,
                     'shipping_method' => $value->shipping_method,
                     'payment_method' => $value->payment_method,
-                    'billing_address1' => $value->getCustomer->getBillingDetails->address1,
-                    'billing_address2' => $value->getCustomer->getBillingDetails->address2,
-                    'billing_city' => $value->getCustomer->getBillingDetails->city,
-                    'billing_state' => $value->getCustomer->getBillingDetails->get_state->name,
-                    'billing_zip' => $value->getCustomer->getBillingDetails->zip,
-                    'billing_country' => $value->getCustomer->getBillingDetails->get_country->name,
-                    'shipping_address1' => $value->getCustomer->getShippingDetails->address1,
-                    'shipping_address2' => $value->getCustomer->getShippingDetails->address2,
-                    'shipping_city' => $value->getCustomer->getShippingDetails->city,
-                    'shipping_state' => $value->getCustomer->getShippingDetails->get_state->name,
-                    'shipping_zip' => $value->getCustomer->getShippingDetails->zip,
-                    'shipping_country' => $value->getCustomer->getShippingDetails->get_country->name,
+                    'billing_address1' => $billing_address->address1,
+                    'billing_address2' => $billing_address->address2,
+                    'billing_city' => $billing_address->city,
+                    'billing_state' => $billing_address->state_name,
+                    'billing_zip' => $billing_address->zip,
+                    'billing_country' => $billing_address->country_name,
+                    'shipping_address1' => $shipping_address->address1,
+                    'shipping_address2' => $shipping_address->address2,
+                    'shipping_city' => $shipping_address->city,
+                    'shipping_state' => $shipping_address->state_name,
+                    'shipping_zip' => $shipping_address->zip,
+                    'shipping_country' => $shipping_address->country_name,
                     'status' => $value->order_status,
                     'items' => $item_array,
                 );
@@ -140,19 +144,19 @@ class ApiController extends Controller {
                         'ship_date' => $val['ship_date'] != null ? $val['ship_date'] : null,
                         'notes' => $val['notes'] != null ? $val['notes'] : null,
                     );
-                    
-                    if($val['track_url'] != null){
+
+                    if ($val['track_url'] != null) {
                         $update_array['track_url'] = $val['track_url'];
                     }
-                    
+
                     if ($order_details = OrderDetail::find($val['item_id'])) {
                         if ($order_details->track_id != $val['track_number'] && $val['ship_carrier'] != null)
                             $update_array['item_status'] = 'shipped';
-                        if($page_data['status'] == 'completed')
+                        if ($page_data['status'] == 'completed')
                             $update_array['item_status'] = 'completed';
 
 
-                        if (($order_details->item_status != 'shipped' && (isset($update_array['item_status']) && $update_array['item_status']== 'shipped')) || ($order_details->item_status != 'completed' && $page_data['status'] == 'completed')) {
+                        if (($order_details->item_status != 'shipped' && (isset($update_array['item_status']) && $update_array['item_status'] == 'shipped')) || ($order_details->item_status != 'completed' && $page_data['status'] == 'completed')) {
                             $this->saveOrderInvoice($order, $order_details, $update_array['item_status']);
                         }
 
@@ -172,7 +176,7 @@ class ApiController extends Controller {
         }
     }
 
-    public function saveOrderInvoice($order, $item_data,$item_status) {
+    public function saveOrderInvoice($order, $item_data, $item_status) {
         if ($item_status == 'completed') {
             $order_time = date('M d,Y H:i:s A', strtotime($order->updated_at));
         } else {
@@ -180,32 +184,17 @@ class ApiController extends Controller {
         }
 
         $data = array(
-            'user_name' => $order->getCustomer->first_name . ' ' . $order->getCustomer->last_name,
-            'email' => $order->getCustomer->email,
+            'email' => $order->email,
             'order' => array(
                 'id' => $order->id,
                 'order_time' => $order_time,
                 'order_status' => $item_status,
                 'shipping_method' => $order->shipping_method,
-                'payment_method' => $order->payment_method
+                'payment_method' => $order->payment_method,
+                'shipping_address' => json_decode($order->shipping_address),
+                'billing_address' => json_decode($order->billing_address)
             ),
-            'item_data' => $item_data,
-            'shipping_address' => array(
-                'address1' => $order->getCustomer->getShippingDetails->address1,
-                'address2' => $order->getCustomer->getShippingDetails->address2,
-                'city' => $order->getCustomer->getShippingDetails->city,
-                'state' => $order->getCustomer->getShippingDetails->get_state->name,
-                'country' => $order->getCustomer->getShippingDetails->get_country->name,
-                'zip' => $order->getCustomer->getShippingDetails->zip
-            ),
-            'billing_address' => array(
-                'address1' => $order->getCustomer->getBillingDetails->address1,
-                'address2' => $order->getCustomer->getBillingDetails->address2,
-                'city' => $order->getCustomer->getBillingDetails->city,
-                'state' => $order->getCustomer->getBillingDetails->get_state->name,
-                'country' => $order->getCustomer->getBillingDetails->get_country->name,
-                'zip' => $order->getCustomer->getBillingDetails->zip
-            )
+            'item_data' => $item_data
         );
 
         DB::table('order_emails')->insert(['order_data' => json_encode($data)]);
@@ -282,8 +271,8 @@ class ApiController extends Controller {
                     'part_type' => $value->part_type,
                     'parse_link' => @$value->product_details->parse_link,
                     'oem_number' => @$value->product_details->oem_number,
-                    'category' => @$value->product_category->category->name,
-                    'sub_category' => @$value->product_sub_category->get_sub_categories->name,
+                    'category' => @$value->get_category->name,
+                    'sub_category' => @$value->get_sub_category->name,
                     'certification' => @$value->product_details->certification,
                     'price' => $value->price,
                     'special_price' => !empty(@$value->special_price) ? @$value->special_price : '',
@@ -359,15 +348,20 @@ class ApiController extends Controller {
                 $slug = $this->createSlug(trim($row['sub_category']), 'category');
                 $sub_category = SubCategory::create(array('category_id' => $category->id, 'name' => trim($row['sub_category']), 'slug' => $slug, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
             }
+            $product_array['category_id'] = $category->id;
+            $product_array['sub_category_id'] = $sub_category->sub_category_id;
+
             if (isset($row['vehicle_make'])) {
                 if (!$vehicle_company = VehicleCompany::where('name', 'like', trim(ucfirst(strtolower($row['vehicle_make']))))->first(array('id'))) {
-                    $vehicle_company = VehicleCompany::create(array('name' => trim(ucfirst(strtolower($row['vehicle_make']))), 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
+                    $make_slug = $this->createSlug(trim($row['vehicle_make']), 'vehicle_make');
+                    $vehicle_company = VehicleCompany::create(array('name' => trim(ucfirst(strtolower($row['vehicle_make']))), 'slug' => $make_slug, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
                 }
                 $product_array['vehicle_make_id'] = $vehicle_company->id;
             }
             if (isset($row['vehicle_model'])) {
                 if (!$vehicle_model = VehicleModel::where('name', 'like', trim(ucfirst(strtolower($row['vehicle_model']))))->first(array('id'))) {
-                    $vehicle_model = VehicleModel::create(array('name' => trim(ucfirst(strtolower($row['vehicle_model']))), 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
+                    $model_slug = $this->createSlug(trim($row['vehicle_model']), 'vehicle_model');
+                    $vehicle_model = VehicleModel::create(array('name' => trim(ucfirst(strtolower($row['vehicle_model']))), 'slug' => $model_slug, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
                 }
                 $product_array['vehicle_model_id'] = $vehicle_model->id;
             }
@@ -403,8 +397,8 @@ class ApiController extends Controller {
                     }
                     $product_detail_array['product_id'] = $product->id;
                     ProductDetail::create($product_detail_array);
-                    ProductCategory::create(array('product_id' => $product->id, 'category_id' => $category->id));
-                    ProductSubCategory::create(array('product_id' => $product->id, 'sub_category_id' => $sub_category->id));
+                    //ProductCategory::create(array('product_id' => $product->id, 'category_id' => $category->id));
+                    //ProductSubCategory::create(array('product_id' => $product->id, 'sub_category_id' => $sub_category->id));
                 }
             } else {
                 return response()->json(['status' => "error", "message" => "Product already exist related to this sku " . $row['sku']]);
@@ -427,27 +421,15 @@ class ApiController extends Controller {
                 if (isset($row['category'])) {
                     if (!$category = Category::where('name', 'like', trim($row['category']))->first(array('id'))) {
                         return response()->json(['status' => "error", 'message' => $row['category'] . ' category not found !']);
-                    } else {
-
-                        if ($product_category = ProductCategory::where('product_id', $products->id)->first()) {
-                            $product_category->fill(array('category_id' => $category->id))->save();
-                        } else {
-                            ProductCategory::create(array('product_id' => $products->id, 'category_id' => $category->id));
-                        }
                     }
+                    $product_array['category_id'] = $category->id;
                 }
 
                 if (isset($row['category']) && $row['sub_category']) {
                     if (!$sub_category = SubCategory::where('category_id', $category->id)->where('name', 'like', trim($row['sub_category']))->first(array('id', 'category_id'))) {
                         return response()->json(['status' => "error", 'message' => $row['sub_category'] . ' sub category not found !']);
-                    } else {
-
-                        if ($product_sub_category = ProductSubCategory::where('product_id', $products->id)->first()) {
-                            $product_sub_category->fill(array('sub_category' => $sub_category->id))->save();
-                        } else {
-                            ProductSubCategory::create(array('product_id' => $products->id, 'sub_category_id' => $sub_category->id));
-                        }
                     }
+                    $product_array['sub_category_id'] = $sub_category->sub_category_id;
                 }
                 if (isset($row['vehicle_make'])) {
                     if (!$vehicle_company = VehicleCompany::where('name', 'like', trim(ucfirst(strtolower($row['vehicle_make']))))->first(array('id'))) {
@@ -468,7 +450,7 @@ class ApiController extends Controller {
                     }
                     $product_array['brand_id'] = $brand->id;
                 }
-                
+
                 if (isset($row['product_name'])) {
                     $product_array['product_slug'] = $this->createSlug(trim($row['product_name']), 'product');
                 }
@@ -683,6 +665,12 @@ class ApiController extends Controller {
     protected function getRelatedSlugs($slug, $table) {
         if ($table == 'category') {
             return SubCategory::select('slug')->where('slug', 'like', $slug . '%')
+                            ->get();
+        } elseif ($table == 'vehicle_make') {
+            return VehicleCompany::select('slug')->where('slug', 'like', $slug . '%')
+                            ->get();
+        } elseif ($table == 'vehicle_model') {
+            return VehicleModel::select('slug')->where('slug', 'like', $slug . '%')
                             ->get();
         } else {
             return Product::select('product_slug')->where('product_slug', 'like', $slug . '%')

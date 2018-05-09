@@ -13,8 +13,8 @@ use Redirect;
 use Yajra\Datatables\Facades\Datatables;
 use DB;
 
-class ShippingRateController extends Controller
-{
+class ShippingRateController extends Controller {
+
     /**
      * Display a listing of the resource.
      *
@@ -42,7 +42,7 @@ class ShippingRateController extends Controller
     public function create() {
         $title = 'Shipping Rate | create';
         $countries = Country::get(array('name', 'id'));
-        return View::make('admin.ship_rates.add', compact('title','countries'));
+        return View::make('admin.ship_rates.add', compact('title', 'countries'));
     }
 
     /**
@@ -54,11 +54,30 @@ class ShippingRateController extends Controller
         $data = $request->all();
         $this->validate($request, [
             'country_id' => 'required',
-            'low_weight' => 'required|numeric',
-            'high_weight' => 'required|numeric',
+//            'low_weight' => 'required|numeric',
+//            'high_weight' => 'required|numeric',
             'price' => 'required',
-            
         ]);
+
+        $shipping_rates = ShippingRate::Where('country_id', $data['country_id'])->first();
+
+        if ($shipping_rates) {
+            if ($shipping_rates->ship_type != $data['ship_type']) {
+                return Redirect::back()
+                                ->with('error-message', 'Sorry !  The other ship type is already exist for this country.');
+            }
+        }
+
+        if ($request->get('zip_code') != null && $request->get('ship_type') == 'zip_biased') {
+            $data['zip_code'] = json_encode(explode(',', $data['zip_code']));
+        } else {
+            $data['zip_code'] = null;
+        }
+
+        if ($request->get('low_weight') == null && $request->get('high_weight') == null) {
+            $data['low_weight'] = null;
+            $data['high_weight'] = null;
+        }
 
         ShippingRate::create($data);
         return redirect()->route('shipping_rates.index')->with('success-message', 'Added successfully!');
@@ -73,7 +92,7 @@ class ShippingRateController extends Controller
         $title = 'Shipping Rate';
         $countries = Country::get(array('name', 'id'));
         $shipping_rates = ShippingRate::where('id', $id)->first();
-        return View::make('admin.ship_rates.edit', compact('title', 'shipping_rates','countries'));
+        return View::make('admin.ship_rates.edit', compact('title', 'shipping_rates', 'countries'));
     }
 
 //    /**
@@ -84,15 +103,26 @@ class ShippingRateController extends Controller
 //     */
     public function update(Request $request, $id) {
         $data = $request->all();
-         $this->validate($request, [
+        $this->validate($request, [
             'country_id' => 'required',
-            'low_weight' => 'required|numeric',
-            'high_weight' => 'required|numeric',
+//            'low_weight' => 'required|numeric',
+//            'high_weight' => 'required|numeric',
             'price' => 'required',
-            
         ]);
 
         $shipping_rates = ShippingRate::find($id);
+
+        if ($request->get('zip_code') != null) {
+            $data['zip_code'] = json_encode(explode(',', $data['zip_code']));
+        } else {
+            $data['zip_code'] = null;
+        }
+
+        if ($request->get('low_weight') == null && $request->get('high_weight') == null) {
+            $data['low_weight'] = null;
+            $data['high_weight'] = null;
+        }
+
 
         if (!$shipping_rates) {
             return Redirect::back()

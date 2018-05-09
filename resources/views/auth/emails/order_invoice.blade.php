@@ -491,10 +491,10 @@
                                                                                             <td align="left" class="textContent">
                                                                                                 <h3 style="line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:left;">Billing Address</h3>
                                                                                                 <div style="text-align:left;font-family:Helvetica,Arial,sans-serif;font-size:15px;margin-bottom:0;line-height:135%;">
-                                                                                                    <span>{{ Auth::user()->first_name.' '.Auth::user()->last_name }}</span><br/>
+                                                                                                    <span>{{ $billing_address->first_name.' '.$billing_address->last_name }}</span><br/>
                                                                                                     <span>{{ $billing_address->address1 }}</span><br/>
                                                                                                     <span>{{ $billing_address->address2 }}</span><br/>
-                                                                                                    <span>{{ $billing_address->city.','.$billing_address->get_state->name.','.$billing_address->zip.' '.$billing_address->get_country->name }}</span>
+                                                                                                    <span>{{ $billing_address->city.','.$billing_address->state_name.','.$billing_address->zip.' '.$billing_address->country_name }}</span>
                                                                                                 </div>
                                                                                             </td>
                                                                                         </tr>
@@ -506,10 +506,10 @@
                                                                                             <td align="left" class="textContent">
                                                                                                 <h3 style="line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:left;">Shipping Address</h3>
                                                                                                 <div style="text-align:left;font-family:Helvetica,Arial,sans-serif;font-size:15px;margin-bottom:0;line-height:135%;">
-                                                                                                    <span>{{ Auth::user()->first_name.' '.Auth::user()->last_name }}</span><br/>
+                                                                                                    <span>{{ $shipping_address->first_name.' '.$shipping_address->last_name }}</span><br/>
                                                                                                     <span>{{ $shipping_address->address1 }}</span><br/>
                                                                                                     <span>{{ $shipping_address->address2 }}</span><br/>
-                                                                                                    <span>{{ $shipping_address->city.','.$shipping_address->get_state->name.','.$shipping_address->zip.' '.$shipping_address->get_country->name }}</span>
+                                                                                                    <span>{{ $shipping_address->city.','.$shipping_address->state_name.','.$shipping_address->zip.' '.$shipping_address->country_name }}</span>
                                                                                                 </div>
                                                                                             </td>
                                                                                         </tr>

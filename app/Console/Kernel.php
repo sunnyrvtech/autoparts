@@ -27,14 +27,17 @@ class Kernel extends ConsoleKernel {
      */
     protected function schedule(Schedule $schedule) {
         $schedule->call(function () {
-           // Log::error("Cron running " . date('H:i:s'));
+            // Log::error("Cron running " . date('H:i:s'));
             $order_data = DB::table('order_emails')->get();
             if ($order_data->toArray()) {
                 foreach ($order_data as $value) {
                     $data = (array) json_decode($value->order_data);
                     Mail::send('auth.emails.status_invoice', $data, function($message) use ($data) {
                         $message->from('jerhica.pe@gmail.com', " Welcome To Autolighthouse");
-                        $message->to($data['email'])->subject('Autolighthouse Store:New Order #' . $data['order']->id);
+                        if ($data['order']->order_status == 'shipped')
+                            $message->to($data['email'])->subject('Autolighthouse Store:Order shipped #' . $data['order']->id);
+                        else
+                            $message->to($data['email'])->subject('Autolighthouse Store:Order completed #' . $data['order']->id);
                     });
                     DB::table('order_emails')->where('id', '=', $value->id)->delete();
                 }

@@ -121,6 +121,9 @@
                                 </li>
                             </ul>
                         </li>
+<!--                        <li class="@if(Request::segment(2) == 'api')active @endif">
+                            <a href="{{ route('api.token')}}"><i class=""></i>API Token</a>
+                        </li>-->
 <!--                        <li class="@if(Request::segment(2) == 'warehouses')active @endif">
                             <a href=""><i class="fa fa-fw fa-shopping-cart"></i> Warehouse Store</a>
                         </li>-->
@@ -202,7 +205,7 @@
                                 }
                                 $("body").tooltip({selector: '[data-toggle=tooltip]', trigger: 'hover'});
                                 //initialize ckeditor        
-                                $('textarea').ckeditor({
+                                $('.textarea').ckeditor({
                                     enterMode: CKEDITOR.ENTER_DIV,
                                     allowedContent: true
                                 });

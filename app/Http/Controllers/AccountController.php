@@ -98,6 +98,8 @@ class AccountController extends Controller {
         }
 
         $validator = Validator::make($data, [
+                    'first_name' => 'required|max:150',
+                    'last_name' => 'required|max:150',
                     'address1' => 'required|max:150',
                     'country_id' => 'required',
                     'state_id' => 'required',
@@ -161,6 +163,8 @@ class AccountController extends Controller {
             $intented = '';
         }
         $validator = Validator::make($data, [
+                    'first_name' => 'required|max:150',
+                    'last_name' => 'required|max:150',
                     'address1' => 'required|max:150',
                     'country_id' => 'required',
                     'state_id' => 'required',

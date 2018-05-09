@@ -8,6 +8,8 @@ use App\Product;
 use App\VehicleCompany;
 use App\VehicleModel;
 use App\Cart;
+use App\Country;
+use App\State;
 use App\ShippingMethod;
 use App\ShippingRate;
 use App\SubCategory;
@@ -16,7 +18,7 @@ use App\CoupanUsage;
 use App\TaxRate;
 use App\ShippingAddress;
 use App\BillingAddress;
-use App\ProductSubCategory;
+//use App\ProductSubCategory;
 use Session;
 use Auth;
 use Carbon\Carbon;
@@ -53,32 +55,46 @@ class ProductController extends Controller {
      */
     public function Cart(Request $request) {
         $offer_code = $request->get('offer_code');
+        $tax_price = '';
+        $shipping_address = null;
+        $billing_address = null;
         if (Auth::check()) {
             $carts = Cart::where('user_id', Auth::id())->get(array('id', 'product_id', 'quantity', 'total_price'));
             $shipping_address = ShippingAddress::where('user_id', Auth::id())->first();
             $billing_address = BillingAddress::where('user_id', Auth::id())->first();
-
-            //get tax price
-            $regrex = '"([^"]*)' . $shipping_address->state_id . '([^"]*)"';
-            $tax_price = TaxRate::Where('country_id', $shipping_address->country_id)->whereRaw("state_id REGEXP '" . $regrex . "'")->first(array('price'));
+            if (!$shipping_address = ShippingAddress::where('user_id', Auth::id())->first()) {
+                if (Session::has('shipping_address'))
+                    $shipping_address = Session::get('shipping_address');
+            }else {
+                //get tax price
+                $regrex = '"([^"]*)' . $shipping_address->state_id . '([^"]*)"';
+                $tax_price = TaxRate::Where('country_id', $shipping_address->country_id)->whereRaw("state_id REGEXP '" . $regrex . "'")->first(array('price'));
+            }
+            if (!$billing_address = BillingAddress::where('user_id', Auth::id())->first()) {
+                if (Session::has('billing_address'))
+                    $billing_address = Session::get('billing_address');
+            }
 
             if (empty($carts->toArray())) {
                 $carts = array();
             }
+            $customer_email = Auth::user()->email;
         } else {
             if (Session::has('cartItem')) {
                 $carts = json_decode(json_encode(Session::get('cartItem')));  // here json_encode and decode is used to covert simple array to object array
             } else {
                 $carts = array();
             }
-            $shipping_address = '';
-            $billing_address = '';
-            $tax_price = '';
+            if (Session::has('billing_address'))
+                $shipping_address = Session::get('billing_address');
+            if (Session::has('shipping_address'))
+                $billing_address = Session::get('shipping_address');
+            $customer_email = Session::get('customer_email');
         }
 
         $total_price_cart = 0;
         $total_weight = 0;
-       // $discount = 0;
+        // $discount = 0;
         if (!empty($carts)) {
             $cart_data = array();
             $sku_array = array();
@@ -113,23 +129,23 @@ class ProductController extends Controller {
         } else {
             $cart_data = array();
         }
-        
-        
-         $coupon_discount = null;
-         $discount_status = false;
+
+
+        $coupon_discount = null;
+        $discount_status = false;
         // this code is used to verify coupan code and allow discount 
         if ($offer_code != null) {
             $coupan_code = CoupanCode::Where(['code' => $offer_code, 'status' => 1])->first();
             // this is used to check if the request is ajax json
             if ($request->wantsJson()) {
                 if ($coupan_code) {
-                    $check_usage = CoupanUsage::Where([['coupan_id', '=', $coupan_code->id], ['user_id', '=', Auth::id()], ['usage', '>=', $coupan_code->usage]])->first();
+                    $check_usage = CoupanUsage::Where([['coupan_id', '=', $coupan_code->id], ['email', '=', $customer_email], ['usage', '>=', $coupan_code->usage]])->first();
                     $current_date = strtotime(Carbon::now());
                     if (strtotime($coupan_code->expiration_date) < $current_date) {
                         return response()->json(array('error' => 'Sorry,this coupan code has been expired!'), 401);
                     } else if ($check_usage) {
                         return response()->json(array('error' => 'Sorry,You have exceed the coupan code usage limit!'), 401);
-                    }else if ($coupan_code->coupon_type == 'per_product' && ($coupan_code->product_sku == null || empty(array_intersect($sku_array,json_decode($coupan_code->product_sku))))) {
+                    } else if ($coupan_code->coupon_type == 'per_product' && ($coupan_code->product_sku == null || empty(array_intersect($sku_array, json_decode($coupan_code->product_sku))))) {
                         return response()->json(array('error' => 'Sorry discount not available for these products!'), 401);
                     }
                     $discount_status = true;
@@ -137,8 +153,8 @@ class ProductController extends Controller {
                 } else {
                     return response()->json(array('error' => 'Sorry,please check your coupan code or try again later!'), 401);
                 }
-            } 
-        } 
+            }
+        }
 
         if ($request->get('shipping_method') == '') {
             $method_name = "Free shipping";
@@ -148,21 +164,31 @@ class ProductController extends Controller {
         // calculate total price based on shipping method and rates
         $shipping_methods = ShippingMethod::where('status', 1)->get();
         $shipping_price = 0;
-        if (!empty($shipping_methods->toArray()) && $shipping_address != '' && $method_name != 'Free shipping') {
+        if (!empty($shipping_methods->toArray()) && $shipping_address != null && $method_name != 'Free shipping') {
 
-            $shipping_rates = ShippingRate::where('country_id', $shipping_address->country_id)->where(function ($query) use ($total_weight) {
-                        $query->where('low_weight', '>=', $total_weight)
-                                ->where('low_weight', '<=', $total_weight)
-                                ->orwhere('high_weight', '>=', $total_weight)
-                                ->where('high_weight', '<=', $total_weight);
-                    })->first(array('price'));
-            if ($shipping_rates != '') {
-                $shipping_price = $shipping_rates->price;
-            } else {
-                $shipping_price = ShippingRate::where('country_id', $shipping_address->country_id)->max('price');
-                if (!$shipping_price)
-                    $shipping_price = 0;
+            $rates = ShippingRate::where('country_id', $shipping_address->country_id)->first();
+            if (!$rates) {
+                return response()->json(array('error' => 'No shipping available in your country !'), 401);
             }
+
+            if ($rates->ship_type == 'zip_biased') {
+                $ship_regrex = '"([^"]*)' . $shipping_address->zip . '([^"]*)"';
+                $shipping_rates = ShippingRate::whereRaw("zip_code REGEXP '" . $ship_regrex . "'")->first(array('price'));
+                if ($shipping_rates != '')
+                    $shipping_price = $shipping_rates->price;
+            } else {
+                $shipping_rates = ShippingRate::where('country_id', $shipping_address->country_id)->where(function ($query) use ($total_weight) {
+                            $query->where('low_weight', '>=', $total_weight)
+                                    ->where('low_weight', '<=', $total_weight)
+                                    ->orwhere('high_weight', '>=', $total_weight)
+                                    ->where('high_weight', '<=', $total_weight);
+                        })->first(array('price'));
+
+                if ($shipping_rates == '')
+                    $shipping_price = ShippingRate::where('country_id', $shipping_address->country_id)->max('price');
+            }
+            if (!$shipping_price)
+                return response()->json(array('error' => 'No shipping available in your country !'), 401);
         }
 
 
@@ -174,27 +200,39 @@ class ProductController extends Controller {
             'discount_code' => $offer_code,
             'coupon_discount' => $coupon_discount
         );
-        
-        if($discount_status){
-            if($coupan_code->coupon_type == 'per_product'){
-                  $check_discount_array = array_intersect($sku_array,json_decode($coupan_code->product_sku));
-                  foreach($check_discount_array as $k=>$val){
-                      $cart_data[$k]['coupon_discount'] = $coupon_discount;
-                  }
+
+        if ($discount_status) {
+            if ($coupan_code->coupon_type == 'per_product') {
+                $check_discount_array = array_intersect($sku_array, json_decode($coupan_code->product_sku));
+                foreach ($check_discount_array as $k => $val) {
+                    $cart_data[$k]['coupon_discount'] = $coupon_discount;
+                }
             }
             $other_cart_data['coupon_type'] = $coupan_code->coupon_type;
         }
-        
-        
+
+        if ($shipping_address != null) {
+            $shipping_address->state_name = State::Where('id', $shipping_address->state_id)->pluck('name')->first();
+            $shipping_country = Country::Where('id', $shipping_address->country_id)->first(array('name', 'sortname'));
+            $shipping_address->country_name = $shipping_country->name;
+            $shipping_address->country_code = $shipping_country->sortname;
+        }
+        if ($billing_address != null) {
+            $billing_address->state_name = State::Where('id', $billing_address->state_id)->pluck('name')->first();
+            $billing_country = Country::Where('id', $billing_address->country_id)->first(array('name', 'sortname'));
+            $billing_address->country_name = $billing_country->name;
+            $billing_address->country_code = $billing_country->sortname;
+        }
+
         $data['cart_data'] = $cart_data;
         $data['other_cart_data'] = $other_cart_data;
-        
-        Session::put('cart_data',$data);
+
+        Session::put('cart_data', $data);
         $data['shipping_address'] = $shipping_address;
         $data['shipping_methods'] = $shipping_methods;
         $data['billing_address'] = $billing_address;
-        
-      
+
+
         $view = View::make('carts.index', $data);
         if ($request->wantsJson()) {
             $sections = $view->renderSections();
@@ -359,7 +397,7 @@ class ProductController extends Controller {
         $year = $request->get('id');
         // get vehicle company data from product table and vehicle company table
         $vehicle_companies = Product::with(['get_vehicle_company' => function ($q) {
-                        $q->select(['vehicle_companies.id', 'vehicle_companies.name']);
+                        $q->select(['vehicle_companies.id', 'vehicle_companies.name','vehicle_companies.slug']);
                     }])->where([['products.vehicle_year_from', '<=', $year], ['products.vehicle_year_to', '>=', $year]])->groupby('products.vehicle_make_id')->get(array('products.vehicle_make_id'));
 
         return $vehicle_companies;
@@ -376,7 +414,7 @@ class ProductController extends Controller {
         $year = $request->get('year');
         // get vehicle model data from product table and vehicle model table
         $vehicle_models = Product::with(['get_vehicle_model' => function ($q) {
-                        $q->select(['vehicle_models.id', 'vehicle_models.name']);
+                        $q->select(['vehicle_models.id', 'vehicle_models.name','vehicle_models.slug']);
                     }])->where([['products.vehicle_year_from', '<=', $year], ['products.vehicle_year_to', '>=', $year], ['products.vehicle_make_id', $make_id]])->groupby('products.vehicle_model_id')->get(array('products.vehicle_model_id'));
 
         return $vehicle_models;
@@ -391,28 +429,22 @@ class ProductController extends Controller {
 
         $title = 'Products | Search';
 
-
         $keyword = $request->input('q');
         $cat_name = $request->input('cat');
-        $year = $request->input('year');
-        $make_id = $request->input('make_id');
-        $model_id = $request->input('model_id');
 
-
-        if (($keyword != null || $cat_name != null) && !$year) {
-//            $product_sub_category_ids = Product::whereHas('product_sub_categories.get_sub_categories', function($query) use ($cat_name) {
-//                        $query->Where('sub_categories.name', 'LIKE', '%' . $cat_name . '%');
-//                    })->Where([['products.quantity', '>', 0], ['status', '=', 1]])->pluck('id')->toArray();
-//                    
-//                    
-//            dd($product_sub_category_ids);        
-
+        if (($keyword != null || $cat_name != null)) {
             $products = Product::with(['product_details', 'get_brands', 'get_vehicle_company', 'get_vehicle_model'])
                             ->Where([['products.quantity', '>', 0], ['status', '=', 1]])
-                            ->Where('products.product_name', 'LIKE', '%' . $keyword . '%')
-                            ->orWhereHas('product_category.category', function($query) use($keyword) {
-                                $query->where('categories.name', 'LIKE', '%' . $keyword . '%');
-                            })->orWhereHas('get_brands', function ($query) use($keyword) {
+                            ->Where(function($query) use($keyword) {
+                                if (!is_numeric($keyword)) {
+                                    $query->Where('products.product_name', 'LIKE', '%' . $keyword . '%');
+                                } else {
+                                    $query->Where('products.price', 'LIKE', $keyword . '%');
+                                }
+                            })->orWhereHas('product_details', function($query) use($keyword) {
+                        $query->where('product_details.oem_number', 'LIKE', '%' . $keyword . '%')
+                                ->orwhere('product_details.parse_link', 'LIKE', '%' . $keyword . '%');
+                    })->orWhereHas('get_brands', function ($query) use($keyword) {
                         $query->where('brands.name', 'LIKE', '%' . $keyword . '%');
                     })->orWhereHas('get_vehicle_company', function ($query) use($keyword) {
                         $query->where('vehicle_companies.name', 'LIKE', '%' . $keyword . '%');
@@ -420,14 +452,11 @@ class ProductController extends Controller {
                         $query->where('vehicle_models.name', 'LIKE', '%' . $keyword . '%');
                     })->orWhere(function($query) use ($cat_name) {
                         if ($cat_name != null) {
-                            $query->orWhereHas('product_sub_categories.get_sub_categories', function($q) use ($cat_name) {
+                            $query->orWhereHas('get_sub_category', function($q) use ($cat_name) {
                                 $q->Where('sub_categories.name', 'LIKE', '%' . $cat_name . '%');
                             });
                         }
                     })->paginate(20);
-        } else if ($year != null && $make_id != null && $model_id != null) {
-            $whereCond = [['products.vehicle_year_from', '<=', $year], ['products.vehicle_year_to', '>=', $year], ['products.quantity', '>', 0], ['status', '=', 1], 'products.vehicle_make_id' => $make_id, 'products.vehicle_model_id' => $model_id];
-            $products = Product::with(['product_details', 'get_brands', 'get_vehicle_company', 'get_vehicle_model'])->Where($whereCond)->paginate(20);
         } else {
             $products = Product::with(['product_details', 'get_brands', 'get_vehicle_company', 'get_vehicle_model'])->Where([['products.quantity', '>', 0], ['status', '=', 1]])->paginate(20);
         }
@@ -441,6 +470,90 @@ class ProductController extends Controller {
             return $sections['content'];
         }
         return $view;
+    }
+
+    public function getAddresses() {
+        if (!$data['shipping_address'] = ShippingAddress::where('user_id', Auth::id())->first()) {
+            if (Session::has('shipping_address')) {
+                $data['shipping_address'] = Session::get('shipping_address');
+                $data['shipping_states'] = State::Where('country_id', $data['shipping_address']->country_id)->get(array('name', 'id'));
+            }
+        }
+        if (!$data['billing_address'] = BillingAddress::where('user_id', Auth::id())->first()) {
+            if (Session::has('billing_address')) {
+                $data['billing_address'] = Session::get('billing_address');
+                $data['billing_states'] = State::Where('country_id', $data['billing_address']->country_id)->get(array('name', 'id'));
+            }
+        }
+        $data['countries'] = Country::get(array('name', 'id'));
+
+        return View::make('carts.addresses', $data);
+    }
+
+    public function postCartAddresses(Request $request) {
+        $data = $request->all();
+        $this->validate($request, [
+            'billing_first_name' => 'required|max:150',
+            'shipping_first_name' => 'required|max:150',
+            'email' => 'required',
+            'billing_last_name' => 'required|max:150',
+            'shipping_last_name' => 'required|max:150',
+            'billing_address1' => 'required|max:150',
+            'shipping_address1' => 'required|max:150',
+            'billing_country_id' => 'required',
+            'shipping_country_id' => 'required',
+            'billing_state_id' => 'required',
+            'shipping_state_id' => 'required',
+            'billing_city' => 'required',
+            'shipping_city' => 'required',
+            'billing_zip' => 'required|max:6',
+            'shipping_zip' => 'required|max:6'
+        ]);
+
+
+        $shipping_address = array(
+            'first_name' => $data['shipping_first_name'],
+            'last_name' => $data['shipping_last_name'],
+            'address1' => $data['shipping_address1'],
+            'address2' => $data['shipping_address2'],
+            'country_id' => $data['shipping_country_id'],
+            'state_id' => $data['shipping_state_id'],
+            'city' => $data['shipping_city'],
+            'zip' => $data['shipping_zip']
+        );
+        $billing_address = array(
+            'first_name' => $data['billing_first_name'],
+            'last_name' => $data['billing_last_name'],
+            'address1' => $data['billing_address1'],
+            'address2' => $data['billing_address2'],
+            'country_id' => $data['billing_country_id'],
+            'state_id' => $data['billing_state_id'],
+            'city' => $data['billing_city'],
+            'zip' => $data['billing_zip']
+        );
+
+
+        if (Auth::check()) {
+            $shippings = ShippingAddress::where('user_id', Auth::id())->first();
+            if (!empty($shippings)) {
+                $shippings->fill($shipping_address)->save();
+            } else {
+                $shipping_address['user_id'] = Auth::id();
+                ShippingAddress::create($shipping_address);
+            }
+            $billings = BillingAddress::where('user_id', Auth::id())->first();
+            if (!empty($billings)) {
+                $billings->fill($billing_address)->save();
+            } else {
+                $billing_address['user_id'] = Auth::id();
+                BillingAddress::create($billing_address);
+            }
+        } else {
+            Session::put('shipping_address', (object) $shipping_address);
+            Session::put('billing_address', (object) $billing_address);
+            Session::put('customer_email', $data['email']);
+        }
+        return redirect()->route('cart');
     }
 
 }

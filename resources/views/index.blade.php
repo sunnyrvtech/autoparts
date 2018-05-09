@@ -50,7 +50,7 @@
                             </button>
                             <ul class="dropdown-menu scrollable-menu">
                                 <li><a role="button">Select Vehicle Make</a></li>
-                                <li ng-repeat="x in result_vehicle_company"><a data-id="<%x.get_vehicle_company.id%>" data-method="vehicle_company" data-url="{{ url('products/vehicle_model') }}" role="button"><%x.get_vehicle_company.name%></a></li>
+                                <li ng-repeat="x in result_vehicle_company"><a data-id="<%x.get_vehicle_company.id%>" data-slug="<%x.get_vehicle_company.slug%>" data-method="vehicle_company" data-url="{{ url('products/vehicle_model') }}" role="button"><%x.get_vehicle_company.name%></a></li>
                             </ul>
                         </div>
 
@@ -60,7 +60,7 @@
                             </button>
                             <ul class="dropdown-menu scrollable-menu">
                                  <li><a role="button">Select Vehicle Model</a></li>
-                                <li ng-repeat="x in result_vehicle_model"><a data-id="<%x.get_vehicle_model.id%>" data-method="vehicle_model"  role="button"><%x.get_vehicle_model.name%></a></li>
+                                <li ng-repeat="x in result_vehicle_model"><a data-id="<%x.get_vehicle_model.id%>" data-slug="<%x.get_vehicle_model.slug%>" data-method="vehicle_model"  role="button"><%x.get_vehicle_model.name%></a></li>
                             </ul>
                         </div>
                         <button class="btn btn-xlg am-orange hover material ymm-submit" elevation="1" ng-click="searchProduct()" type="submit">Search</button>
@@ -104,46 +104,16 @@
         </div>
     </div>
 
-    <div class="row popular-brands-con" >
+    <div class="row featured-cats-con" >
         <div class="col-md-12">
-            <div class="col-md-6 col-sm-12">
-                <!-- Popular Brands -->
+            <div class="col-md-12 col-sm-12">
                 <div class="home-page-card-con material" elevation="1">
                     <div class="home-page-card-con-inner">
-                        <h3>Popular Brands</h3>
-                        <!--                <div class="carousel-loading">
-                                            <i class="glyphicon glyphicon-repeat gly-spin"></i>
-                                        </div>-->
-                        <div class="slickSlider-half slickSlider"  type="TOP_BASIC_MAKE" style="overflow: initial; display: block;">
-                            @foreach($brands as $key=>$value)
-                            <div class="thumbnail-wrapper">
-                                <a class="thumbnail" href="{{ URL('products/search').'?q='.urlencode($value->name) }}">
-                                    <!--                                <div class="img-wrapper">
-                                                                        <img class="" src="" alt="" />
-                                                                    </div>-->
-                                    <div class="caption">
-                                        <div class="caption-text truncate">{{ $value->name }}</div>
-                                    </div>
-                                </a>
-                            </div>
-                            @endforeach
-                        </div>
-                        <div class="full-list-widget">
-                            <div class="actions">
-                                <!--<a class="btn am-orange hover material" elevation="1" href="javascript:void(0);">View All</a>-->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-sm-12">
-                <div class="home-page-card-con material" elevation="1">
-                    <div class="home-page-card-con-inner">
-                        <h3>Shop by Vehicle</h3>
-                        <div class="slickSlider-half slickSlider" type="TOP_BASIC_MAKE" style="overflow: initial; display: block;">
+                        <h3 class="text-center">Shop by Vehicle</h3>
+                        <div class="slickSlider-con slickSlider" type="TOP_BASIC_MAKE" style="overflow: initial; display: block;">
                             @foreach($vehicles as $key=>$value)
                             <div class="thumbnail-wrapper">
-                                <a class="thumbnail" href="{{ URL('products/search').'?q='.urlencode($value->name) }}">
+                                <a class="thumbnail" href="{{ url('/'.urlencode($value->slug)) }}">
                                     <div class="caption">
                                         <div class="caption-text truncate">{{ $value->name }}</div>
                                     </div>

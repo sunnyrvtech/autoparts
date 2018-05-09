@@ -162,7 +162,8 @@ h1.cms-title {
     margin-bottom: 40px;
     margin-right: 15px;
     margin-left: 15px;
-    margin-top: 10px
+    margin-top: 10px;
+    font-size: 24px;
 }
 #top-header-con {
     text-align: center;
@@ -1653,6 +1654,8 @@ h1.welcome-msg { color: rgb(75, 168, 173); }
 .select-apperance::after { border-left: 5px solid rgba(0, 0, 0, 0);border-right: 5px solid rgba(0, 0, 0, 0);border-top: 5px solid rgb(51, 51, 51);content: "";position: absolute;right: 8px;top: 15px; }
 .home-page-card-con-inner .slickSlider-full{ overflow: visible !important; }
 .row.about-con-wrp .cms-title { display: none; }
+#content .addresses-container { border: 1px solid #C5C5C5;margin-bottom: 20px;padding-bottom: 10px; }
+#content .addresses-container .address-area { padding: 20px; }
 
 @-moz-keyframes spin {
     0% {

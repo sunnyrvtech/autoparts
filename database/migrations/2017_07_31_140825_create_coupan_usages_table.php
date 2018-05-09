@@ -15,7 +15,7 @@ class CreateCoupanUsagesTable extends Migration
     {
         Schema::create('coupan_usages', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id');
+            $table->string('email');
             $table->integer('coupan_id');
             $table->integer('usage');
             $table->timestamps();

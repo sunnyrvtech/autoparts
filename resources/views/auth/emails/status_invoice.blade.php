@@ -377,10 +377,10 @@
                                                                                             <td align="left" class="textContent">
                                                                                                 <h3 style="line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:left;">Billing Address</h3>
                                                                                                 <div style="text-align:left;font-family:Helvetica,Arial,sans-serif;font-size:15px;margin-bottom:0;line-height:135%;">
-                                                                                                    <span>{{ $user_name }}</span><br/>
-                                                                                                    <span>{{ $billing_address->address1 }}</span><br/>
-                                                                                                    <span>{{ $billing_address->address2 }}</span><br/>
-                                                                                                    <span>{{ $billing_address->city.','.$billing_address->state.','.$billing_address->zip.' '.$billing_address->country }}</span>
+                                                                                                    <span>{{ $order->billing_address->first_name.' '.$order->billing_address->last_name }}</span><br/>
+                                                                                                    <span>{{ $order->billing_address->address1 }}</span><br/>
+                                                                                                    <span>{{ $order->billing_address->address2 }}</span><br/>
+                                                                                                    <span>{{ $order->billing_address->city.','.$order->billing_address->state_name.','.$order->billing_address->zip.' '.$order->billing_address->country_name }}</span>
                                                                                                 </div>
                                                                                             </td>
                                                                                         </tr>
@@ -392,10 +392,10 @@
                                                                                             <td align="left" class="textContent">
                                                                                                 <h3 style="line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:left;">Shipping Address</h3>
                                                                                                 <div style="text-align:left;font-family:Helvetica,Arial,sans-serif;font-size:15px;margin-bottom:0;line-height:135%;">
-                                                                                                    <span>{{ $user_name }}</span><br/>
-                                                                                                    <span>{{ $shipping_address->address1 }}</span><br/>
-                                                                                                    <span>{{ $shipping_address->address2 }}</span><br/>
-                                                                                                    <span>{{ $shipping_address->city.','.$shipping_address->state.','.$shipping_address->zip.' '.$shipping_address->country }}</span>
+                                                                                                    <span>{{ $order->shipping_address->first_name.' '.$order->shipping_address->last_name }}</span><br/>
+                                                                                                    <span>{{ $order->shipping_address->address1 }}</span><br/>
+                                                                                                    <span>{{ $order->shipping_address->address2 }}</span><br/>
+                                                                                                    <span>{{ $order->shipping_address->city.','.$order->shipping_address->state_name.','.$order->shipping_address->zip.' '.$order->shipping_address->country_name }}</span>
                                                                                                 </div>
                                                                                             </td>
                                                                                         </tr>

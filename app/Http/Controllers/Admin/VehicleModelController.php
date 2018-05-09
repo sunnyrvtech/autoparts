@@ -20,6 +20,23 @@ class VehicleModelController extends Controller {
      */
     public function index(Request $request) {
         $title = 'Vehicle Model';
+        
+//         $vehicle_models = VehicleModel::get();
+//            
+//            foreach($vehicle_models as $val){
+//                $slug = $this->createSlug($val->name);
+//
+//        $vehicle_model = VehicleModel::findOrFail($val->id);
+//        $vehicle_model->fill(array('slug'=>$slug))->save();
+//            }
+            
+            
+        
+        
+        
+        
+        
+        
         if ($request->ajax()) {
             $vehicle_models = VehicleModel::get();
             foreach ($vehicle_models as $key => $value) {
@@ -50,6 +67,7 @@ class VehicleModelController extends Controller {
         $this->validate($request, [
             'name' => 'required|unique:vehicle_companies|max:50'
         ]);
+        $data['slug'] = $this->createSlug($data['name']);
         VehicleModel::create($data);
         return Redirect::back()
                         ->with('success-message', 'Record inserted successfully!');
@@ -101,6 +119,31 @@ class VehicleModelController extends Controller {
             Session::flash('success-message', 'Record deleted successfully !');
         }
         return 'true';
+    }
+    
+    public function createSlug($title) {
+        // Normalize the title
+        $slug = str_slug($title);
+        // Get any that could possibly be related.
+        // This cuts the queries down by doing it once.
+        $allSlugs = $this->getRelatedSlugs($slug);
+        // If we haven't used it before then we are all good.
+        if (!$allSlugs->contains('slug', $slug)) {
+            return $slug;
+        }
+        // Just append numbers like a savage until we find not used.
+        for ($i = 1; $i <= 10; $i++) {
+            $newSlug = $slug . '-' . $i;
+            if (!$allSlugs->contains('slug', $newSlug)) {
+                return $newSlug;
+            }
+        }
+        throw new \Exception('Can not create a unique slug');
+    }
+
+    protected function getRelatedSlugs($slug) {
+        return VehicleModel::select('slug')->where('slug', 'like', $slug . '%')
+                        ->get();
     }
 
 }

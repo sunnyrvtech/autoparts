@@ -16,6 +16,7 @@ class CreateVehicleCompaniesTable extends Migration
         Schema::create('vehicle_companies', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->string('slug');
             $table->timestamps();
             $table->softDeletes();
         });

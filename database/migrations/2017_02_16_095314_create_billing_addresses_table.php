@@ -16,6 +16,8 @@ class CreateBillingAddressesTable extends Migration
         Schema::create('billing_addresses', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
+            $table->string('first_name');
+            $table->string('last_name');
             $table->string('address1');
             $table->string('address2')->nullable();
             $table->integer('country_id');

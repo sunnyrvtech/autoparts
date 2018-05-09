@@ -500,7 +500,7 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
         }
 
         $scope.get_payment_form = function (ship_method) {
-            if (ship_method == undefined || ship_method == 'null') {
+            if (ship_method == undefined || ship_method == 'null' || ship_method == '') {
                 $("#shipping_method_error").show();
                 $("#account_cart_area").hide();
                 return false;
@@ -522,6 +522,16 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
                     var $e1 = $('#content').html(data.data);
                     $compile($e1)($scope);
                     (window).scrollTop(0);
+                }, function errorCallback(data) {
+                    $("#changeShippingMethod").val('');
+                    $scope.loading = false;
+                    $scope.alert_loading = true;
+                    $scope.alertClass = 'alert-danger';
+                    $scope.alertLabel = 'Error!';
+                    $scope.alert_messages = data.data.error;
+                    $scope.alertHide();
+                    $(window).scrollTop(0);
+
                 });
             }
         }
@@ -596,12 +606,13 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
 
         $scope.getProductVehicleData = function (element) {
             var id = element.attr('data-id');
+            var slug = element.attr('data-slug');
             var URL = element.attr('data-url');
             var method = element.attr('data-method');
             var year = '';
             if (method != 'vehicle_year') {
                 year = $("#vehicle_year").attr('data-id');
-                element.closest(".ymm-select.open").find('.select-text').attr('data-id', id).text(element.text());
+                element.closest(".ymm-select.open").find('.select-text').attr('data-slug', slug).text(element.text());
             } else {
                 $(".dropdown-menu .ng-scope").remove();
                 $("#vehicle_make").attr('data-id', '').text('Select Vehicle Make');
@@ -627,9 +638,10 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
 
         $scope.searchProduct = function (element) {
             var year = $("#vehicle_year").attr('data-id');
-            var make_id = $("#vehicle_make").attr('data-id');
-            var model_id = $("#vehicle_model").attr('data-id');
-            var url = BaseUrl + '/products/search' + '?year=' + year + '&make_id=' + make_id + '&model_id=' + model_id;
+            var make_id = $("#vehicle_make").attr('data-slug');
+            var model_id = $("#vehicle_model").attr('data-slug');
+//            var url = BaseUrl + '/products/search' + '?year=' + year + '&make_id=' + make_id + '&model_id=' + model_id;
+            var url = BaseUrl + '/' + year + '/' + make_id + '/' + model_id;
             window.location.href = url;
         }
 
