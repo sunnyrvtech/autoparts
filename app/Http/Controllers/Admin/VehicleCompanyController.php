@@ -21,17 +21,6 @@ class VehicleCompanyController extends Controller {
     public function index(Request $request) {
         $title = 'Vehicle';
         
-        
-        $vehicle_companies = VehicleCompany::get();
-            
-            foreach($vehicle_companies as $val){
-                $slug = $this->createSlug($val->name);
-
-        $vehicle_make = VehicleCompany::findOrFail($val->id);
-        $vehicle_make->fill(array('slug'=>$slug))->save();
-            }
-        die;
-        
         if ($request->ajax()) {
 
             $vehicle_companies = VehicleCompany::get();
