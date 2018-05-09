@@ -21,15 +21,15 @@ class VehicleModelController extends Controller {
     public function index(Request $request) {
         $title = 'Vehicle Model';
         
-//         $vehicle_models = VehicleModel::get();
-//            
-//            foreach($vehicle_models as $val){
-//                $slug = $this->createSlug($val->name);
-//
-//        $vehicle_model = VehicleModel::findOrFail($val->id);
-//        $vehicle_model->fill(array('slug'=>$slug))->save();
-//            }
+         $vehicle_models = VehicleModel::get();
             
+            foreach($vehicle_models as $val){
+                $slug = $this->createSlug($val->name);
+
+        $vehicle_model = VehicleModel::findOrFail($val->id);
+        $vehicle_model->fill(array('slug'=>$slug))->save();
+            }
+            die;
             
         
         

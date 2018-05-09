@@ -24,13 +24,13 @@ class VehicleCompanyController extends Controller {
         
         $vehicle_companies = VehicleCompany::get();
             
-//            foreach($vehicle_companies as $val){
-//                $slug = $this->createSlug($val->name);
-//
-//        $vehicle_make = VehicleCompany::findOrFail($val->id);
-//        $vehicle_make->fill(array('slug'=>$slug))->save();
-//            }
-//        die;
+            foreach($vehicle_companies as $val){
+                $slug = $this->createSlug($val->name);
+
+        $vehicle_make = VehicleCompany::findOrFail($val->id);
+        $vehicle_make->fill(array('slug'=>$slug))->save();
+            }
+        die;
         
         if ($request->ajax()) {
 
