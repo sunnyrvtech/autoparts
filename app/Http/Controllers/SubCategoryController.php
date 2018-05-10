@@ -25,12 +25,12 @@ class SubCategoryController extends Controller {
             $data['bredcrum'] = '<span class="divider"> &gt; </span><span>' . $sub_categories->name . '</span>';
             $data['filter_data'] = Product::Where([['quantity', '>', 0], ['status', '=', 1], ['sub_category_id', '=', $sub_categories->id]])->groupBy('vehicle_make_id')->get(array('vehicle_make_id'));
         } else {
-            $vehicle_company = VehicleCompany::where('name', 'like', $slug . '%')->first(array('id', 'name','slug'));
+            $vehicle_company = VehicleCompany::where('slug', 'like', $slug . '%')->first(array('id', 'name','slug'));
             if ($vehicle_company) {
                 $data['filter_title'] = $vehicle_company->name;
                 $data['bredcrum'] = '<span class="divider"> &gt; </span><span>' . $vehicle_company->name . '</span>';
                 $data['vehicle_company'] = $vehicle_company;
-                $data['filter_data'] = Product::with(['get_vehicle_company:id,name', 'get_vehicle_model:id,name'])->Where([['quantity', '>', 0], ['status', '=', 1], ['vehicle_make_id', '=', $vehicle_company->id]])->groupBy('vehicle_model_id')->get(array('vehicle_make_id', 'vehicle_model_id'));
+                $data['filter_data'] = Product::Where([['quantity', '>', 0], ['status', '=', 1], ['vehicle_make_id', '=', $vehicle_company->id]])->groupBy('vehicle_model_id')->get(array('vehicle_make_id', 'vehicle_model_id'));
             } else {
                 return view('errors.404');
             }
