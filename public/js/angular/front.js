@@ -615,8 +615,8 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
                 element.closest(".ymm-select.open").find('.select-text').attr('data-slug', slug).text(element.text());
             } else {
                 $(".dropdown-menu .ng-scope").remove();
-                $("#vehicle_make").attr('data-id', '').text('Select Vehicle Make');
-                $("#vehicle_model").attr('data-id', '').text('Select Vehicle Model');
+                $("#vehicle_make").attr('data-slug', '').text('Select Vehicle Make');
+                $("#vehicle_model").attr('data-slug', '').text('Select Vehicle Model');
                 element.closest(".ymm-select.open").find('.select-text').attr('data-id', id).text(id);
             }
             if (method != 'vehicle_model') {

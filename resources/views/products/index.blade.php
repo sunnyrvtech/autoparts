@@ -239,4 +239,28 @@
 @endsection
 @push('scripts')
 <script src="{{ URL::asset('/js/product.js') }}"></script>
+<script type="text/javascript">
+@if(isset($year) && isset($vehicle_company->id) && isset($vehicle_model->id))    
+$(document).ready(function(){
+    var year = {{ $year }};
+    var make_id = {{ $vehicle_company->id }};
+    var make_slug = "{{ $vehicle_company->slug }}";
+    var make_name = "{{ $vehicle_company->name }}";
+    var model_id = {{ $vehicle_model->id }};
+    var model_slug = "{{ $vehicle_model->slug }}";
+    var model_name = "{{ $vehicle_model->name }}";
+    
+    $("#vehicle_year").attr('data-id', year).text(year);
+   
+   
+    
+    $("[data-id="+year+"]").trigger("click"); 
+    setTimeout(function(){
+        $("#vehicle_make").attr('data-slug', make_slug).text(make_name);
+        $("[data-id="+make_id+"]").trigger("click");
+        $("#vehicle_model").attr('data-slug', model_slug).text(model_name);
+    },500);
+});
+@endif
+</script>
 @endpush
