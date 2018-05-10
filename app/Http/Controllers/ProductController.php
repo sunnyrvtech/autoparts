@@ -40,12 +40,13 @@ class ProductController extends Controller {
      * @return Response
      */
     public function singleProduct(Request $request, $slug) {
-        $title = 'Products';
-        $products = Product::where([['product_slug', '=', $slug], ['status', '=', 1]])->first();
-        if ($products) {
-            return View::make('products.single', compact('title', 'products'));
+        $data['title'] = 'Products';
+        $data['products'] = Product::where([['product_slug', '=', $slug], ['status', '=', 1]])->first();
+        if ($data['products']) {
+            $data['bredcrum'] = '<span class="divider"> &gt; </span><span><a href="' . url('/' .$data['products']->get_vehicle_company->slug.'/'.$data['products']->get_vehicle_model->slug.'/'.$data['products']->get_sub_category->slug) . '">' . $data['products']->get_sub_category->name . '</a></span><span class="divider"> &gt; </span><span>' . $slug . '</span>';
+            return view('products.single', $data);
         }
-        return View::make('errors.404');
+        return view('errors.404');
     }
 
     /**
@@ -397,7 +398,7 @@ class ProductController extends Controller {
         $year = $request->get('id');
         // get vehicle company data from product table and vehicle company table
         $vehicle_companies = Product::with(['get_vehicle_company' => function ($q) {
-                        $q->select(['vehicle_companies.id', 'vehicle_companies.name','vehicle_companies.slug']);
+                        $q->select(['vehicle_companies.id', 'vehicle_companies.name', 'vehicle_companies.slug']);
                     }])->where([['products.vehicle_year_from', '<=', $year], ['products.vehicle_year_to', '>=', $year]])->groupby('products.vehicle_make_id')->get(array('products.vehicle_make_id'));
 
         return $vehicle_companies;
@@ -414,7 +415,7 @@ class ProductController extends Controller {
         $year = $request->get('year');
         // get vehicle model data from product table and vehicle model table
         $vehicle_models = Product::with(['get_vehicle_model' => function ($q) {
-                        $q->select(['vehicle_models.id', 'vehicle_models.name','vehicle_models.slug']);
+                        $q->select(['vehicle_models.id', 'vehicle_models.name', 'vehicle_models.slug']);
                     }])->where([['products.vehicle_year_from', '<=', $year], ['products.vehicle_year_to', '>=', $year], ['products.vehicle_make_id', $make_id]])->groupby('products.vehicle_model_id')->get(array('products.vehicle_model_id'));
 
         return $vehicle_models;
