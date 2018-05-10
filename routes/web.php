@@ -63,6 +63,8 @@ Route::post('cart/add', 'ProductController@addCart')->middleware('web');
 Route::post('cart/update', 'ProductController@updateCart')->middleware('web');
 Route::post('cart/delete', 'ProductController@deleteCart');
 Route::get('cart', 'ProductController@Cart')->name('cart');
+Route::get('cart/addresses', 'ProductController@getAddresses')->name('cart.addresses');
+Route::post('cart/addresses', 'ProductController@postCartAddresses')->name('cart.addresses');
 Route::get('track_order', 'OrderController@index');
 Route::post('track_order', 'OrderController@postTrackOrder')->name('track_order');
 Route::get('my-account', 'AccountController@index')->name('my-account');
@@ -91,8 +93,6 @@ Route::get('/{slug}', 'SubCategoryController@getListByCategorySlug');
 Route::get('/{category}/{vehicle}', 'SubCategoryController@getListByCategoryVehicleSlug');
 Route::get('/{vehicle}/{model}/{category}', 'SubCategoryController@getProductByCategoryVehicleModelSlug');
 Route::get('/{year}/{vehicle}/{model}/{category}', 'SubCategoryController@getProductByYearCategoryVehicleModelSlug');
-Route::get('cart/addresses', 'ProductController@getAddresses')->name('cart.addresses');
-Route::post('cart/addresses', 'ProductController@postCartAddresses')->name('cart.addresses');
 
 //Route::get('/{company}/{slug}', 'SubSubCategoryController@getSubSubSubcategory');
 
