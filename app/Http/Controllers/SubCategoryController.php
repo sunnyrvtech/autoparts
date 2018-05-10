@@ -41,7 +41,7 @@ class SubCategoryController extends Controller {
     public function getListByCategoryVehicleSlug(Request $request, $vehicle, $cat) {
 
         $sub_categories = SubCategory::where('slug', $cat)->first(array('id', 'name', 'slug'));
-        $vehicle_company = VehicleCompany::where('slug', 'like', $vehicle . '%')->first(array('id', 'name'));
+        $vehicle_company = VehicleCompany::where('slug', 'like', $vehicle . '%')->first(array('id', 'name','slug'));
 
         $data['vehicle_company'] = $vehicle_company;
         if ($sub_categories) {
