@@ -1651,7 +1651,7 @@ h1.welcome-msg { color: rgb(75, 168, 173); }
 #navbar-lower .nav.navbar-nav .am-logo { padding: 0; }
 .select-apperance { float: left;  position: relative; }
 .select-apperance select { -moz-appearance: none;border-radius: 3px 0 0 3px;border-right: medium none;box-shadow: none;-webkit-appearance: inherit;max-width: 150px; }
-.select-apperance::after { border-left: 5px solid rgba(0, 0, 0, 0);border-right: 5px solid rgba(0, 0, 0, 0);border-top: 5px solid rgb(51, 51, 51);content: "";position: absolute;right: 8px;top: 15px; }
+.select-apperance::after { border-left: 5px solid rgba(0, 0, 0, 0);border-right: 5px solid rgba(0, 0, 0, 0);border-top: 5px solid rgb(51, 51, 51);content: "";position: absolute;right: 3px;top: 15px; }
 .home-page-card-con-inner .slickSlider-full{ overflow: visible !important; }
 .row.about-con-wrp .cms-title { display: none; }
 #content .addresses-container { border: 1px solid #C5C5C5;margin-bottom: 20px;padding-bottom: 10px; }
