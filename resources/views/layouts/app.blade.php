@@ -133,12 +133,12 @@
                             <select class="form-control" name="cat">
                                 <option value="">All Categories</option>
                                  @foreach($featured_category as $key=>$cat_value)
-                                    <option value="{{ $cat_value->name }}">{{ $cat_value->name  }}</option>
+                                    <option @if(Request::get('cat') == $cat_value->name)selected @endif value="{{ $cat_value->name }}">{{ $cat_value->name  }}</option>
                                     @endforeach
                             </select>
                             </div>
                             <div class="input-group input-group-lg" id="search-phrase-container">
-                                <input aria-label="Enter Search" autocomplete="off" class="form-control" id="search-phrase" name="q" placeholder="Search" type="text" value="" />
+                                <input aria-label="Enter Search" autocomplete="off" class="form-control" id="search-phrase" name="q" placeholder="Search" type="text" value="{{ Request::get('q') }}" />
                                 <span class="input-group-addon" id="search-glass">
                                     <span aria-hidden="true" class="glyphicon glyphicon-search"></span>
                                 </span>
