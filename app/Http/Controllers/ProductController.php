@@ -438,7 +438,8 @@ class ProductController extends Controller {
                             ->Where([['products.quantity', '>', 0], ['status', '=', 1]])
                             ->Where(function($query) use($keyword) {
                                 if (!is_numeric($keyword)) {
-                                    $query->whereRaw( "MATCH(product_name) AGAINST(? IN BOOLEAN MODE)",  [$keyword]);
+                                    $query->whereRaw("MATCH(product_name) AGAINST(? IN BOOLEAN MODE)", [$keyword]);
+                                    $query->orWhere('products.sku', 'LIKE', $keyword . '%');
                                 } else {
                                     $query->Where('products.price', 'LIKE', $keyword . '%');
                                 }
