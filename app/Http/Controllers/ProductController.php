@@ -476,17 +476,20 @@ class ProductController extends Controller {
 
     public function getAddresses() {
         if (!$data['shipping_address'] = ShippingAddress::where('user_id', Auth::id())->first()) {
-            if (Session::has('shipping_address')) {
+            if (Session::has('shipping_address'))
                 $data['shipping_address'] = Session::get('shipping_address');
-                $data['shipping_states'] = State::Where('country_id', $data['shipping_address']->country_id)->get(array('name', 'id'));
-            }
         }
         if (!$data['billing_address'] = BillingAddress::where('user_id', Auth::id())->first()) {
-            if (Session::has('billing_address')) {
+            if (Session::has('billing_address'))
                 $data['billing_address'] = Session::get('billing_address');
-                $data['billing_states'] = State::Where('country_id', $data['billing_address']->country_id)->get(array('name', 'id'));
-            }
         }
+
+        if (isset($data['shipping_address']))
+            $data['shipping_states'] = State::Where('country_id', $data['shipping_address']->country_id)->get(array('name', 'id'));
+
+        if (isset($data['billing_address']))
+            $data['billing_states'] = State::Where('country_id', $data['billing_address']->country_id)->get(array('name', 'id'));
+
         $data['countries'] = Country::get(array('name', 'id'));
 
         return View::make('carts.addresses', $data);
