@@ -1,7 +1,7 @@
 /node_modules
 /public/storage
 /public/product_images
-/app/http/paypal.log
+/app/Http/PayPal.log
 /storage/*.key
 /storage
 /config/paypal_payment.php

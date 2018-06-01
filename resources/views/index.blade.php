@@ -24,33 +24,23 @@
             <div class="am-ymm horizontal hide-header full-width">
                 <h2>Select your vehicle</h2>
                 <?php
-                $minYear = date('Y', strtotime('-50 year'));
-                $maxYear = date('Y', strtotime('+1 year'));
+                //$minYear = date('Y', strtotime('-50 year'));
+                //$maxYear = date('Y', strtotime('+1 year'));
                 // set start and end year range
-                $yearArray = range($maxYear, $minYear);
+                //$yearArray = range($maxYear, $minYear);
                 ?>
                 <div class="am-ymm-inner">
                     <h3 id="ymm-header">Find parts for your car</h3>
                     <form id="am-ymm-home-form">
-                        <div class="btn-group year-select ymm-select">
-                            <button class="btn btn-default dropdown-toggle input-xlg" data-toggle="dropdown" type="button">
-                                <span class="select-text" id="vehicle_year">Select Vehicle Year</span><span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu scrollable-menu">
-                                <li><a role="button">Select Vehicle Year</a></li>
-                                @foreach($yearArray as $val)
-                                <li><a data-id="{{ $val }}" data-method="vehicle_year" data-url="{{ url('products/vehicle') }}" role="button">{{ $val }}</a></li>
-                                @endforeach
-                            </ul>
-                        </div>
-
                         <div class="btn-group make-select ymm-select">
                             <button class="btn btn-default dropdown-toggle input-xlg" data-toggle="dropdown" type="button">
                                 <span class="select-text" id="vehicle_make">Select Vehicle Make</span><span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu scrollable-menu">
                                 <li><a role="button">Select Vehicle Make</a></li>
-                                <li ng-repeat="x in result_vehicle_company"><a data-id="<%x.get_vehicle_company.id%>" data-slug="<%x.get_vehicle_company.slug%>" data-method="vehicle_company" data-url="{{ url('products/vehicle_model') }}" role="button"><%x.get_vehicle_company.name%></a></li>
+                                @foreach($vehicles as $val)
+                                <li><a data-id="{{ $val->id}}" data-slug="{{ $val->slug}}" data-method="vehicle_company" data-url="{{ url('products/vehicle_model')}}" role="button">{{ $val->name}}</a></li>
+                                @endforeach
                             </ul>
                         </div>
 
@@ -60,9 +50,20 @@
                             </button>
                             <ul class="dropdown-menu scrollable-menu">
                                  <li><a role="button">Select Vehicle Model</a></li>
-                                <li ng-repeat="x in result_vehicle_model"><a data-id="<%x.get_vehicle_model.id%>" data-slug="<%x.get_vehicle_model.slug%>" data-method="vehicle_model"  role="button"><%x.get_vehicle_model.name%></a></li>
+                                <li ng-repeat="x in result_vehicle_model"><a data-id="<%x.get_vehicle_model.id%>" data-slug="<%x.get_vehicle_model.slug%>" data-method="vehicle_model" data-url="{{ url('products/vehicle_year')}}"  role="button"><%x.get_vehicle_model.name%></a></li>
                             </ul>
                         </div>
+                        
+                        <div class="btn-group year-select ymm-select">
+                            <button class="btn btn-default dropdown-toggle input-xlg" data-toggle="dropdown" type="button">
+                                <span class="select-text" id="vehicle_year">Select Vehicle Year</span><span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu scrollable-menu">
+                                <li><a role="button">Select Vehicle Year</a></li>
+                                <li ng-repeat="x in result_vehicle_year"><a data-id="<%x%>" data-method="vehicle_year" role="button"><%x%></a></li>
+                            </ul>
+                        </div>
+                        
                         <button class="btn btn-xlg am-orange hover material ymm-submit" elevation="1" ng-click="searchProduct()" type="submit">Search</button>
                         <br class="clearfix" />
                     </form>

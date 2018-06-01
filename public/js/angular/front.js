@@ -407,7 +407,7 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
                     $scope.alertHide();
                     $(window).scrollTop(0);
                     $scope.loading = false;
-                   if (data.data.intended == "cart") {
+                    if (data.data.intended == "cart") {
                         $timeout(function () {
                             window.location = BaseUrl + "/" + data.data.intended;
                         }, 200);
@@ -609,24 +609,28 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
             var slug = element.attr('data-slug');
             var URL = element.attr('data-url');
             var method = element.attr('data-method');
-            var year = '';
-            if (method != 'vehicle_year') {
-                year = $("#vehicle_year").attr('data-id');
-                element.closest(".ymm-select.open").find('.select-text').attr('data-slug', slug).text(element.text());
+            var vehicle_make = '';
+            if (method == 'vehicle_year') {
+                element.closest(".ymm-select.open").find('.select-text').attr('data-id', id).text(id);
+            } else if (method == 'vehicle_model') {
+                vehicle_make = $("#vehicle_make").attr('data-id');
+                element.closest(".ymm-select.open").find('.select-text').attr('data-slug', slug).attr('data-id', id).text(element.text());
             } else {
                 $(".dropdown-menu .ng-scope").remove();
-                $("#vehicle_make").attr('data-slug', '').text('Select Vehicle Make');
+//                $("#vehicle_make").attr('data-slug', '').text('Select Vehicle Make');
                 $("#vehicle_model").attr('data-slug', '').text('Select Vehicle Model');
-                element.closest(".ymm-select.open").find('.select-text').attr('data-id', id).text(id);
+                element.closest(".ymm-select.open").find('.select-text').attr('data-slug', slug).attr('data-id', id).text(element.text());
             }
-            if (method != 'vehicle_model') {
+
+          
+            if (method != 'vehicle_year') {
                 $http({
                     method: 'POST',
                     url: URL,
-                    data: {id: id, year: year},
+                    data: {id: id, vehicle_make: vehicle_make},
                 }).then(function (data, status, headers, config) {
-                    if (method == 'vehicle_year') {
-                        $scope.result_vehicle_company = data.data;
+                    if (method == 'vehicle_model') {
+                        $scope.result_vehicle_year = data.data;
                     } else {
                         $scope.result_vehicle_model = data.data;
                     }

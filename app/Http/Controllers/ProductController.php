@@ -412,13 +412,30 @@ class ProductController extends Controller {
     public function getProductVehicleModelByMakeId(Request $request) {
 
         $make_id = $request->get('id');
-        $year = $request->get('year');
+        //$year = $request->get('year');
         // get vehicle model data from product table and vehicle model table
         $vehicle_models = Product::with(['get_vehicle_model' => function ($q) {
                         $q->select(['id', 'name', 'slug']);
-                    }])->where([['vehicle_year_from', '<=', $year], ['vehicle_year_to', '>=', $year], ['vehicle_make_id', $make_id]])->groupby('vehicle_model_id')->get(array('vehicle_model_id'));
+                    }])->where([['vehicle_make_id', $make_id]])->groupby('vehicle_model_id')->get(array('vehicle_model_id'));
         $vehicle_models = collect($vehicle_models)->sortBy('get_vehicle_model.name')->values();
         return $vehicle_models;
+    }
+
+    /**
+     * function to get product vehicle model based on make id.
+     *
+     * @return Response
+     */
+    public function getProductVehicleYearByModelId(Request $request) {
+
+        $model_id = $request->get('id');
+        $make_id = $request->get('vehicle_make');
+        $vehicle_year_from = Product::where([['vehicle_make_id', $make_id], ['vehicle_model_id', $model_id]])->groupby('vehicle_year_from')->pluck('vehicle_year_from')->toArray();
+        $vehicle_year_to = Product::where([['vehicle_make_id', $make_id], ['vehicle_model_id', $model_id]])->groupby('vehicle_year_to')->pluck('vehicle_year_to')->toArray();
+
+        $years = array_values(array_unique(array_merge($vehicle_year_from, $vehicle_year_to)));
+        sort($years);
+        return $years;
     }
 
     /**

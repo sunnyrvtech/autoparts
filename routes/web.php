@@ -56,6 +56,7 @@ Route::get('logout', 'Auth\LoginController@logout');
 //Route::get('products', 'ProductController@index');
 Route::post('products/vehicle', 'ProductController@getProductVehicleCompanyByYear');
 Route::post('products/vehicle_model', 'ProductController@getProductVehicleModelByMakeId');
+Route::post('products/vehicle_year', 'ProductController@getProductVehicleYearByModelId');
 Route::get('products/search', 'ProductController@searchProduct');
 Route::get('products/{slug}', 'ProductController@singleProduct');
 Route::resource('checkout','PaymentController');
