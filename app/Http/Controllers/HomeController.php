@@ -29,7 +29,7 @@ class HomeController extends Controller {
         // get sub category data and make it featured category
 //        $featured_category = SubCategory::take(40)->get(array('name', 'id', 'slug'));
         // get vehicle companies data
-        $data['vehicles'] = VehicleCompany::get(array('slug','name', 'id'));
+        $data['vehicles'] = VehicleCompany::orderby('name')->get(array('slug','name', 'id'));
 //        $data['brands'] = Brand::take(40)->get(array('name', 'id'));
 
         $data['latest_product'] = Product::Where([['quantity', '>', 0],['status','=',1]])->orderBy('updated_at', 'DESC')->take('20')->get();

@@ -614,6 +614,7 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
                 element.closest(".ymm-select.open").find('.select-text').attr('data-id', id).text(id);
             } else if (method == 'vehicle_model') {
                 vehicle_make = $("#vehicle_make").attr('data-id');
+                $("#vehicle_year").attr('data-id', '').text('Select Vehicle Year');
                 element.closest(".ymm-select.open").find('.select-text').attr('data-slug', slug).attr('data-id', id).text(element.text());
             } else {
                 $(".dropdown-menu .ng-scope").remove();

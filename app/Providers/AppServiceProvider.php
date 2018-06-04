@@ -23,7 +23,7 @@ class AppServiceProvider extends ServiceProvider {
         }
 
         $categories = Category::where('status', 1)->orderBy('name')->limit(8)->get(array('name', 'id'));
-        $featured_category = SubCategory::groupBy('name')->get(array('name', 'id', 'slug'));
+        $featured_category = SubCategory::orderBy('name')->groupBy('name')->get(array('name', 'id', 'slug'));
         $header_content = StaticPage::where('slug', 'header')->first();
         view()->share('categories', $categories);
         view()->share('header_content', $header_content);

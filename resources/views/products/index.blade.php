@@ -48,10 +48,10 @@
 //            $vehicle_company_array = [];
             //$vehicle_model_array = [];
 
-            $minYear = date('Y', strtotime('-50 year'));
-            $maxYear = date('Y', strtotime('+1 year'));
+            //$minYear = date('Y', strtotime('-50 year'));
+            //$maxYear = date('Y', strtotime('+1 year'));
             // set start and end year range
-            $yearArray = range($maxYear, $minYear);
+            //$yearArray = range($maxYear, $minYear);
               function my_sort($a, $b) {
                     if (Request::get('sort_by') == 'high') {
                         return ($a['price'] > $b['price']) ? -1 : 1;
@@ -143,12 +143,12 @@
                                 <div class="form-group">
                                     <div class="btn-group year-select ymm-select">
                                         <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" type="button">
-                                            <span id="vehicle_year" class="select-text">Select Vehicle Year</span><span class="caret"></span>
+                                            <span id="vehicle_make" class="select-text">Select Vehicle Make</span><span class="caret"></span>
                                         </button>
                                         <ul class="dropdown-menu scrollable-menu">
-                                            <li><a role="button">Select Vehicle Year</a></li>
-                                            @foreach($yearArray as $val_year)
-                                            <li><a data-id="{{ $val_year }}" data-method="vehicle_year" data-url="{{ url('products/vehicle') }}" role="button">{{ $val_year }}</a></li>
+                                            <li><a role="button">Select Vehicle Make</a></li>
+                                            @foreach($vehicles as $val)
+                                            <li><a data-id="{{ $val->id}}" data-slug="{{ $val->slug}}" data-method="vehicle_company" data-url="{{ url('products/vehicle_model')}}" role="button">{{ $val->name}}</a></li>
                                             @endforeach
                                         </ul>
                                     </div>
@@ -156,22 +156,22 @@
                                 <div class="form-group">
                                     <div class="btn-group make-select ymm-select">
                                         <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" type="button">
-                                            <span id="vehicle_make" class="select-text">Select Vehicle Make</span><span class="caret"></span>
+                                            <span id="vehicle_model" class="select-text">Select Vehicle Model</span><span class="caret"></span>
                                         </button>
                                         <ul class="dropdown-menu scrollable-menu">
-                                            <li><a role="button">Select Vehicle Make</a></li>
-                                            <li ng-repeat="x in result_vehicle_company"><a data-id="<%x.get_vehicle_company.id%>" data-slug="<%x.get_vehicle_company.slug%>" data-method="vehicle_company" data-url="{{ url('products/vehicle_model') }}" role="button"><%x.get_vehicle_company.name%></a></li>
+                                            <li><a role="button">Select Vehicle Model</a></li>
+                                            <li ng-repeat="x in result_vehicle_model"><a data-id="<%x.get_vehicle_model.id%>" data-slug="<%x.get_vehicle_model.slug%>" data-method="vehicle_model" data-url="{{ url('products/vehicle_year')}}"  role="button"><%x.get_vehicle_model.name%></a></li>
                                         </ul>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="btn-group model-select ymm-select">
                                         <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" type="button">
-                                            <span id="vehicle_model" class="select-text">Select Vehicle Model</span><span class="caret"></span>
+                                            <span id="vehicle_year" class="select-text">Select Vehicle Year</span><span class="caret"></span>
                                         </button>
                                         <ul class="dropdown-menu scrollable-menu">
-                                            <li><a role="button">Select Vehicle Model</a></li>
-                                            <li ng-repeat="x in result_vehicle_model"><a data-id="<%x.get_vehicle_model.id%>" data-slug="<%x.get_vehicle_model.slug%>" data-method="vehicle_model"  role="button"><%x.get_vehicle_model.name%></a></li>
+                                            <li><a role="button">Select Vehicle Year</a></li>
+                                            <li ng-repeat="x in result_vehicle_year"><a data-id="<%x%>" data-method="vehicle_year" role="button"><%x%></a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -186,7 +186,7 @@
                 $filter_array = array(
                     0 => [
                         "title" => "Product Category",
-                        "data" => $all_categories
+                        "data" => $featured_category
                     ]
                 );
 //                1 => [
@@ -250,15 +250,13 @@ $(document).ready(function(){
     var model_slug = "{{ $vehicle_model->slug }}";
     var model_name = "{{ $vehicle_model->name }}";
     
-    $("#vehicle_year").attr('data-id', year).text(year);
+    $("#vehicle_make").attr('data-slug', make_slug).attr('data-id', make_id).text(make_name);
    
-   
-    
-    $("[data-id="+year+"]").trigger("click"); 
+    $("[data-id="+make_id+"][data-method='vehicle_company']").trigger("click"); 
     setTimeout(function(){
-        $("#vehicle_make").attr('data-slug', make_slug).text(make_name);
-        $("[data-id="+make_id+"]").trigger("click");
-        $("#vehicle_model").attr('data-slug', model_slug).text(model_name);
+     $("#vehicle_model").attr('data-slug', model_slug).attr('data-id', model_id).text(model_name);
+     $("[data-id="+model_id+"][data-method='vehicle_model']").trigger("click");
+     $("#vehicle_year").attr('data-id', year).text(year);
     },500);
 });
 @endif

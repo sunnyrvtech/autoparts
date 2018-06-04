@@ -479,11 +479,8 @@ class ProductController extends Controller {
         } else {
             $products = Product::with(['product_details', 'get_brands', 'get_vehicle_company', 'get_vehicle_model'])->Where([['products.quantity', '>', 0], ['status', '=', 1]])->paginate(20);
         }
-
-
-        $all_categories = SubCategory::groupBy('name')->get();
-
-        $view = View::make('products.search', compact('title', 'products', 'all_categories'));
+        $vehicles = VehicleCompany::orderby('name')->get(array('slug', 'name', 'id'));
+        $view = View::make('products.search', compact('title', 'products', 'vehicles'));
         if ($request->wantsJson()) {
             $sections = $view->renderSections();
             return $sections['content'];
