@@ -469,7 +469,7 @@ class ProductController extends Controller {
                         $query->where('vehicle_companies.name', 'LIKE', '%' . $keyword . '%');
                     })->orWhereHas('get_vehicle_model', function ($query) use($keyword) {
                         $query->where('vehicle_models.name', 'LIKE', '%' . $keyword . '%');
-                    })->orWhere(function($query) use ($cat_name) {
+                    })->Where(function($query) use ($cat_name) {
                         if ($cat_name != null) {
                             $query->orWhereHas('get_sub_category', function($q) use ($cat_name) {
                                 $q->Where('sub_categories.name', 'LIKE', '%' . $cat_name . '%');
