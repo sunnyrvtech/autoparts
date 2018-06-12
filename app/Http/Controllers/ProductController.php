@@ -448,31 +448,49 @@ class ProductController extends Controller {
         $title = 'Products | Search';
 
         $keyword = $request->input('q');
-        $cat_name = $request->input('cat');
+        $cat_id = $request->input('cat');
 
-        if (($keyword != null || $cat_name != null)) {
+        if (($keyword != null || $cat_id != null)) {
             $products = Product::with(['product_details', 'get_brands', 'get_vehicle_company', 'get_vehicle_model'])
                             ->Where([['products.quantity', '>', 0], ['status', '=', 1]])
-                            ->Where(function($query) use($keyword) {
-                                if (!is_numeric($keyword)) {
+                            ->Where(function($query) use($keyword, $cat_id) {
+                                if ($cat_id != null)
+                                    $query->Where('products.sub_category_id', '=', $cat_id);
+                                if (!is_numeric($keyword) && $keyword != null) {
                                     $query->whereRaw("MATCH(product_name) AGAINST(? IN BOOLEAN MODE)", [$keyword]);
                                     $query->orWhere('products.sku', 'LIKE', $keyword . '%');
-                                } else {
+                                } elseif ($keyword != null) {
                                     $query->Where('products.price', 'LIKE', $keyword . '%');
                                 }
-                            })->orWhereHas('product_details', function($query) use($keyword) {
-                        $query->where('product_details.oem_number', 'LIKE', '%' . $keyword . '%')
-                                ->orwhere('product_details.parse_link', 'LIKE', '%' . $keyword . '%');
-                    })->orWhereHas('get_brands', function ($query) use($keyword) {
-                        $query->where('brands.name', 'LIKE', '%' . $keyword . '%');
-                    })->orWhereHas('get_vehicle_company', function ($query) use($keyword) {
-                        $query->where('vehicle_companies.name', 'LIKE', '%' . $keyword . '%');
-                    })->orWhereHas('get_vehicle_model', function ($query) use($keyword) {
-                        $query->where('vehicle_models.name', 'LIKE', '%' . $keyword . '%');
-                    })->Where(function($query) use ($cat_name) {
-                        if ($cat_name != null) {
-                            $query->orWhereHas('get_sub_category', function($q) use ($cat_name) {
-                                $q->Where('sub_categories.name', 'LIKE', '%' . $cat_name . '%');
+                            })->orWhere(function($query) use($keyword) {
+                        if ($keyword != null) {
+                            $query->WhereHas('product_details', function ($q) use ($keyword) {
+                                $q->where('product_details.oem_number', 'LIKE', '%' . $keyword . '%')
+                                        ->orwhere('product_details.parse_link', 'LIKE', '%' . $keyword . '%');
+                            });
+                        }
+                    })->orWhere(function($query) use($keyword) {
+                        if ($keyword != null) {
+                            $query->WhereHas('get_brands', function ($q) use($keyword) {
+                                $q->where('brands.name', 'LIKE', '%' . $keyword . '%');
+                            });
+                        }
+                    })->orWhere(function($query) use($keyword) {
+                        if ($keyword != null) {
+                            $query->WhereHas('get_vehicle_company', function ($q) use($keyword) {
+                                $q->where('vehicle_companies.name', 'LIKE', '%' . $keyword . '%');
+                            });
+                        }
+                    })->orWhere(function($query) use($keyword) {
+                        if ($keyword != null) {
+                            $query->WhereHas('get_vehicle_model', function ($q) use($keyword) {
+                                $q->where('vehicle_models.name', 'LIKE', '%' . $keyword . '%');
+                            });
+                        }
+                    })->orWhere(function($query) use ($keyword) {
+                        if ($keyword != null) {
+                            $query->orWhereHas('get_sub_category', function($q) use ($keyword) {
+                                $q->Where('sub_categories.name', 'LIKE', '%' . $keyword . '%');
                             });
                         }
                     })->paginate(20);

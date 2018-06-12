@@ -133,7 +133,7 @@
                             <select class="form-control" name="cat">
                                 <option value="">All Categories</option>
                                  @foreach($featured_category as $key=>$cat_value)
-                                    <option @if(Request::get('cat') == $cat_value->name)selected @endif value="{{ $cat_value->name }}">{{ $cat_value->name  }}</option>
+                                    <option @if(Request::get('cat') == $cat_value->id)selected @endif value="{{ $cat_value->id }}">{{ $cat_value->name  }}</option>
                                     @endforeach
                             </select>
                             </div>
