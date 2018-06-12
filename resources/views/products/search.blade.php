@@ -43,8 +43,8 @@
         <div id="products-content-area" class="row list-group">
             <?php
 //            $brand_array = [];
-//            $vehicle_company_array = [];
-            //$vehicle_model_array = [];
+            $vehicle_company_array = [];
+            $vehicle_model_array = [];
 //            $minYear = date('Y', strtotime('-50 year'));
 //            $maxYear = date('Y', strtotime('+1 year'));
             // set start and end year range
@@ -74,14 +74,15 @@
 //                $brand_array[$key]['id'] = $value['brand_id'];
 //                $brand_array[$key]['name'] = isset($value['get_brands']['name']) ? $value['get_brands']['name'] : '';
 //            }
-//            if (!empty($value['vehicle_make_id'])) {
-//                $vehicle_company_array[$key]['id'] = $value['vehicle_make_id'];
-//                $vehicle_company_array[$key]['name'] = isset($value['get_vehicle_company']['name']) ? $value['get_vehicle_company']['name'] : '';
-//            }
-//            if (!empty($value['vehicle_model_id'])) {
-//                $vehicle_model_array[$key]['id'] = $value['vehicle_model_id'];
-//                $vehicle_model_array[$key]['name'] = isset($value['get_vehicle_model']['name']) ? $value['get_vehicle_model']['name'] : '';
-//            }
+            if (!empty($value['vehicle_make_id']) && !empty($value['vehicle_model_id'])) {
+                $vehicle_company_array[$key]['id'] = $value['vehicle_make_id'];
+                $vehicle_company_array[$key]['slug'] = $value['get_vehicle_company']['slug'];
+                $vehicle_company_array[$key]['name'] = isset($value['get_vehicle_company']['name']) ? $value['get_vehicle_company']['name'] : '';
+            
+                $vehicle_model_array[$key]['id'] = $value['vehicle_model_id'];
+                $vehicle_model_array[$key]['slug'] = $value['get_vehicle_company']['slug'] . '/' . $value['get_vehicle_model']['slug'];
+                $vehicle_model_array[$key]['name'] = isset($value['get_vehicle_model']['name']) ? $value['get_vehicle_model']['name'] : '';
+            }
             $product_images = json_decode($value['product_details']['product_images']);
             ?>
             <div class="item col-xs-4 col-lg-4 list-group-item">
@@ -183,6 +184,14 @@
                     0 => [
                         "title" => "Product Category",
                         "data" => $featured_category
+                    ],
+                    1 => [
+                        "title" => "Vehicle Make",
+                        "data" => array_values(array_map("unserialize", array_unique(array_map("serialize", $vehicle_company_array))))
+                    ],
+                    2 => [
+                        "title" => "Vehicle Model",
+                        "data" => array_values(array_map("unserialize", array_unique(array_map("serialize", $vehicle_model_array))))
                     ]
                 );
 //                1 => [
@@ -210,13 +219,14 @@
                             </a>
                         </h4>
                     </div>
-                    <div class="panel-collapse collapse" role="tabpanel" id="search-facet-collapse-plain{{$key}}">
+                    <div class="panel-collapse collapse in" role="tabpanel" id="search-facet-collapse-plain{{$key}}">
                         <div class="panel-body">
                             <ul>
                                 @foreach($value['data'] as $k=>$val)
                                 <li>
                                     <span class="glyphicon glyphicon-chevron-right"></span>
-                                    <a class="@if(Request::segment(1) == $val['slug'])filter-applied @endif" href="{{ url('/'.$val['slug']) }}">{{ $val['name'] }}</a>
+                                    <!--filter-applied-->
+                                    <a class="" href="{{ url('/'.$val['slug']) }}">{{ $val['name'] }}</a>
                                 </li>
                                 @endforeach
                             </ul>

@@ -104,7 +104,7 @@ class SubCategoryController extends Controller {
         $data['products'] = Product::with(['product_details', 'get_brands', 'get_vehicle_company', 'get_vehicle_model'])->where([['vehicle_year_from', '<=', $year], ['vehicle_year_to', '>=', $year], ['vehicle_make_id', '=', $vehicle_company->id], ['vehicle_model_id', '=', $vehicle_model->id], ['sub_category_id', '=', $sub_categories->id]])->paginate(20);
         $data['all_categories'] = SubCategory::groupBy('name')->get();
         $data['filter_title'] = $year . ' ' . $vehicle_company->name . ' ' . $vehicle_model->name . ' Parts:' . $sub_categories->name;
-        $data['bredcrum'] = '<span class="divider"> &gt; </span><span><a href="' . url('/' . $vehicle_company->name) . '">' . $vehicle_company->name . '</a></span><span class="divider"> &gt; </span><span><a href="' . url('/' . $vehicle_company->name . '/' . $vehicle_model->name) . '">' . $vehicle_model->name . '</a></span><span class="divider"> &gt; </span><span>' . $sub_categories->name . '</span>';
+        $data['bredcrum'] = '<span class="divider"> &gt; </span><span><a href="' . url('/' . $vehicle_company->slug) . '">' . $vehicle_company->name . '</a></span><span class="divider"> &gt; </span><span><a href="' . url('/' . $vehicle_company->slug . '/' . $vehicle_model->slug) . '">' . $vehicle_model->name . '</a></span><span class="divider"> &gt; </span><span>' . $sub_categories->name . '</span>';
         $data['vehicles'] = VehicleCompany::orderby('name')->get(array('slug', 'name', 'id'));
         $view = view('products.index', $data);
         if ($request->wantsJson()) {
