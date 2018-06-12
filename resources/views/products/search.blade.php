@@ -113,7 +113,7 @@
             @empty
                 <div class="col-md-12">
                     <div class="alert alert-success" role="alert">
-                        <strong>Sorry,</strong> no matches were found containing ({{ Request::input('q') }}).Please try some other keyword!
+                        <strong>Sorry,</strong> no matches were found containing ( <span class="cat_name_get"></span>{{ Request::input('q') }} ).Please try some other keyword!
                     </div>
                 </div>
             @endforelse
@@ -235,4 +235,12 @@
 @endsection
 @push('scripts')
 <script src="{{ URL::asset('/js/product.js') }}"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+    if($("select[name='cat']").val() != ''){
+        var cat_name = $("select[name='cat'] option:selected").text();
+        $('.cat_name_get').text(cat_name+" category and "); 
+    }
+});
+</script>
 @endpush
