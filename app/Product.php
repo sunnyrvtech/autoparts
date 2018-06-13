@@ -151,7 +151,7 @@ class Product extends Model {
 
     public static function count_product_by_category_list($year = null, $cat_id = null, $make_id = null, $model_id = null) {
         if ($year != null)
-            return Product::Where([['vehicle_year_from', '<=', $year], ['vehicle_year_to', '>=', $year], ['vehicle_make_id', '=', $make_id], ['vehicle_model_id', '=', $model_id], ['quantity', '>', 0], ['status', '=', 1]])->count();
+            return Product::Where([['vehicle_year_from', '<=', $year], ['vehicle_year_to', '>=', $year],['sub_category_id','=',$cat_id], ['vehicle_make_id', '=', $make_id], ['vehicle_model_id', '=', $model_id], ['quantity', '>', 0], ['status', '=', 1]])->count();
         else
             return Product::Where([['sub_category_id','=',$cat_id],['vehicle_make_id', '=', $make_id], ['vehicle_model_id', '=', $model_id], ['quantity', '>', 0], ['status', '=', 1]])->count();
     }
