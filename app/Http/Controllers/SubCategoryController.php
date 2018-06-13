@@ -79,7 +79,7 @@ class SubCategoryController extends Controller {
         $sub_categories = SubCategory::where('slug', $cat)->first(array('id', 'name', 'slug'));
         $vehicle_model = VehicleModel::where('slug', 'like', $model . '%')->first(array('id', 'name', 'slug'));
         $vehicle_company = VehicleCompany::where('slug', 'like', $vehicle . '%')->first(array('id', 'name', 'slug'));
-        $data['products'] = Product::with(['product_details', 'get_brands', 'get_vehicle_company', 'get_vehicle_model'])->where('sub_category_id', $sub_categories->id)->where([['vehicle_make_id', '=', $vehicle_company->id], ['vehicle_model_id', '=', $vehicle_model->id], ['sub_category_id', '=', $sub_categories->id]])->paginate(20);
+        $data['products'] = Product::with(['product_details', 'get_brands', 'get_vehicle_company', 'get_vehicle_model'])->where([['vehicle_make_id', '=', $vehicle_company->id], ['vehicle_model_id', '=', $vehicle_model->id], ['sub_category_id', '=', $sub_categories->id]])->paginate(20);
         $data['filter_title'] = $vehicle_company->name . ' ' . $vehicle_model->name . ' Parts:' . $sub_categories->name;
         $data['bredcrum'] = '<span class="divider"> &gt; </span><span><a href="' . url('/' . $vehicle_company->slug) . '">' . $vehicle_company->name . '</a></span><span class="divider"> &gt; </span><span><a href="' . url('/' . $vehicle_company->slug . '/' . $vehicle_model->slug) . '">' . $vehicle_model->name . '</a></span><span class="divider"> &gt; </span><span>' . $sub_categories->name . '</span>';
         $data['vehicles'] = VehicleCompany::orderby('name')->get(array('slug', 'name', 'id'));
