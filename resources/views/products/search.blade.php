@@ -227,7 +227,7 @@
                                     <span class="glyphicon glyphicon-chevron-right"></span>
                                     <!--filter-applied-->
                                     @if($key == 0)
-                                    <a class="" href="{{ url('/products/search?cat='.$val['id']) }}">{{ $val['name'] }}</a>
+                                    <a class="" href="{{ url('/products/search?cat='.$val['id'].'&q='.Request::get('q')) }}">{{ $val['name'] }}</a>
                                     @else
                                     <a class="" href="{{ url('/'.$val['slug']) }}">{{ $val['name'] }}</a>
                                     @endif
