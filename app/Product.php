@@ -94,11 +94,10 @@ class Product extends Model {
         return $this->hasOne('App\SubCategory', 'id', 'sub_category_id');
     }
 
-    public static function count_product_by_catId($cat_id = null, $make_id = null, $model_id = null, $keyword = null) {
+    public static function count_product_by_search_keyword($cat_id = null, $make_id = null, $model_id = null, $keyword = null) {
         if (($keyword != null || $cat_id != null || $make_id != null || $model_id != null)) {
-            $products = Product::with(['product_details', 'get_sub_category', 'get_brands', 'get_vehicle_company', 'get_vehicle_model'])
-                            ->Where([['products.quantity', '>', 0], ['status', '=', 1]])
-                            ->Where(function($query) use($keyword, $cat_id,$make_id,$model_id) {
+            $products = Product::Where([['products.quantity', '>', 0], ['status', '=', 1]])
+                            ->Where(function($query) use($keyword, $cat_id, $make_id, $model_id) {
                                 if ($cat_id != null)
                                     $query->Where('sub_category_id', '=', $cat_id);
                                 if ($make_id != null)
@@ -144,10 +143,17 @@ class Product extends Model {
                         }
                     })->count();
         } else {
-            $products = Product::with(['product_details', 'get_sub_category', 'get_brands', 'get_vehicle_company', 'get_vehicle_model'])->Where([['products.quantity', '>', 0], ['status', '=', 1]])->count();
+            $products = Product::Where([['products.quantity', '>', 0], ['status', '=', 1]])->count();
         }
 
         return $products;
+    }
+
+    public static function count_product_by_category_list($year = null, $cat_id = null, $make_id = null, $model_id = null) {
+        if ($year != null)
+            return Product::Where([['vehicle_year_from', '<=', $year], ['vehicle_year_to', '>=', $year], ['vehicle_make_id', '=', $make_id], ['vehicle_model_id', '=', $model_id], ['quantity', '>', 0], ['status', '=', 1]])->count();
+        else
+            return Product::Where([['sub_category_id','=',$cat_id],['vehicle_make_id', '=', $make_id], ['vehicle_model_id', '=', $model_id], ['quantity', '>', 0], ['status', '=', 1]])->count();
     }
 
 }

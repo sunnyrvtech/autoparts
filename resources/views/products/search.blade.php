@@ -195,15 +195,15 @@
                 
                 
                 foreach($sub_category_array as $key=>$value){
-                    $sub_category_array[$key]['count'] = App\Product::count_product_by_catId($value['id'],null,null,Request::get('q'));
+                    $sub_category_array[$key]['count'] = App\Product::count_product_by_search_keyword($value['id'],null,null,Request::get('q'));
                     $sub_category_array[$key]['slug'] = url('/products/search?cat='.$value['id'].'&q='.Request::get('q'));
                 }
                 foreach($vehicle_company_array as $key=>$value){
-                    $vehicle_company_array[$key]['count'] = App\Product::count_product_by_catId(null,$value['id'],null,Request::get('q'));
+                    $vehicle_company_array[$key]['count'] = App\Product::count_product_by_search_keyword(null,$value['id'],null,Request::get('q'));
                     $vehicle_company_array[$key]['slug'] = url('/products/search?make='.$value['id'].'&q='.Request::get('q'));
                 }
                 foreach($vehicle_model_array as $key=>$value){
-                    $vehicle_model_array[$key]['count'] = App\Product::count_product_by_catId(null,null,$value['id'],Request::get('q'));
+                    $vehicle_model_array[$key]['count'] = App\Product::count_product_by_search_keyword(null,null,$value['id'],Request::get('q'));
                     $vehicle_model_array[$key]['slug'] = url('/products/search?model='.$value['id'].'&q='.Request::get('q'));
                 }
                 
@@ -253,7 +253,7 @@
                                 <li>
                                     <span class="glyphicon glyphicon-chevron-right"></span>
                                     <!--filter-applied-->
-                                    <a class="" href="{{ $val['slug'] }}">{{ $val['name'] }}({{ $val['count'] }})</a>
+                                    <a class="" href="{{ $val['slug'] }}">{{ $val['name'] }} ({{ $val['count'] }})</a>
                                 </li>
                                 @endforeach
                             </ul>

@@ -45,8 +45,8 @@
         <div id="products-content-area" class="row list-group">
             <?php
 //            $brand_array = [];
-            $vehicle_company_array = [];
-            $vehicle_model_array = [];
+//            $vehicle_company_array = [];
+//            $vehicle_model_array = [];
 
             //$minYear = date('Y', strtotime('-50 year'));
             //$maxYear = date('Y', strtotime('+1 year'));
@@ -78,15 +78,15 @@
 //                $brand_array[$key]['id'] = $value['brand_id'];
 //                $brand_array[$key]['name'] = isset($value['get_brands']['name']) ? $value['get_brands']['name'] : '';
 //            }
-            if (!empty($value['vehicle_make_id']) && !empty($value['vehicle_model_id'])) {
-                $vehicle_company_array[$key]['id'] = $value['vehicle_make_id'];
-                $vehicle_company_array[$key]['slug'] = $value['get_vehicle_company']['slug'];
-                $vehicle_company_array[$key]['name'] = isset($value['get_vehicle_company']['name']) ? $value['get_vehicle_company']['name'] : '';
-            
-                $vehicle_model_array[$key]['id'] = $value['vehicle_model_id'];
-                $vehicle_model_array[$key]['slug'] = $value['get_vehicle_company']['slug'] . '/' . $value['get_vehicle_model']['slug'];
-                $vehicle_model_array[$key]['name'] = isset($value['get_vehicle_model']['name']) ? $value['get_vehicle_model']['name'] : '';
-            }
+//            if (!empty($value['vehicle_make_id']) && !empty($value['vehicle_model_id'])) {
+//                $vehicle_company_array[$key]['id'] = $value['vehicle_make_id'];
+//                $vehicle_company_array[$key]['slug'] = $value['get_vehicle_company']['slug'];
+//                $vehicle_company_array[$key]['name'] = isset($value['get_vehicle_company']['name']) ? $value['get_vehicle_company']['name'] : '';
+//            
+//                $vehicle_model_array[$key]['id'] = $value['vehicle_model_id'];
+//                $vehicle_model_array[$key]['slug'] = $value['get_vehicle_company']['slug'] . '/' . $value['get_vehicle_model']['slug'];
+//                $vehicle_model_array[$key]['name'] = isset($value['get_vehicle_model']['name']) ? $value['get_vehicle_model']['name'] : '';
+//            }
             $product_images = json_decode($value['product_details']['product_images']);
             ?>
             <div class="item col-xs-4 col-lg-4 list-group-item">
@@ -187,24 +187,19 @@
                 $sub_category_array = array();
                 foreach ($category_filter as $key => $cat_val) {
                     $sub_category_array[$key]['id'] = $cat_val->get_sub_category->id;
-                    if (isset($year))
-                        $sub_category_array[$key]['slug'] = $year.'/'.$vehicle_slug . '/' . $model_slug . '/' . $cat_val->get_sub_category->slug;
-                    else
+                    if (isset($year)) {
+                        $sub_category_array[$key]['slug'] = $year . '/' . $vehicle_slug . '/' . $model_slug . '/' . $cat_val->get_sub_category->slug;
+                        $sub_category_array[$key]['count'] = App\Product::count_product_by_category_list($year,$cat_val->get_sub_category->id,$cat_val->get_vehicle_company->id,$cat_val->get_vehicle_model->id);
+                    } else {
                         $sub_category_array[$key]['slug'] = $vehicle_slug . '/' . $model_slug . '/' . $cat_val->get_sub_category->slug;
+                        $sub_category_array[$key]['count'] = App\Product::count_product_by_category_list(null,$cat_val->get_sub_category->id,$cat_val->get_vehicle_company->id,$cat_val->get_vehicle_model->id);
+                    }
                     $sub_category_array[$key]['name'] = $cat_val->get_sub_category->name;
                 }
                 $filter_array = array(
                     0 => [
                         "title" => "Product Category",
                         "data" => $sub_category_array
-                    ],
-                    1 => [
-                        "title" => "Vehicle Make",
-                        "data" => array_values(array_map("unserialize", array_unique(array_map("serialize", $vehicle_company_array))))
-                    ],
-                    2 => [
-                        "title" => "Vehicle Model",
-                        "data" => array_values(array_map("unserialize", array_unique(array_map("serialize", $vehicle_model_array))))
                     ]
                 );
 //                1 => [
@@ -239,7 +234,7 @@
                                 <li>
                                     <span class="glyphicon glyphicon-chevron-right"></span>
                                     <!--filter-applied-->
-                                    <a class="" href="{{ url('/'.$val['slug']) }}">{{ $val['name'] }}</a>
+                                    <a class="" href="{{ url('/'.$val['slug']) }}">{{ $val['name'] }} ({{ $val['count'] }})</a>
                                 </li>
                                 @endforeach
                             </ul>
