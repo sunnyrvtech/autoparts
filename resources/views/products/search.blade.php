@@ -114,7 +114,7 @@
             @empty
                 <div class="col-md-12">
                     <div class="alert alert-success" role="alert">
-                        <strong>Sorry,</strong> no matches were found containing ( <span class="cat_name_get"></span>{{ Request::input('q') }} ).Please try some other keyword!
+                        <strong>Sorry,</strong> no matches were found containing ( <span class="cat_name_get"></span> ).Please try some other keyword!
                     </div>
                 </div>
             @endforelse
@@ -226,7 +226,11 @@
                                 <li>
                                     <span class="glyphicon glyphicon-chevron-right"></span>
                                     <!--filter-applied-->
+                                    @if($key == 0)
+                                    <a class="" href="{{ url('/products/search?cat='.$val['id']) }}">{{ $val['name'] }}</a>
+                                    @else
                                     <a class="" href="{{ url('/'.$val['slug']) }}">{{ $val['name'] }}</a>
+                                    @endif
                                 </li>
                                 @endforeach
                             </ul>
@@ -247,9 +251,12 @@
 <script src="{{ URL::asset('/js/product.js') }}"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-    if($("select[name='cat']").val() != ''){
-        var cat_name = $("select[name='cat'] option:selected").text();
-        $('.cat_name_get').text(cat_name+" category and "); 
+    var q = "{{ Request::get('q') }}";
+    var cat_name = $("select[name='cat'] option:selected").text();
+    if($("select[name='cat']").val() != '' && q !=''){
+        $('.cat_name_get').text(cat_name+" category and "+q); 
+    }else if($("select[name='cat']").val() != '' && q ==''){
+        $('.cat_name_get').text(cat_name+" category "); 
     }
 });
 </script>
