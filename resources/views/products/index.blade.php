@@ -184,10 +184,19 @@
                 </div>
                 </div>
                 <?php
+                $sub_category_array = array();
+                foreach ($category_filter as $key => $cat_val) {
+                    $sub_category_array[$key]['id'] = $cat_val->get_sub_category->id;
+                    if (isset($year))
+                        $sub_category_array[$key]['slug'] = $year.'/'.$vehicle_slug . '/' . $model_slug . '/' . $cat_val->get_sub_category->slug;
+                    else
+                        $sub_category_array[$key]['slug'] = $vehicle_slug . '/' . $model_slug . '/' . $cat_val->get_sub_category->slug;
+                    $sub_category_array[$key]['name'] = $cat_val->get_sub_category->name;
+                }
                 $filter_array = array(
                     0 => [
                         "title" => "Product Category",
-                        "data" => $featured_category
+                        "data" => $sub_category_array
                     ],
                     1 => [
                         "title" => "Vehicle Make",
