@@ -45,6 +45,7 @@
 //            $brand_array = [];
             $vehicle_company_array = [];
             $vehicle_model_array = [];
+            $sub_category_array = [];
 //            $minYear = date('Y', strtotime('-50 year'));
 //            $maxYear = date('Y', strtotime('+1 year'));
             // set start and end year range
@@ -83,6 +84,13 @@
                 $vehicle_model_array[$key]['slug'] = $value['get_vehicle_company']['slug'] . '/' . $value['get_vehicle_model']['slug'];
                 $vehicle_model_array[$key]['name'] = isset($value['get_vehicle_model']['name']) ? $value['get_vehicle_model']['name'] : '';
             }
+            
+            if(!empty($value['sub_category_id'])){
+                $sub_category_array[$key]['id'] = $value['get_sub_category']['id'];
+                $sub_category_array[$key]['slug'] = $value['get_sub_category']['slug'];
+                $sub_category_array[$key]['name'] = $value['get_sub_category']['name'];
+            }
+            
             $product_images = json_decode($value['product_details']['product_images']);
             ?>
             <div class="item col-xs-4 col-lg-4 list-group-item">
@@ -180,18 +188,37 @@
                 </div>
                 </div>
                 <?php
+                
+                $sub_category_array = array_values(array_map("unserialize", array_unique(array_map("serialize", $sub_category_array))));
+                $vehicle_company_array = array_values(array_map("unserialize", array_unique(array_map("serialize", $vehicle_company_array))));
+                $vehicle_model_array = array_values(array_map("unserialize", array_unique(array_map("serialize", $vehicle_model_array))));
+                
+                
+                foreach($sub_category_array as $key=>$value){
+                    $sub_category_array[$key]['count'] = App\Product::count_product_by_catId($value['id'],null,null,Request::get('q'));
+                    $sub_category_array[$key]['slug'] = url('/products/search?cat='.$value['id'].'&q='.Request::get('q'));
+                }
+                foreach($vehicle_company_array as $key=>$value){
+                    $vehicle_company_array[$key]['count'] = App\Product::count_product_by_catId(null,$value['id'],null,Request::get('q'));
+                    $vehicle_company_array[$key]['slug'] = url('/products/search?make='.$value['id'].'&q='.Request::get('q'));
+                }
+                foreach($vehicle_model_array as $key=>$value){
+                    $vehicle_model_array[$key]['count'] = App\Product::count_product_by_catId(null,null,$value['id'],Request::get('q'));
+                    $vehicle_model_array[$key]['slug'] = url('/products/search?model='.$value['id'].'&q='.Request::get('q'));
+                }
+                
                 $filter_array = array(
                     0 => [
                         "title" => "Product Category",
-                        "data" => $featured_category
+                        "data" => $sub_category_array
                     ],
                     1 => [
                         "title" => "Vehicle Make",
-                        "data" => array_values(array_map("unserialize", array_unique(array_map("serialize", $vehicle_company_array))))
+                        "data" => $vehicle_company_array
                     ],
                     2 => [
                         "title" => "Vehicle Model",
-                        "data" => array_values(array_map("unserialize", array_unique(array_map("serialize", $vehicle_model_array))))
+                        "data" => $vehicle_model_array
                     ]
                 );
 //                1 => [
@@ -226,11 +253,7 @@
                                 <li>
                                     <span class="glyphicon glyphicon-chevron-right"></span>
                                     <!--filter-applied-->
-                                    @if($key == 0)
-                                    <a class="" href="{{ url('/products/search?cat='.$val['id'].'&q='.Request::get('q')) }}">{{ $val['name'] }}</a>
-                                    @else
-                                    <a class="" href="{{ url('/'.$val['slug']) }}">{{ $val['name'] }}</a>
-                                    @endif
+                                    <a class="" href="{{ $val['slug'] }}">{{ $val['name'] }}({{ $val['count'] }})</a>
                                 </li>
                                 @endforeach
                             </ul>
