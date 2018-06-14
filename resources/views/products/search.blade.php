@@ -77,18 +77,21 @@
 //            }
             if (!empty($value['vehicle_make_id']) && !empty($value['vehicle_model_id'])) {
                 $vehicle_company_array[$key]['id'] = $value['vehicle_make_id'];
-                $vehicle_company_array[$key]['slug'] = $value['get_vehicle_company']['slug'];
+//                $vehicle_company_array[$key]['slug'] = $value['get_vehicle_company']['slug'];
                 $vehicle_company_array[$key]['name'] = isset($value['get_vehicle_company']['name']) ? $value['get_vehicle_company']['name'] : '';
-            
+                $vehicle_company_array[$key]['slug'] = url('/products/search?make='.$value['vehicle_make_id'].'&q='.Request::get('q'));
+               
                 $vehicle_model_array[$key]['id'] = $value['vehicle_model_id'];
-                $vehicle_model_array[$key]['slug'] = $value['get_vehicle_company']['slug'] . '/' . $value['get_vehicle_model']['slug'];
+//                $vehicle_model_array[$key]['slug'] = $value['get_vehicle_company']['slug'] . '/' . $value['get_vehicle_model']['slug'];
                 $vehicle_model_array[$key]['name'] = isset($value['get_vehicle_model']['name']) ? $value['get_vehicle_model']['name'] : '';
+                $vehicle_model_array[$key]['slug'] = url('/products/search?model='.$value['vehicle_model_id'].'&q='.Request::get('q'));
             }
             
             if(!empty($value['sub_category_id'])){
                 $sub_category_array[$key]['id'] = $value['get_sub_category']['id'];
-                $sub_category_array[$key]['slug'] = $value['get_sub_category']['slug'];
+//                $sub_category_array[$key]['slug'] = $value['get_sub_category']['slug'];
                 $sub_category_array[$key]['name'] = $value['get_sub_category']['name'];
+                $sub_category_array[$key]['slug'] = url('/products/search?cat='.$value['sub_category_id'].'&q='.Request::get('q'));
             }
             
             $product_images = json_decode($value['product_details']['product_images']);
@@ -194,18 +197,18 @@
                 $vehicle_model_array = array_values(array_map("unserialize", array_unique(array_map("serialize", $vehicle_model_array))));
                 
                 
-                foreach($sub_category_array as $key=>$value){
-                    $sub_category_array[$key]['count'] = App\Product::count_product_by_search_keyword($value['id'],null,null,Request::get('q'));
-                    $sub_category_array[$key]['slug'] = url('/products/search?cat='.$value['id'].'&q='.Request::get('q'));
-                }
-                foreach($vehicle_company_array as $key=>$value){
-                    $vehicle_company_array[$key]['count'] = App\Product::count_product_by_search_keyword(null,$value['id'],null,Request::get('q'));
-                    $vehicle_company_array[$key]['slug'] = url('/products/search?make='.$value['id'].'&q='.Request::get('q'));
-                }
-                foreach($vehicle_model_array as $key=>$value){
-                    $vehicle_model_array[$key]['count'] = App\Product::count_product_by_search_keyword(null,null,$value['id'],Request::get('q'));
-                    $vehicle_model_array[$key]['slug'] = url('/products/search?model='.$value['id'].'&q='.Request::get('q'));
-                }
+//                foreach($sub_category_array as $key=>$value){
+//                    $sub_category_array[$key]['count'] = App\Product::count_product_by_search_keyword($value['id'],null,null,Request::get('q'));
+//                    $sub_category_array[$key]['slug'] = url('/products/search?cat='.$value['id'].'&q='.Request::get('q'));
+//                }
+//                foreach($vehicle_company_array as $key=>$value){
+//                    $vehicle_company_array[$key]['count'] = App\Product::count_product_by_search_keyword(null,$value['id'],null,Request::get('q'));
+//                    $vehicle_company_array[$key]['slug'] = url('/products/search?make='.$value['id'].'&q='.Request::get('q'));
+//                }
+//                foreach($vehicle_model_array as $key=>$value){
+//                    $vehicle_model_array[$key]['count'] = App\Product::count_product_by_search_keyword(null,null,$value['id'],Request::get('q'));
+//                    $vehicle_model_array[$key]['slug'] = url('/products/search?model='.$value['id'].'&q='.Request::get('q'));
+//                }
                 
                 $filter_array = array(
                     0 => [
@@ -253,7 +256,7 @@
                                 <li>
                                     <span class="glyphicon glyphicon-chevron-right"></span>
                                     <!--filter-applied-->
-                                    <a class="" href="{{ $val['slug'] }}">{{ $val['name'] }} ({{ $val['count'] }})</a>
+                                    <a class="" href="{{ $val['slug'] }}">{{ $val['name'] }}</a>
                                 </li>
                                 @endforeach
                             </ul>

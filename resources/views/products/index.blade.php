@@ -189,10 +189,10 @@
                     $sub_category_array[$key]['id'] = $cat_val->get_sub_category->id;
                     if (isset($year)) {
                         $sub_category_array[$key]['slug'] = $year . '/' . $vehicle_slug . '/' . $model_slug . '/' . $cat_val->get_sub_category->slug;
-                        $sub_category_array[$key]['count'] = App\Product::count_product_by_category_list($year,$cat_val->get_sub_category->id,$cat_val->get_vehicle_company->id,$cat_val->get_vehicle_model->id);
+                        //$sub_category_array[$key]['count'] = App\Product::count_product_by_category_list($year,$cat_val->get_sub_category->id,$cat_val->get_vehicle_company->id,$cat_val->get_vehicle_model->id);
                     } else {
                         $sub_category_array[$key]['slug'] = $vehicle_slug . '/' . $model_slug . '/' . $cat_val->get_sub_category->slug;
-                        $sub_category_array[$key]['count'] = App\Product::count_product_by_category_list(null,$cat_val->get_sub_category->id,$cat_val->get_vehicle_company->id,$cat_val->get_vehicle_model->id);
+                        //$sub_category_array[$key]['count'] = App\Product::count_product_by_category_list(null,$cat_val->get_sub_category->id,$cat_val->get_vehicle_company->id,$cat_val->get_vehicle_model->id);
                     }
                     $sub_category_array[$key]['name'] = $cat_val->get_sub_category->name;
                 }
@@ -234,7 +234,7 @@
                                 <li>
                                     <span class="glyphicon glyphicon-chevron-right"></span>
                                     <!--filter-applied-->
-                                    <a class="" href="{{ url('/'.$val['slug']) }}">{{ $val['name'] }} ({{ $val['count'] }})</a>
+                                    <a class="" href="{{ url('/'.$val['slug']) }}">{{ $val['name'] }}</a>
                                 </li>
                                 @endforeach
                             </ul>
