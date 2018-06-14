@@ -93,7 +93,7 @@
                     <div class="row">
                         <div class="col-md-6 col-xs-6">
                             <div class="form-group">
-                                <label for="price">Sku:</label><span> ${{ $products->sku }}</span>
+                                <label for="price">Sku:</label><span> {{ $products->sku }}</span>
                             </div>
                         </div>
                         <div class="col-md-6 col-xs-6">

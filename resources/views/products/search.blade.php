@@ -113,6 +113,8 @@
                         </div>
                         <div class="row">
                             <p class="lead">${{ $value['price']  }}</p>
+                            <label for="parse_link">Parse Link:</label><span> {{ $value['product_details']['parse_link'] }}</span>
+                            <label for="vehicle_make">Category:</label><span> {{ $value['get_sub_category']['name'] }}</span>
                         </div>
                     </div>
                 </div>
