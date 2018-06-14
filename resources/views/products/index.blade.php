@@ -107,10 +107,10 @@
                         <div class="row">
                             <p class="lead">${{ $value['price'] }}</p>
                             @if($value['product_details']['parse_link'])
-                            <label for="parse_link">Parse Link:</label><span> {{ $value['product_details']['parse_link'] }}</span>
+                            <p><label for="parse_link">Parse Link:</label><span> {{ $value['product_details']['parse_link'] }}</span></p>
                             @endif
                             @if($value['get_sub_category']['name'])
-                            <label for="vehicle_make">Category:</label><span> {{ $value['get_sub_category']['name'] }}</span>
+                            <p><label for="vehicle_make">Category:</label><span> {{ $value['get_sub_category']['name'] }}</span></p>
                             @endif
                         </div>
                     </div>
