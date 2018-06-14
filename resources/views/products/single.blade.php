@@ -90,6 +90,18 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-6 col-xs-6">
+                            <div class="form-group">
+                                <label for="price">Sku:</label><span> ${{ $products->sku }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-xs-6">
+                            <div class="form-group">
+                                <label for="quantity">Category:</label><span> {{ $products->get_sub_category->name }}</span>
+                            </div>
+                        </div>
+                    </div>
                     <div class="row form-inline">
                         <div class="col-md-12">
                             <form name="cartForm" role="form" method="POST" action="javascript:void(0);" ng-submit="submitCart(cartForm.$valid,{{ $products->id }})" novalidate>
