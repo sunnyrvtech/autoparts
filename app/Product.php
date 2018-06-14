@@ -119,12 +119,6 @@ class Product extends Model {
                         }
                     })->orWhere(function($query) use($keyword) {
                         if ($keyword != null) {
-                            $query->WhereHas('get_brands', function ($q) use($keyword) {
-                                $q->where('brands.name', 'LIKE', '%' . $keyword . '%');
-                            });
-                        }
-                    })->orWhere(function($query) use($keyword) {
-                        if ($keyword != null) {
                             $query->WhereHas('get_vehicle_company', function ($q) use($keyword) {
                                 $q->where('vehicle_companies.name', 'LIKE', '%' . $keyword . '%');
                             });
