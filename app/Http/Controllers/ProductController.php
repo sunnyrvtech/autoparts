@@ -456,13 +456,44 @@ class ProductController extends Controller {
             $products = Product::with(['product_details', 'get_sub_category', 'get_brands', 'get_vehicle_company', 'get_vehicle_model'])
                             ->Where([['products.quantity', '>', 0], ['status', '=', 1]])
                             ->Where(function($query) use($keyword, $cat_id,$make_id,$model_id) {
+                                if ($cat_id != null)
+                                    $query->Where('sub_category_id', '=', $cat_id);
+                                if ($make_id != null)
+                                    $query->Where('vehicle_make_id', '=', $make_id);
+                                if ($model_id != null)
+                                    $query->Where('vehicle_model_id', '=', $model_id);
                                 if (!is_numeric($keyword) && $keyword != null) {
                                     $query->whereRaw("MATCH(product_name) AGAINST(? IN BOOLEAN MODE)", [$keyword]);
                                     $query->orWhere('products.sku', 'LIKE', $keyword . '%');
                                 } elseif ($keyword != null) {
                                     $query->Where('products.price', 'LIKE', $keyword . '%');
                                 }
-                            })->paginate(20);
+                            })->orWhere(function($query) use($keyword) {
+                        if ($keyword != null) {
+                            $query->WhereHas('product_details', function ($q) use ($keyword) {
+                                $q->where('product_details.oem_number', 'LIKE', '%' . $keyword . '%')
+                                        ->orwhere('product_details.parse_link', 'LIKE', '%' . $keyword . '%');
+                            });
+                        }
+                    })->orWhere(function($query) use($keyword) {
+                        if ($keyword != null) {
+                            $query->WhereHas('get_vehicle_company', function ($q) use($keyword) {
+                                $q->where('vehicle_companies.name', 'LIKE', '%' . $keyword . '%');
+                            });
+                        }
+                    })->orWhere(function($query) use($keyword) {
+                        if ($keyword != null) {
+                            $query->WhereHas('get_vehicle_model', function ($q) use($keyword) {
+                                $q->where('vehicle_models.name', 'LIKE', '%' . $keyword . '%');
+                            });
+                        }
+                    })->orWhere(function($query) use ($keyword) {
+                        if ($keyword != null) {
+                            $query->orWhereHas('get_sub_category', function($q) use ($keyword) {
+                                $q->Where('sub_categories.name', 'LIKE', '%' . $keyword . '%');
+                            });
+                        }
+                    })->paginate(20);
         } else {
             $products = Product::with(['product_details', 'get_sub_category', 'get_brands', 'get_vehicle_company', 'get_vehicle_model'])->Where([['products.quantity', '>', 0], ['status', '=', 1]])->paginate(20);
         }
