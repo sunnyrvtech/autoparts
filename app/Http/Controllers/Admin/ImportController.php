@@ -399,19 +399,19 @@ class ImportController extends Controller {
             DB::statement('DELETE FROM product_details');
 //            DB::statement('DELETE FROM product_categories');
 //            DB::statement('DELETE FROM product_sub_categories');
-            DB::statement('DELETE FROM categories');
-            DB::statement('DELETE FROM sub_categories');
-            DB::statement('DELETE FROM vehicle_models');
-            DB::statement('DELETE FROM vehicle_companies');
+           // DB::statement('DELETE FROM categories');
+           // DB::statement('DELETE FROM sub_categories');
+           // DB::statement('DELETE FROM vehicle_models');
+           // DB::statement('DELETE FROM vehicle_companies');
 
             DB::statement('ALTER TABLE products AUTO_INCREMENT=1');
-            DB::statement('ALTER TABLE categories AUTO_INCREMENT=1');
-            DB::statement('ALTER TABLE sub_categories AUTO_INCREMENT=1');
+           // DB::statement('ALTER TABLE categories AUTO_INCREMENT=1');
+          //  DB::statement('ALTER TABLE sub_categories AUTO_INCREMENT=1');
             DB::statement('ALTER TABLE product_details AUTO_INCREMENT=1');
 //            DB::statement('ALTER TABLE product_categories AUTO_INCREMENT=1');
 //            DB::statement('ALTER TABLE product_sub_categories AUTO_INCREMENT=1');
-            DB::statement('ALTER TABLE vehicle_models AUTO_INCREMENT=1');
-            DB::statement('ALTER TABLE vehicle_companies AUTO_INCREMENT=1');
+         //   DB::statement('ALTER TABLE vehicle_models AUTO_INCREMENT=1');
+         //   DB::statement('ALTER TABLE vehicle_companies AUTO_INCREMENT=1');
             Session::flash('success-message', 'All products data deleted successfully !');
         }
     }
