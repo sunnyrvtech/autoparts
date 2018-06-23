@@ -33,24 +33,33 @@ class ImportController extends Controller {
         $path = $request->file('productCsv')->getRealPath();
         Excel::filter('chunk')->load($path)->chunk(1000, function($results) {
             foreach ($results as $key => $row) {
-
-                if (!$category = Category::where('name', 'like', trim($row->category))->first(array('id'))) {
+                $search_keyword = '';
+                $search_keyword = trim($row->product_name);
+                if (!empty($row->parse_link)) {
+                    $search_keyword = $search_keyword . ' ' . trim($row->parse_link);
+                }
+                if (!empty($row->oem_number)) {
+                    $search_keyword = $search_keyword . ' ' . trim($row->oem_number);
+                }
+                if (!$category = Category::where('name', 'like', trim($row->category))->first(array('id','name'))) {
                     $category = Category::create(array('name' => trim($row->category), 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
                 }
 
-                if (!$sub_category = SubCategory::where('category_id', $category->id)->where('name', 'like', trim($row->sub_category))->first(array('id', 'category_id'))) {
+                if (!$sub_category = SubCategory::where('category_id', $category->id)->where('name', 'like', trim($row->sub_category))->first(array('id','name', 'category_id'))) {
                     $slug = $this->createSlug(trim($row->sub_category), 'category');
                     $sub_category = SubCategory::create(array('category_id' => $category->id, 'name' => trim($row->sub_category), 'slug' => $slug, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
                 }
-                if (!$vehicle_company = VehicleCompany::where('name', 'like', trim(ucfirst(strtolower($row->vehicle_make))))->first(array('id'))) {
+                if (!$vehicle_company = VehicleCompany::where('name', 'like', trim(ucfirst(strtolower($row->vehicle_make))))->first(array('id','name'))) {
                     $make_slug = $this->createSlug(trim($row->vehicle_make), 'vehicle_make');
-                    $vehicle_company = VehicleCompany::create(array('name' => trim(ucfirst(strtolower($row->vehicle_make))),'slug'=>$make_slug, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
+                    $vehicle_company = VehicleCompany::create(array('name' => trim(ucfirst(strtolower($row->vehicle_make))), 'slug' => $make_slug, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
                 }
-                if (!$vehicle_model = VehicleModel::where('name', 'like', trim(ucfirst(strtolower($row->vehicle_model))))->first(array('id'))) {
+                if (!$vehicle_model = VehicleModel::where('name', 'like', trim(ucfirst(strtolower($row->vehicle_model))))->first(array('id','name'))) {
                     $model_slug = $this->createSlug(trim($row->vehicle_model), 'vehicle_model');
-                    $vehicle_model = VehicleModel::create(array('name' => trim(ucfirst(strtolower($row->vehicle_model))),'slug'=>$model_slug, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
+                    $vehicle_model = VehicleModel::create(array('name' => trim(ucfirst(strtolower($row->vehicle_model))), 'slug' => $model_slug, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
                 }
-
+                
+                $search_keyword = $search_keyword.' '.$category->name.' '.$sub_category->name.' '.$vehicle_company->name.' '.$vehicle_model->name;
+                
                 $product_slug = $this->createSlug(trim($row->product_name), 'product');
                 $vehicle_year = explode('-', $row->vehicle_year);
                 $product_array = array(
@@ -88,6 +97,7 @@ class ImportController extends Controller {
                     'design' => empty($row->design) ? null : trim($row->design),
                     'product_line' => empty($row->product_line) ? null : trim($row->product_line),
                     'status' => empty($row->status) ? 1 : trim($row->status),
+                    'keyword_search' => substr($search_keyword, 0, 255),
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now()
                 );
@@ -399,19 +409,19 @@ class ImportController extends Controller {
             DB::statement('DELETE FROM product_details');
 //            DB::statement('DELETE FROM product_categories');
 //            DB::statement('DELETE FROM product_sub_categories');
-           // DB::statement('DELETE FROM categories');
-           // DB::statement('DELETE FROM sub_categories');
-           // DB::statement('DELETE FROM vehicle_models');
-           // DB::statement('DELETE FROM vehicle_companies');
+            // DB::statement('DELETE FROM categories');
+            // DB::statement('DELETE FROM sub_categories');
+            // DB::statement('DELETE FROM vehicle_models');
+            // DB::statement('DELETE FROM vehicle_companies');
 
             DB::statement('ALTER TABLE products AUTO_INCREMENT=1');
-           // DB::statement('ALTER TABLE categories AUTO_INCREMENT=1');
-          //  DB::statement('ALTER TABLE sub_categories AUTO_INCREMENT=1');
+            // DB::statement('ALTER TABLE categories AUTO_INCREMENT=1');
+            //  DB::statement('ALTER TABLE sub_categories AUTO_INCREMENT=1');
             DB::statement('ALTER TABLE product_details AUTO_INCREMENT=1');
 //            DB::statement('ALTER TABLE product_categories AUTO_INCREMENT=1');
 //            DB::statement('ALTER TABLE product_sub_categories AUTO_INCREMENT=1');
-         //   DB::statement('ALTER TABLE vehicle_models AUTO_INCREMENT=1');
-         //   DB::statement('ALTER TABLE vehicle_companies AUTO_INCREMENT=1');
+            //   DB::statement('ALTER TABLE vehicle_models AUTO_INCREMENT=1');
+            //   DB::statement('ALTER TABLE vehicle_companies AUTO_INCREMENT=1');
             Session::flash('success-message', 'All products data deleted successfully !');
         }
     }

@@ -289,6 +289,8 @@ $(document).ready(function(){
         $('.cat_name_get').text(cat_name+" category and "+q); 
     }else if($("select[name='cat']").val() != '' && q ==''){
         $('.cat_name_get').text(cat_name+" category "); 
+    }else if($("select[name='cat']").val() == '' && q !=''){
+        $('.cat_name_get').text(q); 
     }
 });
 </script>

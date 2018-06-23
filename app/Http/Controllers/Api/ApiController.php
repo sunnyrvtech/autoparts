@@ -331,7 +331,7 @@ class ApiController extends Controller {
         $ids_array = array();
         foreach ($data['products'] as $key => $value) {
             $row = $value;
-
+            $search_keyword = '';
             $product_array = array();
             $product_detail_array = array();
 
@@ -339,31 +339,41 @@ class ApiController extends Controller {
 
                 return response()->json(['status' => "error", "message" => "The following fields are must be in the json request i.e:- product_name,sku,price,quantity,status,category,sub_category"]);
             }
-
-            if (!$category = Category::where('name', 'like', trim($row['category']))->first(array('id'))) {
+            $search_keyword = trim($row['product_name']);
+            if (isset($row['parse_link']) && !empty($row['parse_link'])) {
+                $search_keyword = $search_keyword . ' ' . trim($row['parse_link']);
+            }
+            if (isset($row['oem_number']) && !empty($row['oem_number'])) {
+                $search_keyword = $search_keyword . ' ' . trim($row['oem_number']);
+            }
+            if (!$category = Category::where('name', 'like', trim($row['category']))->first(array('id','name'))) {
                 $category = Category::create(array('name' => trim($row['category']), 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
             }
 
-            if (!$sub_category = SubCategory::where('category_id', $category->id)->where('name', 'like', trim($row['sub_category']))->first(array('id', 'category_id'))) {
+            if (!$sub_category = SubCategory::where('category_id', $category->id)->where('name', 'like', trim($row['sub_category']))->first(array('id','name', 'category_id'))) {
                 $slug = $this->createSlug(trim($row['sub_category']), 'category');
                 $sub_category = SubCategory::create(array('category_id' => $category->id, 'name' => trim($row['sub_category']), 'slug' => $slug, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
             }
+            $search_keyword = $search_keyword.' '.$category->name.' '.$sub_category->name;
+            
             $product_array['category_id'] = $category->id;
             $product_array['sub_category_id'] = $sub_category->id;
 
             if (isset($row['vehicle_make'])) {
-                if (!$vehicle_company = VehicleCompany::where('name', 'like', trim(ucfirst(strtolower($row['vehicle_make']))))->first(array('id'))) {
+                if (!$vehicle_company = VehicleCompany::where('name', 'like', trim(ucfirst(strtolower($row['vehicle_make']))))->first(array('id','name'))) {
                     $make_slug = $this->createSlug(trim($row['vehicle_make']), 'vehicle_make');
                     $vehicle_company = VehicleCompany::create(array('name' => trim(ucfirst(strtolower($row['vehicle_make']))), 'slug' => $make_slug, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
                 }
                 $product_array['vehicle_make_id'] = $vehicle_company->id;
+                $search_keyword = $search_keyword.' '.$vehicle_company->name;
             }
             if (isset($row['vehicle_model'])) {
-                if (!$vehicle_model = VehicleModel::where('name', 'like', trim(ucfirst(strtolower($row['vehicle_model']))))->first(array('id'))) {
+                if (!$vehicle_model = VehicleModel::where('name', 'like', trim(ucfirst(strtolower($row['vehicle_model']))))->first(array('id','name'))) {
                     $model_slug = $this->createSlug(trim($row['vehicle_model']), 'vehicle_model');
                     $vehicle_model = VehicleModel::create(array('name' => trim(ucfirst(strtolower($row['vehicle_model']))), 'slug' => $model_slug, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
                 }
                 $product_array['vehicle_model_id'] = $vehicle_model->id;
+                $search_keyword = $search_keyword.' '.$vehicle_model->name;
             }
             if (isset($row['brand']) && !empty($row['brand'])) {
                 if (!$brand = Brand::where('name', 'like', trim(ucfirst(strtolower($row['brand']))))->first(array('id'))) {
@@ -371,11 +381,11 @@ class ApiController extends Controller {
                 }
                 $product_array['brand_id'] = $brand->id;
             }
-
-
+            
             $product_array = $this->productArray($row, $product_array);
             $product_detail_array = $this->productDetailArray($row, $product_detail_array);
 
+            $product_array['keyword_search'] = substr($search_keyword, 0, 255);
             $product_array['created_at'] = Carbon::now();
             $product_array['updated_at'] = Carbon::now();
 
@@ -418,6 +428,10 @@ class ApiController extends Controller {
             if ($products) {
                 $product_array = array();
                 $product_detail_array = array();
+                
+                if (isset($row['product_name'])) {
+                    $product_array['product_slug'] = $this->createSlug(trim($row['product_name']), 'product');
+                }
                 if (isset($row['category'])) {
                     if (!$category = Category::where('name', 'like', trim($row['category']))->first(array('id'))) {
                         return response()->json(['status' => "error", 'message' => $row['category'] . ' category not found !']);
@@ -451,9 +465,7 @@ class ApiController extends Controller {
                     $product_array['brand_id'] = $brand->id;
                 }
 
-                if (isset($row['product_name'])) {
-                    $product_array['product_slug'] = $this->createSlug(trim($row['product_name']), 'product');
-                }
+                
                 $product_array = $this->productArray($row, $product_array);
                 $product_detail_array = $this->productDetailArray($row, $product_detail_array);
 
@@ -477,6 +489,31 @@ class ApiController extends Controller {
                     }
                     $product_details->fill($product_detail_array)->save();
                 }
+                
+                $product_search_keyword = Product::with(['product_details:product_id,parse_link,oem_number','get_category:id,name','get_sub_category:id,name', 'get_vehicle_company:id,name', 'get_vehicle_model:id,name'])->Where('id',$products->id)->first(array('id','product_name','category_id','sub_category_id','vehicle_make_id','vehicle_model_id'));
+                
+                //  this is used to update search keyword column 
+                $search_keyword = $product_search_keyword->product_name;
+                if($product_search_keyword->product_details->parse_link != null)
+                    $search_keyword = $search_keyword.' '.$product_search_keyword->product_details->parse_link;
+            
+                if($product_search_keyword->product_details->oem_number != null)
+                    $search_keyword = $search_keyword.' '.$product_search_keyword->product_details->oem_number;
+            
+                if($product_search_keyword->get_category->name != null)
+                    $search_keyword = $search_keyword.' '.$product_search_keyword->get_category->name;
+            
+                if($product_search_keyword->get_sub_category->name != null)
+                    $search_keyword = $search_keyword.' '.' '.$product_search_keyword->get_sub_category->name;
+            
+                if($product_search_keyword->get_vehicle_company->name != null)
+                    $search_keyword = $search_keyword.' '.' '.$product_search_keyword->get_vehicle_company->name;
+                
+                if($product_search_keyword->get_vehicle_model->name != null)
+                    $search_keyword = $search_keyword.' '.' '.$product_search_keyword->get_vehicle_model->name;
+                
+                $product_search_keyword->fill(array('keyword_search'=>substr($search_keyword, 0, 255)))->save();
+                
             } else {
                 return response()->json(['status' => "error", "message" => "Product not exist related to this sku" . $row['sku']]);
             }

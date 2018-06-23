@@ -444,6 +444,34 @@ class ProductController extends Controller {
      * @return Response
      */
     public function searchProduct(Request $request) {
+        
+        $title = 'Products | Search';
+
+        $keyword = explode(" ", $request->get('q'));
+        $products = Product::with(['product_details', 'get_sub_category', 'get_brands', 'get_vehicle_company', 'get_vehicle_model'])
+                        ->Where([['products.quantity', '>', 0], ['status', '=', 1]])
+                        ->Where(function($query) use($keyword) {
+                            $query->Where(function($q) use($keyword) {
+                                foreach ($keyword as $val) {
+                                    $q->Where('keyword_search', 'LIKE', '%' . $val . '%');
+                                }
+                            });
+                        })->paginate(20);
+        $vehicles = VehicleCompany::orderby('name')->get(array('slug', 'name', 'id'));
+        $view = View::make('products.search', compact('title', 'products', 'vehicles'));
+        if ($request->wantsJson()) {
+            $sections = $view->renderSections();
+            return $sections['content'];
+        }
+        return $view;
+    }
+
+    /**
+     * function for search product.
+     *
+     * @return Response
+     */
+    public function searchProduct1(Request $request) {
 
         $title = 'Products | Search';
 
@@ -455,7 +483,7 @@ class ProductController extends Controller {
         if (($keyword != null || $cat_id != null || $make_id != null || $model_id != null)) {
             $products = Product::with(['product_details', 'get_sub_category', 'get_brands', 'get_vehicle_company', 'get_vehicle_model'])
                             ->Where([['products.quantity', '>', 0], ['status', '=', 1]])
-                            ->Where(function($query) use($keyword, $cat_id,$make_id,$model_id) {
+                            ->Where(function($query) use($keyword, $cat_id, $make_id, $model_id) {
                                 if ($cat_id != null)
                                     $query->Where('sub_category_id', '=', $cat_id);
                                 if ($make_id != null)

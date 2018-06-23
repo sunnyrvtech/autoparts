@@ -16,7 +16,7 @@ class Product extends Model {
 //    ];
 
     protected $fillable = [
-        'product_name', 'product_slug', 'product_long_description', 'product_short_description', 'sku', 'quantity', 'price', 'special_price', 'discount', 'vehicle_fit', 'vehicle_year_from', 'vehicle_year_to', 'vehicle_make_id', 'vehicle_model_id', 'category_id', 'sub_category_id', 'weight', 'length', 'width', 'height', 'part_type', 'brand_id', 'operation', 'wattage', 'mirror_option', 'location', 'size', 'material', 'color', 'front_location', 'side_location', 'includes', 'design', 'product_line', 'status',
+        'product_name', 'product_slug', 'product_long_description', 'product_short_description', 'sku', 'quantity', 'price', 'special_price', 'discount', 'vehicle_fit', 'vehicle_year_from', 'vehicle_year_to', 'vehicle_make_id', 'vehicle_model_id', 'category_id', 'sub_category_id', 'weight', 'length', 'width', 'height', 'part_type', 'brand_id', 'operation', 'wattage', 'mirror_option', 'location', 'size', 'material', 'color', 'front_location', 'side_location', 'includes', 'design', 'product_line', 'status','keyword_search',
     ];
 
     public function product_details() {

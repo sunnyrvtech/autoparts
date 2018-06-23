@@ -50,6 +50,7 @@ class CreateProductsTable extends Migration
            $table->string('design')->nullable();
            $table->string('product_line')->nullable();
            $table->tinyInteger('status')->default(1);
+           $table->string('product_slug')->nullable();
            $table->timestamps();
            $table->softDeletes();
        });
