@@ -444,13 +444,23 @@ class ProductController extends Controller {
      * @return Response
      */
     public function searchProduct(Request $request) {
-        
+
         $title = 'Products | Search';
 
         $keyword = explode(" ", $request->get('q'));
+        $cat_id = $request->input('cat');
+        $make_id = $request->input('make');
+        $model_id = $request->input('model');
         $products = Product::with(['product_details', 'get_sub_category', 'get_brands', 'get_vehicle_company', 'get_vehicle_model'])
                         ->Where([['products.quantity', '>', 0], ['status', '=', 1]])
-                        ->Where(function($query) use($keyword) {
+                        ->Where(function($query) use($keyword, $cat_id, $make_id, $model_id) {
+                            if ($cat_id != null)
+                                $query->Where('sub_category_id', '=', $cat_id);
+                            if ($make_id != null)
+                                $query->Where('vehicle_make_id', '=', $make_id);
+                            if ($model_id != null)
+                                $query->Where('vehicle_model_id', '=', $model_id);
+
                             $query->Where(function($q) use($keyword) {
                                 foreach ($keyword as $val) {
                                     $q->Where('keyword_search', 'LIKE', '%' . $val . '%');
