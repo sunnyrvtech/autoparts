@@ -230,6 +230,10 @@
                         "data" => $vehicle_model_array
                     ]
                 );
+                
+                
+                dd($filter_array);
+                
 //                1 => [
 //                        "title" => "Vehicle Model",
 //                        "data" => array_values(array_map("unserialize", array_unique(array_map("serialize", $vehicle_model_array))))
