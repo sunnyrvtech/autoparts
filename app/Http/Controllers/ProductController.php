@@ -447,26 +447,48 @@ class ProductController extends Controller {
 
         $title = 'Products | Search';
 
-        $keyword = explode(" ", $request->get('q'));
+        $keyword_array = explode(" ", $request->get('q'));
+        $keyword = array();
+        $years_array = array();
+        foreach ($keyword_array as $value) {
+            if (is_numeric($value)) {
+                array_push($years_array, $value);
+            } else if ($value) {
+                array_push($keyword, $value);
+            }
+        }
+
         $cat_id = $request->input('cat');
         $make_id = $request->input('make');
         $model_id = $request->input('model');
         $products = Product::with(['product_details', 'get_sub_category', 'get_brands', 'get_vehicle_company', 'get_vehicle_model'])
-                        ->Where([['products.quantity', '>', 0], ['status', '=', 1]])
-                        ->Where(function($query) use($keyword, $cat_id, $make_id, $model_id) {
+                        ->Where(function($query) use($keyword, $cat_id, $make_id, $model_id, $years_array) {
+                            $query->Where([['products.quantity', '>', 0], ['status', '=', 1]]);
+
                             if ($cat_id != null)
                                 $query->Where('sub_category_id', '=', $cat_id);
                             if ($make_id != null)
                                 $query->Where('vehicle_make_id', '=', $make_id);
                             if ($model_id != null)
                                 $query->Where('vehicle_model_id', '=', $model_id);
+                            if (!empty($keyword)) {
+                                $query->Where(function($q) use($keyword) {
+                                    foreach ($keyword as $val) {
+                                        $q->Where('keyword_search', 'LIKE', '%' . $val . '%');
+                                    }
+                                });
+                            }
+                            if (!empty($years_array)) {
+                                $query->Where(function($q) use($years_array) {
 
-                            $query->Where(function($q) use($keyword) {
-                                foreach ($keyword as $val) {
-                                    $q->Where('keyword_search', 'LIKE', '%' . $val . '%');
-                                }
-                            });
+                                    foreach ($years_array as $year) {
+                                        $q->orwhere([['vehicle_year_from', '<=', $year], ['vehicle_year_to', '>=', $year]]);
+                                    }
+                                });
+                            }
                         })->paginate(20);
+
+
         $vehicles = VehicleCompany::orderby('name')->get(array('slug', 'name', 'id'));
         $view = View::make('products.search', compact('title', 'products', 'vehicles'));
         if ($request->wantsJson()) {

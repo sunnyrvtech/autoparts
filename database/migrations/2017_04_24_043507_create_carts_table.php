@@ -18,7 +18,7 @@ class CreateCartsTable extends Migration {
             $table->string('session_id')->nullable();
             $table->integer('product_id');
             $table->integer('quantity');
-            $table->decimal('total_price', 5, 2);
+            $table->decimal('total_price', 10, 2);
             $table->timestamps();
         });
     }

@@ -22,7 +22,7 @@ class CreateOrdersDetailsTable extends Migration
             $table->string('product_name');
             $table->string('sku_number');
             $table->integer('quantity');
-            $table->decimal('total_price', 5, 2);
+            $table->decimal('total_price', 10, 2);
             $table->decimal('discount', 5, 2)->nullable();
             $table->string('ship_carrier')->nullable();
             $table->timestamp('ship_date')->nullable();

@@ -20,7 +20,7 @@ class CreateOrdersTable extends Migration
             $table->string('email')->nullable();
             $table->text('billing_address')->nullable();
             $table->text('shipping_address')->nullable();
-            $table->decimal('total_price', 5, 2);
+            $table->decimal('total_price', 10, 2);
             $table->decimal('ship_price', 5, 2);
             $table->decimal('tax_rate', 5, 2);
             $table->string('shipping_method')->nullable();
