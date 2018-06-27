@@ -119,8 +119,6 @@
                             @if($value['get_sub_category']['name'])
                             <label for="vehicle_make">Category:</label><span> {{ $value['get_sub_category']['name'] }}</span>
                             @endif
-                            <label for="year">year from:</label><span> {{ $value['vehicle_year_from'].'--'.$value['vehicle_year_to'] }}</span><br>
-                            
                         </div>
                     </div>
                 </div>
