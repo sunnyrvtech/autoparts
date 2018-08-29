@@ -117,7 +117,10 @@
                             <label for="parse_link">Parse Link:</label><span> {{ $value['product_details']['parse_link'] }}</span><br>
                             @endif
                             @if($value['get_sub_category']['name'])
-                            <label for="vehicle_make">Category:</label><span> {{ $value['get_sub_category']['name'] }}</span>
+                            <label for="vehicle_make">Category:</label><span> {{ $value['get_sub_category']['name'] }}</span><br>
+                            @endif
+                            @if($value['vehicle_year_from'] || $value['vehicle_year_to'])
+                            <label for="year">Year:</label><span> {{ $value['vehicle_year_from'] }}-{{ $value['vehicle_year_to'] }}</span><br>
                             @endif
                         </div>
                     </div>
