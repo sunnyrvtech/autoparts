@@ -17,9 +17,6 @@ class CreateProductsDetailsTable extends Migration
            $table->increments('id');
            $table->integer('product_id')->unsigned();
            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
-           $table->string('meta_title')->nullable();
-           $table->string('meta_description')->nullable();
-           $table->string('meta_keyword')->nullable();
            $table->string('product_images')->nullable();
            $table->string('text')->nullable();
            $table->string('sale_type')->nullable();

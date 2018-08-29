@@ -668,7 +668,7 @@
                     <div class="row">
                         <div class="form-group {{ $errors->has('meta_title') ? ' has-error' : '' }}">
                             <label class="control-label">Meta Title</label>
-                            {{ Form::text('meta_title', @$products->product_details->meta_title,array('class'=>'form-control')) }}
+                            {{ Form::text('meta_title', @$products->meta_title,array('class'=>'form-control')) }}
                             @if ($errors->has('meta_title'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('meta_title') }}</strong>
@@ -677,7 +677,7 @@
                         </div>
                         <div class="form-group {{ $errors->has('meta_description') ? ' has-error' : '' }}">
                             <label class="control-label">Meta Description</label>
-                            {{ Form::text('meta_description', @$products->product_details->meta_description,array('class'=>'form-control')) }}
+                            {{ Form::textarea('meta_description', @$products->meta_description,array('class'=>'form-control')) }}
                             @if ($errors->has('meta_description'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('meta_description') }}</strong>
@@ -686,7 +686,7 @@
                         </div>
                         <div class="form-group {{ $errors->has('meta_keyword') ? ' has-error' : '' }}">
                             <label class="control-label">Meta Keyword</label>
-                            {{ Form::text('meta_keyword', @$products->product_details->meta_keyword,array('class'=>'form-control')) }}
+                            {{ Form::textarea('meta_keyword', @$products->meta_keyword,array('class'=>'form-control')) }}
                             @if ($errors->has('meta_keyword'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('meta_keyword') }}</strong>

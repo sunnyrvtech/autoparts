@@ -63,6 +63,9 @@ class ImportController extends Controller {
                 $product_slug = $this->createSlug(trim($row->product_name), 'product');
                 $vehicle_year = explode('-', $row->vehicle_year);
                 $product_array = array(
+                    'meta_title' => empty($row->meta_title) ? null : trim($row->meta_title),
+                    'meta_description' => empty($row->meta_description) ? null : trim($row->meta_description),
+                    'meta_keyword' => empty($row->meta_keyword) ? null : trim($row->meta_keyword),
                     'product_name' => trim($row->product_name),
                     'product_slug' => $product_slug,
                     'product_long_description' => trim($row->product_long_description),
@@ -114,9 +117,6 @@ class ImportController extends Controller {
 
 
                 $product_detail_array = array(
-                    'meta_title' => empty($row->meta_title) ? null : trim($row->meta_title),
-                    'meta_description' => empty($row->meta_description) ? null : trim($row->meta_description),
-                    'meta_keyword' => empty($row->meta_keyword) ? null : trim($row->meta_keyword),
                     'text' => empty($row->text) ? null : trim($row->text),
                     'sale_type' => empty($row->sale_type) ? null : trim($row->sale_type),
                     'm_code' => empty($row->m_code) ? null : trim($row->m_code),
@@ -575,7 +575,7 @@ class ImportController extends Controller {
         $product_line = "Example product line";
         $meta_title = "Example meta title";
         $meta_description = "Example meta description";
-        $meta_keyword = "Example meta keyword";
+        $meta_keyword = "Enter comma separated keywords";
         $software = "Example software";
         $licensed_by = "Example licensed by";
         $car_cover = "Example car cover";

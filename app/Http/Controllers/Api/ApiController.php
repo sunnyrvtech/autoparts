@@ -297,9 +297,9 @@ class ApiController extends Controller {
                     'includes' => !empty(@$value->includes) ? @$value->includes : '',
                     'design' => !empty(@$value->design) ? @$value->design : '',
                     'product_line' => !empty(@$value->product_line) ? @$value->product_line : '',
-                    'meta_title' => !empty(@$value->product_details->meta_title) ? @$value->product_details->meta_title : '',
-                    'meta_description' => !empty(@$value->product_details->meta_description) ? @$value->product_details->meta_description : '',
-                    'meta_keyword' => !empty(@$value->product_details->meta_keyword) ? @$value->product_details->meta_keyword : '',
+                    'meta_title' => !empty(@$value->meta_title) ? @$value->meta_title : '',
+                    'meta_description' => !empty(@$value->meta_description) ? @$value->meta_description : '',
+                    'meta_keyword' => !empty(@$value->meta_keyword) ? @$value->meta_keyword : '',
                     'software' => !empty(@$value->product_details->software) ? @$value->product_details->software : '',
                     'licensed_by' => !empty(@$value->product_details->licensed_by) ? @$value->product_details->licensed_by : '',
                     'car_cover' => !empty(@$value->product_details->car_cover) ? @$value->product_details->car_cover : '',
@@ -522,12 +522,17 @@ class ApiController extends Controller {
     }
 
     public function productArray($row, $product_array) {
+        if (isset($row['meta_title']))
+            $product_array['meta_title'] = empty($row['meta_title']) ? null : trim($row['meta_title']);
+        if (isset($row['meta_description']))
+            $product_array['meta_description'] = empty($row['meta_description']) ? null : trim($row['meta_description']);
+        if (isset($row['meta_keyword']))
+            $product_array['meta_keyword'] = empty($row['meta_keyword']) ? null : trim($row['meta_keyword']);
         if (isset($row['vehicle_year'])) {
             $vehicle_year = explode('-', $row['vehicle_year']);
             $product_array['vehicle_year_from'] = $vehicle_year[0];
             $product_array['vehicle_year_to'] = $vehicle_year[1];
         }
-
         if (isset($row['product_name']))
             $product_array['product_name'] = trim($row['product_name']);
         if (isset($row['product_long_description']))
@@ -587,12 +592,6 @@ class ApiController extends Controller {
     }
 
     public function productDetailArray($row, $product_detail_array) {
-        if (isset($row['meta_title']))
-            $product_detail_array['meta_title'] = empty($row['meta_title']) ? null : trim($row['meta_title']);
-        if (isset($row['meta_description']))
-            $product_detail_array['meta_description'] = empty($row['meta_description']) ? null : trim($row['meta_description']);
-        if (isset($row['meta_keyword']))
-            $product_detail_array['meta_keyword'] = empty($row['meta_keyword']) ? null : trim($row['meta_keyword']);
         if (isset($row['text']))
             $product_detail_array['text'] = empty($row['text']) ? null : trim($row['text']);
         if (isset($row['sale_type']))

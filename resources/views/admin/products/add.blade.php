@@ -666,7 +666,7 @@
                         </div>
                         <div class="form-group {{ $errors->has('meta_description') ? ' has-error' : '' }}">
                             <label class="control-label">Meta Description</label>
-                            {{ Form::text('meta_description', null,array('class'=>'form-control')) }}
+                            {{ Form::textarea('meta_description', null,array('class'=>'form-control')) }}
                             @if ($errors->has('meta_description'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('meta_description') }}</strong>
@@ -675,7 +675,7 @@
                         </div>
                         <div class="form-group {{ $errors->has('meta_keyword') ? ' has-error' : '' }}">
                             <label class="control-label">Meta Keyword</label>
-                            {{ Form::text('meta_keyword', null,array('class'=>'form-control')) }}
+                            {{ Form::textarea('meta_keyword', null,array('class'=>'form-control')) }}
                             @if ($errors->has('meta_keyword'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('meta_keyword') }}</strong>
