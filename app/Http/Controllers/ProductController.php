@@ -478,6 +478,11 @@ class ProductController extends Controller {
                                     }
                                 });
                             }
+                            $query->orWhere(function($q) use($keyword) {
+                                foreach ($keyword as $val) {
+                                        $q->Where('meta_keyword', 'LIKE', '%' . $val . '%');
+                                    }
+                            });
                             if (!empty($years_array)) {
                                 $query->Where(function($q) use($years_array) {
 
@@ -487,8 +492,6 @@ class ProductController extends Controller {
                                 });
                             }
                         })->paginate(20);
-
-
         $vehicles = VehicleCompany::orderby('name')->get(array('slug', 'name', 'id'));
         $view = View::make('products.search', compact('title', 'products', 'vehicles'));
         if ($request->wantsJson()) {
