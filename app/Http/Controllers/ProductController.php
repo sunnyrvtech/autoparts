@@ -478,7 +478,11 @@ class ProductController extends Controller {
                                     }
                                 });
                             }
-                            
+                            $query->orWhere(function($q) use($keyword) {
+                                foreach ($keyword as $val) {
+                                        $q->Where('meta_keyword', 'LIKE', '%' . $val . '%');
+                                    }
+                            });
                             if (!empty($years_array)) {
                                 $query->Where(function($q) use($years_array) {
 
