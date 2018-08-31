@@ -41,25 +41,29 @@ class ImportController extends Controller {
                 if (!empty($row->oem_number)) {
                     $search_keyword = $search_keyword . ' ' . trim($row->oem_number);
                 }
-                if (!$category = Category::where('name', 'like', trim($row->category))->first(array('id','name'))) {
+                if (!$category = Category::where('name', 'like', trim($row->category))->first(array('id', 'name'))) {
                     $category = Category::create(array('name' => trim($row->category), 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
                 }
 
-                if (!$sub_category = SubCategory::where('category_id', $category->id)->where('name', 'like', trim($row->sub_category))->first(array('id','name', 'category_id'))) {
+                if (!$sub_category = SubCategory::where('category_id', $category->id)->where('name', 'like', trim($row->sub_category))->first(array('id', 'name', 'category_id'))) {
                     $slug = $this->createSlug(trim($row->sub_category), 'category');
                     $sub_category = SubCategory::create(array('category_id' => $category->id, 'name' => trim($row->sub_category), 'slug' => $slug, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
                 }
-                if (!$vehicle_company = VehicleCompany::where('name', 'like', trim(ucfirst(strtolower($row->vehicle_make))))->first(array('id','name'))) {
+                if (!$vehicle_company = VehicleCompany::where('name', 'like', trim(ucfirst(strtolower($row->vehicle_make))))->first(array('id', 'name'))) {
                     $make_slug = $this->createSlug(trim($row->vehicle_make), 'vehicle_make');
                     $vehicle_company = VehicleCompany::create(array('name' => trim(ucfirst(strtolower($row->vehicle_make))), 'slug' => $make_slug, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
                 }
-                if (!$vehicle_model = VehicleModel::where('name', 'like', trim(ucfirst(strtolower($row->vehicle_model))))->first(array('id','name'))) {
+                if (!$vehicle_model = VehicleModel::where('name', 'like', trim(ucfirst(strtolower($row->vehicle_model))))->first(array('id', 'name'))) {
                     $model_slug = $this->createSlug(trim($row->vehicle_model), 'vehicle_model');
                     $vehicle_model = VehicleModel::create(array('name' => trim(ucfirst(strtolower($row->vehicle_model))), 'slug' => $model_slug, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
                 }
-                
-                $search_keyword = $search_keyword.' '.$category->name.' '.$sub_category->name.' '.$vehicle_company->name.' '.$vehicle_model->name;
-                
+
+                $search_keyword = $search_keyword . ' ' . $category->name . ' ' . $sub_category->name . ' ' . $vehicle_company->name . ' ' . $vehicle_model->name;
+
+                if (!empty($row->meta_keyword)) {
+                    $search_keyword = $search_keyword . ' ' . str_replace(",", " ", $row->meta_description);
+                }
+
                 $product_slug = $this->createSlug(trim($row->product_name), 'product');
                 $vehicle_year = explode('-', $row->vehicle_year);
                 $product_array = array(
@@ -485,9 +489,9 @@ class ImportController extends Controller {
                     'includes' => $value->includes,
                     'design' => $value->design,
                     'product_line' => $value->product_line,
-                    'meta_title' => @$value->product_details->meta_title,
-                    'meta_description' => @$value->product_details->meta_description,
-                    'meta_keyword' => @$value->product_details->meta_keyword,
+                    'meta_title' => @$value->meta_title,
+                    'meta_description' => @$value->meta_description,
+                    'meta_keyword' => @$value->meta_keyword,
                     'software' => @$value->product_details->software,
                     'licensed_by' => @$value->product_details->licensed_by,
                     'car_cover' => @$value->product_details->car_cover,

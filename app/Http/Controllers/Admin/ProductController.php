@@ -85,9 +85,12 @@ class ProductController extends Controller {
            $search_keyword = $search_keyword.' '.VehicleCompany::Where('id',$request->get('vehicle_make_id'))->first(array('name'))->name;
         }
         
+        if($request->get('meta_keyword') != null){
+           $search_keyword = $search_keyword.' '.str_replace("," , " " , $data['meta_keyword']);
+        }
+        
         $data['keyword_search'] = substr($search_keyword, 0, 255);
         
-
         //set null value in the empty string
         foreach ($data as $key => $value) {
             $data[$key] = empty($value) ? null : $value;
@@ -175,6 +178,10 @@ class ProductController extends Controller {
            $search_keyword = $search_keyword.' '.VehicleCompany::Where('id',$request->get('vehicle_make_id'))->first(array('name'))->name;
         }
         
+        if($request->get('meta_keyword') != null){
+           $search_keyword = $search_keyword.' '.str_replace("," , " " , $data['meta_keyword']);
+        }
+
         $data['keyword_search'] = substr($search_keyword, 0, 255);
         
         //set null value in the empty string
