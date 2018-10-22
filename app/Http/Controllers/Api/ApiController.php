@@ -300,6 +300,7 @@ class ApiController extends Controller {
                     'meta_title' => !empty(@$value->meta_title) ? @$value->meta_title : '',
                     'meta_description' => !empty(@$value->meta_description) ? @$value->meta_description : '',
                     'meta_keyword' => !empty(@$value->meta_keyword) ? @$value->meta_keyword : '',
+                    'negative_keyword' => !empty(@$value->negative_keyword) ? @$value->negative_keyword : '',
                     'software' => !empty(@$value->product_details->software) ? @$value->product_details->software : '',
                     'licensed_by' => !empty(@$value->product_details->licensed_by) ? @$value->product_details->licensed_by : '',
                     'car_cover' => !empty(@$value->product_details->car_cover) ? @$value->product_details->car_cover : '',
@@ -534,6 +535,8 @@ class ApiController extends Controller {
             $product_array['meta_description'] = empty($row['meta_description']) ? null : trim($row['meta_description']);
         if (isset($row['meta_keyword']))
             $product_array['meta_keyword'] = empty($row['meta_keyword']) ? null : trim($row['meta_keyword']);
+        if (isset($row['negative_keyword']))
+            $product_array['negative_keyword'] = empty($row['negative_keyword']) ? null : trim($row['negative_keyword']);
         if (isset($row['vehicle_year'])) {
             $vehicle_year = explode('-', $row['vehicle_year']);
             $product_array['vehicle_year_from'] = $vehicle_year[0];

@@ -18,6 +18,7 @@ class CreateProductsTable extends Migration
            $table->string('meta_title')->nullable();
            $table->text('meta_description')->nullable();
            $table->text('meta_keyword')->nullable();
+           $table->text('negative_keyword')->nullable();
            $table->string('product_name');
            $table->string('product_slug');
            $table->text('product_long_description');

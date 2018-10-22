@@ -67,7 +67,7 @@ class ProductController extends Controller {
                 if (Session::has('shipping_address'))
                     $shipping_address = Session::get('shipping_address');
             }else {
-                //get tax price
+//get tax price
                 $regrex = '"([^"]*)' . $shipping_address->state_id . '([^"]*)"';
                 $tax_price = TaxRate::Where('country_id', $shipping_address->country_id)->whereRaw("state_id REGEXP '" . $regrex . "'")->first(array('price'));
             }
@@ -95,7 +95,7 @@ class ProductController extends Controller {
 
         $total_price_cart = 0;
         $total_weight = 0;
-        // $discount = 0;
+// $discount = 0;
         if (!empty($carts)) {
             $cart_data = array();
             $sku_array = array();
@@ -109,7 +109,7 @@ class ProductController extends Controller {
                 }
                 $product_image = json_decode($products->product_details->product_images);
                 $total_weight += $value->quantity * $products->weight;
-                //$discount += $products->discount;
+//$discount += $products->discount;
                 $cart_data[$key] = array(
                     'product_id' => $products->id,
                     'cart_id' => Auth::check() ? $value->id : $products->id, //   if user not logged in then we have removed item in the session array based on product id otherwise from database
@@ -134,10 +134,10 @@ class ProductController extends Controller {
 
         $coupon_discount = null;
         $discount_status = false;
-        // this code is used to verify coupan code and allow discount 
+// this code is used to verify coupan code and allow discount 
         if ($offer_code != null) {
             $coupan_code = CoupanCode::Where(['code' => $offer_code, 'status' => 1])->first();
-            // this is used to check if the request is ajax json
+// this is used to check if the request is ajax json
             if ($request->wantsJson()) {
                 if ($coupan_code) {
                     $check_usage = CoupanUsage::Where([['coupan_id', '=', $coupan_code->id], ['email', '=', $customer_email], ['usage', '>=', $coupan_code->usage]])->first();
@@ -162,7 +162,7 @@ class ProductController extends Controller {
         } else {
             $method_name = $request->get('shipping_method');
         }
-        // calculate total price based on shipping method and rates
+// calculate total price based on shipping method and rates
         $shipping_methods = ShippingMethod::where('status', 1)->get();
         $shipping_price = 0;
         if (!empty($shipping_methods->toArray()) && $shipping_address != null && $method_name != 'Free shipping') {
@@ -249,13 +249,13 @@ class ProductController extends Controller {
      */
     public function addCart(Request $request) {
         $data = $request->all();
-        //get product quantity and price based on product id
+//get product quantity and price based on product id
         $products = Product::select(array('id', 'price', 'quantity'))->find($data['product_id']);
         $data['quantity'] = isset($data['quantity']) && ((int) $data['quantity'] > 0) ? (int) $data['quantity'] : 1;
 
         if (Auth::check()) {   ///  if user logged in then we insert his cart details in the database
             $data['user_id'] = Auth::id();
-            // this is used to check if user already insert same item in the cart
+// this is used to check if user already insert same item in the cart
             $cart = Cart::Where('user_id', $data['user_id'])->Where('product_id', $data['product_id'])->first(array('id', 'quantity'));
             if ($cart) {
                 $data['quantity'] = $cart->quantity + $data['quantity'];  // if item already exist then we update same product quantity with current quantity 
@@ -313,7 +313,7 @@ class ProductController extends Controller {
      */
     public function updateCart(Request $request) {
         $data = $request->all();
-        //get product quantity and price based on product id
+//get product quantity and price based on product id
         $products = Product::select(array('id', 'price', 'quantity'))->find($data['product_id']);
         $data['quantity'] = isset($data['quantity']) && ((int) $data['quantity'] > 0) ? (int) $data['quantity'] : 1;
 
@@ -369,7 +369,7 @@ class ProductController extends Controller {
                 return response()->json(array('error' => 'Something went wrong .Please try again later!'), 401);
             } else {
                 $cart->delete();
-                //return response()->json(['success' => true, 'messages' => "Item deleted successfully !"]);
+//return response()->json(['success' => true, 'messages' => "Item deleted successfully !"]);
             }
         } else {
 
@@ -396,7 +396,7 @@ class ProductController extends Controller {
     public function getProductVehicleCompanyByYear(Request $request) {
 
         $year = $request->get('id');
-        // get vehicle company data from product table and vehicle company table
+// get vehicle company data from product table and vehicle company table
         $vehicle_companies = Product::with(['get_vehicle_company' => function ($q) {
                         $q->select(['id', 'name', 'slug']);
                     }])->where([['vehicle_year_from', '<=', $year], ['vehicle_year_to', '>=', $year]])->groupby('vehicle_make_id')->get(array('vehicle_make_id'));
@@ -412,8 +412,8 @@ class ProductController extends Controller {
     public function getProductVehicleModelByMakeId(Request $request) {
 
         $make_id = $request->get('id');
-        //$year = $request->get('year');
-        // get vehicle model data from product table and vehicle model table
+//$year = $request->get('year');
+// get vehicle model data from product table and vehicle model table
         $vehicle_models = Product::with(['get_vehicle_model' => function ($q) {
                         $q->select(['id', 'name', 'slug']);
                     }])->where([['vehicle_make_id', $make_id]])->groupby('vehicle_model_id')->get(array('vehicle_model_id'));
@@ -458,11 +458,19 @@ class ProductController extends Controller {
             }
         }
 
+        $product_ids = Product::Where(function($query) use($keyword) {
+                    if (!empty($keyword)) {
+                        foreach ($keyword as $val) {
+                            $query->orWhere('negative_keyword', 'LIKE', '%' . $val . '%');
+                        }
+                    }
+                })->pluck('id')->toArray();
+
         $cat_id = $request->input('cat');
         $make_id = $request->input('make');
         $model_id = $request->input('model');
         $products = Product::with(['product_details', 'get_sub_category', 'get_brands', 'get_vehicle_company', 'get_vehicle_model'])
-                        ->Where(function($query) use($keyword, $cat_id, $make_id, $model_id, $years_array) {
+                        ->Where(function($query) use($keyword, $cat_id, $make_id, $model_id, $years_array, $product_ids) {
                             $query->Where([['products.quantity', '>', 0], ['status', '=', 1]]);
 
                             if ($cat_id != null)
@@ -478,19 +486,15 @@ class ProductController extends Controller {
                                     }
                                 });
                             }
-//                            $query->orWhere(function($q) use($keyword) {
-//                                foreach ($keyword as $val) {
-//                                        $q->Where('meta_keyword', 'LIKE', '%' . $val . '%');
-//                                    }
-//                            });
                             if (!empty($years_array)) {
                                 $query->Where(function($q) use($years_array) {
-
                                     foreach ($years_array as $year) {
                                         $q->orwhere([['vehicle_year_from', '<=', $year], ['vehicle_year_to', '>=', $year]]);
                                     }
                                 });
                             }
+                            if ($product_ids)
+                                $query->whereNotIn('id', $product_ids);
                         })->paginate(20);
         $vehicles = VehicleCompany::orderby('name')->get(array('slug', 'name', 'id'));
         $view = View::make('products.search', compact('title', 'products', 'vehicles'));

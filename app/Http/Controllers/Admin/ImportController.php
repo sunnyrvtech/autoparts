@@ -70,6 +70,7 @@ class ImportController extends Controller {
                     'meta_title' => empty($row->meta_title) ? null : trim($row->meta_title),
                     'meta_description' => empty($row->meta_description) ? null : trim($row->meta_description),
                     'meta_keyword' => empty($row->meta_keyword) ? null : trim($row->meta_keyword),
+                    'negative_keyword' => empty($row->negative_keyword) ? null : trim($row->negative_keyword),
                     'product_name' => trim($row->product_name),
                     'product_slug' => $product_slug,
                     'product_long_description' => trim($row->product_long_description),
@@ -492,6 +493,7 @@ class ImportController extends Controller {
                     'meta_title' => @$value->meta_title,
                     'meta_description' => @$value->meta_description,
                     'meta_keyword' => @$value->meta_keyword,
+                    'negative_keyword' => @$value->negative_keyword,
                     'software' => @$value->product_details->software,
                     'licensed_by' => @$value->product_details->licensed_by,
                     'car_cover' => @$value->product_details->car_cover,
@@ -580,6 +582,7 @@ class ImportController extends Controller {
         $meta_title = "Example meta title";
         $meta_description = "Example meta description";
         $meta_keyword = "Enter comma separated keywords";
+        $negative_keyword = "Enter comma separated keywords";
         $software = "Example software";
         $licensed_by = "Example licensed by";
         $car_cover = "Example car cover";
@@ -643,6 +646,7 @@ class ImportController extends Controller {
                 'meta_title' => $meta_title . $i,
                 'meta_description' => $meta_description . $i,
                 'meta_keyword' => $meta_keyword . $i,
+                'negative_keyword' => $negative_keyword . $i,
                 'software' => $software . $i,
                 'licensed_by' => $licensed_by . $i,
                 'car_cover' => $car_cover . $i,

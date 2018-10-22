@@ -693,6 +693,15 @@
                             </span>
                             @endif
                         </div>
+                        <div class="form-group {{ $errors->has('negative_keyword') ? ' has-error' : '' }}">
+                            <label class="control-label">Negative Keyword</label>
+                            {{ Form::textarea('negative_keyword', @$products->negative_keyword,array('class'=>'form-control')) }}
+                            @if ($errors->has('negative_keyword'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('negative_keyword') }}</strong>
+                            </span>
+                            @endif
+                        </div>
                     </div>
                 </div>
                 <div class="tab-pane" id="images">
