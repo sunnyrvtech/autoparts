@@ -146,6 +146,7 @@ class ImportController extends Controller {
                     'cooling_fan_type' => empty($row->cooling_fan_type) ? null : trim($row->cooling_fan_type),
                     'radiator_row_count' => empty($row->radiator_row_count) ? null : trim($row->radiator_row_count),
                     'oil_plan_capacity' => empty($row->oil_plan_capacity) ? null : trim($row->oil_plan_capacity),
+                    'product_images' => empty($row->product_images) ? null : json_encode(explode(",",$row->product_images)),
                 );
 
 
@@ -509,7 +510,9 @@ class ImportController extends Controller {
                     'lighting_mount_type' => @$value->product_details->lighting_mount_type,
                     'cooling_fan_type' => @$value->product_details->cooling_fan_type,
                     'radiator_row_count' => @$value->product_details->radiator_row_count,
-                    'oil_plan_capacity' => @$value->product_details->oil_plan_capacity);
+                    'oil_plan_capacity' => @$value->product_details->oil_plan_capacity,
+                    'product_images' => ($value->product_details->product_images != null) ? implode(',', json_decode($value->product_details->product_images)) : null,
+                );
             }
 
 
@@ -599,6 +602,7 @@ class ImportController extends Controller {
         $cooling_fan_type = "Example cooling fan type";
         $radiator_row_count = "Example radiator row count";
         $oil_plan_capacity = "Example oil_plan_capacity";
+        $product_images = "image_name_1,image_name_2,image_name_3,image_name_4";
         $export_array = array();
         for ($i = 1; $i <= 5; $i++) {
             $export_array[$i] = array(
@@ -662,9 +666,10 @@ class ImportController extends Controller {
                 'lighting_mount_type' => $lighting_mount_type . $i,
                 'cooling_fan_type' => $cooling_fan_type . $i,
                 'radiator_row_count' => $radiator_row_count . $i,
-                'oil_plan_capacity' => $oil_plan_capacity . $i);
+                'oil_plan_capacity' => $oil_plan_capacity . $i,
+                'product_images' => $product_images
+            );
         }
-
 
         $myFile = Excel::create($filename, function($excel) use ($export_array) {
                     $excel->sheet('Sheetname', function($sheet) use ($export_array) {
