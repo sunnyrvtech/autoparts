@@ -21,6 +21,7 @@ use App\BillingAddress;
 //use App\ProductSubCategory;
 use Session;
 use Auth;
+use DOMDocument;
 use Carbon\Carbon;
 
 class ProductController extends Controller {
@@ -213,13 +214,17 @@ class ProductController extends Controller {
         }
 
         if ($shipping_address != null) {
-            $shipping_address->state_name = State::Where('id', $shipping_address->state_id)->pluck('name')->first();
+            $shipping_states = State::Where('id', $shipping_address->state_id)->first();
+            $shipping_address->state_name = $shipping_states->name;
+            $shipping_address->state_code = $shipping_states->postal_code;
             $shipping_country = Country::Where('id', $shipping_address->country_id)->first(array('name', 'sortname'));
             $shipping_address->country_name = $shipping_country->name;
             $shipping_address->country_code = $shipping_country->sortname;
         }
         if ($billing_address != null) {
-            $billing_address->state_name = State::Where('id', $billing_address->state_id)->pluck('name')->first();
+            $billing_states = State::Where('id', $billing_address->state_id)->first();
+            $billing_address->state_name = $billing_states->name;
+            $billing_address->state_code = $billing_states->postal_code;
             $billing_country = Country::Where('id', $billing_address->country_id)->first(array('name', 'sortname'));
             $billing_address->country_name = $billing_country->name;
             $billing_address->country_code = $billing_country->sortname;
@@ -592,6 +597,46 @@ class ProductController extends Controller {
         $data['countries'] = Country::get(array('name', 'id'));
 
         return View::make('carts.addresses', $data);
+    }
+
+    public function getgoogleShoppingFeed(Request $request) {
+        $products = Product::get();
+
+        $dom = new DOMDocument('1.0', 'UTF-8');
+        $xmlRoot = $dom->createElement("rss");
+        $xmlRoot = $dom->appendChild($xmlRoot);
+        $xmlRoot->setAttribute('version', '2.0');
+        $xmlRoot->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:g', "http://base.google.com/ns/1.0");
+
+        $channelNode = $xmlRoot->appendChild($dom->createElement('channel'));
+        $channelNode->appendChild($dom->createElement('title', 'Auto light house'));
+        $channelNode->appendChild($dom->createElement('link', url('/')));
+
+        foreach ($products as $key => $product) {
+            $itemNode = $channelNode->appendChild($dom->createElement('item'));
+            $itemNode->appendChild($dom->createElement('g:id'))->appendChild($dom->createTextNode($product->sku));
+            $itemNode->appendChild($dom->createElement('title'))->appendChild($dom->createTextNode($product->product_name));
+            $itemNode->appendChild($dom->createElement('link'))->appendChild($dom->createTextNode(route('products', $product->product_slug)));
+            $itemNode->appendChild($dom->createElement('g:price'))->appendChild($dom->createTextNode($product->price));
+            $itemNode->appendChild($dom->createElement('g:description'))->appendChild($dom->createTextNode($product->product_long_description));
+            $itemNode->appendChild($dom->createElement('g:google_product_category'))->appendChild($dom->createTextNode($product->get_category->name));
+
+            if (isset($product->product_details->product_images) && $product->product_details->product_images != null) {
+                $product_images = json_decode($product->product_details->product_images);
+                foreach ($product_images as $i => $image) {
+                    if ($i == 0)
+                        $itemNode->appendChild($dom->createElement('g:image_link'))->appendChild($dom->createTextNode(url(asset('/product_images') . '/' . $image)));
+                    else
+                        $itemNode->appendChild($dom->createElement('g:additional_image_link'))->appendChild($dom->createTextNode(url(asset('/product_images') . '/' . $image)));
+                }
+            }
+        }
+
+
+        $dom->formatOutput = true;
+//        echo '<xmp>' . $dom->saveXML() . '</xmp>';
+        $dom->save(base_path('public/xml/products.xml'));
+        die;
     }
 
     public function postCartAddresses(Request $request) {

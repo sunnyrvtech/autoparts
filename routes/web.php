@@ -58,7 +58,7 @@ Route::post('products/vehicle', 'ProductController@getProductVehicleCompanyByYea
 Route::post('products/vehicle_model', 'ProductController@getProductVehicleModelByMakeId');
 Route::post('products/vehicle_year', 'ProductController@getProductVehicleYearByModelId');
 Route::get('products/search', 'ProductController@searchProduct');
-Route::get('products/{slug}', 'ProductController@singleProduct');
+Route::get('products/{slug}', 'ProductController@singleProduct')->name('products');
 Route::resource('checkout','PaymentController');
 Route::post('cart/add', 'ProductController@addCart')->middleware('web');
 Route::post('cart/update', 'ProductController@updateCart')->middleware('web');
@@ -90,6 +90,7 @@ Route::get('/return', 'HomeController@getReturnPolicy');
 Route::get('/faq', 'HomeController@getFaq');
 Route::get('/contact-us', 'HomeController@getContactUs');
 Route::post('/contact-us', 'HomeController@postContactUs');
+Route::get('/google/shopping/feed', 'ProductController@getgoogleShoppingFeed');
 Route::get('/{slug}', 'SubCategoryController@getListByCategorySlug');
 Route::get('/{category}/{vehicle}', 'SubCategoryController@getListByCategoryVehicleSlug');
 Route::get('/{vehicle}/{model}/{category}', 'SubCategoryController@getProductByCategoryVehicleModelSlug');

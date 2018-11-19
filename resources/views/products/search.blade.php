@@ -126,7 +126,7 @@
                     </div>
                 </div>
                 <div class="product-card__overlay">
-                    <a class="btn am-black product-card__overlay-btn" href="{{ URL('products').'/'.$value['product_slug'] }}">View <span class="glyphicon glyphicon-eye-open"></span></a>
+                    <a class="btn am-black product-card__overlay-btn" href="{{ route('products',$value['product_slug']) }}">View <span class="glyphicon glyphicon-eye-open"></span></a>
                     <a class="btn am-orange product-card__overlay-btn" href="javascript:void(0);" ng-click="submitCart(true,{{ $value['id'] }})">Add to cart <span class="glyphicon glyphicon-shopping-cart"></span></a>
                 </div>
                 </div>

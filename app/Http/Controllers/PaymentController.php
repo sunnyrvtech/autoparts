@@ -15,7 +15,8 @@ use App\CoupanCode;
 use App\CoupanUsage;
 use App\TaxRate;
 use Auth;
-use App\WarehouseStore;
+use net\authorize\api\contract\v1 as AnetAPI;
+use net\authorize\api\controller as AnetController;
 use Mail;
 use Redirect;
 use View;
@@ -64,7 +65,7 @@ class PaymentController extends Controller {
      * Process payment using credit card
      */
 
-    public function store(Request $request) {
+    public function oldstore(Request $request) {
 
 
         $data = Session::get('cart_data');
@@ -241,19 +242,174 @@ class PaymentController extends Controller {
         }
     }
 
+    public function store(Request $request) {
+
+        $data = Session::get('cart_data');
+
+        $shipping_method = $data['other_cart_data']['shipping_method'];
+        $shipping_price = $data['other_cart_data']['shipping_price'];
+
+        $discount_status = $data['other_cart_data']['discount_status'];
+
+
+        if (Auth::check()) {
+            $shipping_address = ShippingAddress::where('user_id', Auth::id())->first();
+            $shipping_address->state_code = $shipping_address->get_state->postal_code;
+            $shipping_address->country_code = $shipping_address->get_country->sortname;
+        } else {
+            $shipping_address = Session::get('shipping_address');
+        }
+
+        if (!ShippingRate::where('country_id', $shipping_address->country_id)->first() || $shipping_price == 0) {
+            return Redirect::back()
+                            ->with('error-message', "No shipping available in your country !");
+        }
+
+        $cart_ids = $request->get('cart_id');
+        $carts = $data['cart_data'];
+
+        $item = array();
+        $item_price = 0;
+        $sub_total = 0;
+        $i = 0;
+        foreach ($carts as $key => $value) {
+            $item_price = $value['price'] * $value['quantity'];
+            if (isset($value['coupon_discount']) && $discount_status && $data['other_cart_data']['coupon_type'] == 'per_product') {
+                $total_price = $item_price - ($item_price * $value['coupon_discount'] / 100);
+                $sub_total += $total_price;
+                $i++;
+            } else {
+                $sub_total += $item_price;
+            }
+            $i++;
+        }
+
+        if ($discount_status && $data['other_cart_data']['coupon_type'] == 'all_products') {
+            $discount = $sub_total;
+            $sub_total = number_format($sub_total - ($sub_total * $data['other_cart_data']['coupon_discount'] / 100), 2);
+            $discount_price = $sub_total - $discount;
+        } else {
+            $sub_total = number_format($sub_total, 2);
+        }
+
+        $tax_price = ($sub_total + ($sub_total * $data['other_cart_data']['tax_price'] / 100)) - $sub_total;
+
+        $total_cart_price = $sub_total + $shipping_price + $tax_price;
+        
+        $data['other_cart_data']['tax_rate'] = $tax_price;
+        $data['other_cart_data']['total_cart_price'] = $total_cart_price;
+        
+        // Common setup for API credentials
+        $merchantAuthentication = new AnetAPI\MerchantAuthenticationType();
+        $merchantAuthentication->setName(config('services.authorize.login'));
+        $merchantAuthentication->setTransactionKey(config('services.authorize.key'));
+        $refId = 'ref' . time();
+
+        // Create the payment data for a credit card
+        $creditCard = new AnetAPI\CreditCardType();
+
+        $creditCard->setCardNumber($request->get('cardNumber'));
+        // $creditCard->setExpirationDate( "2038-12");
+        $expiry = $request->get('expiry_year') . '-' . $request->get('expiry_month');
+        $creditCard->setExpirationDate($expiry);
+        $creditCard->setCardCode($request->get('cardCvv'));
+
+        // Add the payment data to a paymentType object
+        $paymentOne = new AnetAPI\PaymentType();
+        $paymentOne->setCreditCard($creditCard);
+
+
+        // Set the customer's Bill To address
+        $customerAddress = new AnetAPI\CustomerAddressType();
+        $customerAddress->setFirstName($shipping_address->first_name);
+        $customerAddress->setLastName($shipping_address->last_name);
+        $customerAddress->setAddress($shipping_address->address1);
+        $customerAddress->setCity($shipping_address->city);
+        $customerAddress->setState($shipping_address->state_name);
+        $customerAddress->setZip($shipping_address->zip);
+        $customerAddress->setCountry($shipping_address->country_code);
+
+        // Create a TransactionRequestType object and add the previous objects to it
+        $transactionRequestType = new AnetAPI\TransactionRequestType();
+        $transactionRequestType->setTransactionType("authCaptureTransaction");
+        $transactionRequestType->setAmount($total_cart_price);
+        $transactionRequestType->setPayment($paymentOne);
+        $transactionRequestType->setBillTo($customerAddress);
+
+
+        // Assemble the complete transaction request
+        $request = new AnetAPI\CreateTransactionRequest();
+        $request->setMerchantAuthentication($merchantAuthentication);
+        $request->setRefId($refId);
+        $request->setTransactionRequest($transactionRequestType);
+
+        // Create the controller and get the response
+        $controller = new AnetController\CreateTransactionController($request);
+        $response = $controller->executeWithApiResponse(\net\authorize\api\constants\ANetEnvironment::SANDBOX);
+
+
+        if ($response != null) {
+            // Check to see if the API request was successfully received and acted upon
+            if ($response->getMessages()->getResultCode() == "Ok") {
+                // Since the API request was successful, look for a transaction response
+                // and parse it to display the results of authorizing the card
+                $tresponse = $response->getTransactionResponse();
+
+                if ($tresponse != null && $tresponse->getMessages() != null) {
+//                    echo " Successfully created transaction with Transaction ID: " . $tresponse->getTransId() . "\n";
+//                    echo " Transaction Response Code: " . $tresponse->getResponseCode() . "\n";
+//                    echo " Message Code: " . $tresponse->getMessages()[0]->getCode() . "\n";
+//                    echo " Auth Code: " . $tresponse->getAuthCode() . "\n";
+//                    echo " Description: " . $tresponse->getMessages()[0]->getDescription() . "\n";
+
+                    if ($transaction_id = $this->savePaymentDetails($tresponse, $data)) {
+                        Cart::destroy($cart_ids); ///  empty cart table after payment successfull
+                        return View::make('carts.success', compact('transaction_id'));
+                    }
+                } else {
+                    //echo "Transaction Failed \n";
+                    if ($tresponse->getErrors() != null) {
+                        //echo " Error Code  : " . $tresponse->getErrors()[0]->getErrorCode() . "\n";
+                        //echo " Error Message : " . $tresponse->getErrors()[0]->getErrorText() . "\n";
+                        return Redirect::back()
+                                        ->with('error-message', $tresponse->getErrors()[0]->getErrorText());
+                    }
+                }
+                // Or, print errors if the API request wasn't successful
+            } else {
+                $tresponse = $response->getTransactionResponse();
+
+                if ($tresponse != null && $tresponse->getErrors() != null) {
+                    //echo " Error Code  : " . $tresponse->getErrors()[0]->getErrorCode() . "\n";
+                    //echo " Error Message : " . $tresponse->getErrors()[0]->getErrorText() . "\n";
+                    return Redirect::back()
+                                    ->with('error-message', $tresponse->getErrors()[0]->getErrorText());
+                } else {
+                    //echo " Error Code  : " . $response->getMessages()->getMessage()[0]->getCode() . "\n";
+                    //echo " Error Message : " . $response->getMessages()->getMessage()[0]->getText() . "\n";
+                    return Redirect::back()
+                                    ->with('error-message', $response->getMessages()->getMessage()[0]->getText());
+                }
+            }
+        } else {
+            return Redirect::back()
+                            ->with('error-message', 'No response returned !');
+        }
+    }
+
     public function savePaymentDetails($payment, $carts) {
         Session::forget('cartItem');
         Session::forget('cart_data');
         $order_array = array(
             'user_id' => Auth::check() ? Auth::id() : null,
-            'transaction_id' => $payment->id,
-            'total_price' => $payment->transactions[0]->amount->total,
-            'ship_price' => $payment->transactions[0]->amount->details->shipping,
-            'tax_rate' => $payment->transactions[0]->amount->details->tax,
+            'transaction_id' =>  $payment->getTransId(),
+            'total_price' =>  $carts['other_cart_data']['total_cart_price'],
+            'ship_price' =>  $carts['other_cart_data']['shipping_price'],
+            'tax_rate' =>  $carts['other_cart_data']['tax_rate'],
             'shipping_method' => $carts['other_cart_data']['shipping_method'],
-            'payment_method' => 'Paypal',
+            'payment_method' => 'Authorize Net',
             'order_status' => 'processing',
-            'created_at' => date('Y-m-d H:i:s', strtotime($payment->create_time))
+            'created_at' => Carbon::now()
         );
 
         if (Auth::check()) {
@@ -310,8 +466,8 @@ class PaymentController extends Controller {
 
             $carts['other_cart_data']['transaction_id'] = $orders->id;
             $carts['other_cart_data']['payment_method'] = 'Paypal';
-            $carts['other_cart_data']['tax_rate'] = $payment->transactions[0]->amount->details->tax;
-            $carts['other_cart_data']['order_time'] = date('M d,Y H:i:s A', strtotime($payment->create_time));
+            $carts['other_cart_data']['tax_rate'] = $carts['other_cart_data']['tax_rate'];
+            $carts['other_cart_data']['order_time'] = $order_array['created_at'];
 
             foreach ($carts['cart_data'] as $value) {
 
