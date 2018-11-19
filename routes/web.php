@@ -90,7 +90,7 @@ Route::get('/return', 'HomeController@getReturnPolicy');
 Route::get('/faq', 'HomeController@getFaq');
 Route::get('/contact-us', 'HomeController@getContactUs');
 Route::post('/contact-us', 'HomeController@postContactUs');
-Route::get('/google/shopping/feed', 'ProductController@getgoogleShoppingFeed');
+//Route::get('/google/shopping/feed', 'ProductController@getgoogleShoppingFeed');
 Route::get('/{slug}', 'SubCategoryController@getListByCategorySlug');
 Route::get('/{category}/{vehicle}', 'SubCategoryController@getListByCategoryVehicleSlug');
 Route::get('/{vehicle}/{model}/{category}', 'SubCategoryController@getProductByCategoryVehicleModelSlug');

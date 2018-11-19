@@ -1,5 +1,6 @@
 /node_modules
 /public/storage
+/public/xml
 /public/product_images
 /app/Http/PayPal.log
 /storage/*.key

@@ -21,7 +21,6 @@ use App\BillingAddress;
 //use App\ProductSubCategory;
 use Session;
 use Auth;
-use DOMDocument;
 use Carbon\Carbon;
 
 class ProductController extends Controller {
