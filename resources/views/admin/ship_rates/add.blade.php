@@ -38,8 +38,8 @@
                         <label class="col-sm-3 col-md-3 control-label" for="name">Ship Type:</label>
                         <div class="col-sm-9 col-md-9">
                             <select name="ship_type" required="" class="form-control">
-                                <option value="zip_biased">Zip Biased</option>
-                                <option value="weight_biased">Weight Biased</option>
+                                <option value="zip_by">Zip By</option>
+                                <option value="weight_by">Weight By</option>
                             </select>
                             @if ($errors->has('country_id'))
                             <span class="help-block">
@@ -110,7 +110,7 @@
 <script type="text/javascript">
 $(document).ready(function(){
    $(document).on('change','select[name="ship_type"]',function(){
-       if($(this).val() == 'zip_biased'){
+       if($(this).val() == 'zip_by'){
            $(".zip-content").show();
            $(".weight-content").hide();
        }else{
