@@ -56,7 +56,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="weight-content"style="display: none;">
+                    <div class="weight-content" style="display: none;">
                         <div class="form-group {{ $errors->has('low_weight') ? ' has-error' : ''}}">
                             <label class="col-sm-3 col-md-3 control-label" for="low_weight">Low Weight:</label>
                             <div class="col-sm-9 col-md-9">

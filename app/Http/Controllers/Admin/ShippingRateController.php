@@ -70,6 +70,8 @@ class ShippingRateController extends Controller {
 
         if ($request->get('zip_code') != null && $request->get('ship_type') == 'zip_biased') {
             $data['zip_code'] = json_encode(explode(',', $data['zip_code']));
+            $data['low_weight'] = null;
+            $data['high_weight'] = null;
         } else {
             $data['zip_code'] = null;
         }
@@ -114,6 +116,8 @@ class ShippingRateController extends Controller {
 
         if ($request->get('zip_code') != null) {
             $data['zip_code'] = json_encode(explode(',', $data['zip_code']));
+            $data['low_weight'] = null;
+            $data['high_weight'] = null;
         } else {
             $data['zip_code'] = null;
         }

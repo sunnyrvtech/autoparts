@@ -35,8 +35,21 @@
                             @endif
                         </div>
                     </div>
-                    @if($shipping_rates->ship_type == 'zip_biased')
-                    <div class="zip-content">
+                    <div class="form-group {{ $errors->has('ship_type') ? ' has-error' : ''}}">
+                        <label class="col-sm-3 col-md-3 control-label" for="name">Ship Type:</label>
+                        <div class="col-sm-9 col-md-9">
+                            <select name="ship_type" required="" class="form-control">
+                                <option @if($shipping_rates->ship_type == 'zip_biased') selected @endif value="zip_biased">Zip Biased</option>
+                                <option @if($shipping_rates->ship_type == 'weight_biased') selected @endif value="weight_biased">Weight Biased</option>
+                            </select>
+                            @if ($errors->has('country_id'))
+                            <span class="help-block">
+                                <strong>{{ $errors-> first('country_id')}}</strong>
+                            </span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="zip-content" @if($shipping_rates->ship_type == 'weight_biased') style="display: none;" @endif>
                         <div class="form-group {{ $errors->has('zip_code') ? ' has-error' : ''}}">
                             <label class="col-sm-3 col-md-3 control-label" for="zip_code">Zip Code:</label>
                             <div class="col-sm-9 col-md-9">
@@ -44,8 +57,7 @@
                             </div>
                         </div>
                     </div>
-                    @else
-                    <div class="weight-content">
+                    <div class="weight-content" @if($shipping_rates->ship_type == 'zip_biased') style="display: none;" @endif>
                         <div class="form-group {{ $errors->has('low_weight') ? ' has-error' : ''}}">
                             <label class="col-sm-3 col-md-3 control-label" for="low_weight">Low Weight:</label>
                             <div class="col-sm-9 col-md-9">
@@ -69,7 +81,6 @@
                             </div>
                         </div>
                     </div>
-                    @endif
                     <div class="form-group {{ $errors->has('price') ? ' has-error' : ''}}">
                         <label class="col-sm-3 col-md-3 control-label" for="price">Price:</label>
                         <div class="col-sm-9 col-md-9">
@@ -97,4 +108,17 @@
 @endsection
 @push('scripts')
 <script src="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+   $(document).on('change','select[name="ship_type"]',function(){
+       if($(this).val() == 'zip_biased'){
+           $(".zip-content").show();
+           $(".weight-content").hide();
+       }else{
+           $(".zip-content").hide();
+           $(".weight-content").show();
+       }
+   }); 
+});
+</script>
 @endpush
