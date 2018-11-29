@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <div class="row form-group">
         <div class="col-md-12">
-            <a href="{{ route('static_page.create') }}" class="btn btn-primary">Add New</a>
+            <!--<a href="{{ route('static_page.create') }}" class="btn btn-primary">Add New</a>-->
         </div>
     </div>
     <div class="row">
