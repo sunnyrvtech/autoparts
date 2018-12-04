@@ -29,13 +29,13 @@
                     <div class="panel panel-default height">
                         <div class="panel-heading">Billing Details</div>
                         <?php
-                        $billing_address = $orders->getCustomer->getBillingDetails;
+                        $billing_address = json_decode($orders->billing_address);
                         ?>
                         <div class="panel-body">
-                            <strong>{{ $orders->getCustomer->first_name.' '.$orders->getCustomer->last_name }}:</strong><br>
+                            <strong>{{ $billing_address->first_name.' '.$billing_address->last_name }}:</strong><br>
                             {{ $billing_address->address1.' '.$billing_address->address2 }}<br>
-                            {{ $billing_address->city }},{{ $billing_address->get_state->name }}<br>
-                            {{ $billing_address->get_country->name }},<strong>{{ $billing_address->zip }}</strong><br>
+                            {{ $billing_address->city }},{{ $billing_address->state_name }}<br>
+                            {{ $billing_address->country_name }},<strong>{{ $billing_address->zip }}</strong><br>
                         </div>
                     </div>
                 </div>
@@ -75,13 +75,13 @@
                     <div class="panel panel-default height">
                         <div class="panel-heading">Shipping Address</div>
                         <?php
-                        $shipping_address = $orders->getCustomer->getShippingDetails;
+                        $shipping_address = json_decode($orders->shipping_address);
                         ?>
                         <div class="panel-body">
-                            <strong>{{ $orders->getCustomer->first_name.' '.$orders->getCustomer->last_name }}:</strong><br>
+                            <strong>{{ $shipping_address->first_name.' '.$shipping_address->last_name }}:</strong><br>
                             {{ $shipping_address->address1.' '.$shipping_address->address2 }}<br>
-                            {{ $shipping_address->city }},{{ $shipping_address->get_state->name }}<br>
-                            {{ $shipping_address->get_country->name }},<strong>{{ $shipping_address->zip }}</strong><br>
+                            {{ $shipping_address->city }},{{ $shipping_address->state_name }}<br>
+                            {{ $shipping_address->country_name }},<strong>{{ $shipping_address->zip }}</strong><br>
                         </div>
                     </div>
                 </div>

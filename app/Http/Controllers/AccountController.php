@@ -335,10 +335,10 @@ class AccountController extends Controller {
      */
     public function getOrderDetails(Request $request, $id) {
         if (Auth::check()) {
-            $data['order_details'] = Order::where('user_id', Auth::id())->where('id', $id)->first();
-            $data['shipping_address'] = ShippingAddress::where('user_id', Auth::id())->first();
-            $data['billing_address'] = BillingAddress::where('user_id', Auth::id())->first();
-
+            $orders = Order::where('user_id', Auth::id())->where('id', $id)->first();
+            $data['order_details'] = $orders;
+            $data['shipping_address'] = json_decode($orders->shipping_address);
+            $data['billing_address'] = json_decode($orders->billing_address);
             return View::make('orders.detail', $data);
         }
         return redirect('/login');
