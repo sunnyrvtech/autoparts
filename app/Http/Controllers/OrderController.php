@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use View;
 use App\OrderDetail;
 use App\User;
+use App\Order;
+use Mail;
+use Session;
 
 class OrderController extends Controller {
 
@@ -45,6 +48,29 @@ class OrderController extends Controller {
 
 //        return redirect()->back()
 //                        ->with('error-message', 'No order found to this email address !');
+    }
+
+    public function orderCancelled(Request $request) {
+        $id = $request->get('id');
+        $order = Order::find($id);
+        if ($order->order_status == "processing") {
+
+            $data = array(
+                'order_id' => $order->id,
+                'shipping_address' => json_decode($order->shipping_address),
+                'billing_address' => json_decode($order->billing_address)
+            );
+
+            if ($order->fill(array("order_status" => "cancelled"))->save()) {
+                Session::flash('success-message', 'Order cancelled successfully!');
+                Mail::send('auth.emails.order_cancel', $data, function($message) use ($data) {
+                    $message->from('autolighthouseplus@gmail.com', " Welcome To Autolighthouse");
+                    $message->to('sunny_kumar@rvtechnologies.com')->subject('Order cancelled #' . $data['order_id']);
+                });
+                return response()->json(array('success' => true));
+            }
+            return response()->json(array('error' => 'something is wrong,please try again later'), 401);
+        }
     }
 
 }

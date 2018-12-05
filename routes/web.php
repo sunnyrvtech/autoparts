@@ -68,6 +68,7 @@ Route::get('cart/addresses', 'ProductController@getAddresses')->name('cart.addre
 Route::post('cart/addresses', 'ProductController@postCartAddresses')->name('cart.addresses');
 Route::get('track_order', 'OrderController@index');
 Route::post('track_order', 'OrderController@postTrackOrder')->name('track_order');
+Route::post('order/cancel', 'OrderController@orderCancelled');
 Route::get('my-account', 'AccountController@index')->name('my-account');
 Route::post('my-account/profile', 'AccountController@updateProfile');
 Route::get('my-account/order', 'AccountController@getOrderList')->name('order');

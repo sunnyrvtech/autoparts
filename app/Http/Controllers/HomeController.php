@@ -113,9 +113,9 @@ class HomeController extends Controller {
 
         $data = $request->all();
 
-        Mail::send('auth.emails.contact', $data, function($message) {
-            $message->from('jerhica.pe@gmail.com', " Welcome To Autolighthouse");
-            $message->to('sunny_kumar@rvtechnologies.co.in')->subject('Autolighthouse inquiry email !!!');
+        Mail::send('auth.emails.contact', $data, function($message) use ($data) {
+            $message->from('autolighthouseplus@gmail.com', "Welcome To Autolighthouse");
+            $message->to($data['email'])->subject('Autolighthouse inquiry email !!!');
         });
     }
 

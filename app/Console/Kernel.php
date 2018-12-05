@@ -35,7 +35,7 @@ class Kernel extends ConsoleKernel {
                 foreach ($order_data as $value) {
                     $data = (array) json_decode($value->order_data);
                     Mail::send('auth.emails.status_invoice', $data, function($message) use ($data) {
-                        $message->from('jerhica.pe@gmail.com', " Welcome To Autolighthouse");
+                        $message->from('autolighthouseplus@gmail.com', " Welcome To Autolighthouse");
                         if ($data['order']->order_status == 'shipped')
                             $message->to($data['email'])->subject('Autolighthouse Store:Order shipped #' . $data['order']->id);
                         else

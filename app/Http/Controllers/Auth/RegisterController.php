@@ -99,7 +99,7 @@ use RegistersUsers;
         ]);
 
         Mail::send('auth.emails.activated', array('link' => route('account.activate', $code), 'username' => $data['first_name'] . ' ' . $data['last_name']), function($message) use ($data) {
-            $message->from('jerhica.pe@gmail.com', " Welcome To Autolighthouse");
+            $message->from('autolighthouseplus@gmail.com', " Welcome To Autolighthouse");
             $message->to($data['email'], $data['first_name'])->subject('Welcome to Autolighthouse!');
         });
         Session::flash('success-message', 'Your account has been created! We have sent you an email to activate your account.');

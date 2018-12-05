@@ -528,7 +528,7 @@ class PaymentController extends Controller {
 
         $transaction_details['store_email'] = false;
         Mail::send('auth.emails.order_invoice', array('transaction_details' => $transaction_details, 'carts' => $carts, 'shipping_address' => $shipping_address, 'billing_address' => $billing_address), function($message) use ($data) {
-            $message->from('jerhica.pe@gmail.com', " Welcome To Autolighthouse");
+            $message->from('autolighthouseplus@gmail.com', " Welcome To Autolighthouse");
             $message->to($data['email'])->subject('Autolighthouse Store:New Order #' . $data['transaction_id']);
         });
 

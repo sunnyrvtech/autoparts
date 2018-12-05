@@ -623,7 +623,7 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
                 element.closest(".ymm-select.open").find('.select-text').attr('data-slug', slug).attr('data-id', id).text(element.text());
             }
 
-          
+
             if (method != 'vehicle_year') {
                 $http({
                     method: 'POST',
@@ -697,6 +697,27 @@ app.controller('autoPartController', ['$scope', '$http', '$sce', '$compile', '$t
                 $scope.loading = false;
 
             });
+        }
+
+        $scope.cancelOrder = function ($id) {
+            $scope.loading = true;
+            $http({
+                method: 'POST',
+                url: BaseUrl + '/order/cancel',
+                data: {'id': $id},
+                headers: {'Content-Type': 'application/json'}
+            }).then(function (data, status, headers, config) {
+                window.location.reload();
+            }, function errorCallback(data) {
+                $scope.loading = false;
+                $scope.alert_loading = true;
+                $scope.alertClass = 'alert-danger';
+                $scope.alertLabel = 'Error!';
+                $scope.alert_messages = data.data.error;
+                $scope.alertHide();
+                $(window).scrollTop(0);
+            });
+
         }
 
         $scope.deleteTodo = function (index) {

@@ -6,115 +6,122 @@
     <div class="my-account">
         @include('accounts.sidebar') 
 
-            <!-- Tab panes -->
-            <div class="tab-content">
-                <div class="tab-panel">
-                    <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9 colsm">
-                        <div id="order_details">
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <div class="text-center">
-                                        <h2>Invoice order id # {{ $order_details->id }}</h2>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div class="tab-panel">
+                <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9 colsm">
+                    <div id="order_details">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="text-center">
+                                    <h2>Invoice order id # {{ $order_details->id }}</h2>
+                                </div>
+                                @if($order_details->order_status == 'processing')
+                                <div class="text-right">
+                                    <a href="javascript:void(0);" class="btn am-orange cancel_confirm_pop">Cancel Order</a>
+                                </div><br>
+                                @endif
+                                <div class="row">
+                                    <div class="col-xs-12 col-md-4 col-lg-4">
+                                        <div class="panel panel-default height">
+                                            <div class="panel-heading">Billing Details</div>
+                                            <div class="panel-body">
+                                                <strong>{{ $billing_address->first_name.' '.$billing_address->last_name }}:</strong><br>
+                                                {{ $billing_address->address1.' '.$billing_address->address2 }}<br>
+                                                {{ $billing_address->city }},{{ $billing_address->state_name }}<br>
+                                                {{ $billing_address->country_name }},<strong>{{ $billing_address->zip }}</strong><br>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-xs-12 col-md-4 col-lg-4">
-                                            <div class="panel panel-default height">
-                                                <div class="panel-heading">Billing Details</div>
-                                                <div class="panel-body">
-                                                    <strong>{{ $billing_address->first_name.' '.$billing_address->last_name }}:</strong><br>
-                                                    {{ $billing_address->address1.' '.$billing_address->address2 }}<br>
-                                                    {{ $billing_address->city }},{{ $billing_address->state_name }}<br>
-                                                    {{ $billing_address->country_name }},<strong>{{ $billing_address->zip }}</strong><br>
-                                                </div>
+                                    <div class="col-xs-12 col-md-4 col-lg-4">
+                                        <div class="panel panel-default height">
+                                            <div class="panel-heading">Payment Method</div>
+                                            <div class="panel-body text-center">
+                                                <strong>{{ $order_details->payment_method }}</strong>
+                                            </div>
+                                            <div class="panel-heading">Shipping Method</div>
+                                            <div class="panel-body text-center">
+                                                <strong>{{ $order_details->shipping_method }}</strong>
                                             </div>
                                         </div>
-                                        <div class="col-xs-12 col-md-4 col-lg-4">
-                                            <div class="panel panel-default height">
-                                                <div class="panel-heading">Payment Method</div>
-                                                <div class="panel-body text-center">
-                                                    <strong>{{ $order_details->payment_method }}</strong>
-                                                </div>
-                                                <div class="panel-heading">Shipping Method</div>
-                                                <div class="panel-body text-center">
-                                                    <strong>{{ $order_details->shipping_method }}</strong>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-12 col-md-4 col-lg-4">
-                                            <div class="panel panel-default height">
-                                                <div class="panel-heading">Shipping Address</div>
-                                                <div class="panel-body">
-                                                    <strong>{{ $shipping_address->first_name.' '.$shipping_address->last_name }}:</strong><br>
-                                                    {{ $shipping_address->address1.' '.$shipping_address->address2 }}<br>
-                                                    {{ $shipping_address->city }},{{ $shipping_address->state_name }}<br>
-                                                    {{ $shipping_address->country_name }},<strong>{{ $shipping_address->zip }}</strong><br>
-                                                </div>
+                                    </div>
+                                    <div class="col-xs-12 col-md-4 col-lg-4">
+                                        <div class="panel panel-default height">
+                                            <div class="panel-heading">Shipping Address</div>
+                                            <div class="panel-body">
+                                                <strong>{{ $shipping_address->first_name.' '.$shipping_address->last_name }}:</strong><br>
+                                                {{ $shipping_address->address1.' '.$shipping_address->address2 }}<br>
+                                                {{ $shipping_address->city }},{{ $shipping_address->state_name }}<br>
+                                                {{ $shipping_address->country_name }},<strong>{{ $shipping_address->zip }}</strong><br>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="panel panel-default height">
-                                        <div class="panel-heading"><h3 class="text-center"><strong>Tracking Info</strong></h3></div>
-                                        <div class="panel-body">
-                                            <div class="table-responsive">
-                                                <table class="table table-condensed">
-                                                    <thead>
-                                                        <tr>
-                                                            <td><strong>Item Name</strong></td>
-                                                            <td class="text-center"><strong>Sku</strong></td>
-                                                            <td class="text-center"><strong>Track Number</strong></td>
-                                                            <td class="text-center"><strong>Action</strong></td>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @foreach($order_details->getOrderDetailById as $value)
-                                                        <tr>
-                                                            <td>{{ $value->product_name }}</td>
-                                                            <td class="text-center">{{ $value->sku_number }}</td>
-                                                            <td class="text-center">{{ $value->track_id }}</td>
-                                                            <td class="text-center">
-                                                                @if($value->track_url != null && $value->track_id)
-                                                                <a href="{{ $value->track_url }}" target="__blank">Track order</a>
-                                                                @endif
-                                                            </td>
-                                                        </tr>
-                                                        @endforeach
-                                                    </tbody>
-                                                </table>
-                                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="panel panel-default height">
+                                    <div class="panel-heading"><h3 class="text-center"><strong>Tracking Info</strong></h3></div>
+                                    <div class="panel-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-condensed">
+                                                <thead>
+                                                    <tr>
+                                                        <td><strong>Item Name</strong></td>
+                                                        <td class="text-center"><strong>Sku</strong></td>
+                                                        <td class="text-center"><strong>Track Number</strong></td>
+                                                        <td class="text-center"><strong>Action</strong></td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach($order_details->getOrderDetailById as $value)
+                                                    <tr>
+                                                        <td>{{ $value->product_name }}</td>
+                                                        <td class="text-center">{{ $value->sku_number }}</td>
+                                                        <td class="text-center">{{ $value->track_id }}</td>
+                                                        <td class="text-center">
+                                                            @if($value->track_url != null && $value->track_id)
+                                                            <a href="{{ $value->track_url }}" target="__blank">Track order</a>
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading"><h3 class="text-center"><strong>Order Status</strong></h3></div>
-                                        <div class="panel-body text-center">
-                                            <span>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"><h3 class="text-center"><strong>Order Status</strong></h3></div>
+                                    <div class="panel-body text-center">
+                                        <span>
                                             @if($order_details->order_status == 'completed')
-                                             Order is completed on {{ date('m-d-Y H:i A',strtotime($order_details->updated_at)) }}
+                                            Order is completed on {{ date('m-d-Y H:i A',strtotime($order_details->updated_at)) }}
                                             @endif
                                             @if($order_details->ship_date != null)
-                                             Order is shipped on {{ date('m-d-Y H:i A',strtotime($order_details->ship_date)) }}
+                                            Order is shipped on {{ date('m-d-Y H:i A',strtotime($order_details->ship_date)) }}
                                             @endif
-                                            @if($order_details->ship_date == null)
-                                             Order is processing 
+                                            @if($order_details->order_status == 'processing')
+                                            Order is processing 
+                                            @elseif($order_details->order_status == 'cancelled')
+                                            Order Cancelled
                                             @endif
-                                            </span>
-                                        </div>
+                                        </span>
                                     </div>
                                 </div>
-                            </div>   
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading"><h3 class="text-center"><strong>Order Summary</strong></h3></div>
-                                        <div class="panel-body">
-                                            <div class="table-wrp">
+                            </div>
+                        </div>   
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"><h3 class="text-center"><strong>Order Summary</strong></h3></div>
+                                    <div class="panel-body">
+                                        <div class="table-wrp">
                                             <table class="table order-detail">
                                                 <thead>
                                                     <tr>
@@ -131,7 +138,7 @@
                                                     <?php $sub_total = 0; ?>
                                                     @foreach($order_details->getOrderDetailById as $val)
                                                     <?php
-                                                    if ($order_details->coupon_type == 'per_product' && $val->discount !=null) {
+                                                    if ($order_details->coupon_type == 'per_product' && $val->discount != null) {
                                                         $total_price = $val->total_price - ($val->total_price * $val->discount / 100);
                                                         $sub_total += $total_price;
                                                     } else {
@@ -155,8 +162,8 @@
                                                             <div>${{ number_format($val->total_price/$val->quantity,2) }}</div>
                                                         </td>
                                                         @if($order_details->coupon_type == 'per_product')
-                                                         <?php $item_discount = $val->total_price-$total_price; ?>
-                                                         <td>
+                                                        <?php $item_discount = $val->total_price - $total_price; ?>
+                                                        <td>
                                                             <div>
                                                                 @if($val->discount !=null)
                                                                 ${{ number_format($item_discount,2) }}
@@ -166,7 +173,7 @@
                                                             </div>
                                                         </td>
                                                         @endif
-                                                        
+
                                                         <td>
                                                             <div class="">${{ number_format($total_price,2) }}</div>
                                                         </td>
@@ -175,7 +182,7 @@
                                                 </tbody>
                                             </table>
                                         </div>
-                                            <div class="col-md-12 col-sm-12 col-xs-12 pull-right">
+                                        <div class="col-md-12 col-sm-12 col-xs-12 pull-right">
                                             <h4>Order Total:</h4>
                                             <div class="outer-order">
                                                 <div class="row">
@@ -189,8 +196,8 @@
                                                 @if($order_details->discount != null && $order_details->coupon_type == 'all_products')
                                                 <?php
                                                 $sub_discount = $sub_total;
-                                                $sub_total = $sub_total-($sub_total*$order_details->discount/100);
-                                                $sub_discount = $sub_discount-$sub_total;
+                                                $sub_total = $sub_total - ($sub_total * $order_details->discount / 100);
+                                                $sub_discount = $sub_discount - $sub_total;
                                                 ?>
                                                 <div class="row">
                                                     <div class="col-md-6 col-sm-6 col-xs-6">
@@ -235,13 +242,41 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        </div>        
-                                    </div>
+                                    </div>        
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-</div>
-@endsection
+        </div>
+    </div>
+    @endsection
+    @push('scripts')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.0.0/bootbox.min.js"></script>
+    <script type="text/javascript">
+$(".cancel_confirm_pop").click(function () {
+    bootbox.confirm({
+        message: "Are you sure,you want to cancel this order ?",
+        buttons: {
+            cancel: {
+                label: '<i class="fa fa-times"></i> No'
+            },
+            confirm: {
+                label: '<i class="fa fa-check"></i> Yes',
+                className: "cancel_confirm"
+            }
+        },
+        callback: function (result) {
+
+        }
+    });
+});
+$(document).on('click', '.cancel_confirm', function (e) {
+    e.preventDefault();
+    var order_id = "{{ $order_details->id }}";
+    angular.element(this).scope().cancelOrder(order_id);
+});
+
+    </script>
+    @endpush
