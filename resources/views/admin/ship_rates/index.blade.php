@@ -17,7 +17,8 @@
                         <th>Ship Type</th>
                         <th>Low Weight</th>
                         <th>High Weight</th>
-                        <th>Zip code</th>
+                        <th>Zip codes</th>
+                        <th>Sku's</th>
                         <th>Price</th>
                         <th>Created At</th>
                         <th>Updated At</th>
@@ -46,6 +47,7 @@
                 {data: 'low_weight', name: 'low_weight'},
                 {data: 'high_weight', name: 'high_weight'},
                 {data: 'zip_code', name: 'zip_code'},
+                {data: 'sku', name: 'sku'},
                 {data: 'price', name: 'price'},
                 {data: 'created_at', name: 'created_at'},
                 {data: 'updated_at', name: 'updated_at'},

@@ -95,6 +95,7 @@ class ProductController extends Controller {
 
         $total_price_cart = 0;
         $total_weight = 0;
+        $shipping_price = 0;
 // $discount = 0;
         if (!empty($carts)) {
             $cart_data = array();
@@ -126,6 +127,13 @@ class ProductController extends Controller {
 //                    'discount' => $products->discount,
 //                    'total_price' => $value->total_price,
                 );
+
+
+                $ship_zip_regrex = '"([^"]*)' . $shipping_address->zip . '([^"]*)"';
+                $ship_sku_regrex = '"([^"]*)' . $products->sku . '([^"]*)"';
+                $shipping_rates = ShippingRate::where('country_id', $shipping_address->country_id)->whereRaw("zip_code REGEXP '" . $ship_zip_regrex . "'")->whereRaw("sku REGEXP '" . $ship_sku_regrex . "'")->first(array('price'));
+                if ($shipping_rates != '')
+                    $shipping_price += $shipping_rates->price;
             }
         } else {
             $cart_data = array();
@@ -164,7 +172,6 @@ class ProductController extends Controller {
         }
 // calculate total price based on shipping method and rates
         $shipping_methods = ShippingMethod::where('status', 1)->get();
-        $shipping_price = 0;
         if (!empty($shipping_methods->toArray()) && $shipping_address != null && $method_name != 'Free shipping') {
 
             $rates = ShippingRate::where('country_id', $shipping_address->country_id)->first();
@@ -172,12 +179,13 @@ class ProductController extends Controller {
                 return response()->json(array('error' => 'No shipping available in your country !'), 401);
             }
 
-            if ($rates->ship_type == 'zip_biased') {
-                $ship_regrex = '"([^"]*)' . $shipping_address->zip . '([^"]*)"';
-                $shipping_rates = ShippingRate::whereRaw("zip_code REGEXP '" . $ship_regrex . "'")->first(array('price'));
-                if ($shipping_rates != '')
-                    $shipping_price = $shipping_rates->price;
-            } else {
+
+            $ship_regrex = '"([^"]*)' . $shipping_address->zip . '([^"]*)"';
+            $shipping_rates = ShippingRate::whereNull('sku')->whereRaw("zip_code REGEXP '" . $ship_regrex . "'")->first(array('price'));
+            if ($shipping_rates)
+                $shipping_price += $shipping_rates->price;
+
+            if (!$shipping_price) {
                 $shipping_rates = ShippingRate::where('country_id', $shipping_address->country_id)->where(function ($query) use ($total_weight) {
                             $query->where('low_weight', '>=', $total_weight)
                                     ->where('low_weight', '<=', $total_weight)
@@ -185,8 +193,10 @@ class ProductController extends Controller {
                                     ->where('high_weight', '<=', $total_weight);
                         })->first(array('price'));
 
-                if ($shipping_rates == '')
-                    $shipping_price = ShippingRate::where('country_id', $shipping_address->country_id)->max('price');
+                if ($shipping_rates)
+                    $shipping_price = $shipping_rates->price;
+                else
+                    $shipping_price = ShippingRate::where('ship_type','=','weight_by')->where('country_id', $shipping_address->country_id)->max('price');
             }
             if (!$shipping_price)
                 return response()->json(array('error' => 'No shipping available in your country !'), 401);

@@ -50,15 +50,21 @@
                         </div>
                     </div>
                     <div class="zip-content" @if($shipping_rates->ship_type == 'weight_by') style="display: none;" @endif>
-                        <div class="form-group {{ $errors->has('zip_code') ? ' has-error' : ''}}">
+                         <div class="form-group {{ $errors->has('zip_code') ? ' has-error' : ''}}">
                             <label class="col-sm-3 col-md-3 control-label" for="zip_code">Zip Code:</label>
                             <div class="col-sm-9 col-md-9">
-                                <input type="text" data-role="tagsinput" value="@if($shipping_rates->zip_code != null){{ implode(',',json_decode($shipping_rates->zip_code)) }}@endif" class="form-control" data-role="tagsinput"  name="zip_code" placeholder="Enter multiple zip code">
+                                <input type="text" data-role="tagsinput" value="@if($shipping_rates->zip_code != null){{ implode(',',json_decode($shipping_rates->zip_code)) }}@endif" class="form-control" data-role="tagsinput"  name="zip_code" placeholder="Enter zip code with comma separated value">
                             </div>
                         </div>
                     </div>
+                    <div class="form-group {{ $errors->has('sku') ? ' has-error' : ''}}">
+                        <label class="col-sm-3 col-md-3 control-label" for="sku">Sku's:</label>
+                        <div class="col-sm-9 col-md-9">
+                            <input type="text" class="form-control" value="@if($shipping_rates->sku != null){{ implode(',',json_decode($shipping_rates->sku)) }}@endif" data-role="tagsinput"  name="sku" placeholder="Enter sku's with comma separated value">
+                        </div>
+                    </div>
                     <div class="weight-content" @if($shipping_rates->ship_type == 'zip_by') style="display: none;" @endif>
-                        <div class="form-group {{ $errors->has('low_weight') ? ' has-error' : ''}}">
+                         <div class="form-group {{ $errors->has('low_weight') ? ' has-error' : ''}}">
                             <label class="col-sm-3 col-md-3 control-label" for="low_weight">Low Weight:</label>
                             <div class="col-sm-9 col-md-9">
                                 <input type="text" name="low_weight" value="{{ $shipping_rates->low_weight }}" class="form-control" placeholder="Low Weight">
@@ -109,16 +115,16 @@
 @push('scripts')
 <script src="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
 <script type="text/javascript">
-$(document).ready(function(){
-   $(document).on('change','select[name="ship_type"]',function(){
-       if($(this).val() == 'zip_by'){
-           $(".zip-content").show();
-           $(".weight-content").hide();
-       }else{
-           $(".zip-content").hide();
-           $(".weight-content").show();
-       }
-   }); 
+$(document).ready(function () {
+    $(document).on('change', 'select[name="ship_type"]', function () {
+        if ($(this).val() == 'zip_by') {
+            $(".zip-content").show();
+            $(".weight-content").hide();
+        } else {
+            $(".zip-content").hide();
+            $(".weight-content").show();
+        }
+    });
 });
 </script>
 @endpush

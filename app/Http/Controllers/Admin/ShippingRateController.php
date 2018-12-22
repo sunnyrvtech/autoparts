@@ -80,6 +80,9 @@ class ShippingRateController extends Controller {
             $data['low_weight'] = null;
             $data['high_weight'] = null;
         }
+        if ($request->get('sku')) {
+            $data['sku'] = json_encode(explode(',', $data['sku']));
+        }
 
         ShippingRate::create($data);
         return redirect()->route('shipping_rates.index')->with('success-message', 'Added successfully!');
@@ -127,7 +130,12 @@ class ShippingRateController extends Controller {
             $data['high_weight'] = null;
         }
 
-
+        if ($request->get('sku')) {
+            $data['sku'] = json_encode(explode(',', $data['sku']));
+        }else{
+            $data['sku'] = null;
+        }
+        
         if (!$shipping_rates) {
             return Redirect::back()
                             ->with('success-message', 'Something went wrong.Please try again later!');

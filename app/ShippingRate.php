@@ -12,7 +12,7 @@ class ShippingRate extends Model {
      * @var array
      */
     protected $fillable = [
-        'country_id','ship_type', 'low_weight', 'high_weight','zip_code', 'price'
+        'country_id','ship_type', 'low_weight', 'high_weight','zip_code','sku', 'price'
     ];
 
     public function get_country() {

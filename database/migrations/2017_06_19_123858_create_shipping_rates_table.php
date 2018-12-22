@@ -20,6 +20,7 @@ class CreateShippingRatesTable extends Migration
             $table->integer('low_weight')->nullable();
             $table->integer('high_weight')->nullable();
             $table->text('zip_code')->nullable();
+            $table->text('sku')->nullable();
             $table->decimal('price', 5, 2);
             $table->timestamps();
         });

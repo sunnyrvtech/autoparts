@@ -52,8 +52,14 @@
                         <div class="form-group {{ $errors->has('zip_code') ? ' has-error' : ''}}">
                             <label class="col-sm-3 col-md-3 control-label" for="zip_code">Zip Code:</label>
                             <div class="col-sm-9 col-md-9">
-                                <input type="text" class="form-control" data-role="tagsinput"  name="zip_code" placeholder="Enter multiple zip code">
+                                <input type="text" class="form-control" data-role="tagsinput"  name="zip_code" placeholder="Enter zip code with comma separated value">
                             </div>
+                        </div>
+                    </div>
+                    <div class="form-group {{ $errors->has('sku') ? ' has-error' : ''}}">
+                        <label class="col-sm-3 col-md-3 control-label" for="sku">Sku's:</label>
+                        <div class="col-sm-9 col-md-9">
+                            <input type="text" class="form-control" data-role="tagsinput"  name="sku" placeholder="Enter sku's with comma separated value">
                         </div>
                     </div>
                     <div class="weight-content" style="display: none;">
@@ -108,16 +114,16 @@
 @push('scripts')
 <script src="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
 <script type="text/javascript">
-$(document).ready(function(){
-   $(document).on('change','select[name="ship_type"]',function(){
-       if($(this).val() == 'zip_by'){
-           $(".zip-content").show();
-           $(".weight-content").hide();
-       }else{
-           $(".zip-content").hide();
-           $(".weight-content").show();
-       }
-   }); 
+$(document).ready(function () {
+    $(document).on('change', 'select[name="ship_type"]', function () {
+        if ($(this).val() == 'zip_by') {
+            $(".zip-content").show();
+            $(".weight-content").hide();
+        } else {
+            $(".zip-content").hide();
+            $(".weight-content").show();
+        }
+    });
 });
 </script>
 @endpush
