@@ -128,12 +128,13 @@ class ProductController extends Controller {
 //                    'total_price' => $value->total_price,
                 );
 
-
-                $ship_zip_regrex = '"([^"]*)' . $shipping_address->zip . '([^"]*)"';
-                $ship_sku_regrex = '"([^"]*)' . $products->sku . '([^"]*)"';
-                $shipping_rates = ShippingRate::where('country_id', $shipping_address->country_id)->whereRaw("zip_code REGEXP '" . $ship_zip_regrex . "'")->whereRaw("sku REGEXP '" . $ship_sku_regrex . "'")->first(array('price'));
-                if ($shipping_rates != '')
-                    $shipping_price += $shipping_rates->price;
+                if ($shipping_address && $request->get('shipping_method')) {
+                    $ship_zip_regrex = '"([^"]*)' . $shipping_address->zip . '([^"]*)"';
+                    $ship_sku_regrex = '"([^"]*)' . $products->sku . '([^"]*)"';
+                    $shipping_rates = ShippingRate::where('country_id', $shipping_address->country_id)->whereRaw("zip_code REGEXP '" . $ship_zip_regrex . "'")->whereRaw("sku REGEXP '" . $ship_sku_regrex . "'")->first(array('price'));
+                    if ($shipping_rates != '')
+                        $shipping_price += $shipping_rates->price;
+                }
             }
         } else {
             $cart_data = array();
@@ -196,7 +197,7 @@ class ProductController extends Controller {
                 if ($shipping_rates)
                     $shipping_price = $shipping_rates->price;
                 else
-                    $shipping_price = ShippingRate::where('ship_type','=','weight_by')->where('country_id', $shipping_address->country_id)->max('price');
+                    $shipping_price = ShippingRate::where('ship_type', '=', 'weight_by')->where('country_id', $shipping_address->country_id)->max('price');
             }
             if (!$shipping_price)
                 return response()->json(array('error' => 'No shipping available in your country !'), 401);
@@ -471,14 +472,16 @@ class ProductController extends Controller {
                 array_push($keyword, $value);
             }
         }
-
-        $product_ids = Product::Where(function($query) use($keyword) {
-                    if (!empty($keyword)) {
-                        foreach ($keyword as $val) {
-                            $query->orWhere('negative_keyword', 'LIKE', '%' . $val . '%');
+        $product_ids = null;
+        if ($product_ids) {
+            $product_ids = Product::Where(function($query) use($keyword) {
+                        if (!empty($keyword)) {
+                            foreach ($keyword as $val) {
+                                $query->orWhere('negative_keyword', 'LIKE', '%' . $val . '%');
+                            }
                         }
-                    }
-                })->pluck('id')->toArray();
+                    })->pluck('id')->toArray();
+        }
 
         $cat_id = $request->input('cat');
         $make_id = $request->input('make');
