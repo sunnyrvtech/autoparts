@@ -87,7 +87,7 @@ class Kernel extends ConsoleKernel {
             }
             $dom->formatOutput = true;
             $dom->save(base_path('public/xml/products.xml'));
-        })->daily();
+        })->everyFiveMinutes();
     }
 
     /**
