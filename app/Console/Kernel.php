@@ -59,13 +59,21 @@ class Kernel extends ConsoleKernel {
             $channelNode->appendChild($dom->createElement('link', url('/')));
 
             foreach ($products as $key => $product) {
+                       if($product->price == 0)
+                           $availability = "out of stock";
+                       else
+                           $availability = "in stock";
                 $itemNode = $channelNode->appendChild($dom->createElement('item'));
                 $itemNode->appendChild($dom->createElement('g:id'))->appendChild($dom->createTextNode($product->sku));
                 $itemNode->appendChild($dom->createElement('title'))->appendChild($dom->createTextNode($product->product_name));
+                $itemNode->appendChild($dom->createElement('g:description'))->appendChild($dom->createTextNode($product->product_name));
                 $itemNode->appendChild($dom->createElement('link'))->appendChild($dom->createTextNode(route('products', $product->product_slug)));
-                $itemNode->appendChild($dom->createElement('g:price'))->appendChild($dom->createTextNode($product->price));
-                $itemNode->appendChild($dom->createElement('g:description'))->appendChild($dom->createTextNode($product->product_long_description));
+                $itemNode->appendChild($dom->createElement('g:price'))->appendChild($dom->createTextNode($product->price." USD"));
+                $itemNode->appendChild($dom->createElement('g:availability'))->appendChild($dom->createTextNode($availability));
                 $itemNode->appendChild($dom->createElement('g:google_product_category'))->appendChild($dom->createTextNode($product->get_category->name));
+                $itemNode->appendChild($dom->createElement('g:identifier_exists'))->appendChild($dom->createTextNode("no"));
+                $itemNode->appendChild($dom->createElement('g:condition'))->appendChild($dom->createTextNode($product->part_type));
+               
 
                 if (isset($product->product_details->product_images) && $product->product_details->product_images != null) {
                     $product_images = json_decode($product->product_details->product_images);
