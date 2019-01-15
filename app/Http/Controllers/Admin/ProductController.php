@@ -84,9 +84,11 @@ class ProductController extends Controller {
         if($request->get('vehicle_make_id') != null){
            $search_keyword = $search_keyword.' '.VehicleCompany::Where('id',$request->get('vehicle_make_id'))->first(array('name'))->name;
         }
-        
         if($request->get('meta_keyword') != null){
            $search_keyword = $search_keyword.' '.str_replace("," , " " , $data['meta_keyword']);
+        }
+        if($request->get('google_category') != null){
+           $data['google_category'] = htmlentities($request->get('google_category'));
         }
         
         $data['keyword_search'] = substr($search_keyword, 0, 255);
@@ -177,9 +179,11 @@ class ProductController extends Controller {
         if($request->get('vehicle_make_id') != null){
            $search_keyword = $search_keyword.' '.VehicleCompany::Where('id',$request->get('vehicle_make_id'))->first(array('name'))->name;
         }
-        
         if($request->get('meta_keyword') != null){
            $search_keyword = $search_keyword.' '.str_replace("," , " " , $data['meta_keyword']);
+        }
+        if($request->get('google_category') != null){
+           $data['google_category'] = htmlentities($request->get('google_category'));
         }
 
         $data['keyword_search'] = substr($search_keyword, 0, 255);

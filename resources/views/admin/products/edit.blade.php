@@ -702,6 +702,15 @@
                             </span>
                             @endif
                         </div>
+                        <div class="form-group {{ $errors->has('google_category') ? ' has-error' : '' }}">
+                            <label class="control-label">Google Category</label>
+                            {{ Form::textarea('google_category', @$products->google_category,array('class'=>'form-control')) }}
+                            @if ($errors->has('google_category'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('google_category') }}</strong>
+                            </span>
+                            @endif
+                        </div>
                     </div>
                 </div>
                 <div class="tab-pane" id="images">

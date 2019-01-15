@@ -70,9 +70,9 @@ class Kernel extends ConsoleKernel {
                 $itemNode->appendChild($dom->createElement('link'))->appendChild($dom->createTextNode(route('products', $product->product_slug)));
                 $itemNode->appendChild($dom->createElement('g:price'))->appendChild($dom->createTextNode($product->price." USD"));
                 $itemNode->appendChild($dom->createElement('g:availability'))->appendChild($dom->createTextNode($availability));
-                $itemNode->appendChild($dom->createElement('g:google_product_category'))->appendChild($dom->createTextNode($product->get_category->name));
+                $itemNode->appendChild($dom->createElement('g:google_product_category'))->appendChild($dom->createTextNode($product->google_category));
                 $itemNode->appendChild($dom->createElement('g:identifier_exists'))->appendChild($dom->createTextNode("no"));
-                $itemNode->appendChild($dom->createElement('g:condition'))->appendChild($dom->createTextNode('new'));
+                $itemNode->appendChild($dom->createElement('g:condition'))->appendChild($dom->createTextNode($product->part_type));
                
 
                 if (isset($product->product_details->product_images) && $product->product_details->product_images != null) {
