@@ -22,7 +22,7 @@ class CreateProductsTable extends Migration
            $table->text('google_category')->nullable();
            $table->string('product_name');
            $table->string('product_slug');
-           $table->text('product_long_description');
+           $table->text('product_long_description')->nullable();
            $table->text('product_short_description')->nullable();
            $table->string('sku');
            $table->integer('quantity')->nullable();

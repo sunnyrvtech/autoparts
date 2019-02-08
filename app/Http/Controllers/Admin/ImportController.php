@@ -49,16 +49,25 @@ class ImportController extends Controller {
                     $slug = $this->createSlug(trim($row->sub_category), 'category');
                     $sub_category = SubCategory::create(array('category_id' => $category->id, 'name' => trim($row->sub_category), 'slug' => $slug, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
                 }
-                if (!$vehicle_company = VehicleCompany::where('name', 'like', trim(ucfirst(strtolower($row->vehicle_make))))->first(array('id', 'name'))) {
-                    $make_slug = $this->createSlug(trim($row->vehicle_make), 'vehicle_make');
-                    $vehicle_company = VehicleCompany::create(array('name' => trim(ucfirst(strtolower($row->vehicle_make))), 'slug' => $make_slug, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
+                
+                $search_keyword = $search_keyword . ' ' . $category->name . ' ' . $sub_category->name;
+
+                if (!empty($row->vehicle_make)) {
+                    if (!$vehicle_company = VehicleCompany::where('name', 'like', trim(ucfirst(strtolower($row->vehicle_make))))->first(array('id', 'name'))) {
+                        $make_slug = $this->createSlug(trim($row->vehicle_make), 'vehicle_make');
+                        $vehicle_company = VehicleCompany::create(array('name' => trim(ucfirst(strtolower($row->vehicle_make))), 'slug' => $make_slug, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
+                    }
+                    $search_keyword = $search_keyword . ' ' . $vehicle_company->name;
+               
                 }
-                if (!$vehicle_model = VehicleModel::where('name', 'like', trim(ucfirst(strtolower($row->vehicle_model))))->first(array('id', 'name'))) {
-                    $model_slug = $this->createSlug(trim($row->vehicle_model), 'vehicle_model');
-                    $vehicle_model = VehicleModel::create(array('name' => trim(ucfirst(strtolower($row->vehicle_model))), 'slug' => $model_slug, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
+                if (!empty($row->vehicle_model)) {
+                    if (!$vehicle_model = VehicleModel::where('name', 'like', trim(ucfirst(strtolower($row->vehicle_model))))->first(array('id', 'name'))) {
+                        $model_slug = $this->createSlug(trim($row->vehicle_model), 'vehicle_model');
+                        $vehicle_model = VehicleModel::create(array('name' => trim(ucfirst(strtolower($row->vehicle_model))), 'slug' => $model_slug, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now()));
+                    }
+                    $search_keyword = $search_keyword . ' ' . $vehicle_model->name;
                 }
 
-                $search_keyword = $search_keyword . ' ' . $category->name . ' ' . $sub_category->name . ' ' . $vehicle_company->name . ' ' . $vehicle_model->name;
 
                 if (!empty($row->meta_keyword)) {
                     $search_keyword = $search_keyword . ' ' . str_replace(",", " ", $row->meta_description);
@@ -74,18 +83,18 @@ class ImportController extends Controller {
                     'google_category' => empty($row->google_category) ? null : htmlentities(trim($row->google_category)),
                     'product_name' => trim($row->product_name),
                     'product_slug' => $product_slug,
-                    'product_long_description' => trim($row->product_long_description),
-                    'product_short_description' => trim($row->product_short_description),
+                    'product_long_description' => empty($row->negative_keyword) ? null : trim($row->product_long_description),
+                    'product_short_description' => empty($row->negative_keyword) ? null : trim($row->product_short_description),
                     'vehicle_fit' => empty($row->vehicle_fit) ? null : trim($row->vehicle_fit),
                     'sku' => trim($row->sku),
                     'price' => $row->price,
                     'quantity' => $row->quantity,
                     'discount' => $row->discount,
                     'special_price' => $row->special_price,
-                    'vehicle_year_from' => $vehicle_year[0],
-                    'vehicle_year_to' => $vehicle_year[1],
-                    'vehicle_make_id' => $vehicle_company->id,
-                    'vehicle_model_id' => $vehicle_model->id,
+                    'vehicle_year_from' => isset($vehicle_year[0]) ? $vehicle_year[0] : null,
+                    'vehicle_year_to' => isset($vehicle_year[1]) ? $vehicle_year[1] : null,
+                    'vehicle_make_id' => isset($vehicle_company)?$vehicle_company->id:null,
+                    'vehicle_model_id' => isset($vehicle_model)?$vehicle_model->id:null,
                     'category_id' => $category->id,
                     'sub_category_id' => $sub_category->id,
                     'length' => empty($row->length) ? null : trim($row->length),
@@ -147,7 +156,7 @@ class ImportController extends Controller {
                     'cooling_fan_type' => empty($row->cooling_fan_type) ? null : trim($row->cooling_fan_type),
                     'radiator_row_count' => empty($row->radiator_row_count) ? null : trim($row->radiator_row_count),
                     'oil_plan_capacity' => empty($row->oil_plan_capacity) ? null : trim($row->oil_plan_capacity),
-                    'product_images' => empty($row->product_images) ? null : json_encode(explode(",",$row->product_images)),
+                    'product_images' => empty($row->product_images) ? null : json_encode(explode(",", $row->product_images)),
                 );
 
 
