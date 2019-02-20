@@ -47,7 +47,7 @@ class Kernel extends ConsoleKernel {
         })->everyFiveMinutes();
 
         $schedule->call(function () {
-            $products = Product::whereNotNull('product_name')->whereNotNull('google_category')->whereNotNull('price')->whereNotNull('part_type')->get();
+            $products = Product::whereNotNull('product_name')->whereNotNull('google_category')->where('price','>',0)->whereNotNull('part_type')->get();
             $dom = new DOMDocument('1.0', 'UTF-8');
             $xmlRoot = $dom->createElement("rss");
             $xmlRoot = $dom->appendChild($xmlRoot);
