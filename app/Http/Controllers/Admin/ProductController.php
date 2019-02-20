@@ -64,7 +64,7 @@ class ProductController extends Controller {
             'quantity' => 'required|numeric',
             'status' => 'required',
         ]);
-        
+
         $search_keyword = $data['product_name'];
         if($request->get('parse_link') != null){
             $search_keyword = $search_keyword.' '.$data['parse_link'];
@@ -90,9 +90,9 @@ class ProductController extends Controller {
         if($request->get('google_category') != null){
            $data['google_category'] = htmlentities($request->get('google_category'));
         }
-        
+
         $data['keyword_search'] = substr($search_keyword, 0, 255);
-        
+
         //set null value in the empty string
         foreach ($data as $key => $value) {
             $data[$key] = empty($value) ? null : $value;
@@ -187,7 +187,7 @@ class ProductController extends Controller {
         }
 
         $data['keyword_search'] = substr($search_keyword, 0, 255);
-        
+
         //set null value in the empty string
         foreach ($data as $key => $value) {
             $data[$key] = empty($value) ? null : $value;
@@ -235,7 +235,7 @@ class ProductController extends Controller {
         $data['sub_category_id'] = $request->get('sub_category');
 
         $products->fill($data)->save();
-        //saved other product details 
+        //saved other product details
         $product_details = ProductDetail::where('product_id', $products->id);
         if ($product_details->count()) {
             $product_details = $product_details->first();

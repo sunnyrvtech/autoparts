@@ -47,7 +47,7 @@ class Kernel extends ConsoleKernel {
         })->everyFiveMinutes();
 
         $schedule->call(function () {
-            $products = Product::get();
+            $products = Product::whereNotNull('product_name')->whereNotNull('google_category')->whereNotNull('price')->whereNotNull('part_type')->get();
             $dom = new DOMDocument('1.0', 'UTF-8');
             $xmlRoot = $dom->createElement("rss");
             $xmlRoot = $dom->appendChild($xmlRoot);
@@ -59,7 +59,7 @@ class Kernel extends ConsoleKernel {
             $channelNode->appendChild($dom->createElement('link', url('/')));
 
             foreach ($products as $key => $product) {
-                       if($product->price == 0)
+                       if($product->quantity == 0)
                            $availability = "out of stock";
                        else
                            $availability = "in stock";
@@ -73,7 +73,7 @@ class Kernel extends ConsoleKernel {
                 $itemNode->appendChild($dom->createElement('g:google_product_category'))->appendChild($dom->createTextNode($product->google_category));
                 $itemNode->appendChild($dom->createElement('g:identifier_exists'))->appendChild($dom->createTextNode("no"));
                 $itemNode->appendChild($dom->createElement('g:condition'))->appendChild($dom->createTextNode($product->part_type));
-               
+
 
                 if (isset($product->product_details->product_images) && $product->product_details->product_images != null) {
                     $product_images = json_decode($product->product_details->product_images);
